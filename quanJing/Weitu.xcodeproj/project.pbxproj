@@ -17,7 +17,18 @@
 		31338AA819B5405600A2EE6E /* OQJSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AA419B5405600A2EE6E /* OQJSearchView.m */; };
 		31338AB419B574FD00A2EE6E /* OWTSocialNavCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AB019B574FD00A2EE6E /* OWTSocialNavCon.m */; };
 		316145EA19B3189200498B91 /* UIImage+ColorExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 316145E919B3189200498B91 /* UIImage+ColorExt.m */; };
-		31C91FCB1BD60E0500DFC3C0 /* QuanJingSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C91FCA1BD60E0500DFC3C0 /* QuanJingSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		31C920321BD65D7D00DFC3C0 /* QJErrorCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C920151BD65D7D00DFC3C0 /* QJErrorCode.m */; settings = {ASSET_TAGS = (); }; };
+		31C920331BD65D7D00DFC3C0 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C920191BD65D7D00DFC3C0 /* UIDevice-Hardware.m */; settings = {ASSET_TAGS = (); }; };
+		31C920341BD65D7D00DFC3C0 /* QJHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C9201C1BD65D7D00DFC3C0 /* QJHTTPManager.m */; settings = {ASSET_TAGS = (); }; };
+		31C920351BD65D7D00DFC3C0 /* QJInterfaceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C9201E1BD65D7D00DFC3C0 /* QJInterfaceManager.m */; settings = {ASSET_TAGS = (); }; };
+		31C920361BD65D7D00DFC3C0 /* QJPassport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C920201BD65D7D00DFC3C0 /* QJPassport.m */; settings = {ASSET_TAGS = (); }; };
+		31C920371BD65D7D00DFC3C0 /* QJActionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C920231BD65D7D00DFC3C0 /* QJActionObject.m */; settings = {ASSET_TAGS = (); }; };
+		31C920381BD65D7D00DFC3C0 /* QJCommentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C920251BD65D7D00DFC3C0 /* QJCommentObject.m */; settings = {ASSET_TAGS = (); }; };
+		31C920391BD65D7D00DFC3C0 /* QJHomeIndexObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C920271BD65D7D00DFC3C0 /* QJHomeIndexObject.m */; settings = {ASSET_TAGS = (); }; };
+		31C9203A1BD65D7D00DFC3C0 /* QJImageCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C920291BD65D7D00DFC3C0 /* QJImageCategory.m */; settings = {ASSET_TAGS = (); }; };
+		31C9203B1BD65D7D00DFC3C0 /* QJImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C9202B1BD65D7D00DFC3C0 /* QJImageObject.m */; settings = {ASSET_TAGS = (); }; };
+		31C9203C1BD65D7D00DFC3C0 /* QJUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C9202D1BD65D7D00DFC3C0 /* QJUser.m */; settings = {ASSET_TAGS = (); }; };
+		31C9203D1BD65D7D00DFC3C0 /* QJUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C920311BD65D7D00DFC3C0 /* QJUtils.m */; settings = {ASSET_TAGS = (); }; };
 		31CB738B19B66E050081B05E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31CB738A19B66E050081B05E /* QuartzCore.framework */; };
 		31CB73BB19B6CDD20081B05E /* OWTAssetViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CB73A919B6CDD20081B05E /* OWTAssetViewCon.m */; };
 		31CB73BC19B6CDD20081B05E /* OWTAssetInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CB73AB19B6CDD20081B05E /* OWTAssetInfoView.m */; };
@@ -864,7 +875,33 @@
 		31338AB019B574FD00A2EE6E /* OWTSocialNavCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTSocialNavCon.m; sourceTree = "<group>"; };
 		316145E819B3189200498B91 /* UIImage+ColorExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ColorExt.h"; path = "../../UIImage+ColorExt.h"; sourceTree = "<group>"; };
 		316145E919B3189200498B91 /* UIImage+ColorExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ColorExt.m"; path = "../../UIImage+ColorExt.m"; sourceTree = "<group>"; };
-		31C91FCA1BD60E0500DFC3C0 /* QuanJingSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QuanJingSDK.framework; sourceTree = "<group>"; };
+		31C920131BD65D7D00DFC3C0 /* QJCoreMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJCoreMacros.h; sourceTree = "<group>"; };
+		31C920141BD65D7D00DFC3C0 /* QJErrorCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJErrorCode.h; sourceTree = "<group>"; };
+		31C920151BD65D7D00DFC3C0 /* QJErrorCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJErrorCode.m; sourceTree = "<group>"; };
+		31C920161BD65D7D00DFC3C0 /* QJServerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJServerConstants.h; sourceTree = "<group>"; };
+		31C920181BD65D7D00DFC3C0 /* UIDevice-Hardware.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice-Hardware.h"; sourceTree = "<group>"; };
+		31C920191BD65D7D00DFC3C0 /* UIDevice-Hardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice-Hardware.m"; sourceTree = "<group>"; };
+		31C9201B1BD65D7D00DFC3C0 /* QJHTTPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJHTTPManager.h; sourceTree = "<group>"; };
+		31C9201C1BD65D7D00DFC3C0 /* QJHTTPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJHTTPManager.m; sourceTree = "<group>"; };
+		31C9201D1BD65D7D00DFC3C0 /* QJInterfaceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJInterfaceManager.h; sourceTree = "<group>"; };
+		31C9201E1BD65D7D00DFC3C0 /* QJInterfaceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJInterfaceManager.m; sourceTree = "<group>"; };
+		31C9201F1BD65D7D00DFC3C0 /* QJPassport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJPassport.h; sourceTree = "<group>"; };
+		31C920201BD65D7D00DFC3C0 /* QJPassport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJPassport.m; sourceTree = "<group>"; };
+		31C920221BD65D7D00DFC3C0 /* QJActionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJActionObject.h; sourceTree = "<group>"; };
+		31C920231BD65D7D00DFC3C0 /* QJActionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJActionObject.m; sourceTree = "<group>"; };
+		31C920241BD65D7D00DFC3C0 /* QJCommentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJCommentObject.h; sourceTree = "<group>"; };
+		31C920251BD65D7D00DFC3C0 /* QJCommentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJCommentObject.m; sourceTree = "<group>"; };
+		31C920261BD65D7D00DFC3C0 /* QJHomeIndexObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJHomeIndexObject.h; sourceTree = "<group>"; };
+		31C920271BD65D7D00DFC3C0 /* QJHomeIndexObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJHomeIndexObject.m; sourceTree = "<group>"; };
+		31C920281BD65D7D00DFC3C0 /* QJImageCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJImageCategory.h; sourceTree = "<group>"; };
+		31C920291BD65D7D00DFC3C0 /* QJImageCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJImageCategory.m; sourceTree = "<group>"; };
+		31C9202A1BD65D7D00DFC3C0 /* QJImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJImageObject.h; sourceTree = "<group>"; };
+		31C9202B1BD65D7D00DFC3C0 /* QJImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJImageObject.m; sourceTree = "<group>"; };
+		31C9202C1BD65D7D00DFC3C0 /* QJUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJUser.h; sourceTree = "<group>"; };
+		31C9202D1BD65D7D00DFC3C0 /* QJUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJUser.m; sourceTree = "<group>"; };
+		31C9202E1BD65D7D00DFC3C0 /* QuanJingSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuanJingSDK.h; sourceTree = "<group>"; };
+		31C920301BD65D7D00DFC3C0 /* QJUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJUtils.h; sourceTree = "<group>"; };
+		31C920311BD65D7D00DFC3C0 /* QJUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJUtils.m; sourceTree = "<group>"; };
 		31CB738A19B66E050081B05E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		31CB73A819B6CDD20081B05E /* OWTAssetViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTAssetViewCon.h; sourceTree = "<group>"; };
 		31CB73A919B6CDD20081B05E /* OWTAssetViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTAssetViewCon.m; sourceTree = "<group>"; };
@@ -2264,7 +2301,6 @@
 				66A48F831AC544CD00640BA3 /* libxml2.dylib in Frameworks */,
 				A36A0D2F1B68C56F00F720C1 /* libWeChatSDK.a in Frameworks */,
 				66A48F811AC544C400640BA3 /* libxml2.2.dylib in Frameworks */,
-				31C91FCB1BD60E0500DFC3C0 /* QuanJingSDK.framework in Frameworks */,
 				A34ECB311A75E89E009A666C /* AssetsLibrary.framework in Frameworks */,
 				31CB738B19B66E050081B05E /* QuartzCore.framework in Frameworks */,
 				90476A6C19476C0D00B8A607 /* CFNetwork.framework in Frameworks */,
@@ -2297,6 +2333,80 @@
 			children = (
 			);
 			name = Appicons;
+			sourceTree = "<group>";
+		};
+		31C920111BD65D5600DFC3C0 /* QuanJingSDK */ = {
+			isa = PBXGroup;
+			children = (
+				31C920121BD65D7D00DFC3C0 /* common */,
+				31C920171BD65D7D00DFC3C0 /* device */,
+				31C9201A1BD65D7D00DFC3C0 /* manager */,
+				31C920211BD65D7D00DFC3C0 /* model */,
+				31C9202E1BD65D7D00DFC3C0 /* QuanJingSDK.h */,
+				31C9202F1BD65D7D00DFC3C0 /* utils */,
+			);
+			path = QuanJingSDK;
+			sourceTree = "<group>";
+		};
+		31C920121BD65D7D00DFC3C0 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				31C920131BD65D7D00DFC3C0 /* QJCoreMacros.h */,
+				31C920141BD65D7D00DFC3C0 /* QJErrorCode.h */,
+				31C920151BD65D7D00DFC3C0 /* QJErrorCode.m */,
+				31C920161BD65D7D00DFC3C0 /* QJServerConstants.h */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+		31C920171BD65D7D00DFC3C0 /* device */ = {
+			isa = PBXGroup;
+			children = (
+				31C920181BD65D7D00DFC3C0 /* UIDevice-Hardware.h */,
+				31C920191BD65D7D00DFC3C0 /* UIDevice-Hardware.m */,
+			);
+			path = device;
+			sourceTree = "<group>";
+		};
+		31C9201A1BD65D7D00DFC3C0 /* manager */ = {
+			isa = PBXGroup;
+			children = (
+				31C9201B1BD65D7D00DFC3C0 /* QJHTTPManager.h */,
+				31C9201C1BD65D7D00DFC3C0 /* QJHTTPManager.m */,
+				31C9201D1BD65D7D00DFC3C0 /* QJInterfaceManager.h */,
+				31C9201E1BD65D7D00DFC3C0 /* QJInterfaceManager.m */,
+				31C9201F1BD65D7D00DFC3C0 /* QJPassport.h */,
+				31C920201BD65D7D00DFC3C0 /* QJPassport.m */,
+			);
+			path = manager;
+			sourceTree = "<group>";
+		};
+		31C920211BD65D7D00DFC3C0 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				31C920221BD65D7D00DFC3C0 /* QJActionObject.h */,
+				31C920231BD65D7D00DFC3C0 /* QJActionObject.m */,
+				31C920241BD65D7D00DFC3C0 /* QJCommentObject.h */,
+				31C920251BD65D7D00DFC3C0 /* QJCommentObject.m */,
+				31C920261BD65D7D00DFC3C0 /* QJHomeIndexObject.h */,
+				31C920271BD65D7D00DFC3C0 /* QJHomeIndexObject.m */,
+				31C920281BD65D7D00DFC3C0 /* QJImageCategory.h */,
+				31C920291BD65D7D00DFC3C0 /* QJImageCategory.m */,
+				31C9202A1BD65D7D00DFC3C0 /* QJImageObject.h */,
+				31C9202B1BD65D7D00DFC3C0 /* QJImageObject.m */,
+				31C9202C1BD65D7D00DFC3C0 /* QJUser.h */,
+				31C9202D1BD65D7D00DFC3C0 /* QJUser.m */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		31C9202F1BD65D7D00DFC3C0 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				31C920301BD65D7D00DFC3C0 /* QJUtils.h */,
+				31C920311BD65D7D00DFC3C0 /* QJUtils.m */,
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 		660A104E1AB691AB00C3BCA9 /* SvImageInfoUtil */ = {
@@ -2588,6 +2698,7 @@
 				E08754E71B1776A500797E9A /* Unselected.png */,
 				E02EE6771B207EFE000D76AF /* popBackg.png */,
 				E08754E51B17769C00797E9A /* Selected.png */,
+				31C920111BD65D5600DFC3C0 /* QuanJingSDK */,
 				E02F49C21B5D184E0095DFEE /* 首页 */,
 				E0B99B251B05951C00ED7831 /* HX(环信) */,
 				66ABB3621B00901D00F83504 /* image */,
@@ -2620,7 +2731,6 @@
 		9044E3C318CAE4D800784D38 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				31C91FCA1BD60E0500DFC3C0 /* QuanJingSDK.framework */,
 				A38DF6B31BB4E0FC00EFBCA3 /* Fabric.framework */,
 				A38DF6B41BB4E0FC00EFBCA3 /* Crashlytics.framework */,
 				A39AB5731B6B035D009C2A51 /* Sina */,
@@ -5311,6 +5421,7 @@
 				E0BC01E81B0E1432009D1D20 /* GroupBansViewController.m in Sources */,
 				E0B99BF91B05985400ED7831 /* WCAlertView.m in Sources */,
 				90F1C6AD1905AF2D00C1582A /* OWTUserMeNavCon.m in Sources */,
+				31C920331BD65D7D00DFC3C0 /* UIDevice-Hardware.m in Sources */,
 				9049CC89190973DE00945E86 /* UIViewController+WTExt.m in Sources */,
 				A35D65FD1B2EAAC8006EC936 /* CustomLocalAblumAssertVC.m in Sources */,
 				90D61AC6196084CB00375A85 /* OWTAlbumViewCon.m in Sources */,
@@ -5330,6 +5441,7 @@
 				90BF4A8F193A02D300A1E6C9 /* OThumbnailListViewCon.m in Sources */,
 				E0B99BD71B05978A00ED7831 /* MessageModel.m in Sources */,
 				A3604FD21B281A4400A68FDA /* LJCaptionModel.m in Sources */,
+				31C920341BD65D7D00DFC3C0 /* QJHTTPManager.m in Sources */,
 				E0B99B5C1B05966000ED7831 /* PSTCollectionView.m in Sources */,
 				E027FA801B5925860090F04D /* ExcPhotoRecThread.m in Sources */,
 				311BF04819B2E9250046C11D /* OQJCategoryCell.m in Sources */,
@@ -5351,6 +5463,7 @@
 				E0BC01EA1B0E1432009D1D20 /* GroupSettingViewController.m in Sources */,
 				9013C4481952C60100D19FFD /* OWTSMSInviteViewCon.m in Sources */,
 				A3604FC11B27DEF000A68FDA /* ASIFormDataRequest.m in Sources */,
+				31C9203D1BD65D7D00DFC3C0 /* QJUtils.m in Sources */,
 				E0B99B351B05959F00ED7831 /* NSDate+Category.m in Sources */,
 				9099854D1904EF7F00A0DD78 /* OWTExploreViewCon.m in Sources */,
 				A3BBA8BA1B71B29F00DB319D /* LJCoreData3.xcdatamodeld in Sources */,
@@ -5365,6 +5478,7 @@
 				A38F4D7D1A64A98100FD1912 /* MJRefreshFooterView.m in Sources */,
 				E0BC01EC1B0E1432009D1D20 /* PublicGroupDetailViewController.m in Sources */,
 				E0BC01FD1B0EBEE9009D1D20 /* HXLoginStatus.m in Sources */,
+				31C9203A1BD65D7D00DFC3C0 /* QJImageCategory.m in Sources */,
 				66D799D81AD5222F0030AE48 /* FSBasicImageSource.m in Sources */,
 				31338AB419B574FD00A2EE6E /* OWTSocialNavCon.m in Sources */,
 				9044E3D518CAE4D800784D38 /* OWTAppDelegate.m in Sources */,
@@ -5431,6 +5545,7 @@
 				A3D4CBD11A836FDF0097B48E /* NSString+XHMD5.m in Sources */,
 				E0B99BC41B05976000ED7831 /* MessageModelManager.m in Sources */,
 				E09C89F41BB1063D00505F6C /* OQJFusionViewVC.m in Sources */,
+				31C9203C1BD65D7D00DFC3C0 /* QJUser.m in Sources */,
 				666390FE1A5D86AF002E4D13 /* OWTexploreModel.m in Sources */,
 				90B3618818E3D20400D6205C /* WTError.m in Sources */,
 				E0B99B7D1B05968B00ED7831 /* MWGridViewController.m in Sources */,
@@ -5447,6 +5562,7 @@
 				E08754D81B17054100797E9A /* FriendTableViewCell.m in Sources */,
 				90E241F6195D4792001F3EF7 /* OWTAlbumData.m in Sources */,
 				66A4FA6B1AA9A1B7006F6547 /* AGIPCGridItem.m in Sources */,
+				31C920321BD65D7D00DFC3C0 /* QJErrorCode.m in Sources */,
 				A3D4CBD31A836FDF0097B48E /* XHFileAttribute.m in Sources */,
 				66A4FA621AA9A1B7006F6547 /* AGImagePickerController+Helper.m in Sources */,
 				E0B99BD61B05978A00ED7831 /* EMChatBaseBubbleView.m in Sources */,
@@ -5526,6 +5642,7 @@
 				E0BC01F31B0E18A3009D1D20 /* EMChooseViewController.m in Sources */,
 				66A310A51ACE8E8200D31259 /* HomeViewController.m in Sources */,
 				902F7C8C191FC42B0087A37D /* UIView+EasyAutoLayout.m in Sources */,
+				31C920361BD65D7D00DFC3C0 /* QJPassport.m in Sources */,
 				E081D6011BC7BB8C0086F951 /* OWTDefalutTagsViewController.m in Sources */,
 				90D9EA0618E2E03B007C99A8 /* OWTUserManager.m in Sources */,
 				E0BCFF501B0DBD28009D1D20 /* BaseViewController.m in Sources */,
@@ -5552,10 +5669,12 @@
 				661AB9A71AB92E270011886B /* OWTimageData.m in Sources */,
 				90A7BC0C195D354200FE2602 /* OWTServerError.m in Sources */,
 				A3A47CAE1B9E7BB900B6855F /* LJSearchViewController.m in Sources */,
+				31C920391BD65D7D00DFC3C0 /* QJHomeIndexObject.m in Sources */,
 				A301E8081A7B39EE0086D989 /* OQJSelectedViewCon2.m in Sources */,
 				90F55DD118CAF0FD00D8022C /* OWaterFlowLayout.m in Sources */,
 				E0B99B331B05959F00ED7831 /* UIViewController+HUD.m in Sources */,
 				A3D4D0071BB256CA008482FD /* OWTPhotoUploadTagView.m in Sources */,
+				31C920351BD65D7D00DFC3C0 /* QJInterfaceManager.m in Sources */,
 				E09C8A051BB10CCC00505F6C /* AccelerationAnimation.m in Sources */,
 				E0B99B631B05966000ED7831 /* PSTCollectionViewUpdateItem.m in Sources */,
 				E0BAB5241B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational3.m in Sources */,
@@ -5572,6 +5691,7 @@
 				A36C52DE1B60F25900AD8BB3 /* StartViewController.m in Sources */,
 				90956444191D01510088BA48 /* OWTRoundImageView.m in Sources */,
 				E0B99C951B05A1D600ED7831 /* HuanXinManager.m in Sources */,
+				31C920371BD65D7D00DFC3C0 /* QJActionObject.m in Sources */,
 				A3FEB0551B2C170200422C68 /* OWTUserInfoEditViewCon.m in Sources */,
 				E0B99B811B05968B00ED7831 /* MWTapDetectingView.m in Sources */,
 				90FBF723194C478F00053062 /* OWTUserLikedAssetsViewCon.m in Sources */,
@@ -5601,6 +5721,7 @@
 				A3604FBE1B27DEF000A68FDA /* ASIDataCompressor.m in Sources */,
 				90A7BC0F195D354200FE2602 /* OWTUserData.m in Sources */,
 				A3D4CBCD1A836FDF0097B48E /* XHViewState.m in Sources */,
+				31C9203B1BD65D7D00DFC3C0 /* QJImageObject.m in Sources */,
 				E0B99C981B05A1D600ED7831 /* HXVoiceViewController.m in Sources */,
 				E0B99B7E1B05968B00ED7831 /* MWPhoto.m in Sources */,
 				E0A7D93E1B704872005A569C /* DealErrorPageViewController.m in Sources */,
@@ -5614,6 +5735,7 @@
 				A34A29FC1B9574D40061614A /* LJExploreSquareController.m in Sources */,
 				31CB73BE19B6CDD20081B05E /* OWTLatestCommentsView.m in Sources */,
 				E0B99BA71B0596D400ED7831 /* EMSDWebImageDownloader.m in Sources */,
+				31C920381BD65D7D00DFC3C0 /* QJCommentObject.m in Sources */,
 				90E2421A195D4C8C001F3EF7 /* OWTCategory.m in Sources */,
 				666391061A5DA84E002E4D13 /* OWTCategoryTableViewCell.m in Sources */,
 				E0574E7E1B1EC761003BAD62 /* AddFriendListViewController.m in Sources */,

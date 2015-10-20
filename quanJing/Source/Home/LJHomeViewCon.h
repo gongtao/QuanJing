@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LJHomeViewCon : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@interface LJHomeViewCon : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @end
