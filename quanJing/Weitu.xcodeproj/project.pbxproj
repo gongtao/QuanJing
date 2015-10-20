@@ -4768,7 +4768,6 @@
 				ORGANIZATIONNAME = "SparkingSoft Co., Ltd";
 				TargetAttributes = {
 					9044E3C018CAE4D800784D38 = {
-						DevelopmentTeam = B6DQ38AV7Y;
 						SystemCapabilities = {
 							com.apple.iCloud = {
 								enabled = 0;
