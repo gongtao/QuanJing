@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BuildEnvironment</key>
+	<dict>
+		<key>BuildDate</key>
+		<string>Tue Oct 20 10:08:16 CST 2015</string>
+		<key>BuildMachine</key>
+		<dict>
+			<key>Hostname</key>
+			<string>bogon</string>
+			<key>Model</key>
+			<string>MacBookPro12,1</string>
+			<key>Name</key>
+			<string>denghs的MacBook Pro</string>
+			<key>UUID</key>
+			<string>206435C2-7C5B-563F-B4B9-B62B15229B93</string>
+		</dict>
+		<key>BuildUser</key>
+		<string>denghs (denghs)</string>
+		<key>GitRef</key>
+		<string>b15f882ef599644b0a1c8003d1590c73d072c7bc</string>
+		<key>GitUser</key>
+		<string>petrusDeng (dhs8174@126.com)</string>
+	</dict>
+</dict>
+</plist>

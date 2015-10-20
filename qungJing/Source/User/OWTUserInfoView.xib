@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT" customClass="OWTUserInfoView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="212"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ViB-j4-lHl">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="153"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="我背景.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="jZw-W5-Pap">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="153"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" red="0.16862745098039217" green="0.16862745098039217" blue="0.16862745098039217" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="jZw-W5-Pap" secondAttribute="trailing" id="NAg-eA-yYc"/>
+                        <constraint firstAttribute="bottom" secondItem="jZw-W5-Pap" secondAttribute="bottom" id="P5v-cV-RmN"/>
+                        <constraint firstItem="jZw-W5-Pap" firstAttribute="leading" secondItem="ViB-j4-lHl" secondAttribute="leading" id="dpB-an-h1K"/>
+                        <constraint firstAttribute="height" constant="153" id="gzj-st-3gr"/>
+                        <constraint firstItem="jZw-W5-Pap" firstAttribute="top" secondItem="ViB-j4-lHl" secondAttribute="top" id="uqc-9R-Zbq"/>
+                    </constraints>
+                </view>
+                <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" text="Saaaa Treen" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yfD-h2-LAO" userLabel="Name Label">
+                    <rect key="frame" x="102" y="15" width="202" height="29"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="202" id="cvx-2z-LME"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="198" translatesAutoresizingMaskIntoConstraints="NO" id="Cs9-Fk-ke4" userLabel="SignatureLabel">
+                    <rect key="frame" x="102" y="51" width="202" height="0.0"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uLn-5Y-pbE" userLabel="Action Button">
+                    <rect key="frame" x="140" y="121" width="85" height="32"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="NIq-P2-pkB"/>
+                        <constraint firstAttribute="width" constant="85" id="nWz-sJ-8WO"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <state key="normal" title="编辑个人信息">
+                        <color key="titleColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96470588235294119" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="actionButtonPressed:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="R8t-lG-MVA"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Za-Jo-T79" userLabel="NumberArea" customClass="OWTUserInfoNumberAreaBackgroundView">
+                    <rect key="frame" x="0.0" y="153" width="236" height="59"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="alE-Um-qhC" userLabel="ButtonLikes">
+                            <rect key="frame" x="59" y="0.0" width="59" height="59"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <state key="normal" title="B">
+                                <color key="titleColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="likedAssetsButtonPressed:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="uO1-Gu-FJo"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OFM-h1-G33" userLabel="ButtonFolloing">
+                            <rect key="frame" x="118" y="0.0" width="59" height="59"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <state key="normal" title="C">
+                                <color key="titleColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="followingsButtonPressed:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="c9W-am-Cbc"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hen-78-cxI" userLabel="ButtonFollowers">
+                            <rect key="frame" x="177" y="0.0" width="59" height="59"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                            <state key="normal" title="D">
+                                <color key="titleColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="followersButtonPressed:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="xQe-VT-QNB"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ki2-Yu-Pka" userLabel="ButtonMyPhotoNum">
+                            <rect key="frame" x="0.0" y="0.0" width="59" height="59"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <size key="titleShadowOffset" width="2.2250738585072014e-308" height="0.0"/>
+                            <state key="normal" title="A">
+                                <color key="titleColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="assetsButtonPressed:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="0Sh-W7-exk"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.95686274509803915" green="0.95686274509803915" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="59" id="1Q1-t6-Pvj"/>
+                        <constraint firstItem="Ki2-Yu-Pka" firstAttribute="leading" secondItem="4Za-Jo-T79" secondAttribute="leading" id="1iS-FK-Csb"/>
+                        <constraint firstItem="hen-78-cxI" firstAttribute="top" secondItem="4Za-Jo-T79" secondAttribute="top" id="2Ow-TF-p3J"/>
+                        <constraint firstAttribute="bottom" secondItem="alE-Um-qhC" secondAttribute="bottom" id="4Yu-Hv-8Ob"/>
+                        <constraint firstAttribute="bottom" secondItem="OFM-h1-G33" secondAttribute="bottom" id="4rQ-Mm-gmw"/>
+                        <constraint firstItem="OFM-h1-G33" firstAttribute="leading" secondItem="alE-Um-qhC" secondAttribute="trailing" id="7hh-Vl-lYg"/>
+                        <constraint firstItem="Ki2-Yu-Pka" firstAttribute="width" secondItem="alE-Um-qhC" secondAttribute="width" id="C5M-Wq-cfI"/>
+                        <constraint firstItem="hen-78-cxI" firstAttribute="trailing" secondItem="4Za-Jo-T79" secondAttribute="trailing" id="Hnr-XP-dOA"/>
+                        <constraint firstItem="hen-78-cxI" firstAttribute="leading" secondItem="OFM-h1-G33" secondAttribute="trailing" id="Oj5-Wt-xfA"/>
+                        <constraint firstItem="alE-Um-qhC" firstAttribute="top" secondItem="4Za-Jo-T79" secondAttribute="top" id="Wbk-7y-rZU"/>
+                        <constraint firstItem="alE-Um-qhC" firstAttribute="width" secondItem="OFM-h1-G33" secondAttribute="width" id="Yb3-R6-v3j"/>
+                        <constraint firstItem="hen-78-cxI" firstAttribute="width" secondItem="OFM-h1-G33" secondAttribute="width" id="eOE-RF-1n1"/>
+                        <constraint firstItem="alE-Um-qhC" firstAttribute="leading" secondItem="Ki2-Yu-Pka" secondAttribute="trailing" id="iCi-Kt-egi"/>
+                        <constraint firstAttribute="bottom" secondItem="Ki2-Yu-Pka" secondAttribute="bottom" id="kEJ-fq-h9S"/>
+                        <constraint firstItem="OFM-h1-G33" firstAttribute="top" secondItem="4Za-Jo-T79" secondAttribute="top" id="mTp-0B-Eaa"/>
+                        <constraint firstAttribute="bottom" secondItem="hen-78-cxI" secondAttribute="bottom" id="nCd-Tn-bzV"/>
+                        <constraint firstItem="Ki2-Yu-Pka" firstAttribute="top" secondItem="4Za-Jo-T79" secondAttribute="top" id="tvb-ax-y8j"/>
+                    </constraints>
+                </view>
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fF0-dO-msS" customClass="OWTRoundImageView">
+                    <rect key="frame" x="228" y="125" width="70" height="70"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="QuK-mN-mFh"/>
+                        <constraint firstAttribute="height" constant="70" id="q1T-Ye-0Yk"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.95686274509803915" green="0.95686274509803915" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="ViB-j4-lHl" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="8vB-dF-bW5"/>
+                <constraint firstItem="yfD-h2-LAO" firstAttribute="leading" secondItem="Cs9-Fk-ke4" secondAttribute="leading" id="ADw-y0-aXE"/>
+                <constraint firstAttribute="trailing" secondItem="ViB-j4-lHl" secondAttribute="trailing" id="Ada-vE-wYV"/>
+                <constraint firstAttribute="trailing" secondItem="fF0-dO-msS" secondAttribute="trailing" constant="22" id="CYG-wH-8ED"/>
+                <constraint firstItem="yfD-h2-LAO" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="15" id="CaI-Ph-xIa"/>
+                <constraint firstAttribute="bottom" secondItem="4Za-Jo-T79" secondAttribute="bottom" id="Cib-Et-Q2F"/>
+                <constraint firstAttribute="trailing" secondItem="yfD-h2-LAO" secondAttribute="trailing" constant="16" id="JDx-a7-q4N"/>
+                <constraint firstAttribute="trailing" secondItem="uLn-5Y-pbE" secondAttribute="trailing" constant="95" id="MB3-q5-X8O"/>
+                <constraint firstAttribute="trailing" secondItem="4Za-Jo-T79" secondAttribute="trailing" constant="84" id="Q92-y9-vda"/>
+                <constraint firstItem="fF0-dO-msS" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="125" id="TTX-2y-vUL"/>
+                <constraint firstItem="Cs9-Fk-ke4" firstAttribute="top" secondItem="yfD-h2-LAO" secondAttribute="bottom" constant="7" id="apA-SM-KV5"/>
+                <constraint firstItem="Cs9-Fk-ke4" firstAttribute="trailing" secondItem="yfD-h2-LAO" secondAttribute="trailing" id="c0p-ST-bdX"/>
+                <constraint firstItem="uLn-5Y-pbE" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="121" id="gXC-fA-eID"/>
+                <constraint firstItem="4Za-Jo-T79" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="q4i-do-7S8"/>
+                <constraint firstItem="ViB-j4-lHl" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="xIg-Ly-BT0"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="_actionButton" destination="uLn-5Y-pbE" id="MUf-8k-SVK"/>
+                <outlet property="_followerNumButton" destination="hen-78-cxI" id="N4E-We-wJP"/>
+                <outlet property="_followingNumButton" destination="OFM-h1-G33" id="oj5-7v-3cR"/>
+                <outlet property="_likeNumButton" destination="alE-Um-qhC" id="QmR-7X-wuN"/>
+                <outlet property="_nameLabel" destination="yfD-h2-LAO" id="z9e-GI-psj"/>
+                <outlet property="_photoNumButton" destination="Ki2-Yu-Pka" id="hjV-Z1-Vw1"/>
+                <outlet property="_signatureLabel" destination="Cs9-Fk-ke4" id="Eoh-Kx-vcO"/>
+                <outlet property="_userImageView" destination="jZw-W5-Pap" id="xVW-ua-F2K"/>
+                <outlet property="avatarView" destination="fF0-dO-msS" id="xDW-P8-WZq"/>
+            </connections>
+            <point key="canvasLocation" x="378" y="196"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="我背景.jpg" width="2290" height="1526"/>
+    </resources>
+</document>

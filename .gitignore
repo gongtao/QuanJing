@@ -29,10 +29,18 @@ build/*
 *.pbxuser
  
 *.xcworkspace
+
+*/xcuserdata
+
+*/DerivedData/
  
 xcuserdata
 
 DerivedData/
+
+*/Pods
+
+*/Podfile.lock
 
 Pods
 

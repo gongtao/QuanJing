@@ -1,0 +1,33 @@
+/* 
+  Localized.strings
+  Weitu
+
+  Created by Su on 3/10/14.
+  Copyright (c) 2014 SparkingSoft Co., Ltd. All rights reserved.
+*/
+
+"LATEST_UPLOADS" = "Latest Uploads";
+"WALLPAPERS" = "Wallpapers";
+"DONE" = "Done";
+
+"NETWORK_ERROR" = "Unable to connect, please check your network settings.";
+"GENERAL_ERROR_TRY_LATER" = "Error occurred, please try again later.";
+
+"PLEASE_WAIT" = "Please wait.";
+
+"AUTH_PLEASE_INPUT_EMAIL" = "Please input valid email address.";
+"AUTH_PLEASE_INPUT_PASSWORD" = "Please input password.";
+
+"REGISTER_VIEWCON_TITLE" = "Register";
+"REGISTER_PLEASE_INPUT_NICKNAME" = "Nickname should be at least 2 characters.";
+"REGISTER_FAILED_DUPLICATE_EMAIL" = "Email address already used, please login.";
+"REGISTER_SUCCEED" = "Successfully registered.";
+
+"SMSAUTH_REQUEST_VIEWCON_TITLE" = "手机登陆";
+"SMSAUTH_VERIFY_VIEWCON_TITLE" = "Verify Code";
+"SMSAUTH_PLEASE_INPUT_VALID_CELLPHONE" = "Please input valid cellphone number.";
+"SMSAUTH_PLEASE_INPUT_VERIFICATION_CODE" = "Please input 6 digits verification code.";
+
+"EMAILAUTH_VIEWCON_TITLE" = "Login";
+"EMAILAUTH_FAILED_CHECKINPUT" = "Login failed, please check your email and password.";
+"LOGIN" = "Login";

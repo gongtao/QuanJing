@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view opaque="NO" contentMode="scaleToFill" id="iN0-l3-epB" customClass="OWTPhotoSourceSelectionView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="132"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iEs-wP-faV" userLabel="CameraButonArea">
+                    <rect key="frame" x="47" y="7" width="98" height="118"/>
+                    <subviews>
+                        <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4DS-fN-pAU" userLabel="CameraButton" customClass="KHFlatButton">
+                            <rect key="frame" x="5" y="4" width="88" height="88"/>
+                            <color key="backgroundColor" red="0.282086" green="0.60620399999999997" blue="0.87217800000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="88" id="5Hj-AK-Knd"/>
+                                <constraint firstAttribute="width" constant="88" id="Si2-IT-bUf"/>
+                            </constraints>
+                            <connections>
+                                <action selector="selectCamera:" destination="iN0-l3-epB" eventType="touchUpInside" id="hj8-Vq-j5p"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="相机" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DBt-de-rrc" userLabel="CameraButtonLabel">
+                            <rect key="frame" x="5" y="98" width="88" height="15"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="DBt-de-rrc" firstAttribute="top" secondItem="4DS-fN-pAU" secondAttribute="bottom" constant="6" id="H8d-1c-h4h"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" secondItem="4DS-fN-pAU" secondAttribute="width" constant="10" id="M0J-m0-tOl"/>
+                        <constraint firstAttribute="bottom" secondItem="DBt-de-rrc" secondAttribute="bottom" constant="5" id="Nsh-B4-KTa"/>
+                        <constraint firstAttribute="centerX" secondItem="DBt-de-rrc" secondAttribute="centerX" id="SC8-xi-bDS"/>
+                        <constraint firstAttribute="centerX" secondItem="4DS-fN-pAU" secondAttribute="centerX" id="aLv-me-mRG"/>
+                        <constraint firstItem="4DS-fN-pAU" firstAttribute="top" secondItem="iEs-wP-faV" secondAttribute="top" constant="4" id="grD-wr-k5Z"/>
+                        <constraint firstAttribute="width" secondItem="DBt-de-rrc" secondAttribute="width" constant="10" id="ujb-IY-NYB"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X7q-1V-xky" userLabel="AlbumButonArea">
+                    <rect key="frame" x="175" y="7" width="98" height="118"/>
+                    <subviews>
+                        <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q1x-k5-ikR" userLabel="AlbumButton" customClass="KHFlatButton">
+                            <rect key="frame" x="5" y="4" width="88" height="88"/>
+                            <color key="backgroundColor" red="0.282086" green="0.60620399999999997" blue="0.87217800000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="88" id="rwc-cD-hUg"/>
+                                <constraint firstAttribute="height" constant="88" id="ssY-Fh-9Tb"/>
+                            </constraints>
+                            <connections>
+                                <action selector="selectAlbum:" destination="iN0-l3-epB" eventType="touchUpInside" id="ILz-06-1bu"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="本地相册" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qjS-Bm-Np9" userLabel="AlbumButtonLabel">
+                            <rect key="frame" x="5" y="98" width="88" height="15"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="centerX" secondItem="q1x-k5-ikR" secondAttribute="centerX" id="ATM-hQ-03b"/>
+                        <constraint firstItem="q1x-k5-ikR" firstAttribute="top" secondItem="X7q-1V-xky" secondAttribute="top" constant="4" id="C2L-TH-1KV"/>
+                        <constraint firstItem="qjS-Bm-Np9" firstAttribute="top" secondItem="q1x-k5-ikR" secondAttribute="bottom" constant="6" id="FH2-Bc-C7D"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" secondItem="q1x-k5-ikR" secondAttribute="width" constant="10" id="P6C-sF-NSZ"/>
+                        <constraint firstAttribute="width" secondItem="qjS-Bm-Np9" secondAttribute="width" constant="10" id="jxk-bI-EJe"/>
+                        <constraint firstAttribute="centerX" secondItem="qjS-Bm-Np9" secondAttribute="centerX" id="mWN-VW-6xh"/>
+                        <constraint firstAttribute="bottom" secondItem="qjS-Bm-Np9" secondAttribute="bottom" constant="5" id="p9H-gR-QbR"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="iEs-wP-faV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" constant="-64" id="13w-Cx-jSa"/>
+                <constraint firstItem="X7q-1V-xky" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" constant="64" id="2KF-il-KtL"/>
+                <constraint firstItem="iEs-wP-faV" firstAttribute="width" secondItem="X7q-1V-xky" secondAttribute="width" id="Gw9-07-3mH"/>
+                <constraint firstAttribute="centerY" secondItem="iEs-wP-faV" secondAttribute="centerY" id="hcp-CJ-olB"/>
+                <constraint firstItem="X7q-1V-xky" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="vZD-s7-FhN"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="_albumButton" destination="q1x-k5-ikR" id="gTj-7X-yXO"/>
+                <outlet property="_cameraButton" destination="4DS-fN-pAU" id="0Ko-jg-qdH"/>
+            </connections>
+        </view>
+    </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

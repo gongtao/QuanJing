@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="109" id="KGk-i7-Jjw" customClass="OWTCommentCell">
+            <rect key="frame" x="0.0" y="0.0" width="586" height="109"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="586" height="108.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mxS-9z-30u" userLabel="Avatar View" customClass="OWTImageView">
+                        <rect key="frame" x="10" y="5" width="36" height="36"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="mxS-9z-30u" secondAttribute="height" multiplier="1:1" id="iUK-1D-rS7"/>
+                            <constraint firstAttribute="width" constant="36" id="jsV-yZ-VAU"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pud-Hm-J6h" userLabel="Username Label">
+                        <rect key="frame" x="51" y="8" width="531" height="17"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="531" translatesAutoresizingMaskIntoConstraints="NO" id="Pen-7T-DJx" userLabel="Content Label">
+                        <rect key="frame" x="51" y="27" width="531" height="73"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="mxS-9z-30u" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="0Dw-TV-LJR"/>
+                    <constraint firstItem="Pud-Hm-J6h" firstAttribute="leading" secondItem="mxS-9z-30u" secondAttribute="trailing" constant="5" id="2i3-Dv-bqs"/>
+                    <constraint firstAttribute="trailing" secondItem="Pud-Hm-J6h" secondAttribute="trailing" constant="4" id="EdS-4E-RGU"/>
+                    <constraint firstAttribute="bottom" secondItem="Pen-7T-DJx" secondAttribute="bottom" constant="8" id="MyE-3A-9ed"/>
+                    <constraint firstAttribute="trailing" secondItem="Pen-7T-DJx" secondAttribute="trailing" constant="4" id="VZQ-sU-3lb"/>
+                    <constraint firstItem="Pud-Hm-J6h" firstAttribute="top" secondItem="mxS-9z-30u" secondAttribute="top" constant="3" id="hFt-mD-gCF"/>
+                    <constraint firstItem="mxS-9z-30u" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="rBv-z2-EUV"/>
+                    <constraint firstItem="Pen-7T-DJx" firstAttribute="leading" secondItem="Pud-Hm-J6h" secondAttribute="leading" id="t5a-d3-2Un"/>
+                    <constraint firstItem="Pen-7T-DJx" firstAttribute="top" secondItem="Pud-Hm-J6h" secondAttribute="bottom" constant="2" id="uIi-Pv-8qe"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="avatarView" destination="mxS-9z-30u" id="zQb-4b-C5t"/>
+                <outlet property="contentLabel" destination="Pen-7T-DJx" id="YIT-9x-Rgn"/>
+                <outlet property="usernameLabel" destination="Pud-Hm-J6h" id="mlM-j0-9Jv"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>
