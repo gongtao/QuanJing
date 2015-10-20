@@ -17,7 +17,7 @@
 		31338AA819B5405600A2EE6E /* OQJSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AA419B5405600A2EE6E /* OQJSearchView.m */; };
 		31338AB419B574FD00A2EE6E /* OWTSocialNavCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AB019B574FD00A2EE6E /* OWTSocialNavCon.m */; };
 		316145EA19B3189200498B91 /* UIImage+ColorExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 316145E919B3189200498B91 /* UIImage+ColorExt.m */; };
-		31C91FCB1BD60E0500DFC3C0 /* QuanJingSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C91FCA1BD60E0500DFC3C0 /* QuanJingSDK.framework */; };
+		31C91FCB1BD60E0500DFC3C0 /* QuanJingSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C91FCA1BD60E0500DFC3C0 /* QuanJingSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		31CB738B19B66E050081B05E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31CB738A19B66E050081B05E /* QuartzCore.framework */; };
 		31CB73BB19B6CDD20081B05E /* OWTAssetViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CB73A919B6CDD20081B05E /* OWTAssetViewCon.m */; };
 		31CB73BC19B6CDD20081B05E /* OWTAssetInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CB73AB19B6CDD20081B05E /* OWTAssetInfoView.m */; };
@@ -5802,8 +5802,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5937,7 +5937,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c0c39a9e-d64b-42e0-b92d-5402cf3a7e66";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 				VALID_ARCHS = "armv7 arm64";
@@ -5958,8 +5958,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6093,7 +6093,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c0c39a9e-d64b-42e0-b92d-5402cf3a7e66";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";

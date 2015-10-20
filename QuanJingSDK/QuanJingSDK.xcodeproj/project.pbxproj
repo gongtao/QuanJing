@@ -51,6 +51,10 @@
 		31C91FC11BD5C96600DFC3C0 /* QJHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FBF1BD5C96600DFC3C0 /* QJHTTPManager.m */; settings = {ASSET_TAGS = (); }; };
 		31C91FC51BD5CBC700DFC3C0 /* QJUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FC31BD5CBC700DFC3C0 /* QJUtils.h */; settings = {ASSET_TAGS = (); }; };
 		31C91FC61BD5CBC700DFC3C0 /* QJUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FC41BD5CBC700DFC3C0 /* QJUtils.m */; settings = {ASSET_TAGS = (); }; };
+		31C91FCF1BD61BE000DFC3C0 /* QJActionObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FCD1BD61BE000DFC3C0 /* QJActionObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		31C91FD01BD61BE000DFC3C0 /* QJActionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FCE1BD61BE000DFC3C0 /* QJActionObject.m */; settings = {ASSET_TAGS = (); }; };
+		31C91FD31BD61C9D00DFC3C0 /* QJCommentObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FD11BD61C9D00DFC3C0 /* QJCommentObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		31C91FD41BD61C9D00DFC3C0 /* QJCommentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FD21BD61C9D00DFC3C0 /* QJCommentObject.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +115,10 @@
 		31C91FBF1BD5C96600DFC3C0 /* QJHTTPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJHTTPManager.m; sourceTree = "<group>"; };
 		31C91FC31BD5CBC700DFC3C0 /* QJUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJUtils.h; sourceTree = "<group>"; };
 		31C91FC41BD5CBC700DFC3C0 /* QJUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJUtils.m; sourceTree = "<group>"; };
+		31C91FCD1BD61BE000DFC3C0 /* QJActionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJActionObject.h; sourceTree = "<group>"; };
+		31C91FCE1BD61BE000DFC3C0 /* QJActionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJActionObject.m; sourceTree = "<group>"; };
+		31C91FD11BD61C9D00DFC3C0 /* QJCommentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJCommentObject.h; sourceTree = "<group>"; };
+		31C91FD21BD61C9D00DFC3C0 /* QJCommentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJCommentObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,6 +232,10 @@
 				31C91FB11BD5123500DFC3C0 /* QJImageObject.m */,
 				31C91FB41BD518F300DFC3C0 /* QJImageCategory.h */,
 				31C91FB51BD518F300DFC3C0 /* QJImageCategory.m */,
+				31C91FD11BD61C9D00DFC3C0 /* QJCommentObject.h */,
+				31C91FD21BD61C9D00DFC3C0 /* QJCommentObject.m */,
+				31C91FCD1BD61BE000DFC3C0 /* QJActionObject.h */,
+				31C91FCE1BD61BE000DFC3C0 /* QJActionObject.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -271,6 +283,8 @@
 				31C91FBA1BD5C61700DFC3C0 /* QJPassport.h in Headers */,
 				31C91FB61BD518F300DFC3C0 /* QJImageCategory.h in Headers */,
 				31C91F991BD4BF4900DFC3C0 /* QJErrorCode.h in Headers */,
+				31C91FD31BD61C9D00DFC3C0 /* QJCommentObject.h in Headers */,
+				31C91FCF1BD61BE000DFC3C0 /* QJActionObject.h in Headers */,
 				31C91FBD1BD5C6B500DFC3C0 /* QJServerConstants.h in Headers */,
 				31C91FA51BD4D5B000DFC3C0 /* UIDevice-Hardware.h in Headers */,
 				31C91FC01BD5C96600DFC3C0 /* QJHTTPManager.h in Headers */,
@@ -390,9 +404,11 @@
 				317642681BD3DA5A000162FB /* QJInterfaceManager.m in Sources */,
 				317642611BD3D96E000162FB /* AFURLSessionManager.m in Sources */,
 				31C91FC11BD5C96600DFC3C0 /* QJHTTPManager.m in Sources */,
+				31C91FD01BD61BE000DFC3C0 /* QJActionObject.m in Sources */,
 				31C91FBB1BD5C61700DFC3C0 /* QJPassport.m in Sources */,
 				31C91F9D1BD4BF6000DFC3C0 /* QJErrorCode.m in Sources */,
 				317642541BD3D96E000162FB /* AFHTTPSessionManager.m in Sources */,
+				31C91FD41BD61C9D00DFC3C0 /* QJCommentObject.m in Sources */,
 				317642591BD3D96E000162FB /* AFSecurityPolicy.m in Sources */,
 				31C91FAF1BD4E83A00DFC3C0 /* QJUser.m in Sources */,
 				317642521BD3D96E000162FB /* AFHTTPRequestOperationManager.m in Sources */,

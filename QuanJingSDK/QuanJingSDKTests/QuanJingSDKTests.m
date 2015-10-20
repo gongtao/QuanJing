@@ -28,6 +28,14 @@
 	[super tearDown];
 }
 
+// 获取缩略图url
+- (void)testThumbnailSizeExample
+{
+	NSString * url = [QJInterfaceManager thumbnailUrlFromImageUrl:@"http://quanjing-test.oss.aliyuncs.com/041/819/0418191be0c4e584005436e1235ffc4a/dd8fac16fece498dabd03625cc5cfa7d.gif" size:CGSizeMake(200.0, 200.0)];
+	
+	NSLog(@"%@", url);
+}
+
 // 发送注册短信
 - (void)testSendRegistSMSExample
 {
@@ -182,6 +190,30 @@
 		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
 			if (error)
 				XCTFail(@"testImageCategoryExample error: %@", error);
+		}];
+	}];
+}
+
+// 圈子
+- (void)testActionListExample
+{
+	// This is an example of a functional test case.
+	// Use XCTAssert and related functions to verify your tests produce the correct results.
+	[self measureBlock:^{
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testActionListExample"];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			[[QJInterfaceManager sharedManager] requestActionList:nil
+			pageSize:20
+			userId:nil
+			finished:^(NSArray * actionArray, NSArray * resultArray, NSNumber * nextCursorIndex, NSError * error) {
+				if (error)
+					XCTFail(@"testActionListExample error: %@", error);
+			}];
+			[expectation fulfill];
+		});
+		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
+			if (error)
+				XCTFail(@"testActionListExample error: %@", error);
 		}];
 	}];
 }

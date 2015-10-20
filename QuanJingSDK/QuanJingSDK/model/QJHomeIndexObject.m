@@ -42,8 +42,17 @@
 		NSArray * array = [linkData componentsSeparatedByString:@":"];
 		
 		if (!QJ_IS_ARRAY_NIL(array) && (array.count == 2)) {
-			self.type = [array firstObject];
-			self.typeValue = [array lastObject];
+			NSString * type = [array firstObject];
+			
+			if ([type isEqualToString:@"http"] ||
+				[type isEqualToString:@"https"]) {
+				self.type = @"url";
+				self.typeValue = linkData;
+			}
+			else {
+				self.type = type;
+				self.typeValue = [array lastObject];
+			}
 		}
 	}
 	
