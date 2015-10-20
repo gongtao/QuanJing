@@ -17,6 +17,7 @@
 		31338AA819B5405600A2EE6E /* OQJSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AA419B5405600A2EE6E /* OQJSearchView.m */; };
 		31338AB419B574FD00A2EE6E /* OWTSocialNavCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AB019B574FD00A2EE6E /* OWTSocialNavCon.m */; };
 		316145EA19B3189200498B91 /* UIImage+ColorExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 316145E919B3189200498B91 /* UIImage+ColorExt.m */; };
+		31C91FCB1BD60E0500DFC3C0 /* QuanJingSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C91FCA1BD60E0500DFC3C0 /* QuanJingSDK.framework */; };
 		31CB738B19B66E050081B05E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31CB738A19B66E050081B05E /* QuartzCore.framework */; };
 		31CB73BB19B6CDD20081B05E /* OWTAssetViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CB73A919B6CDD20081B05E /* OWTAssetViewCon.m */; };
 		31CB73BC19B6CDD20081B05E /* OWTAssetInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CB73AB19B6CDD20081B05E /* OWTAssetInfoView.m */; };
@@ -863,6 +864,7 @@
 		31338AB019B574FD00A2EE6E /* OWTSocialNavCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTSocialNavCon.m; sourceTree = "<group>"; };
 		316145E819B3189200498B91 /* UIImage+ColorExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ColorExt.h"; path = "../../UIImage+ColorExt.h"; sourceTree = "<group>"; };
 		316145E919B3189200498B91 /* UIImage+ColorExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ColorExt.m"; path = "../../UIImage+ColorExt.m"; sourceTree = "<group>"; };
+		31C91FCA1BD60E0500DFC3C0 /* QuanJingSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QuanJingSDK.framework; sourceTree = "<group>"; };
 		31CB738A19B66E050081B05E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		31CB73A819B6CDD20081B05E /* OWTAssetViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTAssetViewCon.h; sourceTree = "<group>"; };
 		31CB73A919B6CDD20081B05E /* OWTAssetViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTAssetViewCon.m; sourceTree = "<group>"; };
@@ -2262,6 +2264,7 @@
 				66A48F831AC544CD00640BA3 /* libxml2.dylib in Frameworks */,
 				A36A0D2F1B68C56F00F720C1 /* libWeChatSDK.a in Frameworks */,
 				66A48F811AC544C400640BA3 /* libxml2.2.dylib in Frameworks */,
+				31C91FCB1BD60E0500DFC3C0 /* QuanJingSDK.framework in Frameworks */,
 				A34ECB311A75E89E009A666C /* AssetsLibrary.framework in Frameworks */,
 				31CB738B19B66E050081B05E /* QuartzCore.framework in Frameworks */,
 				90476A6C19476C0D00B8A607 /* CFNetwork.framework in Frameworks */,
@@ -2617,6 +2620,7 @@
 		9044E3C318CAE4D800784D38 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				31C91FCA1BD60E0500DFC3C0 /* QuanJingSDK.framework */,
 				A38DF6B31BB4E0FC00EFBCA3 /* Fabric.framework */,
 				A38DF6B41BB4E0FC00EFBCA3 /* Crashlytics.framework */,
 				A39AB5731B6B035D009C2A51 /* Sina */,
