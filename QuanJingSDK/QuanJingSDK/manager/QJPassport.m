@@ -126,7 +126,9 @@
 }
 
 // 登录
-- (NSError *)loginUser:(NSString *)userName password:(NSString *)password
+- (void)loginUser:(NSString *)userName
+	password:(NSString *)password
+	finished:(void (^)(NSString * userId, NSString * ticket, NSError * error))finished
 {
 	NSParameterAssert(userName);
 	NSParameterAssert(password);
@@ -158,10 +160,17 @@
 	
 	NSLog(@"%@", operation.request.URL);
 	
-	if (!error)
+	if (!error) {
 		NSLog(@"%@", operation.responseObject);
+		NSDictionary * data = operation.responseObject[@"data"];
 		
-	return error;
+		if (finished)
+			finished(data[@"userId"], data[@"ticket"], error);
+		return;
+	}
+	
+	if (finished)
+		finished(nil, nil, error);
 }
 
 - (BOOL)isLogin

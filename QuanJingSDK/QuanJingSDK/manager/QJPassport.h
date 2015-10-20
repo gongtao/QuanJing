@@ -25,13 +25,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 注册用户
 - (void)registerUser:(NSString *)phoneNumber
-            password:(NSString *)password
-                code:(NSString *)code
-            finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished;
-
+	password:(NSString *)password
+	code:(NSString *)code
+	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished;
+	
 // 登录
-- (NSError *)loginUser:(NSString *)userName password:(NSString *)password;
-
+- (void)loginUser:(NSString *)userName
+	password:(NSString *)password
+	finished:(void (^)(NSString * userId, NSString * ticket, NSError * error))finished;
+	
 // 判断是否登录
 - (BOOL)isLogin;
 
@@ -43,8 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 用户信息修改
 - (void)requestModifyUserInfo:(QJUser *)user
-                     finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished;
-
+	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished;
+	
 @end
 
 NS_ASSUME_NONNULL_END

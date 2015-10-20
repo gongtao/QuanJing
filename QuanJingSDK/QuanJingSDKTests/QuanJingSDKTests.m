@@ -81,11 +81,13 @@
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testUserExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			// Login
-			NSError * error = [[QJPassport sharedPassport] loginUser:@"18600962172" password:@"Gongtao1987"];
+			[[QJPassport sharedPassport] loginUser:@"18600962172"
+			password:@"Gongtao1987"
+			finished:^(NSString * userId, NSString * ticket, NSError * error) {
+				if (error)
+					XCTFail(@"testUserExample error: %@", error);
+			}];
 			
-			if (error)
-				XCTFail(@"testUserExample error: %@", error);
-				
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
 			__block QJUser * modifyUser = nil;
