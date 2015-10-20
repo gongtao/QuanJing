@@ -1,0 +1,1 @@
+PODS_RHREFRESHCONTROL_OTHER_LDFLAGS = -framework CoreGraphics

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>AE07DFB8-3C9B-4E57-9351-96DBB30EAB46</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Weitu</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>3b9f3a5c-f707-5748-beab-2b19efe5c086++3568</key>
+		<string>https://192.168.124.48:8089/svn/quanjing_ios/6.1/quanjing2</string>
+		<key>AC5F5DC5A2442DFA09C79CC6056E650961A70EAE</key>
+		<string>ssh://scm.xv57.com:7999/wtu/ios.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Weitu.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>3b9f3a5c-f707-5748-beab-2b19efe5c086++3568</key>
+		<string>../../quanjing2</string>
+		<key>AC5F5DC5A2442DFA09C79CC6056E650961A70EAE</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>3b9f3a5c-f707-5748-beab-2b19efe5c086++3568</key>
+		<string>https://192.168.124.48:8089/svn/quanjing_ios</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://scm.xv57.com:7999/wtu/ios.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>AC5F5DC5A2442DFA09C79CC6056E650961A70EAE</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>AC5F5DC5A2442DFA09C79CC6056E650961A70EAE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>iOS</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>3b9f3a5c-f707-5748-beab-2b19efe5c086++3568</string>
+			<key>IDESourceControlWCCName</key>
+			<string>quanjing2</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,1 @@
+../../NBUImagePicker/Source/Camera/NBUCamera.h
