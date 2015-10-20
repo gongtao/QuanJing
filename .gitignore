@@ -36,6 +36,8 @@ xcuserdata
 
 DerivedData/
 
+!*.bundle
+
 !default.pbxuser
 
 !default.mode1v3

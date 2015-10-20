@@ -83,7 +83,7 @@
 			// Login
 			[[QJPassport sharedPassport] loginUser:@"18600962172"
 			password:@"Gongtao1987"
-			finished:^(NSString * userId, NSString * ticket, NSError * error) {
+			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testUserExample error: %@", error);
 			}];

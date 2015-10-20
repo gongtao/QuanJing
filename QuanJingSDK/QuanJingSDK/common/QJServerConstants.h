@@ -38,4 +38,7 @@ static NSString * const kQJSearchPath = @"/search";
 // 图片分类
 static NSString * const kQJImageCategoryPath = @"/imageCategory/root";
 
+// 圈子列表
+static NSString * const kQJActionListPath = @"/imageCategory/root";
+
 #endif	/* QJServerConstants_h */

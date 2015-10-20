@@ -128,7 +128,7 @@
 // 登录
 - (void)loginUser:(NSString *)userName
 	password:(NSString *)password
-	finished:(void (^)(NSString * userId, NSString * ticket, NSError * error))finished
+	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished
 {
 	NSParameterAssert(userName);
 	NSParameterAssert(password);
@@ -163,14 +163,15 @@
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
 		NSDictionary * data = operation.responseObject[@"data"];
+		NSNumber * userId = data[@"userId"];
 		
 		if (finished)
-			finished(data[@"userId"], data[@"ticket"], error);
+			finished(userId.integerValue, data[@"ticket"], error);
 		return;
 	}
 	
 	if (finished)
-		finished(nil, nil, error);
+		finished(0, nil, error);
 }
 
 - (BOOL)isLogin
