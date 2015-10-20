@@ -110,16 +110,20 @@
 	
 	do {
 		error = nil;
+		NSLog(@"homeIndex begin");
 		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
 		operation = [self.httpRequestManager GET:kQJHomeIndexPath
 			parameters:nil
 			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			NSLog(@"homeIndex success");
 			dispatch_semaphore_signal(sem);
 		}
 			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			NSLog(@"homeIndex fail");
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		NSLog(@"homeIndex end");
 		error = [QJUtils errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
@@ -238,7 +242,9 @@
 		finished(nil, nil, error);
 }
 
-- (NSArray *)resultDicFromActionListResponseData:(nullable NSArray *)data
+// - (NSArray *)resultDicFromActionListResponseData:(nullable NSArray *)data {
+//
+// }
 
 // 圈子列表
 - (void)requestActionList:(nullable NSNumber *)cursorIndex
@@ -282,20 +288,21 @@
 	
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
-        NSArray * dataArray = operation.responseObject[@"data"];
+		NSArray * dataArray = operation.responseObject[@"data"];
 		
-        __block NSNumber *nextCursorIndex = nil;
-        __block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
-        [dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-            QJActionObject *actionObject = [[QJActionObject alloc] initWithJson:obj];
-            [resultArray addObject:actionObject];
-            if (idx == dataArray.count - 1) {
-                NSNumber *creatTime = obj[@"creatTime"];
-                if (!QJ_IS_NUM_NIL(creatTime)) {
-                    nextCursorIndex = creatTime;
-                }
-            }
-        }];
+		__block NSNumber * nextCursorIndex = nil;
+		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+			QJActionObject * actionObject = [[QJActionObject alloc] initWithJson:obj];
+			[resultArray addObject:actionObject];
+			
+			if (idx == dataArray.count - 1) {
+				NSNumber * creatTime = obj[@"creatTime"];
+				
+				if (!QJ_IS_NUM_NIL(creatTime))
+					nextCursorIndex = creatTime;
+			}
+		}];
 		
 		if (finished)
 			finished(resultArray, dataArray, nextCursorIndex, error);

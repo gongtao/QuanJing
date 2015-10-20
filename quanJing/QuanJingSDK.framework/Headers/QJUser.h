@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QJUser : NSObject
 
+@property (nonatomic, strong) NSNumber * uid;
+
 @property (nonatomic, strong, nullable) NSString * age;
 
 @property (nonatomic, strong, nullable) NSString * avatar;
@@ -31,8 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSNumber * gender;
 
 @property (nonatomic, strong, nullable) NSString * goodAt;
-
-@property (nonatomic, strong) NSNumber * uid;
 
 @property (nonatomic, strong, nullable) NSString * interest;
 
@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSNumber * uploadAmount;
 
-@property (nonatomic, strong) NSString * userName;
+@property (nonatomic, strong, nullable) NSString * userName;
 
 @property (nonatomic, strong, nullable) NSString * website;
 

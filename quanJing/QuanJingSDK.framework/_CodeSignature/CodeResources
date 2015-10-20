@@ -4,6 +4,14 @@
 <dict>
 	<key>files</key>
 	<dict>
+		<key>Headers/QJActionObject.h</key>
+		<data>
+		Nn1Cf+E2G6t2wveIzR5Zm7G5qKw=
+		</data>
+		<key>Headers/QJCommentObject.h</key>
+		<data>
+		FpVL5O6FKi1ze0lYcTxk21gi8ek=
+		</data>
 		<key>Headers/QJErrorCode.h</key>
 		<data>
 		UKVojLmScOUi8i6dESeb721Mtt0=
@@ -22,7 +30,7 @@
 		</data>
 		<key>Headers/QJInterfaceManager.h</key>
 		<data>
-		ZFoi4gVCBtMfqbwcCuD6nizNkTA=
+		JCw1WjuqFKR+1+el74P55JsMHsc=
 		</data>
 		<key>Headers/QJPassport.h</key>
 		<data>
@@ -30,11 +38,11 @@
 		</data>
 		<key>Headers/QJUser.h</key>
 		<data>
-		PKt66SMeVp/NUwZZZisCzzxQiC8=
+		Fk/oXd/gWi1e6r5CxKVjmVWthbE=
 		</data>
 		<key>Headers/QuanJingSDK.h</key>
 		<data>
-		mdqIwRz4KGUf/YTnHs0xkpRgAu0=
+		E1wKXMdAZ5KijNpio1WSY9p4c6s=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -47,6 +55,14 @@
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>Headers/QJActionObject.h</key>
+		<data>
+		Nn1Cf+E2G6t2wveIzR5Zm7G5qKw=
+		</data>
+		<key>Headers/QJCommentObject.h</key>
+		<data>
+		FpVL5O6FKi1ze0lYcTxk21gi8ek=
+		</data>
 		<key>Headers/QJErrorCode.h</key>
 		<data>
 		UKVojLmScOUi8i6dESeb721Mtt0=
@@ -65,7 +81,7 @@
 		</data>
 		<key>Headers/QJInterfaceManager.h</key>
 		<data>
-		ZFoi4gVCBtMfqbwcCuD6nizNkTA=
+		JCw1WjuqFKR+1+el74P55JsMHsc=
 		</data>
 		<key>Headers/QJPassport.h</key>
 		<data>
@@ -73,11 +89,11 @@
 		</data>
 		<key>Headers/QJUser.h</key>
 		<data>
-		PKt66SMeVp/NUwZZZisCzzxQiC8=
+		Fk/oXd/gWi1e6r5CxKVjmVWthbE=
 		</data>
 		<key>Headers/QuanJingSDK.h</key>
 		<data>
-		mdqIwRz4KGUf/YTnHs0xkpRgAu0=
+		E1wKXMdAZ5KijNpio1WSY9p4c6s=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
