@@ -58,6 +58,7 @@
 #import "RESideMenu.h"
 #import "OWTUserViewCon.h"
 #import "OQJSearchPageVC.h"
+#import <QuanJingSDK/QuanJingSDK.h>
 #define IS_WIDESCREEN ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 @interface LJHomeViewCon ()<JCTopicDelegate,UISearchBarDelegate>
 @property (nonatomic, strong) JCTopic* Topic;
@@ -113,7 +114,7 @@
     [self setUpTableView];
     [self setUpOtherView];
     [self setUpHeaderView];
-//    [self getTopicData];
+
     [self setupNavMenu];
 
    }
@@ -128,18 +129,7 @@
     _biaoqianData=[[NSMutableData alloc]init];
     _biaoqianClickArr=[[NSMutableArray alloc]init];
     OWTCategoryManagerlife* cm = GetCategoryManagerlife();
-    [cm getResouceData:^{
-        [self reloadData];
-    }];
-}
--(void)reloadData
-{
-    [_categaryBeautiful removeAllObjects];
-//    [_categaryLife removeAllObjects];
-    [_categaryBeautiful addObjectsFromArray:GetCategoryManagerlife().categories];
-//    [_categaryLife addObjectsFromArray:GetCategoryManagerlife().cateBeautityful];
-    [self reloadImageViewImage];
-    [_tableView reloadData];
+    
 }
 
 #pragma mark setUpAllView
@@ -237,18 +227,7 @@
     _tableView.delegate=self;
     _tableView.dataSource=self;
     [self.view addSubview:_tableView];
-    NSString *homeDictionary = NSHomeDirectory();//获取根目录
-    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/biaoqian.archiver"];//添加储存的文件名
-    NSArray *Arr=[NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
-    if (Arr.count>0) {
-    for (NSDictionary*appdict in Arr) {
-        NSString *str =[appdict objectForKey:@"ImgUrl"];
-        [_categaryLife addObject:[NSDictionary dictionaryWithObjects:@[str,@" ",@NO] forKeys:@[@"pic",@"title",@"isLoc"]]];
-        [_biaoqianClickArr addObject:appdict];
-    }
-        [_tableView reloadData];
-    }
-    [_tableView addHeaderWithTarget:self action:@selector(getTopicData) dateKey:@"table"];
+    [_tableView addHeaderWithTarget:self action:@selector(getAllData) dateKey:@"table"];
     [_tableView headerBeginRefreshing];
     
     // 2.上拉加载更多(进入刷新状态就会调用self的footerRereshing)
@@ -356,33 +335,21 @@
     _Topic.JCdelegate = self;
     _Topic.progress = _progress;
     _Topic.page = _page;
-    NSMutableArray * tempArray = [[NSMutableArray alloc]init];
-    NSString *homeDictionary = NSHomeDirectory();//获取根目录
-    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/topicArticle.archiver"];//添加储存的文件名
-    NSArray *Arr=[NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
-    if (Arr==nil) {
-        return;
+       //加入数据 轮播图URL地址
+    if (_showArr.count>0) {
+        NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+        [_showArr enumerateObjectsUsingBlock:^(QJHomeIndexObject * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *str =obj.imageUrl;
+            NSString *str1=obj.title;
+            [tempArray addObject:[NSDictionary dictionaryWithObjects:@[str,str1,@NO] forKeys:@[@"pic",@"title",@"isLoc"]]];
+        }];
+        _Topic.pics = tempArray;
+        _Topic.ifHomePage = YES;
+        
+        [_Topic upDate];
+        _page.numberOfPages = tempArray.count;//指定页面个数
+
     }
-    for (NSDictionary*appdict in Arr) {
-        
-        
-        NSString *str =[appdict objectForKey:@"HCoverUrl"];
-        NSString *str1=[appdict objectForKey:@"Url"];
-        [tempArray addObject:[NSDictionary dictionaryWithObjects:@[str,str1,@NO] forKeys:@[@"pic",@"title",@"isLoc"]]];
-        
-        
-        [_showArr addObject:appdict];
-        
-    }
-    //加入数据 轮播图URL地址
-    _Topic.pics = tempArray;
-    _Topic.picsDic = Arr;
-    _Topic.ifHomePage = YES;
-    
-    NSLog(@"tempArray: %@",tempArray);
-    //更新
-    [_Topic upDate];
-    _page.numberOfPages = tempArray.count;//指定页面个数
 }
 -(void)SetUpsearchView
 {
@@ -529,102 +496,37 @@
     _searchBar.text = @"";
     
 }
-#pragma mark reloadData
-- (void)refreshFeed1
-{
-    OWTCategoryManagerlife* cm = GetCategoryManagerlife();
-    [cm refreshCategoriesWithSuccess:^{
-        [self reloadData];
-        [_tableView headerEndRefreshing];
-    }
-                             failure:^(NSError* error) {
-                                 [_tableView headerEndRefreshing];
-                                 [SVProgressHUD showErrorWithStatus:@"网络连接失败，请稍后重试！"];
-
-                                    if (![NetStatusMonitor isExistenceNetwork]) {
-                                     [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-                                     return;
-                                 }
-                                 
-                             }];
-    
-    
-}
 
 #pragma mark getData
--(void)getTopicData
+-(void)getAllData
 {
-    NSURL *url = [NSURL URLWithString:@"http://api.tiankong.com/qjapi/cdn1/articleHome"];
-    NSURLRequest *request =[NSURLRequest requestWithURL:url];
-    
-    _connection1=[NSURLConnection connectionWithRequest:request delegate:self];
-    NSURL *url1= [NSURL URLWithString:@"http://api.tiankong.com/qjapi/cdn2/homehottag"];
-    NSURLRequest *request1 =[NSURLRequest requestWithURL:url1];
-    
-
-    _connection=[NSURLConnection connectionWithRequest:request1 delegate:self];
-    [self refreshFeed1];
-}
--(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    if (connection==_connection) {
-        [_biaoqianData setLength:0];
-    }else if(connection==_connection1){
-        [_topData setLength:0];}
-}
--(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    if (_connection==connection) {
-        [_biaoqianData appendData:data];
-    }else if(_connection1==connection){
-        [_topData appendData:data];
-    }
-}
--(void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    if (connection==_connection) {
-        [_categaryLife removeAllObjects];
-        [_biaoqianClickArr removeAllObjects];
-        NSArray *Arr =[NSJSONSerialization JSONObjectWithData:_biaoqianData options:NSJSONReadingMutableLeaves error:nil];
-        NSString *homeDictionary = NSHomeDirectory();//获取根目录
-        NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/biaoqian.archiver"];
-        BOOL ret=[NSKeyedArchiver archiveRootObject:Arr toFile:homePath];
-        for (NSDictionary*appdict in Arr) {
-            
-            
-            NSString *str =[appdict objectForKey:@"ImgUrl"];
-            [_categaryLife addObject:[NSDictionary dictionaryWithObjects:@[str,@" ",@NO] forKeys:@[@"pic",@"title",@"isLoc"]]];
-            [_biaoqianClickArr addObject:appdict];
-        }
-        [_tableView reloadData];
-    }else if(_connection1==connection){
-    NSMutableArray * tempArray = [[NSMutableArray alloc]init];
-    NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:_topData options:NSJSONReadingMutableLeaves error:nil];
-    NSArray *Arr=dict[@"article"];
-        if (Arr.count==0) {
-            return;
-        }
-    NSString *homeDictionary = NSHomeDirectory();//获取根目录
-    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/topicArticle.archiver"];
-    BOOL ret=[NSKeyedArchiver archiveRootObject:Arr toFile:homePath];
-    for (NSDictionary*appdict in Arr) {
-        
-        
-        NSString *str =[appdict objectForKey:@"HCoverUrl"];
-        NSString *str1=[appdict objectForKey:@"Url"];
-        [tempArray addObject:[NSDictionary dictionaryWithObjects:@[str,str1,@NO] forKeys:@[@"pic",@"title",@"isLoc"]]];
-        
-        
-        [_showArr addObject:appdict];
-        
-    }
-    //加入数据 轮播图URL地址
-    _Topic.pics = tempArray;
-    _Topic.picsDic = Arr;
-    _Topic.ifHomePage = YES;
-    [_Topic upDate];
-        _page.numberOfPages = tempArray.count;
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+        [fm requestHomeIndex:^(NSDictionary * _Nonnull homeIndexDic, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            NSString *homeDictionary = NSHomeDirectory();//获取根目录
+            NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/homeIndex.archiver"];
+            BOOL ret=[NSKeyedArchiver archiveRootObject:homeIndexDic toFile:homePath];
+            [_categaryBeautiful removeAllObjects];
+            [_biaoqianClickArr removeAllObjects];
+            [_showArr removeAllObjects];
+            [_categaryBeautiful addObjectsFromArray:homeIndexDic[@"mhrs"]];
+            [_biaoqianClickArr addObjectsFromArray:homeIndexDic[@"shzm"]];
+            [_showArr addObjectsFromArray:homeIndexDic[@"lbt"]];
+            NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+            [_showArr enumerateObjectsUsingBlock:^(QJHomeIndexObject * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSString *str =obj.imageUrl;
+                NSString *str1=obj.title;
+                [tempArray addObject:[NSDictionary dictionaryWithObjects:@[str,str1,@NO] forKeys:@[@"pic",@"title",@"isLoc"]]];
+            }];
+            _Topic.pics = tempArray;
+            _Topic.ifHomePage = YES;
+            [_Topic upDate];
+            _page.numberOfPages = tempArray.count;
+            [_tableView reloadData];
+            [_tableView headerEndRefreshing];
+        }];
+ 
+    });
 }
 #pragma mark tapAndButton
 -(void)onSearchTap
@@ -673,12 +575,12 @@
     [self.view setHidden:YES];
      NSInteger selectTag = sender.view.tag-100;
 
-    OWTCategory *category = _categaryBeautiful[selectTag];
-    BOOL isSearch = [category.type isEqualToString:@"search"];
+    QJHomeIndexObject *model = _categaryBeautiful[selectTag];
+    BOOL isSearch = [model.type isEqualToString:@"search"];
     //旅游的跳转页面
     if (selectTag == lvyou) {
         if (isSearch ) {
-            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:category.searchWords];
+            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
             jumpserach.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:jumpserach animated:NO];
             return;
@@ -692,7 +594,7 @@
     
     if (selectTag == jiaju) {
         if (isSearch ) {
-            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:category.searchWords];
+            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
             jumpserach.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:jumpserach animated:NO];
             return;
@@ -706,7 +608,7 @@
     }
     if (selectTag == qiche) {
         if (isSearch ) {
-            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:category.searchWords];
+            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
             jumpserach.hidesBottomBarWhenPushed = YES;
 
             [self.navigationController pushViewController:jumpserach animated:NO];
@@ -721,7 +623,7 @@
     }
     if (selectTag == meishi) {
         if (isSearch ) {
-            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:category.searchWords];
+            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
             jumpserach.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:jumpserach animated:NO];
             return;
@@ -735,7 +637,7 @@
     }
     if (selectTag == shishang) {
         if (isSearch ) {
-            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:category.searchWords];
+            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
             jumpserach.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:jumpserach animated:NO];
             return;
@@ -750,7 +652,7 @@
     
     if (selectTag == baike) {
         if (isSearch ) {
-            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:category.searchWords];
+            OQJSearchPageVC *jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
             jumpserach.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:jumpserach animated:NO];
             return;
@@ -780,15 +682,15 @@
         return;
     }
     [_tabBarHider hideTabBar];
-    NSDictionary *jdic = _showArr[self.page.currentPage];
+    QJHomeIndexObject *model = _showArr[self.page.currentPage];
     WLJWebViewController *evc = [[WLJWebViewController alloc]init];
     
     //
-    evc.SummaryStr =jdic[@"Summary"];
+    evc.SummaryStr =model.detailText;
     //    //
-    evc.titleS=jdic[@"Caption"];
-    evc.urlString =jdic[@"Url"];
-    evc.assetUrl =jdic[@"CoverUrl"];
+    evc.titleS=model.title;
+    evc.urlString =model.typeValue;
+    evc.assetUrl =model.imageUrl;
     [self.navigationController pushViewController:evc animated:YES];
     [evc substituteNavigationBarBackItem];
 
@@ -816,8 +718,8 @@
         cell=[[LJHomeVIewCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];;
-    NSDictionary *dict=_categaryLife[indexPath.row];
-    [cell setImageWithUrl:dict[@"pic"]];
+    QJHomeIndexObject *model=_categaryLife[indexPath.row];
+    [cell setImageWithUrl:model.imageUrl];
     return cell;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -836,9 +738,10 @@
         return;
     }
     [_tabBarHider hideTabBar];
+    QJHomeIndexObject *model=_biaoqianClickArr[indexPath.row];
     NSDictionary *jdic = _biaoqianClickArr[indexPath.row];
-    NSString *Type = [jdic objectForKey:@"Type"];
-    NSString *searchValue = [jdic objectForKey:@"Value"];
+    NSString *Type = model.type;
+    NSString *searchValue = model.typeValue;
     NSLog(@"searchValue  %@",searchValue);
     if([Type isEqualToString:@"search"]){
         _keyword =searchValue;

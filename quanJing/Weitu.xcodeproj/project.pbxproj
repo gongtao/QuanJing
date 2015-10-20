@@ -337,7 +337,6 @@
 		A38F4D641A649C1F00FD1912 /* XHRefreshCircleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A38F4D5D1A649C1E00FD1912 /* XHRefreshCircleContainerView.m */; };
 		A38F4D651A649C1F00FD1912 /* XHRefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = A38F4D5F1A649C1F00FD1912 /* XHRefreshControl.m */; };
 		A38F4D681A649F7D00FD1912 /* XHLoadMoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = A38F4D671A649F7D00FD1912 /* XHLoadMoreView.m */; };
-		A38F4D7A1A64A98100FD1912 /* MJRefresh.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A38F4D6A1A64A98100FD1912 /* MJRefresh.bundle */; };
 		A38F4D7B1A64A98100FD1912 /* MJRefreshBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = A38F4D6D1A64A98100FD1912 /* MJRefreshBaseView.m */; };
 		A38F4D7C1A64A98100FD1912 /* MJRefreshConst.m in Sources */ = {isa = PBXBuildFile; fileRef = A38F4D6F1A64A98100FD1912 /* MJRefreshConst.m */; };
 		A38F4D7D1A64A98100FD1912 /* MJRefreshFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = A38F4D711A64A98100FD1912 /* MJRefreshFooterView.m */; };
@@ -380,6 +379,7 @@
 		A3B1A63C1BA94CB60044B645 /* 主页01.png in Resources */ = {isa = PBXBuildFile; fileRef = A3B1A6341BA94CB60044B645 /* 主页01.png */; };
 		A3B1A6431BA950D10044B645 /* LJExploreViewController1.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B1A6421BA950D10044B645 /* LJExploreViewController1.m */; };
 		A3B1A6461BA95E5F0044B645 /* LJExploreViewCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B1A6451BA95E5F0044B645 /* LJExploreViewCellTableViewCell.m */; };
+		A3B4BF271BD6330D003E4506 /* MJRefresh.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A3B4BF261BD6330D003E4506 /* MJRefresh.bundle */; settings = {ASSET_TAGS = (); }; };
 		A3B7297A1BB2898B001D1C7D /* AlbumPhotosListView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B729791BB2898B001D1C7D /* AlbumPhotosListView.m */; };
 		A3B7297F1BB28A40001D1C7D /* LJHomeViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B7297E1BB28A40001D1C7D /* LJHomeViewCon.m */; };
 		A3B729811BB28B0F001D1C7D /* OWTAssetEditViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B729801BB28B0F001D1C7D /* OWTAssetEditViewCon.m */; };
@@ -1439,7 +1439,6 @@
 		A38F4D601A649C1F00FD1912 /* XHRefreshControlHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHRefreshControlHeader.h; sourceTree = "<group>"; };
 		A38F4D661A649F7D00FD1912 /* XHLoadMoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHLoadMoreView.h; sourceTree = "<group>"; };
 		A38F4D671A649F7D00FD1912 /* XHLoadMoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHLoadMoreView.m; sourceTree = "<group>"; };
-		A38F4D6A1A64A98100FD1912 /* MJRefresh.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MJRefresh.bundle; sourceTree = "<group>"; };
 		A38F4D6B1A64A98100FD1912 /* MJRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJRefresh.h; sourceTree = "<group>"; };
 		A38F4D6C1A64A98100FD1912 /* MJRefreshBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJRefreshBaseView.h; sourceTree = "<group>"; };
 		A38F4D6D1A64A98100FD1912 /* MJRefreshBaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJRefreshBaseView.m; sourceTree = "<group>"; };
@@ -1498,6 +1497,7 @@
 		A3B1A6421BA950D10044B645 /* LJExploreViewController1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJExploreViewController1.m; sourceTree = "<group>"; };
 		A3B1A6441BA95E5F0044B645 /* LJExploreViewCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJExploreViewCellTableViewCell.h; sourceTree = "<group>"; };
 		A3B1A6451BA95E5F0044B645 /* LJExploreViewCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJExploreViewCellTableViewCell.m; sourceTree = "<group>"; };
+		A3B4BF261BD6330D003E4506 /* MJRefresh.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MJRefresh.bundle; sourceTree = "<group>"; };
 		A3B729791BB2898B001D1C7D /* AlbumPhotosListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumPhotosListView.m; sourceTree = "<group>"; };
 		A3B7297B1BB289BF001D1C7D /* OWTAssetEditViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTAssetEditViewCon.h; sourceTree = "<group>"; };
 		A3B7297E1BB28A40001D1C7D /* LJHomeViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJHomeViewCon.m; sourceTree = "<group>"; };
@@ -3484,7 +3484,7 @@
 		A38F4D691A64A98100FD1912 /* MJRefresh */ = {
 			isa = PBXGroup;
 			children = (
-				A38F4D6A1A64A98100FD1912 /* MJRefresh.bundle */,
+				A3B4BF261BD6330D003E4506 /* MJRefresh.bundle */,
 				A38F4D6B1A64A98100FD1912 /* MJRefresh.h */,
 				A38F4D6C1A64A98100FD1912 /* MJRefreshBaseView.h */,
 				A38F4D6D1A64A98100FD1912 /* MJRefreshBaseView.m */,
@@ -4768,7 +4768,7 @@
 				ORGANIZATIONNAME = "SparkingSoft Co., Ltd";
 				TargetAttributes = {
 					9044E3C018CAE4D800784D38 = {
-						DevelopmentTeam = T3BNK5WMQ7;
+						DevelopmentTeam = B6DQ38AV7Y;
 						SystemCapabilities = {
 							com.apple.iCloud = {
 								enabled = 0;
@@ -5025,7 +5025,6 @@
 				66A4FA461AA94D8F006F6547 /* 照片管理2_05(2).png in Resources */,
 				E01391651B0C3EA500051B78 /* chat_video_play.png in Resources */,
 				E01391471B0C3EA500051B78 /* VoiceSearchFeedback019.png in Resources */,
-				A38F4D7A1A64A98100FD1912 /* MJRefresh.bundle in Resources */,
 				E013916F1B0C3EA500051B78 /* group_participant_addHL@2x.png in Resources */,
 				E01391351B0C3EA500051B78 /* VoiceSearchFeedback010.png in Resources */,
 				A3DB10C31BABAD690033522F /* 关注00.png in Resources */,
@@ -5051,6 +5050,7 @@
 				E013913C1B0C3EA500051B78 /* VoiceSearchFeedback013@2x.png in Resources */,
 				E013913E1B0C3EA500051B78 /* VoiceSearchFeedback014@2x.png in Resources */,
 				A3831C961BB2C21100A25AFF /* 赞小标@2x.png in Resources */,
+				A3B4BF271BD6330D003E4506 /* MJRefresh.bundle in Resources */,
 				66DF9B8D1A5B790B0085C51A /* 广场3_05.png in Resources */,
 				A3EFF8531B8468F000DC6255 /* LJClassTableViewCell.xib in Resources */,
 				E01391841B0C3EA500051B78 /* chatBar_recordBg.png in Resources */,
