@@ -76,9 +76,13 @@
     NSPredicate *predicate=[NSPredicate predicateWithFormat:@"imageUrl like %@",imageUrl];
     [fetchRequest setPredicate:predicate];
     NSArray *result=[_managedObjectContext executeFetchRequest:fetchRequest error:nil];
+    NSLog(@"%lu",(unsigned long)result.count);
     if (result.count==0) {
         return nil;
     }else{
+        if (![_resource isKindOfClass:[NSMutableArray class]]||_resource.count==0) {
+            return nil;
+        }
     [_resource removeAllObjects];
     [_resource addObjectsFromArray:result];
         if (result.count>1) {

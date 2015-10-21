@@ -5,24 +5,24 @@
 	<key>BuildEnvironment</key>
 	<dict>
 		<key>BuildDate</key>
-		<string>Tue Oct 20 20:37:40 CST 2015</string>
+		<string>Wed Oct 21 10:39:40 CST 2015</string>
 		<key>BuildMachine</key>
 		<dict>
 			<key>Hostname</key>
 			<string>bogon</string>
 			<key>Model</key>
-			<string>MacBookPro11,4</string>
+			<string>MacBookPro11,2</string>
 			<key>Name</key>
-			<string>QJ的MacBook Pro</string>
+			<string>qj-app的MacBook Pro</string>
 			<key>UUID</key>
-			<string>017D89E3-E0C1-55B1-9BF6-1DC7FFFA1AEB</string>
+			<string>E716967A-D654-5265-91CE-F1AA1C52A08A</string>
 		</dict>
 		<key>BuildUser</key>
-		<string>QJ (qj)</string>
+		<string>qj-app (qj-app)</string>
 		<key>GitRef</key>
-		<string>7d29bb053ed1417b8c19ac1fa2416fa37899158b</string>
+		<string>eb9af1df7b943e423683209e4fa0ced7c5695432</string>
 		<key>GitUser</key>
-		<string>gongtao (gongtao@quanjing.com)</string>
+		<string>MrL (243971673@qq.com)</string>
 	</dict>
 </dict>
 </plist>

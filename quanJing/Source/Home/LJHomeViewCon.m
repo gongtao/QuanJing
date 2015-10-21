@@ -77,14 +77,11 @@
 {
 	UITableView * _tableView;
 	NSMutableArray * _showArr;
-	NSMutableData * _topData;
-	NSMutableData * _biaoqianData;
 	MBProgressHUD * _progress;
 	UIView * _view;
 	UISearchBar * _searchBar;
 	UITapGestureRecognizer * _tap;
 	NSMutableArray * _categaryBeautiful;
-	NSMutableArray * _categaryLife;
 	OWTTabBarHider * _tabBarHider;
 	REMenu * _feedMenu;
 	NSMutableArray * _customViews;
@@ -125,15 +122,25 @@
 {
 	_keyword = [[NSString alloc]init];
 	_tabBarHider = [[OWTTabBarHider alloc]init];
-	_topData = [[NSMutableData alloc]init];
 	_showArr = [[NSMutableArray alloc]init];
 	_categaryBeautiful = [[NSMutableArray alloc]init];
-	_categaryLife = [[NSMutableArray alloc]init];
-	_biaoqianData = [[NSMutableData alloc]init];
 	_biaoqianClickArr = [[NSMutableArray alloc]init];
-	OWTCategoryManagerlife * cm = GetCategoryManagerlife();
+    [self getThePreserveData];
 }
-
+-(void)getThePreserveData
+{
+    NSString * homeDictionary = NSHomeDirectory();	// 获取根目录
+    NSString * homePath = [homeDictionary stringByAppendingString:@"/Documents/homeIndex.archiver"];
+    NSDictionary * homeIndexDic=[NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    if (homeIndexDic!=nil) {
+        [_categaryBeautiful removeAllObjects];
+        [_biaoqianClickArr removeAllObjects];
+        [_showArr removeAllObjects];
+        [_categaryBeautiful addObjectsFromArray:homeIndexDic[@"mhrs"]];
+        [_biaoqianClickArr addObjectsFromArray:homeIndexDic[@"shzm"]];
+        [_showArr addObjectsFromArray:homeIndexDic[@"lbt"]];
+    }
+}
 #pragma mark setUpAllView
 - (void)setUpNavigation
 {
@@ -269,22 +276,21 @@
 		UIImageView * imageView;
 		
 		UILabel * label;
-		OWTCategory * category;
+        QJHomeIndexObject *model;
 		
 		if (_categaryBeautiful.count > 0)
-			category = _categaryBeautiful[i];
-		OWTImageInfo * imageInfo = category.coverImageInfo;
-		
+        model=_categaryBeautiful[i];
+        NSString *imageUrl=[QJInterfaceManager thumbnailUrlFromImageUrl:model.imageUrl size:CGSizeMake(imageWit, imageWit-2)];
 		if (i < 3) {
 			imageView = [LJUIController createImageViewWithFrame:CGRectMake(10 + i % 3 * (imageWit + 5), 230, imageWit, imageWit - 2) imageName:nil];
-			[imageView setImageWithURL:[NSURL URLWithString:imageInfo.url]];
-			label = [LJUIController createLabelWithFrame:CGRectMake(0, 0, 40, 20) Font:14 Text:(category.categoryName == nil ? arr[i] : category.categoryName)];
+			[imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
+			label = [LJUIController createLabelWithFrame:CGRectMake(0, 0, 40, 20) Font:14 Text:(model.title == nil ? arr[i] : model.title)];
 			label.center = CGPointMake(10 + i % 3 * (imageWit + 5) + imageWit / 2, 260 + imageWit + 15 - 30 - 5 - 2);
 		}
 		else {
 			imageView = [LJUIController createImageViewWithFrame:CGRectMake(6 + i % 3 * (imageWit + 6), 230 + imageWit + 35 - 10 - 3 - 2, imageWit, imageWit - 2) imageName:nil];
-			[imageView setImageWithURL:[NSURL URLWithString:imageInfo.url]];
-			label = [LJUIController createLabelWithFrame:CGRectMake(0, 0, 40, 20) Font:14 Text:(category.categoryName == nil ? arr[i] : category.categoryName)];
+			[imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
+			label = [LJUIController createLabelWithFrame:CGRectMake(0, 0, 40, 20) Font:14 Text:(model.title == nil ? arr[i] : model.title)];
 			CGFloat x = 240 + imageWit * 2 + 30 + 12;
 			label.center = CGPointMake(10 + i % 3 * (imageWit + 5) + imageWit / 2, 260 + imageWit * 2 + 35 + 15 - 30 - 10 - 3 - 4 - 2);
 		}
@@ -295,7 +301,6 @@
 		//        label.font=[UIFont fontWithName:@"冬青黑体" size:12];
 		[_view addSubview:label];
 	}
-	
 	UIImageView * grayImage = [LJUIController createImageViewWithFrame:CGRectMake(0, 260 + imageWit * 2 + 70 - 30 - 10 - 3 - 4 - 2, SCREENWIT, 10) imageName:nil];
 	grayImage.backgroundColor = [UIColor colorWithHexString:@"#f6f6f6"];
 	[_view addSubview:grayImage];
@@ -307,15 +312,14 @@
 {
 	for (UIView * view in _view.subviews)
 		for (NSInteger i = 0; i < 6; i++) {
-			OWTCategory * category;
+            QJHomeIndexObject *model;
 			
 			if (_categaryBeautiful.count > 0)
-				category = _categaryBeautiful[i];
-			OWTImageInfo * imageInfo = category.coverImageInfo;
-			
+                model=_categaryBeautiful[i];
 			if (view.tag == i + 100) {
 				UIImageView * imageView = (UIImageView *)view;
-				[imageView setImageWithURL:[NSURL URLWithString:imageInfo.url]];
+             NSString *imageUrl=[QJInterfaceManager thumbnailUrlFromImageUrl:model.imageUrl size:CGSizeMake((SCREENWIT - 30) / 3, (SCREENWIT - 30) / 3-2)];
+				[imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
 			}
 		}
 		
@@ -521,10 +525,13 @@
 			}];
 			_Topic.pics = tempArray;
 			_Topic.ifHomePage = YES;
-			[_Topic upDate];
 			_page.numberOfPages = tempArray.count;
-			[_tableView reloadData];
-			[_tableView headerEndRefreshing];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_Topic upDate];
+                [self reloadImageViewImage];
+                [_tableView reloadData];
+            });
+            [_tableView headerEndRefreshing];
 		}];
 	});
 }
@@ -705,7 +712,7 @@
 #pragma mark tableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return _categaryLife.count;
+	return _biaoqianClickArr.count;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -728,8 +735,12 @@
 	if (!cell)
 		cell = [[LJHomeVIewCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-	QJHomeIndexObject * model = _categaryLife[indexPath.row];
-	[cell setImageWithUrl:model.imageUrl];
+	QJHomeIndexObject * model = _biaoqianClickArr[indexPath.row];
+    float x = 356;
+    float y = 640;
+    CGFloat height = x / y * SCREENWIT;
+    NSString *imageUrl=[QJInterfaceManager thumbnailUrlFromImageUrl:model.imageUrl size:CGSizeMake(SCREENWIT, height)];
+	[cell setImageWithUrl:imageUrl];
 	return cell;
 }
 
@@ -739,7 +750,7 @@
 	float y = 640;
 	CGFloat height = x / y * SCREENWIT;
 	
-	if (indexPath.row == _categaryLife.count - 1)
+	if (indexPath.row == _biaoqianClickArr.count - 1)
 		return height;
 		
 	return height + 5;

@@ -8,6 +8,7 @@
 
 #import "JCTopic.h"
 #import "RRConst.h"
+#import "QuanJingSDK.h"
 @implementation JCTopic
 @synthesize JCdelegate;
 - (id)initWithFrame:(CGRect)frame
@@ -67,7 +68,8 @@
             if ([obj objectForKey:@"placeholderImage"]) {
                 [tempImage setImage:[obj objectForKey:@"placeholderImage"]];
             }
-            [tempImage setImageWithURL:[NSURL URLWithString:[obj objectForKey:@"pic"]] placeholderImage:nil];
+            NSString *imageUrl=[QJInterfaceManager thumbnailUrlFromImageUrl:[obj objectForKey:@"pic"] size:CGSizeMake(pic.frame.size.width, pic.frame.size.height)];
+            [tempImage setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:nil];
             if(_ifHomePage)
             {
                 if ([self.pics lastObject]== obj) {
@@ -172,7 +174,7 @@
     }
 }
 
--(void)click:(id)sender{
+-(void)click:(UIButton *)sender{
     [JCdelegate didClick:[self.pics objectAtIndex:[sender tag]]];
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
