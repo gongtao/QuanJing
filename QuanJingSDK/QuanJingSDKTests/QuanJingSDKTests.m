@@ -195,25 +195,62 @@
 }
 
 // 圈子
-- (void)testActionListExample
+- (void)testActionExample
 {
 	// This is an example of a functional test case.
 	// Use XCTAssert and related functions to verify your tests produce the correct results.
 	[self measureBlock:^{
-		XCTestExpectation * expectation = [self expectationWithDescription:@"testActionListExample"];
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testActionExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			// Login
+			[[QJPassport sharedPassport] loginUser:@"18600962172"
+			password:@"Gongtao1987"
+			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
+				if (error)
+					XCTFail(@"testActionExample error: %@", error);
+			}];
+			
+			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
+			
+			__block NSNumber * actionId = nil;
 			[[QJInterfaceManager sharedManager] requestActionList:nil
 			pageSize:20
 			userId:nil
 			finished:^(NSArray * actionArray, NSArray * resultArray, NSNumber * nextCursorIndex, NSError * error) {
 				if (error)
-					XCTFail(@"testActionListExample error: %@", error);
+					XCTFail(@"testActionExample error: %@", error);
+					
+				if (actionArray && (actionArray.count > 0)) {
+					QJActionObject * actionObject = [actionArray lastObject];
+					actionId = actionObject.aid;
+				}
 			}];
+			
+			NSError * error = [[QJInterfaceManager sharedManager] requestLikeAction:actionId];
+			
+			if (error)
+				XCTFail(@"testActionExample error: %@", error);
+				
+			error = [[QJInterfaceManager sharedManager] requestCancelLikeAction:actionId];
+			
+			if (error)
+				XCTFail(@"testUserExample error: %@", error);
+				
+			error = [[QJInterfaceManager sharedManager] requestCollectAction:actionId];
+			
+			if (error)
+                XCTFail(@"testUserExample error: %@", error);
+            
+            error = [[QJInterfaceManager sharedManager] requestCommentAction:actionId comment:@"赞"];
+            
+            if (error)
+                XCTFail(@"testUserExample error: %@", error);
+				
 			[expectation fulfill];
 		});
 		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
 			if (error)
-				XCTFail(@"testActionListExample error: %@", error);
+				XCTFail(@"testActionExample error: %@", error);
 		}];
 	}];
 }

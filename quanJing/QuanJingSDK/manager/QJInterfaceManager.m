@@ -250,9 +250,27 @@
 		finished(nil, nil, error);
 }
 
-// - (NSArray *)resultDicFromActionListResponseData:(nullable NSArray *)data {
-//
-// }
+- (void)resultArrayFromActionListResponseData:(nullable NSArray *)data
+	finished:(nullable void (^)(NSArray * actionArray, NSNumber * nextCursorIndex))finished
+{
+	__block NSNumber * nextCursorIndex = nil;
+	__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+	
+	[data enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+		QJActionObject * actionObject = [[QJActionObject alloc] initWithJson:obj];
+		[resultArray addObject:actionObject];
+		
+		if (idx == data.count - 1) {
+			NSNumber * creatTime = obj[@"creatTime"];
+			
+			if (!QJ_IS_NUM_NIL(creatTime))
+				nextCursorIndex = creatTime;
+		}
+	}];
+	
+	if (finished)
+		finished(resultArray, nextCursorIndex);
+}
 
 // 圈子列表
 - (void)requestActionList:(nullable NSNumber *)cursorIndex
@@ -302,22 +320,11 @@
 		NSLog(@"%@", responseObject);
 		NSArray * dataArray = responseObject[@"data"];
 		
-		__block NSNumber * nextCursorIndex = nil;
-		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
-		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-			QJActionObject * actionObject = [[QJActionObject alloc] initWithJson:obj];
-			[resultArray addObject:actionObject];
-			
-			if (idx == dataArray.count - 1) {
-				NSNumber * creatTime = obj[@"creatTime"];
-				
-				if (!QJ_IS_NUM_NIL(creatTime))
-					nextCursorIndex = creatTime;
-			}
+		[self resultArrayFromActionListResponseData:dataArray
+		finished:^(NSArray * actionArray, NSNumber * nextCursorIndex) {
+			if (finished)
+				finished(actionArray, dataArray, nextCursorIndex, error);
 		}];
-		
-		if (finished)
-			finished(resultArray, dataArray, nextCursorIndex, error);
 		return;
 	}
 	

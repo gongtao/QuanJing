@@ -37,7 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestImageRootCategory:(nullable void (^)(NSArray * imageCategoryArray, NSArray * resultArray, NSError * error))finished;
 
 // 圈子列表
-- (NSArray *)resultDicFromActionListResponseData:(nullable NSArray *)data;
+- (void)resultArrayFromActionListResponseData:(nullable NSArray *)data
+	finished:(nullable void (^)(NSArray * actionArray, NSNumber * nextCursorIndex))finished;
 - (void)requestActionList:(nullable NSNumber *)cursorIndex
 	pageSize:(NSUInteger)pageSize
 	userId:(nullable NSNumber *)userId
