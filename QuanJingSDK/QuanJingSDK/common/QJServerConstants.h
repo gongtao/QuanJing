@@ -23,6 +23,12 @@ static NSString * const kQJUserRegisterPath = @"/user/regist";
 // 登录用户
 static NSString * const kQJUserLoginPath = @"/user/login";
 
+// 发送登录短信
+static NSString * const kQJUserSendLoginSMSPath = @"/user/sendloginCode";
+
+// 短信登录
+static NSString * const kQJUserLoginSMSPath = @"/user/smsLogin";
+
 // 用户信息
 static NSString * const kQJUserInfoPath = @"/user/info.user";
 

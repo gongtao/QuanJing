@@ -34,6 +34,14 @@ NS_ASSUME_NONNULL_BEGIN
 	password:(NSString *)password
 	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished;
 	
+// 发送登录短信
+- (NSError *)sendLoginSMS:(NSString *)phoneNumber;
+
+// 短信登录
+- (void)loginUser:(NSString *)phoneNumber
+	code:(NSString *)code
+	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished;
+	
 // 判断是否登录
 - (BOOL)isLogin;
 

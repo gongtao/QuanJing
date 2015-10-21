@@ -36,7 +36,7 @@
 	return [[QJHTTPManager sharedManager] httpRequestManager];
 }
 
-#pragma mark - QuanJing User
+#pragma mark - 注册
 
 - (NSError *)sendRegistSMS:(NSString *)phoneNumber
 {
@@ -125,7 +125,8 @@
 		finished(nil, nil, error);
 }
 
-// 登录
+#pragma mark - 登录
+
 - (void)loginUser:(NSString *)userName
 	password:(NSString *)password
 	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished
@@ -174,6 +175,91 @@
 		finished(0, nil, error);
 }
 
+- (NSError *)sendLoginSMS:(NSString *)phoneNumber
+{
+	NSParameterAssert(phoneNumber);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"phoneNumber"] = phoneNumber;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	NSError * error = nil;
+	AFHTTPRequestOperation * operation = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		operation = [self.httpRequestManager GET:kQJUserSendLoginSMSPath
+			parameters:params
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			dispatch_semaphore_signal(sem);
+		}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		error = [QJUtils errorFromOperation:operation];
+		i--;
+	} while (error && i >= 0);
+	
+	NSLog(@"%@", operation.request.URL);
+	
+	if (!error)
+		NSLog(@"%@", operation.responseObject);
+		
+	return error;
+}
+
+// 短信登录
+- (void)loginUser:(NSString *)phoneNumber
+	code:(NSString *)code
+	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished
+{
+	NSParameterAssert(phoneNumber);
+	NSParameterAssert(code);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"phoneNumber"] = phoneNumber;
+	params[@"code"] = code;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	NSError * error = nil;
+	AFHTTPRequestOperation * operation = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		operation = [self.httpRequestManager GET:kQJUserLoginSMSPath
+			parameters:params
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			dispatch_semaphore_signal(sem);
+		}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		error = [QJUtils errorFromOperation:operation];
+		i--;
+	} while (error && i >= 0);
+	
+	NSLog(@"%@", operation.request.URL);
+	
+	if (!error) {
+		NSLog(@"%@", operation.responseObject);
+		NSDictionary * data = operation.responseObject[@"data"];
+		NSNumber * userId = data[@"userId"];
+		
+		if (finished)
+			finished(userId.integerValue, data[@"ticket"], error);
+		return;
+	}
+	
+	if (finished)
+		finished(0, nil, error);
+}
+
 - (BOOL)isLogin
 {
 	__block BOOL isLogin = NO;
@@ -190,6 +276,8 @@
 	return isLogin;
 }
 
+#pragma mark - 注销
+
 - (void)logout
 {
 	NSURL * url = [NSURL URLWithString:kQJServerURL];
@@ -200,6 +288,8 @@
 		[cookieJar deleteCookie:cookie];
 	}];
 }
+
+#pragma mark - 用户信息
 
 - (void)requestUserInfo:(void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished
 {

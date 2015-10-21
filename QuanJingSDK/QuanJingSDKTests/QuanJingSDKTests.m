@@ -81,6 +81,59 @@
 	}];
 }
 
+// 发送登录短信
+- (void)testSendLoginSMSExample
+{
+	// This is an example of a functional test case.
+	// Use XCTAssert and related functions to verify your tests produce the correct results.
+	[self measureBlock:^{
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testSendLoginSMSExample"];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			NSError * error = [[QJPassport sharedPassport] sendLoginSMS:@"18600962172"];
+			
+			if (error)
+				XCTFail(@"testSendLoginSMSExample error: %@", error);
+			[expectation fulfill];
+		});
+		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
+			if (error)
+				XCTFail(@"testSendLoginSMSExample error: %@", error);
+		}];
+	}];
+}
+
+// 短信登录
+- (void)testLoginSMSExample
+{
+	// This is an example of a functional test case.
+	// Use XCTAssert and related functions to verify your tests produce the correct results.
+	[self measureBlock:^{
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testLoginSMSExample"];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			// Login
+			[[QJPassport sharedPassport] loginUser:@"18600962172"
+			code:@"536528"
+			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
+				if (error)
+					XCTFail(@"testLoginSMSExample error: %@", error);
+			}];
+			
+			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
+			
+			[[QJPassport sharedPassport] logout];
+			
+			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
+			
+			[expectation fulfill];
+		});
+		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
+			if (error)
+				XCTFail(@"testLoginSMSExample error: %@", error);
+		}];
+	}];
+}
+
+// 用户信息
 - (void)testUserExample
 {
 	// This is an example of a functional test case.
@@ -210,7 +263,6 @@
 			[[QJInterfaceManager sharedManager] requestArticleList:[NSNumber numberWithLongLong:1]
 			cursorIndex:nil
 			pageSize:20
-			withCategory:YES
 			finished:^(NSArray * articleObjectArray, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testImageCategoryExample error: %@", error);
