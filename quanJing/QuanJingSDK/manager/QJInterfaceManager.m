@@ -332,4 +332,169 @@
 		finished(nil, nil, nil, error);
 }
 
+- (NSError *)requestLikeAction:(NSNumber *)actionId
+{
+	NSParameterAssert(actionId);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"actionId"] = actionId;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJLikeActionPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
+- (NSError *)requestCancelLikeAction:(NSNumber *)actionId
+{
+	NSParameterAssert(actionId);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"actionId"] = actionId;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJCancelLikeActionPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
+- (NSError *)requestCollectAction:(NSNumber *)actionId
+{
+	NSParameterAssert(actionId);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"actionId"] = actionId;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJCollectActionPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
+- (NSError *)requestCommentAction:(NSNumber *)actionId comment:(NSString *)comment
+{
+	NSParameterAssert(actionId);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"actionId"] = actionId;
+	params[@"content"] = comment;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager postPath:kQJCommentActionPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
 @end

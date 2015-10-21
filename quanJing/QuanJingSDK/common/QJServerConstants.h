@@ -41,4 +41,16 @@ static NSString * const kQJImageCategoryPath = @"/imageCategory/root";
 // 圈子列表
 static NSString * const kQJActionListPath = @"/action/list";
 
+// 圈子喜欢
+static NSString * const kQJLikeActionPath = @"/action/like.user";
+
+// 圈子取消喜欢
+static NSString * const kQJCancelLikeActionPath = @"/action/likeCancel.user";
+
+// 圈子收藏
+static NSString * const kQJCollectActionPath = @"/action/collect.user";
+
+// 圈子评论
+static NSString * const kQJCommentActionPath = @"/action/comment.user";
+
 #endif	/* QJServerConstants_h */
