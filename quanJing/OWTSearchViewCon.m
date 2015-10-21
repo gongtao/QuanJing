@@ -19,7 +19,7 @@
 #import <UIColor-HexString/UIColor+HexString.h>
 
 #import "OWTSearchResultsViewCon.h"
-
+#import "QuanJingSDK.h"
 @interface OWTSearchViewCon ()
 {
     OWTSearchResultsViewCon* _searchResultsViewCon;
@@ -133,17 +133,17 @@
     NSString* keyword = _searchBar.text;
 
     [SVProgressHUD showWithStatus:@"搜索中..." maskType:SVProgressHUDMaskTypeBlack];
-
-    OWTSearchManager* sm = GetSearchManager();
-    [sm searchAssetsWithKeyword:keyword
-                        success:^(NSArray* assets) {
-                            [_searchBar resignFirstResponder];
-                            [_searchResultsViewCon setKeyword:keyword withAssets:assets];
-                            [SVProgressHUD dismiss];
-                        }
-                        failure:^(NSError* error) {
-                            [SVProgressHUD showError:error];
-                        }];
+    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [fm requestImageSearchKey:keyword pageNum:1 pageSize:50 finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_searchBar resignFirstResponder];
+                [_searchResultsViewCon setKeyword:keyword withAssets:imageObjectArray];
+                [SVProgressHUD dismiss];
+            });
+        }];
+    });
 }
 
 @end

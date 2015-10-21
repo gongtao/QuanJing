@@ -5,7 +5,7 @@
 	<key>BuildEnvironment</key>
 	<dict>
 		<key>BuildDate</key>
-		<string>Wed Oct 21 14:02:41 CST 2015</string>
+		<string>Wed Oct 21 14:21:05 CST 2015</string>
 		<key>BuildMachine</key>
 		<dict>
 			<key>Hostname</key>
@@ -20,7 +20,7 @@
 		<key>BuildUser</key>
 		<string>qj-app (qj-app)</string>
 		<key>GitRef</key>
-		<string>65a09ff8d5df82a5d9aaa789647b6c2e40dbfe13</string>
+		<string>42e3a25a150a96248955a18b3e674d1c727e472f</string>
 		<key>GitUser</key>
 		<string>MrL (243971673@qq.com)</string>
 	</dict>

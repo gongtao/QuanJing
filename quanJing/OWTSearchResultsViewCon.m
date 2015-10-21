@@ -111,7 +111,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 {
     _keyword = [keyword copy];
     self.title = keyword;
-
     _assets = [NSMutableOrderedSet orderedSetWithArray:assets];
     [self.collectionView reloadData];
     [_collectionView setContentOffset:CGPointMake(0, -self.collectionView.contentInset.top) animated:YES];
@@ -129,6 +128,9 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [fm requestImageSearchKey:_keyword pageNum:_assets.count/50+1 pageSize:50  finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                if (imageObjectArray.count==0) {
+                    [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+                }
                 [_collectionView.infiniteScrollingView stopAnimating];
                 [self mergeAssets:imageObjectArray];
                 [SVProgressHUD dismiss];
