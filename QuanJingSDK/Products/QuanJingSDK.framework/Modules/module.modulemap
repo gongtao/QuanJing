@@ -1,6 +1,0 @@
-framework module QuanJingSDK {
-  umbrella header "QuanJingSDK.h"
-
-  export *
-  module * { export * }
-}

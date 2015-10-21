@@ -125,22 +125,25 @@
 	_showArr = [[NSMutableArray alloc]init];
 	_categaryBeautiful = [[NSMutableArray alloc]init];
 	_biaoqianClickArr = [[NSMutableArray alloc]init];
-    [self getThePreserveData];
+	[self getThePreserveData];
 }
--(void)getThePreserveData
+
+- (void)getThePreserveData
 {
-    NSString * homeDictionary = NSHomeDirectory();	// 获取根目录
-    NSString * homePath = [homeDictionary stringByAppendingString:@"/Documents/homeIndex.archiver"];
-    NSDictionary * homeIndexDic=[NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
-    if (homeIndexDic!=nil) {
-        [_categaryBeautiful removeAllObjects];
-        [_biaoqianClickArr removeAllObjects];
-        [_showArr removeAllObjects];
-        [_categaryBeautiful addObjectsFromArray:homeIndexDic[@"mhrs"]];
-        [_biaoqianClickArr addObjectsFromArray:homeIndexDic[@"shzm"]];
-        [_showArr addObjectsFromArray:homeIndexDic[@"lbt"]];
-    }
+	NSString * homeDictionary = NSHomeDirectory();	// 获取根目录
+	NSString * homePath = [homeDictionary stringByAppendingString:@"/Documents/homeIndex.archiver"];
+	NSDictionary * homeIndexDic = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+	
+	if (homeIndexDic != nil) {
+		[_categaryBeautiful removeAllObjects];
+		[_biaoqianClickArr removeAllObjects];
+		[_showArr removeAllObjects];
+		[_categaryBeautiful addObjectsFromArray:homeIndexDic[@"mhrs"]];
+		[_biaoqianClickArr addObjectsFromArray:homeIndexDic[@"shzm"]];
+		[_showArr addObjectsFromArray:homeIndexDic[@"lbt"]];
+	}
 }
+
 #pragma mark setUpAllView
 - (void)setUpNavigation
 {
@@ -276,11 +279,12 @@
 		UIImageView * imageView;
 		
 		UILabel * label;
-        QJHomeIndexObject *model;
+		QJHomeIndexObject * model;
 		
 		if (_categaryBeautiful.count > 0)
-        model=_categaryBeautiful[i];
-        NSString *imageUrl=[QJInterfaceManager thumbnailUrlFromImageUrl:model.imageUrl size:CGSizeMake(imageWit, imageWit-2)];
+			model = _categaryBeautiful[i];
+		NSString * imageUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:model.imageUrl size:CGSizeMake(imageWit, imageWit - 2)];
+		
 		if (i < 3) {
 			imageView = [LJUIController createImageViewWithFrame:CGRectMake(10 + i % 3 * (imageWit + 5), 230, imageWit, imageWit - 2) imageName:nil];
 			[imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
@@ -301,6 +305,7 @@
 		//        label.font=[UIFont fontWithName:@"冬青黑体" size:12];
 		[_view addSubview:label];
 	}
+	
 	UIImageView * grayImage = [LJUIController createImageViewWithFrame:CGRectMake(0, 260 + imageWit * 2 + 70 - 30 - 10 - 3 - 4 - 2, SCREENWIT, 10) imageName:nil];
 	grayImage.backgroundColor = [UIColor colorWithHexString:@"#f6f6f6"];
 	[_view addSubview:grayImage];
@@ -312,17 +317,17 @@
 {
 	for (UIView * view in _view.subviews)
 		for (NSInteger i = 0; i < 6; i++) {
-            QJHomeIndexObject *model;
+			QJHomeIndexObject * model;
 			
 			if (_categaryBeautiful.count > 0)
-                model=_categaryBeautiful[i];
+				model = _categaryBeautiful[i];
+				
 			if (view.tag == i + 100) {
 				UIImageView * imageView = (UIImageView *)view;
-             NSString *imageUrl=[QJInterfaceManager thumbnailUrlFromImageUrl:model.imageUrl size:CGSizeMake((SCREENWIT - 30) / 3, (SCREENWIT - 30) / 3-2)];
+				NSString * imageUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:model.imageUrl size:CGSizeMake((SCREENWIT - 30) / 3, (SCREENWIT - 30) / 3 - 2)];
 				[imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
 			}
 		}
-		
 }
 
 - (void)setUpOtherView
@@ -526,12 +531,12 @@
 			_Topic.pics = tempArray;
 			_Topic.ifHomePage = YES;
 			_page.numberOfPages = tempArray.count;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_Topic upDate];
-                [self reloadImageViewImage];
-                [_tableView reloadData];
-            });
-            [_tableView headerEndRefreshing];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[_Topic upDate];
+				[self reloadImageViewImage];
+				[_tableView reloadData];
+				[_tableView headerEndRefreshing];
+			});
 		}];
 	});
 }
@@ -559,7 +564,6 @@
 {
 	if (_feedMenu.isOpen)
 		return [_feedMenu close];
-		
 		
 	self.navigationItem.rightBarButtonItem.enabled = NO;
 	[_feedMenu showFromNavigationController:self.navigationController];
@@ -736,10 +740,10 @@
 		cell = [[LJHomeVIewCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 	QJHomeIndexObject * model = _biaoqianClickArr[indexPath.row];
-    float x = 356;
-    float y = 640;
-    CGFloat height = x / y * SCREENWIT;
-    NSString *imageUrl=[QJInterfaceManager thumbnailUrlFromImageUrl:model.imageUrl size:CGSizeMake(SCREENWIT, height)];
+	float x = 356;
+	float y = 640;
+	CGFloat height = x / y * SCREENWIT;
+	NSString * imageUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:model.imageUrl size:CGSizeMake(SCREENWIT, height)];
 	[cell setImageWithUrl:imageUrl];
 	return cell;
 }
