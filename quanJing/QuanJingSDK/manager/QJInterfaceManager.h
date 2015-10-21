@@ -36,6 +36,15 @@ NS_ASSUME_NONNULL_BEGIN
 // 首页根分类
 - (void)requestImageRootCategory:(nullable void (^)(NSArray * imageCategoryArray, NSArray * resultArray, NSError * error))finished;
 
+// 图片故事分类
+- (void)requestArticleCategory:(nullable void (^)(NSArray * articleCategoryArray, NSArray * resultArray, NSError * error))finished;
+
+// 图片故事列表
+- (void)requestArticleList:(nullable NSNumber *)categoryId
+	cursorIndex:(nullable NSNumber *)cursorIndex
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * articleObjectArray, NSArray * resultArray, NSError * error))finished;
+	
 // 圈子列表
 - (void)resultArrayFromActionListResponseData:(nullable NSArray *)data
 	finished:(nullable void (^)(NSArray * actionArray, NSNumber * nextCursorIndex))finished;
@@ -44,6 +53,18 @@ NS_ASSUME_NONNULL_BEGIN
 	userId:(nullable NSNumber *)userId
 	finished:(nullable void (^)(NSArray * actionArray, NSArray * resultArray, NSNumber * nextCursorIndex, NSError * error))finished;
 	
+// 圈子喜欢
+- (NSError *)requestLikeAction:(NSNumber *)actionId;
+
+// 圈子取消喜欢
+- (NSError *)requestCancelLikeAction:(NSNumber *)actionId;
+
+// 圈子收藏
+- (NSError *)requestCollectAction:(NSNumber *)actionId;
+
+// 圈子评论
+- (NSError *)requestCommentAction:(NSNumber *)actionId comment:(NSString *)comment;
+
 @end
 
 NS_ASSUME_NONNULL_END

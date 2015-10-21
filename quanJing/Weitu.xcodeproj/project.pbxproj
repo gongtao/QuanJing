@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		311BF04819B2E9250046C11D /* OQJCategoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 311BF04519B2E9250046C11D /* OQJCategoryCell.m */; };
 		311BF04919B2E9250046C11D /* OQJNavCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 311BF04719B2E9250046C11D /* OQJNavCon.m */; };
+		311D8B971BD7982E0003AE4E /* QJArticleCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 311D8B941BD7982E0003AE4E /* QJArticleCategory.m */; settings = {ASSET_TAGS = (); }; };
+		311D8B981BD7982E0003AE4E /* QJArticleObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 311D8B961BD7982E0003AE4E /* QJArticleObject.m */; settings = {ASSET_TAGS = (); }; };
 		3131894E19C79D8400C42120 /* OWTAssetInfoViewa.m in Sources */ = {isa = PBXBuildFile; fileRef = 3131894C19C79D8400C42120 /* OWTAssetInfoViewa.m */; };
 		3131894F19C79D8400C42120 /* OWTAssetInfoViewa.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3131894D19C79D8400C42120 /* OWTAssetInfoViewa.xib */; };
 		31338AA819B5405600A2EE6E /* OQJSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AA419B5405600A2EE6E /* OQJSearchView.m */; };
@@ -860,6 +862,10 @@
 		311BF04519B2E9250046C11D /* OQJCategoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OQJCategoryCell.m; path = ../../OQJCategoryCell.m; sourceTree = "<group>"; };
 		311BF04619B2E9250046C11D /* OQJNavCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OQJNavCon.h; path = ../../OQJNavCon.h; sourceTree = "<group>"; };
 		311BF04719B2E9250046C11D /* OQJNavCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OQJNavCon.m; path = ../../OQJNavCon.m; sourceTree = "<group>"; };
+		311D8B931BD7982E0003AE4E /* QJArticleCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJArticleCategory.h; sourceTree = "<group>"; };
+		311D8B941BD7982E0003AE4E /* QJArticleCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJArticleCategory.m; sourceTree = "<group>"; };
+		311D8B951BD7982E0003AE4E /* QJArticleObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJArticleObject.h; sourceTree = "<group>"; };
+		311D8B961BD7982E0003AE4E /* QJArticleObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJArticleObject.m; sourceTree = "<group>"; };
 		3131894B19C79D8400C42120 /* OWTAssetInfoViewa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTAssetInfoViewa.h; sourceTree = "<group>"; };
 		3131894C19C79D8400C42120 /* OWTAssetInfoViewa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTAssetInfoViewa.m; sourceTree = "<group>"; };
 		3131894D19C79D8400C42120 /* OWTAssetInfoViewa.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OWTAssetInfoViewa.xib; sourceTree = "<group>"; };
@@ -2396,6 +2402,10 @@
 				31C9202B1BD65D7D00DFC3C0 /* QJImageObject.m */,
 				31C9202C1BD65D7D00DFC3C0 /* QJUser.h */,
 				31C9202D1BD65D7D00DFC3C0 /* QJUser.m */,
+				311D8B931BD7982E0003AE4E /* QJArticleCategory.h */,
+				311D8B941BD7982E0003AE4E /* QJArticleCategory.m */,
+				311D8B951BD7982E0003AE4E /* QJArticleObject.h */,
+				311D8B961BD7982E0003AE4E /* QJArticleObject.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -5428,6 +5438,7 @@
 				90D61AC6196084CB00375A85 /* OWTAlbumViewCon.m in Sources */,
 				90956441191CFB320088BA48 /* OWTImageInfo.m in Sources */,
 				E0B99B651B05966000ED7831 /* PSTGridLayoutItem.m in Sources */,
+				311D8B981BD7982E0003AE4E /* QJArticleObject.m in Sources */,
 				66A4FA651AA9A1B7006F6547 /* AGImagePreviewController.m in Sources */,
 				A34A29F61B95496A0061614A /* LJExploreViewController.m in Sources */,
 				E0B95D181B60A5240003059B /* OWTCategoryManagerlife.m in Sources */,
@@ -5596,6 +5607,7 @@
 				66A4FA661AA9A1B7006F6547 /* AGPreviewScrollView.m in Sources */,
 				902ACC7018E6C00E0066CB9E /* OWTGlobalThemer.m in Sources */,
 				90B65580197EF34F0093524D /* OWTActivityMerger.m in Sources */,
+				311D8B971BD7982E0003AE4E /* QJArticleCategory.m in Sources */,
 				90F55DCE18CAF0E900D8022C /* OWTImageCell.m in Sources */,
 				660A10531AB691AB00C3BCA9 /* SvImageInfoEditUtils.m in Sources */,
 				E0B95D211B60BF0A0003059B /* OWTCategoryManagerlvyouinternational.m in Sources */,

@@ -21,6 +21,10 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		311D8B8D1BD78F420003AE4E /* QJArticleCategory.h in Headers */ = {isa = PBXBuildFile; fileRef = 311D8B8B1BD78F420003AE4E /* QJArticleCategory.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		311D8B8E1BD78F420003AE4E /* QJArticleCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 311D8B8C1BD78F420003AE4E /* QJArticleCategory.m */; settings = {ASSET_TAGS = (); }; };
+		311D8B911BD791650003AE4E /* QJArticleObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 311D8B8F1BD791650003AE4E /* QJArticleObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		311D8B921BD791650003AE4E /* QJArticleObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 311D8B901BD791650003AE4E /* QJArticleObject.m */; settings = {ASSET_TAGS = (); }; };
 		317642231BD3CC92000162FB /* QuanJingSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642221BD3CC92000162FB /* QuanJingSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3176422A1BD3CC92000162FB /* QuanJingSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3176421F1BD3CC92000162FB /* QuanJingSDK.framework */; settings = {ASSET_TAGS = (); }; };
 		3176422F1BD3CC92000162FB /* QuanJingSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176422E1BD3CC92000162FB /* QuanJingSDKTests.m */; };
@@ -82,6 +86,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		311D8B8B1BD78F420003AE4E /* QJArticleCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJArticleCategory.h; sourceTree = "<group>"; };
+		311D8B8C1BD78F420003AE4E /* QJArticleCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJArticleCategory.m; sourceTree = "<group>"; };
+		311D8B8F1BD791650003AE4E /* QJArticleObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJArticleObject.h; sourceTree = "<group>"; };
+		311D8B901BD791650003AE4E /* QJArticleObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJArticleObject.m; sourceTree = "<group>"; };
 		3176421F1BD3CC92000162FB /* QuanJingSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = QuanJingSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		317642221BD3CC92000162FB /* QuanJingSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QuanJingSDK.h; sourceTree = "<group>"; };
 		317642241BD3CC92000162FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -250,6 +258,10 @@
 				31C91FD21BD61C9D00DFC3C0 /* QJCommentObject.m */,
 				31C91FCD1BD61BE000DFC3C0 /* QJActionObject.h */,
 				31C91FCE1BD61BE000DFC3C0 /* QJActionObject.m */,
+				311D8B8B1BD78F420003AE4E /* QJArticleCategory.h */,
+				311D8B8C1BD78F420003AE4E /* QJArticleCategory.m */,
+				311D8B8F1BD791650003AE4E /* QJArticleObject.h */,
+				311D8B901BD791650003AE4E /* QJArticleObject.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -298,6 +310,8 @@
 				31C91FB61BD518F300DFC3C0 /* QJImageCategory.h in Headers */,
 				31C91F991BD4BF4900DFC3C0 /* QJErrorCode.h in Headers */,
 				31C91FD31BD61C9D00DFC3C0 /* QJCommentObject.h in Headers */,
+				311D8B911BD791650003AE4E /* QJArticleObject.h in Headers */,
+				311D8B8D1BD78F420003AE4E /* QJArticleCategory.h in Headers */,
 				31C91FCF1BD61BE000DFC3C0 /* QJActionObject.h in Headers */,
 				31C91FBD1BD5C6B500DFC3C0 /* QJServerConstants.h in Headers */,
 				31C91FA51BD4D5B000DFC3C0 /* UIDevice-Hardware.h in Headers */,
@@ -437,6 +451,7 @@
 				317642681BD3DA5A000162FB /* QJInterfaceManager.m in Sources */,
 				317642611BD3D96E000162FB /* AFURLSessionManager.m in Sources */,
 				31C91FC11BD5C96600DFC3C0 /* QJHTTPManager.m in Sources */,
+				311D8B8E1BD78F420003AE4E /* QJArticleCategory.m in Sources */,
 				31C91FD01BD61BE000DFC3C0 /* QJActionObject.m in Sources */,
 				31C91FBB1BD5C61700DFC3C0 /* QJPassport.m in Sources */,
 				31C91F9D1BD4BF6000DFC3C0 /* QJErrorCode.m in Sources */,
@@ -454,6 +469,7 @@
 				31C91FA11BD4C6E600DFC3C0 /* QJHomeIndexObject.m in Sources */,
 				31C91FC61BD5CBC700DFC3C0 /* QJUtils.m in Sources */,
 				3176425F1BD3D96E000162FB /* AFURLResponseSerialization.m in Sources */,
+				311D8B921BD791650003AE4E /* QJArticleObject.m in Sources */,
 				317642501BD3D96E000162FB /* AFHTTPRequestOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -687,6 +703,7 @@
 				31C91FDB1BD647F200DFC3C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -12,11 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QJCommentObject : NSObject
 
-@property (nonatomic, strong) QJUser * user;
+@property (nonatomic, strong, nullable) QJUser * user;
 
-@property (nonatomic, strong) NSString * comment;
+@property (nonatomic, strong, nullable) NSString * comment;
 
-@property (nonatomic, strong) NSDate * time;
+@property (nonatomic, strong, nullable) NSDate * time;
 
 - (instancetype)initWithJson:(nullable NSDictionary *)json;
 

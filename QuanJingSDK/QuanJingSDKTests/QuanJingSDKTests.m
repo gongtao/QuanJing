@@ -197,22 +197,32 @@
 // 图片故事
 - (void)testArticleExample
 {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-    [self measureBlock:^{
-        XCTestExpectation * expectation = [self expectationWithDescription:@"testImageCategoryExample"];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [[QJInterfaceManager sharedManager] requestArticleCategory:^(NSArray * articleCategoryArray, NSArray * resultArray, NSError * error) {
-                if (error)
-                    XCTFail(@"testImageCategoryExample error: %@", error);
-            }];
-            [expectation fulfill];
-        });
-        [self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
-            if (error)
-                XCTFail(@"testImageCategoryExample error: %@", error);
-        }];
-    }];
+	// This is an example of a functional test case.
+	// Use XCTAssert and related functions to verify your tests produce the correct results.
+	[self measureBlock:^{
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testImageCategoryExample"];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			[[QJInterfaceManager sharedManager] requestArticleCategory:^(NSArray * articleCategoryArray, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testImageCategoryExample error: %@", error);
+			}];
+			
+			[[QJInterfaceManager sharedManager] requestArticleList:[NSNumber numberWithLongLong:1]
+			cursorIndex:nil
+			pageSize:20
+			withCategory:YES
+			finished:^(NSArray * articleObjectArray, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testImageCategoryExample error: %@", error);
+			}];
+			
+			[expectation fulfill];
+		});
+		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
+			if (error)
+				XCTFail(@"testImageCategoryExample error: %@", error);
+		}];
+	}];
 }
 
 // 圈子
@@ -233,19 +243,19 @@
 			
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
-			__block NSNumber * actionId = [NSNumber numberWithLongLong:649039105164321];
-//			[[QJInterfaceManager sharedManager] requestActionList:nil
-//			pageSize:20
-//			userId:nil
-//			finished:^(NSArray * actionArray, NSArray * resultArray, NSNumber * nextCursorIndex, NSError * error) {
-//				if (error)
-//					XCTFail(@"testActionExample error: %@", error);
-//					
-//				if (actionArray && (actionArray.count > 0)) {
-//					QJActionObject * actionObject = [actionArray lastObject];
-//					actionId = actionObject.aid;
-//				}
-//			}];
+			__block NSNumber * actionId = nil;
+			[[QJInterfaceManager sharedManager] requestActionList:nil
+			pageSize:20
+			userId:nil
+			finished:^(NSArray * actionArray, NSArray * resultArray, NSNumber * nextCursorIndex, NSError * error) {
+				if (error)
+					XCTFail(@"testActionExample error: %@", error);
+					
+				if (actionArray && (actionArray.count > 0)) {
+					QJActionObject * actionObject = [actionArray lastObject];
+					actionId = actionObject.aid;
+				}
+			}];
 			
 			NSError * error = [[QJInterfaceManager sharedManager] requestLikeAction:actionId];
 			
@@ -260,12 +270,12 @@
 			error = [[QJInterfaceManager sharedManager] requestCollectAction:actionId];
 			
 			if (error)
-                XCTFail(@"testUserExample error: %@", error);
-            
-            error = [[QJInterfaceManager sharedManager] requestCommentAction:actionId comment:@"赞"];
-            
-            if (error)
-                XCTFail(@"testUserExample error: %@", error);
+				XCTFail(@"testUserExample error: %@", error);
+				
+			error = [[QJInterfaceManager sharedManager] requestCommentAction:actionId comment:@"赞"];
+			
+			if (error)
+				XCTFail(@"testUserExample error: %@", error);
 				
 			[expectation fulfill];
 		});

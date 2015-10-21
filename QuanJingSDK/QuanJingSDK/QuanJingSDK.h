@@ -21,5 +21,7 @@
   #import "QJImageCategory.h"
   #import "QJHomeIndexObject.h"
   #import "QJActionObject.h"
+  #import "QJArticleCategory.h"
+  #import "QJArticleObject.h"
   #import "QJInterfaceManager.h"
 #endif

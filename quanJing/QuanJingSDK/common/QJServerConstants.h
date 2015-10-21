@@ -38,6 +38,12 @@ static NSString * const kQJSearchPath = @"/search";
 // 图片分类
 static NSString * const kQJImageCategoryPath = @"/imageCategory/root";
 
+// 图片故事分类
+static NSString * const kQJArticleCategoryPath = @"/articleSys/category";
+
+// 图片故事列表
+static NSString * const kQJArticleListPath = @"/articleSys/list";
+
 // 圈子列表
 static NSString * const kQJActionListPath = @"/action/list";
 
@@ -52,5 +58,8 @@ static NSString * const kQJCollectActionPath = @"/action/collect.user";
 
 // 圈子评论
 static NSString * const kQJCommentActionPath = @"/action/comment.user";
+
+// 用户收藏列表
+static NSString * const kQJUserCollectListPath = @"/userCollect/list.user";
 
 #endif	/* QJServerConstants_h */

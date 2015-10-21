@@ -16,6 +16,10 @@
 
 #import "QJActionObject.h"
 
+#import "QJArticleCategory.h"
+
+#import "QJArticleObject.h"
+
 #import "QJServerConstants.h"
 
 #import "QJCoreMacros.h"
@@ -75,7 +79,7 @@
 
 #pragma mark - Private
 
-#pragma mark - QuanJing Interface
+#pragma mark - 首页
 
 - (NSDictionary *)resultDicFromHomeIndexResponseData:(NSArray *)data
 {
@@ -143,6 +147,8 @@
 		finished(nil, nil, error);
 }
 
+#pragma mark - 搜索
+
 - (void)requestImageSearchKey:(NSString *)key
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
@@ -203,6 +209,8 @@
 		finished(nil, nil, error);
 }
 
+#pragma mark - 首页根分类
+
 - (void)requestImageRootCategory:(nullable void (^)(NSArray * imageCategoryArray, NSArray * resultArray, NSError * error))finished
 {
 	// When request fails, if it could, retry it 3 times at most.
@@ -249,6 +257,119 @@
 	if (finished)
 		finished(nil, nil, error);
 }
+
+#pragma mark - 图片故事（发现）
+
+- (void)requestArticleCategory:(nullable void (^)(NSArray * articleCategoryArray, NSArray * resultArray, NSError * error))finished
+{
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJArticleCategoryPath
+		parameters:nil
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error) {
+		NSLog(@"%@", responseObject);
+		NSDictionary * dataDic = responseObject[@"data"];
+		NSArray * dataArray = dataDic[@"page"];
+		
+		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+			[resultArray addObject:[[QJArticleCategory alloc] initWithJson:obj]];
+		}];
+		
+		if (finished)
+			finished(resultArray, dataArray, error);
+		return;
+	}
+	
+	if (finished)
+		finished(nil, nil, error);
+}
+
+- (void)requestArticleList:(nullable NSNumber *)categoryId
+	cursorIndex:(nullable NSNumber *)cursorIndex
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * articleObjectArray, NSArray * resultArray, NSError * error))finished
+{
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	
+	if (!QJ_IS_NUM_NIL(categoryId))
+		params[@"categoryId"] = categoryId;
+		
+	if (pageSize > 0)
+		params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
+		
+	if (!QJ_IS_NUM_NIL(cursorIndex))
+		params[@"cursorIndex"] = cursorIndex;
+		
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJArticleListPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error) {
+		NSLog(@"%@", responseObject);
+		NSArray * dataArray = responseObject[@"data"];
+		
+		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+			[resultArray addObject:[[QJImageCategory alloc] initWithJson:obj]];
+		}];
+		
+		if (finished)
+			finished(resultArray, dataArray, error);
+		return;
+	}
+	
+	if (finished)
+		finished(nil, nil, error);
+}
+
+#pragma mark - 圈子
 
 - (void)resultArrayFromActionListResponseData:(nullable NSArray *)data
 	finished:(nullable void (^)(NSArray * actionArray, NSNumber * nextCursorIndex))finished

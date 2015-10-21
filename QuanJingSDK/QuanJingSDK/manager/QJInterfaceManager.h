@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 图片故事列表
 - (void)requestArticleList:(nullable NSNumber *)categoryId
 	cursorIndex:(nullable NSNumber *)cursorIndex
-	pageSize:(nullable NSNumber *)pageSize
+	pageSize:(NSUInteger)pageSize
 	finished:(nullable void (^)(NSArray * articleObjectArray, NSArray * resultArray, NSError * error))finished;
 	
 // 圈子列表

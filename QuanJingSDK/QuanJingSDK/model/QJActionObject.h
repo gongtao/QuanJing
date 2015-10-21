@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QJActionObject : NSObject
 
-@property (nonatomic, strong, nullable) NSNumber * aid;
+@property (nonatomic, strong) NSNumber * aid;
 
 @property (nonatomic, strong, nullable) NSNumber * userId;
 
