@@ -36,6 +36,15 @@ NS_ASSUME_NONNULL_BEGIN
 // 首页根分类
 - (void)requestImageRootCategory:(nullable void (^)(NSArray * imageCategoryArray, NSArray * resultArray, NSError * error))finished;
 
+// 图片故事分类
+- (void)requestArticleCategory:(nullable void (^)(NSArray * articleCategoryArray, NSArray * resultArray, NSError * error))finished;
+
+// 图片故事列表
+- (void)requestArticleList:(nullable NSNumber *)categoryId
+	cursorIndex:(nullable NSNumber *)cursorIndex
+	pageSize:(nullable NSNumber *)pageSize
+	finished:(nullable void (^)(NSArray * articleObjectArray, NSArray * resultArray, NSError * error))finished;
+	
 // 圈子列表
 - (void)resultArrayFromActionListResponseData:(nullable NSArray *)data
 	finished:(nullable void (^)(NSArray * actionArray, NSNumber * nextCursorIndex))finished;

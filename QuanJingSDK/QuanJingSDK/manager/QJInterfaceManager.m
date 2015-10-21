@@ -243,12 +243,65 @@
 		}];
 		
 		if (finished)
-			finished(nil, dataArray, error);
+			finished(resultArray, dataArray, error);
 		return;
 	}
 	
 	if (finished)
 		finished(nil, nil, error);
+}
+
+#pragma mark - 图片故事（发现）
+
+- (void)requestArticleCategory:(nullable void (^)(NSArray * articleCategoryArray, NSArray * resultArray, NSError * error))finished
+{
+    // When request fails, if it could, retry it 3 times at most.
+    int i = 3;
+    NSError * error = nil;
+    AFHTTPRequestOperation * operation = nil;
+    
+    do {
+        error = nil;
+        dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+        operation = [self.httpRequestManager GET:kQJArticleCategoryPath
+                                      parameters:nil
+                                         success:^(AFHTTPRequestOperation * operation, id responseObject) {
+                                             dispatch_semaphore_signal(sem);
+                                         }
+                                         failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+                                             dispatch_semaphore_signal(sem);
+                                         }];
+        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+        error = [QJUtils errorFromOperation:operation];
+        i--;
+    } while (error && i >= 0);
+    
+    NSLog(@"%@", operation.request.URL);
+    
+    if (!error) {
+        NSLog(@"%@", operation.responseObject);
+//        NSArray * dataArray = operation.responseObject[@"data"];
+//        
+//        __block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+//        [dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+//            [resultArray addObject:[[QJImageCategory alloc] initWithJson:obj]];
+//        }];
+//        
+//        if (finished)
+//            finished(resultArray, dataArray, error);
+//        return;
+    }
+    
+    if (finished)
+        finished(nil, nil, error);
+}
+
+- (void)requestArticleList:(nullable NSNumber *)categoryId
+               cursorIndex:(nullable NSNumber *)cursorIndex
+                  pageSize:(nullable NSNumber *)pageSize
+                  finished:(nullable void (^)(NSArray * articleCategoryArray, NSArray * resultArray, NSError * error))finished
+{
+    
 }
 
 #pragma mark - 圈子
