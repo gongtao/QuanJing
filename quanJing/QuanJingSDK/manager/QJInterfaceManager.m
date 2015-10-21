@@ -242,7 +242,7 @@
 		}];
 		
 		if (finished)
-			finished(nil, dataArray, error);
+			finished(resultArray, dataArray, error);
 		return;
 	}
 	

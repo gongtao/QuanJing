@@ -87,13 +87,9 @@
 -(void)getData
 {
     NSURL *url = [NSURL URLWithString:@"http://api.tiankong.com/qjapi/game"];
-    
     NSError *error;
     NSURLRequest *request =[NSURLRequest requestWithURL:url];
-    
     NSURLConnection *connection=[NSURLConnection connectionWithRequest:request delegate:self];
-    
-    
 }
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {

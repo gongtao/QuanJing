@@ -14,7 +14,7 @@
 #import "OLineView.h"
 #import <QBFlatButton/QBFlatButton.h>
 #import <FontAwesomeKit/FAKFontAwesome.h>
-
+#import "QuanJingSDK.h"
 @interface OWTPasswordAuthViewCon ()
 {
     
@@ -147,7 +147,8 @@
 
     [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
                          maskType:SVProgressHUDMaskTypeBlack];
-
+    QJPassport *pt=[QJPassport sharedPassport];
+    
     [am authWithUsername:username
              password:password
               success:^{

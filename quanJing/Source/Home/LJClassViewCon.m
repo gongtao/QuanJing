@@ -12,6 +12,7 @@
 #import "LJClassTableViewCell.h"
 #import "OWTSearchResultsViewCon.h"
 #import "UIColor+HexString.h"
+#import "QuanJingSDK.h"
 @interface LJClassViewCon ()<UITableViewDelegate,UITableViewDataSource,ASIHTTPRequestDelegate,UISearchBarDelegate>
 
 @end
@@ -19,7 +20,6 @@
 @implementation LJClassViewCon
 {
     UITableView *_tableView;
-    ASIHTTPRequest *_asi;
     NSMutableArray *_dataArr;
     UISearchBar *_searchBar;
 }
@@ -46,28 +46,16 @@
 #pragma mark getData
 -(void)getData
 {
-
-    NSString *urlStr=@"http://api.tiankong.com/qjapi/cdn2/categories1";
-    _asi=[[ASIHTTPRequest alloc]initWithURL:[NSURL URLWithString:urlStr]];
-    _asi.delegate=self;
-    [_asi startAsynchronous];
-}
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    [SVProgressHUD showErrorWithStatus:@"网络不好"];
-}
--(void)requestFinished:(ASIHTTPRequest *)request
-{
-    NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
-    for (NSDictionary *dict1 in dict[@"categories"]) {
-        LJCategory *model=[[LJCategory alloc]init];
-        model.categoryName=dict1[@"categoryName"];
-        model.count=dict1[@"count"];
-        model.searchWord=dict1[@"searchWord"];
-        model.url=dict1[@"coverImageInfo"][@"url"];
-        [_dataArr addObject:model];
-    }
-    [_tableView reloadData];
+    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [fm requestImageRootCategory:^(NSArray * _Nonnull imageCategoryArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            [_dataArr addObjectsFromArray:imageCategoryArray];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_tableView reloadData];
+            });
+        }];
+    
+    });
 }
 #pragma mark setUpTableView
 -(void)setUpTableView
@@ -160,10 +148,12 @@
         cell=[[NSBundle mainBundle] loadNibNamed:@"LJClassTableViewCell" owner:self options:nil][0];
     }
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    LJCategory *model=_dataArr[indexPath.row];
-    [cell.headView setImageWithURL:[NSURL URLWithString:model.url]];
-    cell.nameLabel.text=model.categoryName;
-    cell.countLabel.text=model.count;
+    QJImageCategory *model=_dataArr[indexPath.row];
+    NSLog(@"%@",model.image);
+    NSString *imageurl=[QJInterfaceManager thumbnailUrlFromImageUrl:model.image size:cell.headView.bounds.size];
+    [cell.headView setImageWithURL:[NSURL URLWithString:imageurl]];
+    cell.nameLabel.text=model.name;
+    cell.countLabel.text=model.imageCount.stringValue;
     return cell;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -172,8 +162,8 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LJCategory *model=_dataArr[indexPath.row];
-    [self performSearch:model.searchWord];
+    QJImageCategory *model=_dataArr[indexPath.row];
+    [self performSearch:model.name];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
