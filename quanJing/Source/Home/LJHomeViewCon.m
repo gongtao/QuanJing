@@ -494,7 +494,7 @@
 	searchResultsViewCon.view.tag = 8173;
 	[searchResultsViewCon setKeyword:_keyword];
 	searchResultsViewCon.hidesBottomBarWhenPushed = YES;
-	[searchResultsViewCon substituteNavigationBarBackItem];
+//	[searchResultsViewCon substituteNavigationBarBackItem];
 	[_tabBarHider hideTabBar];
 	[self.navigationController pushViewController:searchResultsViewCon animated:YES];
 	_searchBar.text = nil;
@@ -710,7 +710,7 @@
 	evc.urlString = model.typeValue;
 	evc.assetUrl = model.imageUrl;
 	[self.navigationController pushViewController:evc animated:YES];
-	[evc substituteNavigationBarBackItem];
+//	[evc substituteNavigationBarBackItem];
 }
 
 #pragma mark tableViewDelegate

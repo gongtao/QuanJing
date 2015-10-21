@@ -11,9 +11,6 @@
 		311BF04919B2E9250046C11D /* OQJNavCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 311BF04719B2E9250046C11D /* OQJNavCon.m */; };
 		3131894E19C79D8400C42120 /* OWTAssetInfoViewa.m in Sources */ = {isa = PBXBuildFile; fileRef = 3131894C19C79D8400C42120 /* OWTAssetInfoViewa.m */; };
 		3131894F19C79D8400C42120 /* OWTAssetInfoViewa.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3131894D19C79D8400C42120 /* OWTAssetInfoViewa.xib */; };
-		31338AA519B5405600A2EE6E /* OWTSearchViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338A9E19B5405600A2EE6E /* OWTSearchViewCon.m */; };
-		31338AA619B5405600A2EE6E /* OWTSearchResultsViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AA019B5405600A2EE6E /* OWTSearchResultsViewCon.m */; };
-		31338AA719B5405600A2EE6E /* OWTSearchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AA219B5405600A2EE6E /* OWTSearchManager.m */; };
 		31338AA819B5405600A2EE6E /* OQJSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AA419B5405600A2EE6E /* OQJSearchView.m */; };
 		31338AB419B574FD00A2EE6E /* OWTSocialNavCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AB019B574FD00A2EE6E /* OWTSocialNavCon.m */; };
 		316145EA19B3189200498B91 /* UIImage+ColorExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 316145E919B3189200498B91 /* UIImage+ColorExt.m */; };
@@ -467,6 +464,9 @@
 		A3DB10C51BABAD690033522F /* 评论.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10BE1BABAD690033522F /* 评论.png */; };
 		A3DB10C71BABAD690033522F /* 赞00.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10C01BABAD690033522F /* 赞00.png */; };
 		A3E447FC1A79B00C000DE7BA /* selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E447FB1A79B00C000DE7BA /* selected@2x.png */; };
+		A3EB5A411BD7412B00E08563 /* OWTSearchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A3C1BD7412B00E08563 /* OWTSearchManager.m */; settings = {ASSET_TAGS = (); }; };
+		A3EB5A421BD7412B00E08563 /* OWTSearchResultsViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A3E1BD7412B00E08563 /* OWTSearchResultsViewCon.m */; settings = {ASSET_TAGS = (); }; };
+		A3EB5A431BD7412B00E08563 /* OWTSearchViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A401BD7412B00E08563 /* OWTSearchViewCon.m */; settings = {ASSET_TAGS = (); }; };
 		A3EFF8501B8468F000DC6255 /* LJClassViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EFF84A1B8468F000DC6255 /* LJClassViewCon.m */; };
 		A3EFF8511B8468F000DC6255 /* LJCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EFF84C1B8468F000DC6255 /* LJCategory.m */; };
 		A3EFF8521B8468F000DC6255 /* LJClassTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EFF84E1B8468F000DC6255 /* LJClassTableViewCell.m */; };
@@ -863,12 +863,6 @@
 		3131894B19C79D8400C42120 /* OWTAssetInfoViewa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTAssetInfoViewa.h; sourceTree = "<group>"; };
 		3131894C19C79D8400C42120 /* OWTAssetInfoViewa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTAssetInfoViewa.m; sourceTree = "<group>"; };
 		3131894D19C79D8400C42120 /* OWTAssetInfoViewa.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OWTAssetInfoViewa.xib; sourceTree = "<group>"; };
-		31338A9D19B5405600A2EE6E /* OWTSearchViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OWTSearchViewCon.h; path = ../../OWTSearchViewCon.h; sourceTree = "<group>"; };
-		31338A9E19B5405600A2EE6E /* OWTSearchViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OWTSearchViewCon.m; path = ../../OWTSearchViewCon.m; sourceTree = "<group>"; };
-		31338A9F19B5405600A2EE6E /* OWTSearchResultsViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OWTSearchResultsViewCon.h; path = ../../OWTSearchResultsViewCon.h; sourceTree = "<group>"; };
-		31338AA019B5405600A2EE6E /* OWTSearchResultsViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OWTSearchResultsViewCon.m; path = ../../OWTSearchResultsViewCon.m; sourceTree = "<group>"; };
-		31338AA119B5405600A2EE6E /* OWTSearchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OWTSearchManager.h; path = ../../OWTSearchManager.h; sourceTree = "<group>"; };
-		31338AA219B5405600A2EE6E /* OWTSearchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OWTSearchManager.m; path = ../../OWTSearchManager.m; sourceTree = "<group>"; };
 		31338AA319B5405600A2EE6E /* OQJSearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OQJSearchView.h; path = ../../OQJSearchView.h; sourceTree = "<group>"; };
 		31338AA419B5405600A2EE6E /* OQJSearchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OQJSearchView.m; path = ../../OQJSearchView.m; sourceTree = "<group>"; };
 		31338AAF19B574FD00A2EE6E /* OWTSocialNavCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTSocialNavCon.h; sourceTree = "<group>"; };
@@ -1642,6 +1636,12 @@
 		A3DB10BE1BABAD690033522F /* 评论.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "评论.png"; sourceTree = "<group>"; };
 		A3DB10C01BABAD690033522F /* 赞00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "赞00.png"; sourceTree = "<group>"; };
 		A3E447FB1A79B00C000DE7BA /* selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selected@2x.png"; sourceTree = "<group>"; };
+		A3EB5A3B1BD7412B00E08563 /* OWTSearchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTSearchManager.h; sourceTree = SOURCE_ROOT; };
+		A3EB5A3C1BD7412B00E08563 /* OWTSearchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTSearchManager.m; sourceTree = SOURCE_ROOT; };
+		A3EB5A3D1BD7412B00E08563 /* OWTSearchResultsViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTSearchResultsViewCon.h; sourceTree = SOURCE_ROOT; };
+		A3EB5A3E1BD7412B00E08563 /* OWTSearchResultsViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTSearchResultsViewCon.m; sourceTree = SOURCE_ROOT; };
+		A3EB5A3F1BD7412B00E08563 /* OWTSearchViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTSearchViewCon.h; sourceTree = SOURCE_ROOT; };
+		A3EB5A401BD7412B00E08563 /* OWTSearchViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTSearchViewCon.m; sourceTree = SOURCE_ROOT; };
 		A3EFF8491B8468F000DC6255 /* LJClassViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJClassViewCon.h; sourceTree = "<group>"; };
 		A3EFF84A1B8468F000DC6255 /* LJClassViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJClassViewCon.m; sourceTree = "<group>"; };
 		A3EFF84B1B8468F000DC6255 /* LJCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJCategory.h; sourceTree = "<group>"; };
@@ -2845,12 +2845,12 @@
 		9049CCCF1909F7C100945E86 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				31338A9D19B5405600A2EE6E /* OWTSearchViewCon.h */,
-				31338A9E19B5405600A2EE6E /* OWTSearchViewCon.m */,
-				31338A9F19B5405600A2EE6E /* OWTSearchResultsViewCon.h */,
-				31338AA019B5405600A2EE6E /* OWTSearchResultsViewCon.m */,
-				31338AA119B5405600A2EE6E /* OWTSearchManager.h */,
-				31338AA219B5405600A2EE6E /* OWTSearchManager.m */,
+				A3EB5A3B1BD7412B00E08563 /* OWTSearchManager.h */,
+				A3EB5A3C1BD7412B00E08563 /* OWTSearchManager.m */,
+				A3EB5A3D1BD7412B00E08563 /* OWTSearchResultsViewCon.h */,
+				A3EB5A3E1BD7412B00E08563 /* OWTSearchResultsViewCon.m */,
+				A3EB5A3F1BD7412B00E08563 /* OWTSearchViewCon.h */,
+				A3EB5A401BD7412B00E08563 /* OWTSearchViewCon.m */,
 				31338AA319B5405600A2EE6E /* OQJSearchView.h */,
 				31338AA419B5405600A2EE6E /* OQJSearchView.m */,
 			);
@@ -5398,6 +5398,7 @@
 				E0B99B621B05966000ED7831 /* PSTCollectionViewLayout.m in Sources */,
 				A38F4D7C1A64A98100FD1912 /* MJRefreshConst.m in Sources */,
 				660A10541AB691AB00C3BCA9 /* SvImageInfoUtils.m in Sources */,
+				A3EB5A421BD7412B00E08563 /* OWTSearchResultsViewCon.m in Sources */,
 				A3D4CBCC1A836FDF0097B48E /* XHImageViewer.m in Sources */,
 				90A7BC0D195D354200FE2602 /* OWTUserAlbumsInfoData.m in Sources */,
 				90E241F3195D45C8001F3EF7 /* OWTActivityData.m in Sources */,
@@ -5540,6 +5541,7 @@
 				E0BAB5231B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational2.m in Sources */,
 				A3D4D0061BB256CA008482FD /* OWTPhotoUploadTagButton.m in Sources */,
 				66D799DF1AD524130030AE48 /* EGOCache.m in Sources */,
+				A3EB5A411BD7412B00E08563 /* OWTSearchManager.m in Sources */,
 				31CB73BF19B6CDD20081B05E /* OWTCommentsViewCon.m in Sources */,
 				A38F4D7B1A64A98100FD1912 /* MJRefreshBaseView.m in Sources */,
 				A3D4CBD11A836FDF0097B48E /* NSString+XHMD5.m in Sources */,
@@ -5552,7 +5554,6 @@
 				E0B99B5E1B05966000ED7831 /* PSTCollectionViewController.m in Sources */,
 				A38F4D811A64A98100FD1912 /* UIView+MJExtension.m in Sources */,
 				A37B3D7A1B3B993500E32E53 /* LJHuancun.xcdatamodeld in Sources */,
-				31338AA619B5405600A2EE6E /* OWTSearchResultsViewCon.m in Sources */,
 				E0B99B361B05959F00ED7831 /* UIResponder+Router.m in Sources */,
 				9089A822191B7F1000D05A18 /* OWTTabBarHider.m in Sources */,
 				90E24211195D4C78001F3EF7 /* OWTAsset.m in Sources */,
@@ -5579,13 +5580,13 @@
 				A3D4CBAF1A834C670097B48E /* CTCheckbox.m in Sources */,
 				E0B99BD41B05978A00ED7831 /* EMChatImageBubbleView.m in Sources */,
 				90D4667C194E54B200A53E3E /* OWTFollowingUsersViewCon.m in Sources */,
-				31338AA719B5405600A2EE6E /* OWTSearchManager.m in Sources */,
 				E02FF7071B4657D5000D437B /* NetStatusMonitor.m in Sources */,
 				A3D4CBB31A834C680097B48E /* OWTLoginRegisterSelectionViewCon.m in Sources */,
 				A33C2A9F1B4B796E00779337 /* LJCaptions.m in Sources */,
 				90BF4AA0193A132D00A1E6C9 /* OThumbnailCell.m in Sources */,
 				E0B99BD31B05978A00ED7831 /* EMChatAudioBubbleView.m in Sources */,
 				90E24205195D4C43001F3EF7 /* OWTUserSubscriptionInfo.m in Sources */,
+				A3EB5A431BD7412B00E08563 /* OWTSearchViewCon.m in Sources */,
 				A3D4D0011BB2552D008482FD /* OWTPhotoUploadViewController.m in Sources */,
 				E0BC01EB1B0E1432009D1D20 /* GroupSubjectChangingViewController.m in Sources */,
 				9044E3FF18CAE5FB00784D38 /* OWTMainViewCon.m in Sources */,
@@ -5618,7 +5619,6 @@
 				A34ECB591A78877C009A666C /* AlbumPhotosListView1.m in Sources */,
 				E0BAB5261B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational5.m in Sources */,
 				90E24202195D4C3D001F3EF7 /* OWTUserFellowshipInfo.m in Sources */,
-				31338AA519B5405600A2EE6E /* OWTSearchViewCon.m in Sources */,
 				E09C8A071BB10CCC00505F6C /* REBackgroundView.m in Sources */,
 				A395D2991A6F39E8004E4F33 /* OWTUserCollectionAssetViewCon.m in Sources */,
 				90B6557E197EF34F0093524D /* OWTActivitiesViewCon.mm in Sources */,

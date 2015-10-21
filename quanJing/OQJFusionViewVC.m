@@ -166,7 +166,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     self.navigationController.navigationBar.barTintColor = nil;
     [searchResultsViewCon setKeyword:keyword ];
     searchResultsViewCon.hidesBottomBarWhenPushed = YES;
-    [searchResultsViewCon substituteNavigationBarBackItem];
+//    [searchResultsViewCon substituteNavigationBarBackItem];
     UIApplication *application = [UIApplication sharedApplication];
     [application setStatusBarStyle:UIStatusBarStyleDefault];
     [_tabBarHider hideTabBar];

@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OWTSearchViewCon : UIViewController<UICollectionViewDelegate, UICollectionViewDataSource,UISearchBarDelegate>
+@interface OWTSearchViewCon : UIViewController<UISearchBarDelegate>
 
-- (void)setKeyword:(NSString *)keyword withAssets:(NSArray*)assets;
 @end

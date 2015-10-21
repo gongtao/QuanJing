@@ -10,7 +10,15 @@
 #import "OWTComment.h"
 
 @implementation OWTAsset
-
+-(void)getFromModel:(QJImageObject *)model
+{
+    _assetID=model.imageId.stringValue;
+    _imageInfo.width=model.width.intValue;
+    _imageInfo.height=model.height.intValue;
+    _imageInfo.url=model.url;
+    _ownerUserID=model.userId;
+    _imageInfo.primaryColorHex=model.bgcolor;
+}
 - (void)addComment:(OWTComment*)comment
 {
     if (_comments == nil)

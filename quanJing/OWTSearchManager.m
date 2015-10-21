@@ -29,17 +29,14 @@
                         success:(void (^)(NSArray* assets))success
                         failure:(void (^)(NSError* error))failure
 {
-    NSString* url = [NSString stringWithFormat:@"assets/search1/%@", keyword];
+    NSString* url = [NSString stringWithFormat:@"assets/search/%@", keyword];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSString* userPhoneName = [[UIDevice currentDevice] name];
-    NSLog(@"手机别名: %@", userPhoneName);
     
     RKObjectManager* om = [RKObjectManager sharedManager];
     [om getObject:nil
              path:url
        parameters:@{ @"startIndex" : [NSString stringWithFormat:@"%d", startIndex],
-                     @"count" : [NSString stringWithFormat:@"%d", count],
-                     @"pn" : userPhoneName}
+                     @"count" : [NSString stringWithFormat:@"%d", count] }
           success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
               [o logResponse];
               

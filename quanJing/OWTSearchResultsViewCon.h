@@ -7,11 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIViewController+WTExt.h"
 
-@interface OWTSearchResultsViewCon : UIViewController<UICollectionViewDelegate, UICollectionViewDataSource,UISearchBarDelegate>
+@interface OWTSearchResultsViewCon : UIViewController<UICollectionViewDelegate, UICollectionViewDataSource>
 
 - (void)setKeyword:(NSString *)keyword withAssets:(NSArray*)assets;
-//
-- (void)setKeyword:(NSString *)keyword;
+- (void)setKeyword:(NSString *)keyword ;
 @end

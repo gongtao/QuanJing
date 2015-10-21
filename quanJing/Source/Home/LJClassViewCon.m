@@ -135,7 +135,7 @@
 //    self.navigationController.navigationBar.barTintColor = nil;
     [searchResultsViewCon setKeyword:keyword ];
     searchResultsViewCon.hidesBottomBarWhenPushed = YES;
-    [searchResultsViewCon substituteNavigationBarBackItem];
+//    [searchResultsViewCon substituteNavigationBarBackItem];
 //    UIApplication *application = [UIApplication sharedApplication];
 //    [application setStatusBarStyle:UIStatusBarStyleDefault];
     [self.navigationController pushViewController:searchResultsViewCon animated:YES];

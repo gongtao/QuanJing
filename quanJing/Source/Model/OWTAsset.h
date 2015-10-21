@@ -7,7 +7,7 @@
 //
 
 #import "OWTAssetData.h"
-
+#import "QuanJingSDK.h"
 @interface OWTAsset : NSObject
 
 @property (nonatomic, strong) NSString* assetID;
@@ -38,5 +38,5 @@
 
 - (void)mergeWithData:(OWTAssetData*)assetData;
 - (void)mergeWithRelatedAssets:(NSArray*)relatedAssets;
-
+- (void)getFromModel:(QJImageObject*)model;
 @end
