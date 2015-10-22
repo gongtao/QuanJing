@@ -132,11 +132,13 @@
             return;
         }
     }
-    
-    [pt requestUserInfo:^(QJUser * _Nonnull user, NSDictionary * _Nonnull userDic, NSError * _Nonnull error) {
-        
-    }];
-    RKObjectManager* om = [RKObjectManager sharedManager];
+     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+         [pt requestUserInfo:^(QJUser * _Nonnull user, NSDictionary * _Nonnull userDic, NSError * _Nonnull error) {
+             
+         }];
+ 
+     });
+        RKObjectManager* om = [RKObjectManager sharedManager];
     [om getObjectsAtPath:@"users/me"
               parameters:nil
                  success:^(RKObjectRequestOperation* o, RKMappingResult* result) {

@@ -129,6 +129,10 @@
 	<array>
 		<string>FZLTHJW.TTF</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchImageFile</key>
 	<string>Default.png</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -151,7 +155,5 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
 </dict>
 </plist>
