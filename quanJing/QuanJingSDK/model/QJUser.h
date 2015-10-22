@@ -70,6 +70,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithJson:(nullable NSDictionary *)json;
 
+- (void)setPropertiesFromJson:(NSDictionary *)json;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -4885,7 +4885,7 @@
 				ORGANIZATIONNAME = "SparkingSoft Co., Ltd";
 				TargetAttributes = {
 					9044E3C018CAE4D800784D38 = {
-						DevelopmentTeam = B6DQ38AV7Y;
+						DevelopmentTeam = T3BNK5WMQ7;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;

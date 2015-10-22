@@ -331,15 +331,20 @@
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
 		NSDictionary * dataDic = operation.responseObject[@"data"];
-		QJUser * user = [[QJUser alloc] initWithJson:dataDic];
+        if (self.currentUser) {
+            [self.currentUser setPropertiesFromJson:dataDic];
+        }
+        else {
+            self.currentUser = [[QJUser alloc] initWithJson:dataDic];
+        }
 		
 		if (finished)
-			finished(user, dataDic, error);
+			finished(self.currentUser, dataDic, error);
 		return;
 	}
 	
 	if (finished)
-		finished(nil, nil, error);
+		finished(self.currentUser, nil, error);
 }
 
 - (void)requestModifyUserInfo:(QJUser *)user
