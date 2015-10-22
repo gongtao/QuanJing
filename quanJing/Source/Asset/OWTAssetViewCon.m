@@ -47,6 +47,7 @@
 #import "LJAssetLikeModel.h"
 #import "OWTComment.h"
 #import "OWTInputView.h"
+#import "QuanJingSDK.h"
 static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 @interface OWTAssetViewCon ()
@@ -78,6 +79,8 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 
 @property (nonatomic, assign) NSInteger jan;
+@property(nonatomic,strong)NSNumber *imageId;
+@property(nonatomic,strong)NSNumber *imageType;
 @end
 
 @implementation OWTAssetViewCon
@@ -92,7 +95,20 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 {
     return [self initWithAsset:asset deletionAllowed:NO onDeleteAction:nil];
 }
-
+-(instancetype)initWithImageId:(NSNumber*)imageId imageType:(NSNumber*)imageType
+{
+    self = [super initWithNibName:nil bundle:nil];
+    if (self)
+    {
+        _likeBodys=[[NSMutableArray alloc]init];
+        _users=[[NSMutableArray alloc]init];
+        _imageId=imageId;
+        _imageType=imageType;
+        _isOpen=NO;
+        [self setup];
+    }
+    return self;
+}
 - (instancetype)initWithAsset:(OWTAsset*)asset
               deletionAllowed:(BOOL)deletionAllowed
                onDeleteAction:(void (^)())onDeleteAction
@@ -374,8 +390,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self getLikesBody];
-    [self getCommentBody];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -682,6 +697,17 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 }
 
 #pragma mark - Data Reloading
+-(void)getAllAssetData
+{
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [[QJInterfaceManager sharedManager]requestImageDetail:_imageId imageType:_imageType finished:^(QJImageObject * _Nonnull imageObject, NSError * _Nonnull error) {
+        
+    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+    });
+});
+}
 -(void)getCommentBody
 {
         if (_asset == nil)

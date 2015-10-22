@@ -16,7 +16,7 @@
     _imageInfo.width=model.width.intValue;
     _imageInfo.height=model.height.intValue;
     _imageInfo.url=model.url;
-    _ownerUserID=model.userId;
+    _ownerUserID=model.userId.stringValue;
     _imageInfo.primaryColorHex=model.bgcolor;
 }
 - (void)addComment:(OWTComment*)comment

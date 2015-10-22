@@ -331,8 +331,7 @@ static const int kDefaultLoadItemNum1 = 10;
         if(_arr.count==0)
             return ;
         QJArticleObject *model1=[_arr lastObject];
-
-        [[QJInterfaceManager sharedManager]requestArticleList:model.cid cursorIndex:model1.aid pageSize:30 finished:^(NSArray * _Nonnull articleObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+        [[QJInterfaceManager sharedManager]requestArticleList:model.cid cursorIndex:model1.aid pageSize:30 finished:^(NSArray * _Nonnull articleObjectArray, NSNumber * _Nonnull nextCursorIndex, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
             if (_pageCount==0) {
 
                 [_categories addObjectsFromArray:articleObjectArray];
@@ -488,7 +487,7 @@ static const int kDefaultLoadItemNum1 = 10;
 {
 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     QJArticleCategory *model=_categoriesList[_pageCount];
-    [[QJInterfaceManager sharedManager]requestArticleList:model.cid cursorIndex:nil pageSize:30 finished:^(NSArray * _Nonnull articleObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+    [[QJInterfaceManager sharedManager]requestArticleList:model.cid cursorIndex:nil pageSize:30 finished:^(NSArray * _Nonnull articleObjectArray, NSNumber * _Nonnull nextCursorIndex, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
         if (_pageCount==0) {
             [_categories removeAllObjects];
             [_categories addObjectsFromArray:articleObjectArray];
@@ -593,7 +592,7 @@ LJExploreViewCellTableViewCell*cell=[tableView dequeueReusableCellWithIdentifier
     evc.SummaryStr =category.summary;
     //    //
     evc.titleS=category.title;
-    evc.urlString =category.content;
+    evc.urlString =category.url;
     evc.assetUrl =category.coverUrl;
     [self.navigationController pushViewController:evc animated:YES];
     [evc substituteNavigationBarBackItem];

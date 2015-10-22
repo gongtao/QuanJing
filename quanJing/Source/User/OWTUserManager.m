@@ -6,6 +6,7 @@
 #import "HuanXinManager.h"
 #import "HXChatInitModel.h"
 #import "HxNickNameImageModel.h"
+#import "QJPassport.h"
 @interface OWTUserManager ()
 {
     NSMutableDictionary* _usersByID;
@@ -123,10 +124,8 @@
 - (void)refreshCurrentUserSuccess:(void (^)())success
                           failure:(void (^)(NSError*))failure
 {
-    OWTAuthManager* am = GetAuthManager();
-    
-    if (!am.isAuthenticated)
-    {
+    QJPassport *pt=[QJPassport sharedPassport];
+    if (!pt.isLogin) {
         if (failure != nil)
         {
             failure(MakeError(kWTErrorAuthFailed));
@@ -134,6 +133,9 @@
         }
     }
     
+    [pt requestUserInfo:^(QJUser * _Nonnull user, NSDictionary * _Nonnull userDic, NSError * _Nonnull error) {
+        
+    }];
     RKObjectManager* om = [RKObjectManager sharedManager];
     [om getObjectsAtPath:@"users/me"
               parameters:nil

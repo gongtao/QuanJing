@@ -228,11 +228,10 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     QJImageObject *model=_assets[indexPath.row];
-    OWTAsset* asset =[[OWTAsset alloc]init];
-    [asset getFromModel:model];
-    if (asset != nil)
+    if (model != nil)
     {
-        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset deletionAllowed:YES onDeleteAction:^{ [self.collectionView reloadData]; }];
+        OWTAssetViewCon *assetViewCon=[[OWTAssetViewCon alloc]initWithImageId:model.imageId imageType:[NSNumber numberWithInt:1]];
+//        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset deletionAllowed:YES onDeleteAction:^{ [self.collectionView reloadData]; }];
         [self.navigationController pushViewController:assetViewCon animated:YES];
     }
 }

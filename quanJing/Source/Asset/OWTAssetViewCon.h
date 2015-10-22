@@ -21,5 +21,5 @@
 - (instancetype)initWithAsset:(OWTAsset*)asset
               deletionAllowed:(BOOL)deletionAllowed
                onDeleteAction:(void (^)())onDeleteAction;
-
+-(instancetype)initWithImageId:(NSNumber*)imageId imageType:(NSNumber*)imageType ;
 @end
