@@ -310,7 +310,7 @@
 - (void)requestArticleList:(nullable NSNumber *)categoryId
 	cursorIndex:(nullable NSNumber *)cursorIndex
 	pageSize:(NSUInteger)pageSize
-	finished:(nullable void (^)(NSArray * articleObjectArray, NSArray * resultArray, NSError * error))finished
+	finished:(nullable void (^)(NSArray * articleObjectArray, NSNumber * nextCursorIndex, NSArray * resultArray, NSError * error))finished
 {
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
 	
@@ -357,18 +357,23 @@
 		NSDictionary * dataDic = responseObject[@"data"];
 		NSArray * dataArray = dataDic[@"page"];
 		
+        __block NSNumber *nextCursorIndex = nil;
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-			[resultArray addObject:[[QJArticleObject alloc] initWithJson:obj]];
+            QJArticleObject *articleObject = [[QJArticleObject alloc] initWithJson:obj];
+			[resultArray addObject:articleObject];
+            if (idx == dataArray.count - 1) {
+                nextCursorIndex = articleObject.aid;
+            }
 		}];
 		
 		if (finished)
-			finished(resultArray, dataArray, error);
+			finished(resultArray, nextCursorIndex, dataArray, error);
 		return;
 	}
 	
 	if (finished)
-		finished(nil, nil, error);
+		finished(nil, nil, nil, error);
 }
 
 #pragma mark - 圈子

@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestArticleList:(nullable NSNumber *)categoryId
 	cursorIndex:(nullable NSNumber *)cursorIndex
 	pageSize:(NSUInteger)pageSize
-	finished:(nullable void (^)(NSArray * articleObjectArray, NSArray * resultArray, NSError * error))finished;
+	finished:(nullable void (^)(NSArray * articleObjectArray, NSNumber * nextCursorIndex, NSArray * resultArray, NSError * error))finished;
 	
 // 圈子列表
 - (void)resultArrayFromActionListResponseData:(nullable NSArray *)data

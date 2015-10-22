@@ -273,32 +273,26 @@
 					XCTFail(@"testImageCategoryExample error: %@", error);
 			}];
 			
-			__block NSNumber * nextCursorIndex = nil;
+			__block NSNumber * cursorIndex = nil;
 			[[QJInterfaceManager sharedManager] requestArticleList:[NSNumber numberWithLongLong:1]
 			cursorIndex:nil
 			pageSize:20
-			finished:^(NSArray * articleObjectArray, NSArray * resultArray, NSError * error) {
+			finished:^(NSArray * articleObjectArray, NSNumber * nextCursorIndex, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testImageCategoryExample error: %@", error);
 					
-				if (articleObjectArray && (articleObjectArray.count > 0)) {
-					QJArticleObject * obj = [articleObjectArray lastObject];
-					nextCursorIndex = [obj aid];
-				}
+                cursorIndex = nextCursorIndex;
 			}];
 			
-			if (nextCursorIndex)
+			if (cursorIndex)
 				[[QJInterfaceManager sharedManager] requestArticleList:[NSNumber numberWithLongLong:1]
-				cursorIndex:nextCursorIndex
+				cursorIndex:cursorIndex
 				pageSize:20
-				finished:^(NSArray * articleObjectArray, NSArray * resultArray, NSError * error) {
+				finished:^(NSArray * articleObjectArray, NSNumber * nextCursorIndex, NSArray * resultArray, NSError * error) {
 					if (error)
 						XCTFail(@"testImageCategoryExample error: %@", error);
 						
-					if (articleObjectArray && (articleObjectArray.count > 0)) {
-						QJArticleObject * obj = [articleObjectArray lastObject];
-						nextCursorIndex = [obj aid];
-					}
+                    cursorIndex = nextCursorIndex;
 				}];
 				
 			[expectation fulfill];
