@@ -84,13 +84,13 @@
 	NSNumber * creatTime = json[@"creatTime"];
 	
 	if (!QJ_IS_NUM_NIL(creatTime))
-		self.creatTime = [NSDate dateWithTimeIntervalSince1970:creatTime.longLongValue];
+		self.creatTime = [NSDate dateWithTimeIntervalSince1970:creatTime.longLongValue / 1000.0];
 		
 	// updateTime
 	NSNumber * updateTime = json[@"updateTime"];
 	
 	if (!QJ_IS_NUM_NIL(updateTime))
-		self.updateTime = [NSDate dateWithTimeIntervalSince1970:updateTime.longLongValue];
+		self.updateTime = [NSDate dateWithTimeIntervalSince1970:updateTime.longLongValue / 1000.0];
 }
 
 @end

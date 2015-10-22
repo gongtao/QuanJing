@@ -47,7 +47,7 @@
     NSNumber * creatTime = json[@"creatTime"];
     
     if (!QJ_IS_NUM_NIL(creatTime))
-        self.creatTime = [NSDate dateWithTimeIntervalSince1970:creatTime.longLongValue];
+        self.creatTime = [NSDate dateWithTimeIntervalSince1970:creatTime.longLongValue / 1000.0];
     
     // aid
     NSNumber * aid = json[@"id"];

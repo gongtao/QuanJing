@@ -281,8 +281,7 @@
 	
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
-		NSDictionary * dataDic = operation.responseObject[@"data"];
-		NSArray * dataArray = dataDic[@"page"];
+		NSArray * dataArray = operation.responseObject[@"data"];
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
@@ -339,7 +338,8 @@
 	
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
-		NSArray * dataArray = operation.responseObject[@"data"];
+		NSDictionary * dataDic = operation.responseObject[@"data"];
+		NSArray * dataArray = dataDic[@"page"];
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {

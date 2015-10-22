@@ -37,19 +37,20 @@
 		
 		if (!QJ_IS_NUM_NIL(userId))
 			self.uid = userId;
-    }
-    
-    // nickName
-    NSString * nickName = json[@"nickName"];
-    
-    if (!QJ_IS_STR_NIL(nickName))
-        self.nickName = nickName;
-    else {
-        NSString * nickname = json[@"nickname"];
-        
-        if (!QJ_IS_NUM_NIL(nickname))
-            self.nickName = nickname;
-    }
+	}
+	
+	// nickName
+	NSString * nickName = json[@"nickName"];
+	
+	if (!QJ_IS_STR_NIL(nickName)) {
+		self.nickName = nickName;
+	}
+	else {
+		NSString * nickname = json[@"nickname"];
+		
+		if (!QJ_IS_NUM_NIL(nickname))
+			self.nickName = nickname;
+	}
 	
 	// age
 	NSString * age = json[@"age"];
@@ -79,7 +80,7 @@
 	NSNumber * creatTime = json[@"creatTime"];
 	
 	if (!QJ_IS_NUM_NIL(creatTime))
-		self.creatTime = [NSDate dateWithTimeIntervalSince1970:creatTime.longLongValue];
+		self.creatTime = [NSDate dateWithTimeIntervalSince1970:creatTime.longLongValue / 1000.0];
 		
 	// email
 	NSString * email = json[@"email"];
@@ -133,7 +134,7 @@
 	NSNumber * lastLoginTime = json[@"lastLoginTime"];
 	
 	if (!QJ_IS_NUM_NIL(lastLoginTime))
-		self.lastLoginTime = [NSDate dateWithTimeIntervalSince1970:lastLoginTime.longLongValue];
+		self.lastLoginTime = [NSDate dateWithTimeIntervalSince1970:lastLoginTime.longLongValue / 1000.0];
 		
 	// maritalStatus
 	NSString * maritalStatus = json[@"maritalStatus"];
