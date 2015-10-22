@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QJPassport : NSObject
 
+@property (nonatomic, strong, nullable) QJUser *currentUser;
+
 + (instancetype)sharedPassport;
 
 ///-------------------

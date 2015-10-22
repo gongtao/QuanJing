@@ -66,7 +66,13 @@
 	NSNumber * height = json[@"height"];
 	
 	if (!QJ_IS_NUM_NIL(height))
-		self.height = height;
+        self.height = height;
+    
+    // imageType
+    NSNumber * imageType = json[@"imageType"];
+    
+    if (!QJ_IS_NUM_NIL(imageType))
+        self.imageType = imageType;
 		
 	// brand
 	NSString * brand = json[@"brand"];

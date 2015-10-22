@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSString * bgcolor;
 
+@property (nonatomic, strong, nullable) NSNumber * imageType;
+
 @property (nonatomic, strong, nullable) NSNumber * authId;
 
 @property (nonatomic, strong, nullable) NSString * brand;

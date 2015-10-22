@@ -165,11 +165,16 @@
 		NSLog(@"%@", operation.responseObject);
 		NSDictionary * data = operation.responseObject[@"data"];
 		NSNumber * userId = data[@"userId"];
-		
+        
+        self.currentUser = [[QJUser alloc] init];
+        self.currentUser.uid = userId;
+        
 		if (finished)
 			finished(userId.integerValue, data[@"ticket"], error);
 		return;
 	}
+    
+    self.currentUser = nil;
 	
 	if (finished)
 		finished(0, nil, error);
@@ -249,12 +254,17 @@
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
 		NSDictionary * data = operation.responseObject[@"data"];
-		NSNumber * userId = data[@"userId"];
+        NSNumber * userId = data[@"userId"];
+        
+        self.currentUser = [[QJUser alloc] init];
+        self.currentUser.uid = userId;
 		
 		if (finished)
 			finished(userId.integerValue, data[@"ticket"], error);
 		return;
 	}
+    
+    self.currentUser = nil;
 	
 	if (finished)
 		finished(0, nil, error);
@@ -287,6 +297,8 @@
 	[cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * cookie, NSUInteger idx, BOOL * stop) {
 		[cookieJar deleteCookie:cookie];
 	}];
+    
+    self.currentUser = nil;
 }
 
 #pragma mark - 用户信息
