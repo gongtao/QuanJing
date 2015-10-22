@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSNumber * aid;
 
+@property (nonatomic, strong) NSString * url;
+
 @property (nonatomic, strong, nullable) NSString * title;
 
 @property (nonatomic, strong, nullable) NSString * summary;

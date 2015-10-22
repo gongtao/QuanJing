@@ -10,6 +10,8 @@
 
 #import "QJCoreMacros.h"
 
+#import "QJServerConstants.h"
+
 @implementation QJArticleObject
 
 - (instancetype)initWithJson:(nullable NSDictionary *)json
@@ -29,8 +31,10 @@
 	// aid
 	NSNumber * aid = json[@"id"];
 	
-	if (!QJ_IS_NUM_NIL(aid))
+    if (!QJ_IS_NUM_NIL(aid)) {
 		self.aid = aid;
+        self.url = [kQJArticleDetailURL stringByAppendingString:[aid stringValue]];
+    }
 		
 	// categoryId
 	NSNumber * categoryId = json[@"categoryId"];
