@@ -65,6 +65,27 @@ static NSString * const kQJCollectActionPath = @"/action/collect.user";
 // 圈子评论
 static NSString * const kQJCommentActionPath = @"/action/comment.user";
 
+// 图片详情
+static NSString * const kQJImageDetailPath = @"/imageUser/detail";
+
+// 图片评论
+static NSString * const kQJImageCommentPath = @"/imageComment/save.user";
+
+// 图片喜欢
+static NSString * const kQJImageLikePath = @"/userLike/save.user";
+
+// 图片取消喜欢
+static NSString * const kQJImageCancelLikePath = @"/userLike/cancel.user";
+
+// 图片收藏
+static NSString * const kQJImageCollectPath = @"/userCollect/save.user";
+
+// 图片取消收藏
+static NSString * const kQJImageCancelCollectPath = @"/userCollect/cancel.user";
+
+// 图片增加一次下载
+static NSString * const kQJImageAddDownloadPath = @"/imageUser/addDownload";
+
 // 用户收藏列表
 static NSString * const kQJUserCollectListPath = @"/userCollect/list.user";
 

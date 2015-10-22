@@ -338,4 +338,73 @@
 	}];
 }
 
+// 图片详情
+- (void)testImageExample
+{
+	// This is an example of a functional test case.
+	// Use XCTAssert and related functions to verify your tests produce the correct results.
+	[self measureBlock:^{
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testImageExample"];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			NSNumber * imageId = [NSNumber numberWithLongLong:900006405];
+			NSNumber * imageType = [NSNumber numberWithLongLong:1];
+			
+			[[QJInterfaceManager sharedManager] requestImageDetail:imageId
+			imageType:imageType
+			finished:^(QJImageObject * imageObject, NSError * error) {
+				if (error)
+					XCTFail(@"testImageExample error: %@", error);
+			}];
+			
+			// Login
+			[[QJPassport sharedPassport] loginUser:@"18600962172"
+			password:@"Gongtao1987"
+			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
+				if (error)
+					XCTFail(@"testActionExample error: %@", error);
+			}];
+			
+			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
+			
+			NSError * error = [[QJInterfaceManager sharedManager] requestImageComment:imageId
+			imageType:imageType
+			comment:@"赞"];
+			
+			if (error)
+				XCTFail(@"testUserExample error: %@", error);
+				
+			error = [[QJInterfaceManager sharedManager] requestImageLike:imageId imageType:imageType];
+			
+			if (error)
+				XCTFail(@"testImageExample error: %@", error);
+				
+			error = [[QJInterfaceManager sharedManager] requestImageCancelLike:imageId imageType:imageType];
+			
+			if (error)
+				XCTFail(@"testImageExample error: %@", error);
+				
+			error = [[QJInterfaceManager sharedManager] requestImageCollect:imageId imageType:imageType];
+			
+			if (error)
+				XCTFail(@"testImageExample error: %@", error);
+				
+			error = [[QJInterfaceManager sharedManager] requestImageCancelCollect:imageId imageType:imageType];
+			
+			if (error)
+				XCTFail(@"testImageExample error: %@", error);
+				
+			error = [[QJInterfaceManager sharedManager] requestImageAddDownload:imageId imageType:imageType];
+			
+			if (error)
+				XCTFail(@"testImageExample error: %@", error);
+				
+			[expectation fulfill];
+		});
+		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
+			if (error)
+				XCTFail(@"testImageExample error: %@", error);
+		}];
+	}];
+}
+
 @end

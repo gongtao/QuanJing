@@ -39,7 +39,7 @@
     NSNumber * time = json[@"time"];
     
     if (!QJ_IS_NUM_NIL(time))
-        self.time = [NSDate dateWithTimeIntervalSince1970:time.longLongValue];
+        self.time = [NSDate dateWithTimeIntervalSince1970:time.longLongValue / 1000.0];
 }
 
 @end

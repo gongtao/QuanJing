@@ -6,7 +6,9 @@
 //  Copyright © 2015年 QJ. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "QJCommentObject.h"
+
+#import "QJUser.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +27,42 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSNumber * userId;
 
 @property (nonatomic, strong, nullable) NSString * bgcolor;
+
+@property (nonatomic, strong, nullable) NSNumber * authId;
+
+@property (nonatomic, strong, nullable) NSString * brand;
+
+@property (nonatomic, strong, nullable) NSString * captionCn;
+
+@property (nonatomic, strong, nullable) NSString * captionEn;
+
+@property (nonatomic, strong, nullable) NSNumber * categoryId;
+
+@property (nonatomic, strong, nullable) NSArray * comments;
+
+@property (nonatomic, strong, nullable) NSDate * creatTime;
+
+@property (nonatomic, strong, nullable) NSString * descript;
+
+@property (nonatomic, strong, nullable) NSNumber * downloadTimes;
+
+@property (nonatomic, strong, nullable) NSString * hvsp;
+
+@property (nonatomic, strong, nullable) NSArray * likes;
+
+@property (nonatomic, strong, nullable) NSString * md5;
+
+@property (nonatomic, strong, nullable) NSString * modelRelease;
+
+@property (nonatomic, strong, nullable) NSString * permissions;
+
+@property (nonatomic, strong, nullable) NSString * photographer;
+
+@property (nonatomic, strong, nullable) NSNumber * picType;
+
+@property (nonatomic, strong, nullable) NSDate * shootingDate;
+
+@property (nonatomic, strong, nullable) NSString * source;
 
 - (instancetype)initWithJson:(nullable NSDictionary *)json;
 

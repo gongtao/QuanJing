@@ -10,8 +10,6 @@
 
 #import "QJHomeIndexObject.h"
 
-#import "QJImageObject.h"
-
 #import "QJImageCategory.h"
 
 #import "QJActionObject.h"
@@ -291,8 +289,7 @@
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
-		NSDictionary * dataDic = responseObject[@"data"];
-		NSArray * dataArray = dataDic[@"page"];
+		NSArray * dataArray = responseObject[@"data"];
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
@@ -353,7 +350,8 @@
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
-		NSArray * dataArray = responseObject[@"data"];
+		NSDictionary * dataDic = responseObject[@"data"];
+		NSArray * dataArray = dataDic[@"page"];
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {

@@ -79,7 +79,7 @@
 	NSNumber * creatTime = json[@"creatTime"];
 	
 	if (!QJ_IS_NUM_NIL(creatTime))
-		self.creatTime = [NSDate dateWithTimeIntervalSince1970:creatTime.longLongValue];
+		self.creatTime = [NSDate dateWithTimeIntervalSince1970:creatTime.longLongValue / 1000.0];
 		
 	// email
 	NSString * email = json[@"email"];
@@ -133,7 +133,7 @@
 	NSNumber * lastLoginTime = json[@"lastLoginTime"];
 	
 	if (!QJ_IS_NUM_NIL(lastLoginTime))
-		self.lastLoginTime = [NSDate dateWithTimeIntervalSince1970:lastLoginTime.longLongValue];
+		self.lastLoginTime = [NSDate dateWithTimeIntervalSince1970:lastLoginTime.longLongValue / 1000.0];
 		
 	// maritalStatus
 	NSString * maritalStatus = json[@"maritalStatus"];
