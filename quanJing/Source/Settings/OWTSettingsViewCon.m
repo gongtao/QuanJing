@@ -94,11 +94,11 @@
     RETableViewSection* section = [RETableViewSection sectionWithHeaderTitle:@"关于"];
     
     NSDictionary* appInfos = [[NSBundle mainBundle] infoDictionary];
-    NSString* bundleVersion = appInfos[@"CFBundleVersion"];
+//    NSString* bundleVersion = appInfos[@"CFBundleVersion"];
     NSString* bundleShortVersion = appInfos[@"CFBundleShortVersionString"];
     
-    NSDictionary* buildInfos = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"BuildInfo" ofType:@"plist"]];
-    NSString* gitRef = [buildInfos[@"BuildEnvironment"][@"GitRef"] substringToIndex:16];
+//    NSDictionary* buildInfos = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"BuildInfo" ofType:@"plist"]];
+//    NSString* gitRef = [buildInfos[@"BuildEnvironment"][@"GitRef"] substringToIndex:16];
     
     RETableViewItem* item;
     item = [RETableViewItem itemWithTitle:[NSString stringWithFormat:@"全景 v%@", bundleShortVersion]];

@@ -161,7 +161,6 @@
 		90B65580197EF34F0093524D /* OWTActivityMerger.m in Sources */ = {isa = PBXBuildFile; fileRef = 90B65576197EF34F0093524D /* OWTActivityMerger.m */; };
 		90B65583197EF34F0093524D /* OWTMergedActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 90B6557B197EF34F0093524D /* OWTMergedActivity.m */; };
 		90B71B7B19A0E0DA0087503D /* OViewPagerTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90B71B7A19A0E0DA0087503D /* OViewPagerTabView.m */; };
-		90BC4C9519A39443001CB5FF /* BuildInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 90BC4C9419A39443001CB5FF /* BuildInfo.plist */; };
 		90BF4A8F193A02D300A1E6C9 /* OThumbnailListViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 90BF4A8E193A02D300A1E6C9 /* OThumbnailListViewCon.m */; };
 		90BF4A9A193A10F600A1E6C9 /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = 90BF4A93193A10F600A1E6C9 /* UIImage+Alpha.m */; };
 		90BF4A9B193A10F600A1E6C9 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 90BF4A95193A10F600A1E6C9 /* UIImage+Resize.m */; };
@@ -1143,7 +1142,6 @@
 		90B6557B197EF34F0093524D /* OWTMergedActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTMergedActivity.m; sourceTree = "<group>"; };
 		90B71B7919A0E0DA0087503D /* OViewPagerTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OViewPagerTabView.h; sourceTree = "<group>"; };
 		90B71B7A19A0E0DA0087503D /* OViewPagerTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OViewPagerTabView.m; sourceTree = "<group>"; };
-		90BC4C9419A39443001CB5FF /* BuildInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BuildInfo.plist; sourceTree = "<group>"; };
 		90BF4A8D193A02D300A1E6C9 /* OThumbnailListViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OThumbnailListViewCon.h; sourceTree = "<group>"; };
 		90BF4A8E193A02D300A1E6C9 /* OThumbnailListViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OThumbnailListViewCon.m; sourceTree = "<group>"; };
 		90BF4A92193A10F600A1E6C9 /* UIImage+Alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
@@ -2842,7 +2840,6 @@
 			isa = PBXGroup;
 			children = (
 				E0BCFF481B0DB9AA009D1D20 /* ChatDemoUIDefine.h */,
-				90BC4C9419A39443001CB5FF /* BuildInfo.plist */,
 				9044E3CC18CAE4D800784D38 /* Weitu-Info.plist */,
 				9044E3CD18CAE4D800784D38 /* InfoPlist.strings */,
 				9044E3D018CAE4D800784D38 /* main.m */,
@@ -5269,7 +5266,6 @@
 				A3D4CBB41A834C680097B48E /* OWTLoginRegisterSelectionViewCon.xib in Resources */,
 				E01391551B0C3EA500051B78 /* chatListCellHead.png in Resources */,
 				E09413201B85DA09000160D7 /* wechatBg@2x.png in Resources */,
-				90BC4C9519A39443001CB5FF /* BuildInfo.plist in Resources */,
 				A38346FA1BB3CF6400D7BC94 /* 广场@2x.png in Resources */,
 				A39A71521BAFB38B00B59BEE /* 小框.png in Resources */,
 				E01391481B0C3EA500051B78 /* VoiceSearchFeedback019@2x.png in Resources */,
@@ -5315,7 +5311,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n\n# increase-build-number.sh\n# @desc Auto-increment the build number every time the project is run and add build information to plist\n# @usage\n# 1. Select: your Target in Xcode\n# 2. Select: Build Phases Tab\n# 3. Select: Add Build Phase -> Add Run Script\n# 4. Paste code below in to new \"Run Script\" section\n# 5. Drag the \"Run Script\" below \"Link Binaries With Libraries\"\n# 6. Insure that your starting build number is set to a whole integer and not a float (e.g. 1, not 1.0)\n\nbuildPlist=Source/BuildInfo.plist\necho $buildPlist\nif [ $CONFIGURATION == Release ]; then\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$buildPlist\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$buildPlist\"\nfi\n\n# Create dictionary BuildEnvironment to keep Info.plist tidy\n/usr/libexec/PlistBuddy -c \"Add :BuildEnvironment dict\" \"$buildPlist\"\n\n# Time and date\ndate=`date`\n/usr/libexec/PlistBuddy -c \"Add :BuildEnvironment:BuildDate string\" \"$buildPlist\"\n/usr/libexec/PlistBuddy -c \"Set :BuildEnvironment:BuildDate $date\" \"$buildPlist\"\n\n# Git name and mail, e.g. \"Jan-Gerd Tenberge (janten@gmail.com)\"\ngitName=`git config --global user.name`\ngitMail=`git config --global user.email`\n/usr/libexec/PlistBuddy -c \"Add :BuildEnvironment:GitUser string\" \"$buildPlist\"\n/usr/libexec/PlistBuddy -c \"Set :BuildEnvironment:GitUser $gitName ($gitMail)\" \"$buildPlist\"\n\n# Current git commit identifier as SHA-1 hash\ngitRev=`git rev-parse HEAD`\necho \"Revision is $gitRev\"\n/usr/libexec/PlistBuddy -c \"Add :BuildEnvironment:GitRef string\" \"$buildPlist\"\n/usr/libexec/PlistBuddy -c \"Set :BuildEnvironment:GitRef $gitRev\" \"$buildPlist\"\n\n# Users full name and username, e.g. \"Jan-Gerd Tenberge (janten)\"\nlongname=\"$(dscacheutil -q user -a name $(whoami) | fgrep gecos | sed -e 's/.*gecos: \\(.*\\)/\\1/')\"\n/usr/libexec/PlistBuddy -c \"Add :BuildEnvironment:BuildUser string\" \"$buildPlist\"\n/usr/libexec/PlistBuddy -c \"Set :BuildEnvironment:BuildUser $longname ($USER)\" \"$buildPlist\"\n\n# Create dictionary for build machine details name, model, hostname and UUID\n/usr/libexec/PlistBuddy -c \"Add :BuildEnvironment:BuildMachine dict\" \"$buildPlist\"\n\n# Computer's name, e.g. \"Jan-Gerds MacBook\"\ncomputerName=`scutil --get ComputerName`\n/usr/libexec/PlistBuddy -c \"Add :BuildEnvironment:BuildMachine:Name string\" \"$buildPlist\"\n/usr/libexec/PlistBuddy -c \"Set :BuildEnvironment:BuildMachine:Name $computerName\" \"$buildPlist\"\n\n# Computer's model, e.g. \"MacBookPro10,2\"\ncomputerModel=`sysctl -b hw.model`\n/usr/libexec/PlistBuddy -c \"Add :BuildEnvironment:BuildMachine:Model string\" \"$buildPlist\"\n/usr/libexec/PlistBuddy -c \"Set :BuildEnvironment:BuildMachine:Model $computerModel\" \"$buildPlist\"\n\n# Current hostname, e.g. \"macbook.jan-gerd.com\"\nhost=`hostname`\n/usr/libexec/PlistBuddy -c \"Add :BuildEnvironment:BuildMachine:Hostname string\" \"$buildPlist\"\n/usr/libexec/PlistBuddy -c \"Set :BuildEnvironment:BuildMachine:Hostname $host\" \"$buildPlist\"\n\n# An unique identifier for the build machine, same as used for provisioning profiles\ncomputerUUID=`ioreg -rd1 -c IOPlatformExpertDevice | awk '/IOPlatformUUID/ { split($0, line, \"\\\"\"); printf(\"%s\\n\", line[4]); }'`\n/usr/libexec/PlistBuddy -c \"Add :BuildEnvironment:BuildMachine:UUID string\" \"$buildPlist\"\n/usr/libexec/PlistBuddy -c \"Set :BuildEnvironment:BuildMachine:UUID $computerUUID\" \"$buildPlist\"\n";
+			shellScript = "
+";
 		};
 		A03514CE7514481C88BA777A /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -47,5 +47,3 @@ DerivedData/
 # Exclude Phabricator files
 
 .arcconfig
-
-quanJing/Source/BuildInfo.plist
