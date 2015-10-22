@@ -86,7 +86,7 @@ static NSString * const kQJImageCancelCollectPath = @"/userCollect/cancel.user";
 // 图片增加一次下载
 static NSString * const kQJImageAddDownloadPath = @"/imageUser/addDownload";
 
-// 用户收藏列表
+// 用户收藏图片列表
 static NSString * const kQJUserCollectListPath = @"/userCollect/list.user";
 
 #endif	/* QJServerConstants_h */

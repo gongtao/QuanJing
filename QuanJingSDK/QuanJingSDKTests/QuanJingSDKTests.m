@@ -10,6 +10,9 @@
 
 #import "QuanJingSDK.h"
 
+#define kPhoneNumber        @"18600962172"
+#define kPassword           @"Gongtao1987"
+
 @interface QuanJingSDKTests : XCTestCase
 
 @end
@@ -28,7 +31,8 @@
 	[super tearDown];
 }
 
-// 获取缩略图url
+#pragma mark - 获取缩略图url
+
 - (void)testThumbnailSizeExample
 {
 	NSString * url = [QJInterfaceManager thumbnailUrlFromImageUrl:@"http://quanjing-test.oss.aliyuncs.com/041/819/0418191be0c4e584005436e1235ffc4a/dd8fac16fece498dabd03625cc5cfa7d.gif" size:CGSizeMake(200.0, 200.0)];
@@ -36,7 +40,8 @@
 	NSLog(@"%@", url);
 }
 
-// 发送注册短信
+#pragma mark - 发送注册短信
+
 - (void)testSendRegistSMSExample
 {
 	// This is an example of a functional test case.
@@ -44,7 +49,7 @@
 	[self measureBlock:^{
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testSendRegistSMSExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			NSError * error = [[QJPassport sharedPassport] sendRegistSMS:@"18600962172"];
+			NSError * error = [[QJPassport sharedPassport] sendRegistSMS:kPhoneNumber];
 			
 			if (error)
 				XCTFail(@"testSendRegistSMSExample error: %@", error);
@@ -57,7 +62,8 @@
 	}];
 }
 
-// 注册
+#pragma mark - 注册
+
 - (void)testUserRegistExample
 {
 	// This is an example of a functional test case.
@@ -65,7 +71,7 @@
 	[self measureBlock:^{
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testUserRegistExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			[[QJPassport sharedPassport] registerUser:@"18600962172"
+			[[QJPassport sharedPassport] registerUser:kPhoneNumber
 			password:@"Gongtao1987"
 			code:@"278715"
 			finished:^(QJUser * user, NSDictionary * userDic, NSError * error) {
@@ -81,7 +87,8 @@
 	}];
 }
 
-// 发送登录短信
+#pragma mark - 发送登录短信
+
 - (void)testSendLoginSMSExample
 {
 	// This is an example of a functional test case.
@@ -89,7 +96,7 @@
 	[self measureBlock:^{
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testSendLoginSMSExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			NSError * error = [[QJPassport sharedPassport] sendLoginSMS:@"18600962172"];
+			NSError * error = [[QJPassport sharedPassport] sendLoginSMS:kPhoneNumber];
 			
 			if (error)
 				XCTFail(@"testSendLoginSMSExample error: %@", error);
@@ -102,7 +109,8 @@
 	}];
 }
 
-// 短信登录
+#pragma mark - 短信登录
+
 - (void)testLoginSMSExample
 {
 	// This is an example of a functional test case.
@@ -111,7 +119,7 @@
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testLoginSMSExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			// Login
-			[[QJPassport sharedPassport] loginUser:@"18600962172"
+			[[QJPassport sharedPassport] loginUser:kPhoneNumber
 			code:@"536528"
 			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
 				if (error)
@@ -133,7 +141,8 @@
 	}];
 }
 
-// 用户信息
+#pragma mark - 用户信息
+
 - (void)testUserExample
 {
 	// This is an example of a functional test case.
@@ -142,7 +151,7 @@
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testUserExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			// Login
-			[[QJPassport sharedPassport] loginUser:@"18600962172"
+			[[QJPassport sharedPassport] loginUser:kPhoneNumber
 			password:@"Gongtao1987"
 			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
 				if (error)
@@ -181,7 +190,8 @@
 	}];
 }
 
-// 首页
+#pragma mark - 首页
+
 - (void)testHomeIndexExample
 {
 	// This is an example of a functional test case.
@@ -202,7 +212,8 @@
 	}];
 }
 
-// 搜索
+#pragma mark - 搜索
+
 - (void)testImageSearchExample
 {
 	// This is an example of a functional test case.
@@ -226,7 +237,8 @@
 	}];
 }
 
-// 图片分类
+#pragma mark - 图片分类
+
 - (void)testImageCategoryExample
 {
 	// This is an example of a functional test case.
@@ -247,7 +259,8 @@
 	}];
 }
 
-// 图片故事
+#pragma mark - 图片故事
+
 - (void)testArticleExample
 {
 	// This is an example of a functional test case.
@@ -277,7 +290,8 @@
 	}];
 }
 
-// 圈子
+#pragma mark - 圈子
+
 - (void)testActionExample
 {
 	// This is an example of a functional test case.
@@ -286,7 +300,7 @@
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testActionExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			// Login
-			[[QJPassport sharedPassport] loginUser:@"18600962172"
+			[[QJPassport sharedPassport] loginUser:kPhoneNumber
 			password:@"Gongtao1987"
 			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
 				if (error)
@@ -338,7 +352,8 @@
 	}];
 }
 
-// 图片详情
+#pragma mark - 图片详情
+
 - (void)testImageExample
 {
 	// This is an example of a functional test case.
@@ -357,7 +372,7 @@
 			}];
 			
 			// Login
-			[[QJPassport sharedPassport] loginUser:@"18600962172"
+			[[QJPassport sharedPassport] loginUser:kPhoneNumber
 			password:@"Gongtao1987"
 			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
 				if (error)
@@ -403,6 +418,40 @@
 		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
 			if (error)
 				XCTFail(@"testImageExample error: %@", error);
+		}];
+	}];
+}
+
+#pragma mark - 用户列表
+
+- (void)testUserImageListExample
+{
+	// This is an example of a functional test case.
+	// Use XCTAssert and related functions to verify your tests produce the correct results.
+	[self measureBlock:^{
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testUserImageListExample"];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			// Login
+			[[QJPassport sharedPassport] loginUser:kPhoneNumber
+			password:@"Gongtao1987"
+			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
+				if (error)
+					XCTFail(@"testActionExample error: %@", error);
+			}];
+			
+			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
+			
+			[[QJInterfaceManager sharedManager] requestUserCollectImageList:0
+			pageSize:20
+			finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserImageListExample error: %@", error);
+			}];
+			[expectation fulfill];
+		});
+		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
+			if (error)
+				XCTFail(@"testUserImageListExample error: %@", error);
 		}];
 	}];
 }

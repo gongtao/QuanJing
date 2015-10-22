@@ -160,8 +160,10 @@
 	if (pageNum == 0)
 		pageNum = 1;
 	params[@"pageNum"] = [NSNumber numberWithUnsignedInteger:pageNum];
-	params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
 	
+	if (pageSize > 0)
+		params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
+		
 	// When request fails, if it could, retry it 3 times at most.
 	int i = 3;
 	__block NSError * error = nil;
@@ -355,7 +357,7 @@
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-			[resultArray addObject:[[QJImageCategory alloc] initWithJson:obj]];
+			[resultArray addObject:[[QJArticleObject alloc] initWithJson:obj]];
 		}];
 		
 		if (finished)

@@ -164,8 +164,10 @@
 	if (pageNum == 0)
 		pageNum = 1;
 	params[@"pageNum"] = [NSNumber numberWithUnsignedInteger:pageNum];
-	params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
 	
+	if (pageSize > 0)
+		params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
+		
 	// When request fails, if it could, retry it 3 times at most.
 	int i = 3;
 	NSError * error = nil;
@@ -343,7 +345,7 @@
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-			[resultArray addObject:[[QJImageCategory alloc] initWithJson:obj]];
+			[resultArray addObject:[[QJArticleObject alloc] initWithJson:obj]];
 		}];
 		
 		if (finished)
@@ -869,6 +871,63 @@
 		NSLog(@"%@", operation.responseObject);
 		
 	return error;
+}
+
+#pragma mark - 用户图片列表
+
+- (void)requestUserCollectImageList:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished
+{
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	
+//	if (pageNum == 0)
+//		pageNum = 1;
+	params[@"pageNum"] = [NSNumber numberWithUnsignedInteger:pageNum];
+	
+	if (pageSize > 0)
+		params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
+		
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	NSError * error = nil;
+	AFHTTPRequestOperation * operation = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		operation = [self.httpRequestManager GET:kQJUserCollectListPath
+			parameters:params
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			dispatch_semaphore_signal(sem);
+		}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		error = [QJUtils errorFromOperation:operation];
+		i--;
+	} while (error && i >= 0);
+	
+	NSLog(@"%@", operation.request.URL);
+	
+	if (!error) {
+		NSLog(@"%@", operation.responseObject);
+        NSDictionary * dataDic = operation.responseObject[@"data"];
+		NSArray * dataArray = dataDic[@"list"];
+		
+		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+			[resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
+		}];
+		
+		if (finished)
+			finished(resultArray, dataArray, error);
+		return;
+	}
+	
+	if (finished)
+		finished(nil, nil, error);
 }
 
 @end

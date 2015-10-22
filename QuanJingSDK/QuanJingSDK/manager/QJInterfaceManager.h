@@ -92,6 +92,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 图片添加一次下载
 - (NSError *)requestImageAddDownload:(NSNumber *)imageId imageType:(NSNumber *)imageType;
 
+// 用户收藏图片列表
+- (void)requestUserCollectImageList:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished;
+	
 @end
 
 NS_ASSUME_NONNULL_END
