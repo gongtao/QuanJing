@@ -483,7 +483,6 @@
 		if (!error)
 			error = [QJUtils errorFromOperation:responseObject];
 		i--;
-		i--;
 	} while (error && i >= 0);
 	
 	if (!error)
@@ -524,7 +523,6 @@
 		if (!error)
 			error = [QJUtils errorFromOperation:responseObject];
 		i--;
-		i--;
 	} while (error && i >= 0);
 	
 	if (!error)
@@ -564,7 +562,6 @@
 		
 		if (!error)
 			error = [QJUtils errorFromOperation:responseObject];
-		i--;
 		i--;
 	} while (error && i >= 0);
 	
@@ -607,6 +604,325 @@
 		if (!error)
 			error = [QJUtils errorFromOperation:responseObject];
 		i--;
+	} while (error && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
+#pragma mark - 图片详情
+
+- (void)requestImageDetail:(NSNumber *)imageId
+	imageType:(NSNumber *)imageType
+	finished:(nullable void (^)(QJImageObject * imageObject, NSError * error))finished
+{
+	NSParameterAssert(imageId);
+	NSParameterAssert(imageType);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	
+	if (!QJ_IS_NUM_NIL(imageId))
+		params[@"imageId"] = imageId;
+		
+	if (!QJ_IS_NUM_NIL(imageType))
+		params[@"imageType"] = imageType;
+		
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJImageDetailPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error) {
+		NSLog(@"%@", responseObject);
+		NSDictionary * data = responseObject[@"data"];
+		QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:data];
+		
+		if (finished)
+			finished(imageObject, error);
+		return;
+	}
+	
+	if (finished)
+		finished(nil, error);
+}
+
+// 图片评论
+- (NSError *)requestImageComment:(NSNumber *)imageId
+	imageType:(NSNumber *)imageType
+	comment:(NSString *)comment
+{
+	NSParameterAssert(imageId);
+	NSParameterAssert(imageType);
+	NSParameterAssert(comment);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"imageId"] = imageId;
+	params[@"imageType"] = imageType;
+	params[@"content"] = comment;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager postPath:kQJImageCommentPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
+// 图片喜欢
+- (NSError *)requestImageLike:(NSNumber *)imageId imageType:(NSNumber *)imageType
+{
+	NSParameterAssert(imageId);
+	NSParameterAssert(imageType);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"imageId"] = imageId;
+	params[@"imageType"] = imageType;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJImageLikePath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
+// 图片取消喜欢
+- (NSError *)requestImageCancelLike:(NSNumber *)imageId imageType:(NSNumber *)imageType;
+{
+	NSParameterAssert(imageId);
+	NSParameterAssert(imageType);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"imageId"] = imageId;
+	params[@"imageType"] = imageType;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJImageCancelLikePath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
+// 图片收藏
+- (NSError *)requestImageCollect:(NSNumber *)imageId imageType:(NSNumber *)imageType
+{
+	NSParameterAssert(imageId);
+	NSParameterAssert(imageType);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"imageId"] = imageId;
+	params[@"imageType"] = imageType;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJImageCollectPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
+// 图片取消收藏
+- (NSError *)requestImageCancelCollect:(NSNumber *)imageId imageType:(NSNumber *)imageType;
+{
+	NSParameterAssert(imageId);
+	NSParameterAssert(imageType);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"imageId"] = imageId;
+	params[@"imageType"] = imageType;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJImageCancelCollectPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
+// 图片添加一次下载
+- (NSError *)requestImageAddDownload:(NSNumber *)imageId imageType:(NSNumber *)imageType;
+{
+	NSParameterAssert(imageId);
+	NSParameterAssert(imageType);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"imageId"] = imageId;
+	params[@"imageType"] = imageType;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJImageAddDownloadPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	

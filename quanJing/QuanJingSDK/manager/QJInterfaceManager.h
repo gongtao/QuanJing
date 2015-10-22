@@ -67,6 +67,31 @@ NS_ASSUME_NONNULL_BEGIN
 // 圈子评论
 - (NSError *)requestCommentAction:(NSNumber *)actionId comment:(NSString *)comment;
 
+// 图片详情
+- (void)requestImageDetail:(NSNumber *)imageId
+	imageType:(NSNumber *)imageType
+	finished:(nullable void (^)(QJImageObject * imageObject, NSError * error))finished;
+	
+// 图片评论
+- (NSError *)requestImageComment:(NSNumber *)imageId
+	imageType:(NSNumber *)imageType
+	comment:(NSString *)comment;
+	
+// 图片喜欢
+- (NSError *)requestImageLike:(NSNumber *)imageId imageType:(NSNumber *)imageType;
+
+// 图片取消喜欢
+- (NSError *)requestImageCancelLike:(NSNumber *)imageId imageType:(NSNumber *)imageType;
+
+// 图片收藏
+- (NSError *)requestImageCollect:(NSNumber *)imageId imageType:(NSNumber *)imageType;
+
+// 图片取消收藏
+- (NSError *)requestImageCancelCollect:(NSNumber *)imageId imageType:(NSNumber *)imageType;
+
+// 图片添加一次下载
+- (NSError *)requestImageAddDownload:(NSNumber *)imageId imageType:(NSNumber *)imageType;
+
 @end
 
 NS_ASSUME_NONNULL_END
