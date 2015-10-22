@@ -192,7 +192,14 @@
     
     [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
                          maskType:SVProgressHUDMaskTypeBlack];
-    
+    QJPassport *pt=[QJPassport sharedPassport];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+    });
+    [pt loginUser:username password:password finished:^(NSInteger userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
+        [SVProgressHUD dismiss];
+        
+    }];
     [am authWithUsername:username
                 password:password
                  success:^{

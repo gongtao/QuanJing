@@ -40,6 +40,7 @@
 #import "NetStatusMonitor.h"
 #import "UIColor+HexString.h"
 #import "LJExploreViewCellTableViewCell.h"
+#import "QuanJingSDK.h"
 static NSString* kCategoryCellID = @"kCategoryCellID";
 
 static const int kDefaultLoadItemNum1 = 10;
@@ -126,24 +127,32 @@ static const int kDefaultLoadItemNum1 = 10;
 {
     NSDictionary *dict=[NSDictionary dictionaryWithObject:[UIColor colorWithHexString:@"#f6f6f6"] forKey:UITextAttributeTextColor];
     self.navigationController.navigationBar.titleTextAttributes=dict;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[QJInterfaceManager sharedManager]requestArticleCategory:^(NSArray * _Nonnull articleCategoryArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+           dispatch_async(dispatch_get_main_queue(), ^{
 
-    NSArray *arr=@[@"全部",@"旅游",@"家居",@"美食",@"时尚" ,@"百科"];
-    _view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 30)];
-    _view.backgroundColor=[UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];    for (int i=0; i<6; i++) {
-        UIButton *btn=[LJUIController createButtonWithFrame:CGRectMake(SCREENWIT/6*i, 5, SCREENWIT/6, 20) imageName:nil title:arr[i] target:self action:@selector(naviClick:)];
-        btn.titleLabel.font=[UIFont systemFontOfSize:12];
-//        btn.titleLabel.font=[UIFont fontWithName:@"冬青黑体" size:12];
-        if (i==0) {
-            [btn setBackgroundImage:[UIImage imageNamed:nil] forState:UIControlStateNormal];
-            [btn setTitleColor:_titleColor1 forState:UIControlStateNormal];
-        }else{
-            [btn setTitleColor:_titleColor0 forState:UIControlStateNormal];
-        }
-        btn.tag=300+i;
-        [_view addSubview:btn];
-        
-    }
-    [self.view addSubview:_view];
+               _view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 30)];
+               _view.backgroundColor=[UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
+               for (int i=0; i<6; i++) {
+                   QJArticleCategory *model=articleCategoryArray[i];
+                   UIButton *btn=[LJUIController createButtonWithFrame:CGRectMake(SCREENWIT/6*i, 5, SCREENWIT/6, 20) imageName:nil title:model.name target:self action:@selector(naviClick:)];
+                   btn.titleLabel.font=[UIFont systemFontOfSize:12];
+                   //        btn.titleLabel.font=[UIFont fontWithName:@"冬青黑体" size:12];
+                   if (i==0) {
+                       [btn setBackgroundImage:[UIImage imageNamed:nil] forState:UIControlStateNormal];
+                       [btn setTitleColor:_titleColor1 forState:UIControlStateNormal];
+                   }else{
+                       [btn setTitleColor:_titleColor0 forState:UIControlStateNormal];
+                   }
+                   btn.tag=300+i;
+                   [_view addSubview:btn];
+                   
+               }
+               [self.view addSubview:_view];
+           });
+        }];
+    });
+    
 }
 -(void)setUpScrollView
 {
