@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "OWTexploreModel.h"
+#import "QuanJingSDK.h"
+
 @interface LJExploreViewCellTableViewCell : UITableViewCell
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
--(void)customTheView:(OWTexploreModel*)model;
+-(void)customTheView:(QJArticleObject*)model;
 @end

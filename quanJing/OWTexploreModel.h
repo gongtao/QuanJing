@@ -34,6 +34,7 @@
 
 @property (nonatomic, copy) NSString* Sort;
 //@property(nonatomic,copy)NSString *BigCoverUrl;
+
 @end
 
 

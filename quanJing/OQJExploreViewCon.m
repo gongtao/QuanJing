@@ -339,6 +339,14 @@ static const int kDefaultLoadItemNum1 = 10;
 
 
 }
+-(void)reloadData3
+{
+    NSString *page=pages[_pageCount];
+    NSInteger page1=page.intValue;
+    page1++;
+    [pages replaceObjectAtIndex:_pageCount withObject:[NSString stringWithFormat:@"%ld",(long)page1]];
+    
+}
 - (void)reloadData2
 {
     NSString *page=pages[_pageCount];

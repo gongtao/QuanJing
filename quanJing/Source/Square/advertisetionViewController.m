@@ -67,7 +67,6 @@ NSArray *arr=[NSJSONSerialization JSONObjectWithData:_data options:NSJSONReading
         [advertisetion setImageWithURL:[NSURL URLWithString:dict[@"ImgUrl"]]];
     }
     if ([str isEqualToString:@"0"]) {
-        [self putIn];
         [userDefaults removeObjectForKey:@"ImgUrl"];
         [userDefaults removeObjectForKey:@"id"];
     }else {

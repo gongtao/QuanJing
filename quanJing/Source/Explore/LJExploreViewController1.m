@@ -86,6 +86,7 @@ static const int kDefaultLoadItemNum1 = 10;
     NSMutableArray *_categories4;
     NSMutableArray *_categories5;
     NSMutableArray *pages;
+    NSMutableArray *_categoriesList;
     NSArray *_arr;
     UITableView *currentTableView;
     UIView *_view;
@@ -102,6 +103,7 @@ static const int kDefaultLoadItemNum1 = 10;
     _categories3=[[NSMutableArray alloc]init];
     _categories4=[[NSMutableArray alloc]init];
     _categories5=[[NSMutableArray alloc]init];
+    _categoriesList=[[NSMutableArray alloc]init];
     pages=[[NSMutableArray alloc]init];
     _titleColor0=[UIColor colorWithHexString:@"2b2b2b"];
     _titleColor1=[UIColor colorWithHexString:@"#ff2a00"];
@@ -130,11 +132,14 @@ static const int kDefaultLoadItemNum1 = 10;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[QJInterfaceManager sharedManager]requestArticleCategory:^(NSArray * _Nonnull articleCategoryArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
            dispatch_async(dispatch_get_main_queue(), ^{
-
+               [_categoriesList addObjectsFromArray:articleCategoryArray];
+               QJArticleCategory *model=[[QJArticleCategory alloc]init];
+               model.name=@"全部";
+               [_categoriesList insertObject:model atIndex:0];
                _view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 30)];
                _view.backgroundColor=[UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
                for (int i=0; i<6; i++) {
-                   QJArticleCategory *model=articleCategoryArray[i];
+                   QJArticleCategory *model=_categoriesList[i];
                    UIButton *btn=[LJUIController createButtonWithFrame:CGRectMake(SCREENWIT/6*i, 5, SCREENWIT/6, 20) imageName:nil title:model.name target:self action:@selector(naviClick:)];
                    btn.titleLabel.font=[UIFont systemFontOfSize:12];
                    //        btn.titleLabel.font=[UIFont fontWithName:@"冬青黑体" size:12];
@@ -149,6 +154,7 @@ static const int kDefaultLoadItemNum1 = 10;
                    
                }
                [self.view addSubview:_view];
+            [currentTableView headerBeginRefreshing];
            });
         }];
     });
@@ -180,47 +186,13 @@ static const int kDefaultLoadItemNum1 = 10;
     for (UIView *view in _scrollView.subviews) {
         if (view.tag==200+_pageCount) {
             currentTableView=(UITableView*)view;
+
         }
     }
 }
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (isFirst) {
-        NSUserDefaults *user=[NSUserDefaults standardUserDefaults];
-        if (![user objectForKey:@"version2"]) {
-            [_coreData1 deleteAll];
-            [user setObject:@"dd" forKey:@"version2"];
-        }
-        LJHuancunModel *model=[_coreData1 check:@"find" withUserid:_user.userID];
-        if (model) {
-            NSDictionary *dic0 =[NSJSONSerialization JSONObjectWithData:model.response options:NSJSONReadingMutableLeaves error:nil];
-            NSArray*appList=dic0[@"article"];
-            for (NSDictionary*appdict in appList) {
-                OWTexploreModel*model=[[OWTexploreModel alloc]init];
-                for (NSString*key in appdict) {
-                    NSLog(@"%@   %@",key,appdict[key]);
-                    if ([appdict[key] isKindOfClass:[NSNull class]]) {
-                        [model setValue:@"" forKey:key];
-                    }else{
-                        [model setValue:appdict[key] forKey:key];
-                        
-                    }
-                }
-                [_categories addObject:model];
-            }
-            _arr=_categories;
-        }
-        if (_arr.count>0) {
-            [currentTableView reloadData];
-            [currentTableView headerBeginRefreshing];
-        }else
-        {
-            [currentTableView headerBeginRefreshing];
-        }
-        
-    }
-    isFirst=NO;
 }
 
 
@@ -348,7 +320,56 @@ static const int kDefaultLoadItemNum1 = 10;
 
     [currentTableView headerEndRefreshing];
 }
-- (void)reloadData2
+-(void)reloadData2
+{
+    NSString *page=pages[_pageCount];
+    NSInteger page1=page.intValue;
+    page1++;
+    [pages replaceObjectAtIndex:_pageCount withObject:[NSString stringWithFormat:@"%ld",(long)page1]];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        QJArticleCategory *model=_categoriesList[_pageCount];
+        if(_arr.count==0)
+            return ;
+        QJArticleObject *model1=[_arr lastObject];
+
+        [[QJInterfaceManager sharedManager]requestArticleList:model.cid cursorIndex:model1.aid pageSize:30 finished:^(NSArray * _Nonnull articleObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            if (_pageCount==0) {
+
+                [_categories addObjectsFromArray:articleObjectArray];
+            }else if (_pageCount==1)
+            {
+
+                [_categories1 addObjectsFromArray:articleObjectArray];
+                
+            }else if (_pageCount==2)
+            {
+
+                [_categories2 addObjectsFromArray:articleObjectArray];
+                
+            }else if (_pageCount==3)
+            {
+
+                [_categories3 addObjectsFromArray:articleObjectArray];
+                
+            }else if (_pageCount==4)
+            {
+                [_categories4 addObjectsFromArray:articleObjectArray];
+                
+            }else
+            {
+                [_categories5 addObjectsFromArray:articleObjectArray];
+                
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self reloadTableView];
+                [currentTableView footerEndRefreshing];
+            });
+            
+        }];
+    });
+
+}
+- (void)reloadData3
 {
     NSString *page=pages[_pageCount];
     NSInteger page1=page.intValue;
@@ -463,113 +484,47 @@ static const int kDefaultLoadItemNum1 = 10;
 }
 
 ///要修改
-- (void)refresh
+-(void)refresh
 {
-    NSString *str;
-    NSInteger i;
-    if (_pageCount==0) {
-        i=10;
-        str=[NSString stringWithFormat:@"http://api.tiankong.com/qjapi/cdn1/articleFound?count=%ld&page=1",(long)i];
-    }else{
-        
-        i=_pageCount;
-        if (_pageCount>=3) {
-            i=_pageCount+1;
-        }
-        str=[NSString stringWithFormat:@"http://api.tiankong.com/qjapi/cdn1/article?count=10&&type=%ld&page=1",(long)i];
-        
-    }
-    NSURL *url = [NSURL URLWithString:str];
-    ASIHTTPRequest *_asi=[[ASIHTTPRequest alloc]initWithURL:url];
-    _asi.tag=12;
-    _asi.delegate=self;
-    [_asi startAsynchronous];
-    
-}
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    if (request.tag==12) {
-        if (![NetStatusMonitor isExistenceNetwork]) {
-            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-        }
-        else{
-            [SVProgressHUD showGeneralError];
-        }
-        [currentTableView headerEndRefreshing];
-    }
-    
-}
--(void)requestFinished:(ASIHTTPRequest *)request
-{
-    if (request.tag==12) {
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    QJArticleCategory *model=_categoriesList[_pageCount];
+    [[QJInterfaceManager sharedManager]requestArticleList:model.cid cursorIndex:nil pageSize:30 finished:^(NSArray * _Nonnull articleObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
         if (_pageCount==0) {
             [_categories removeAllObjects];
+            [_categories addObjectsFromArray:articleObjectArray];
         }else if (_pageCount==1)
         {
             [_categories1 removeAllObjects];
+            [_categories1 addObjectsFromArray:articleObjectArray];
+
         }else if (_pageCount==2)
         {
             [_categories2 removeAllObjects];
+            [_categories2 addObjectsFromArray:articleObjectArray];
+
         }else if (_pageCount==3)
         {
             [_categories3 removeAllObjects];
+            [_categories3 addObjectsFromArray:articleObjectArray];
+
         }else if (_pageCount==4)
         {
             [_categories4 removeAllObjects];
+            [_categories4 addObjectsFromArray:articleObjectArray];
+
         }else
         {
             [_categories5 removeAllObjects];
+            [_categories5 addObjectsFromArray:articleObjectArray];
+
         }
-        NSDictionary *dic0 =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableLeaves error:nil];
-        if (_pageCount==0) {
-            LJHuancunModel *model=[_coreData1 check:@"find" withUserid:_user.userID];
-            if (model) {
-                [_coreData1 update:@"find" with:request.responseData withUserid:_user.userID];
-            }else {
-                [_coreData1 insert:request.responseData withType:@"find" withUserId:_user.userID];}
-        }
-        
-        
-        NSArray*appList=dic0[@"article"];
-        for (NSDictionary*appdict in appList) {
-            OWTexploreModel*model=[[OWTexploreModel alloc]init];
-            for (NSString*key in appdict) {
-                if ([appdict[key] isKindOfClass:[NSNull class]]) {
-                    // do something
-                    [model setValue:@"" forKey:key];
-                }else{
-                    // do something
-                    [model setValue:appdict[key] forKey:key];
-                }
-            }
-            if (_pageCount==0) {
-                [_categories addObject:model];
-            }else if (_pageCount==1)
-            {
-                [_categories1 addObject:model];
-            }else if (_pageCount==2)
-            {
-                [_categories2 addObject:model];
-            }else if (_pageCount==3)
-            {
-                [_categories3 addObject:model];
-            }else if (_pageCount==4)
-            {
-                [_categories4 addObject:model];
-            }else
-            {
-                [_categories5 addObject:model];
-            }
-        }
-        //        NSString *homeDictory=NSHomeDirectory();
-        //       NSString *homePath  = [homeDictory stringByAppendingString:@"/Documents/ddd.archiver"];//添加储存的文件名
-        //        BOOL flag=[NSKeyedArchiver archiveRootObject:_categories toFile:homePath];
-        //        [currentTableView reloadData];
-        [self reloadTableView];
-        [currentTableView headerEndRefreshing];
-        
-    }
-    
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self reloadTableView];
+            [currentTableView headerEndRefreshing];
+        });
+
+    }];
+});
 }
 #pragma mark - UITableViewDataSource
 
@@ -589,7 +544,7 @@ LJExploreViewCellTableViewCell*cell=[tableView dequeueReusableCellWithIdentifier
         cell=[[LJExploreViewCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    OWTexploreModel *model= _arr[indexPath.row];
+    QJArticleObject *model=_arr[indexPath.row];
     [cell customTheView:model];
     return cell;
 }
@@ -598,8 +553,8 @@ LJExploreViewCellTableViewCell*cell=[tableView dequeueReusableCellWithIdentifier
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OWTexploreModel *category= _arr[indexPath.row];
-    CGSize size=[category.Summary sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT-20, 200)];
+    QJArticleObject *category= _arr[indexPath.row];
+    CGSize size=[category.summary sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT-20, 200)];
         return 210+size.height+10;
 }
 
@@ -608,7 +563,7 @@ LJExploreViewCellTableViewCell*cell=[tableView dequeueReusableCellWithIdentifier
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    OWTexploreModel *category;
+    QJArticleObject *category;
     if (_pageCount==0) {
         category=_categories[indexPath.row];
     }else if (_pageCount==1)
@@ -635,11 +590,11 @@ LJExploreViewCellTableViewCell*cell=[tableView dequeueReusableCellWithIdentifier
     WLJWebViewController *evc = [[WLJWebViewController alloc]init];
     
     //
-    evc.SummaryStr =category.Summary;
+    evc.SummaryStr =category.summary;
     //    //
-    evc.titleS=category.Caption;
-    evc.urlString =category.Url;
-    evc.assetUrl =category.CoverUrl;
+    evc.titleS=category.title;
+    evc.urlString =category.content;
+    evc.assetUrl =category.coverUrl;
     [self.navigationController pushViewController:evc animated:YES];
     [evc substituteNavigationBarBackItem];
     

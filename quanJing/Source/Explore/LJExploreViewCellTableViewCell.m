@@ -8,6 +8,7 @@
 
 #import "LJExploreViewCellTableViewCell.h"
 #import "OWTexploreModel.h"
+#import "QuanJingSDK.h"
 #import "UIColor+HexString.h"
 @implementation LJExploreViewCellTableViewCell
 {
@@ -39,16 +40,14 @@
     _grayView.backgroundColor=[UIColor colorWithHexString:@"#f6f6f6"];
     [self.contentView addSubview:_grayView];
 }
--(void)customTheView:(OWTexploreModel*)category
+-(void)customTheView:(QJArticleObject*)category
 {
-    NSMutableString *urlStr=[[NSMutableString alloc]initWithString:category.CoverUrl];
-    NSRange range=[urlStr rangeOfString:@"cover"];
-    [urlStr replaceCharactersInRange:range withString:@"bigcover"];
-    [_imageView setImageWithURL:[NSURL URLWithString:urlStr] placeholderImage:[UIImage imageNamed:@""]];
-    _mainTitle.text= category.Caption;
-    CGSize size=[category.Summary sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT-20, 200)];
+    NSString *imageUrl=[QJInterfaceManager thumbnailUrlFromImageUrl:category.coverUrl size:_imageView.bounds.size];
+    [_imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@""]];
+    _mainTitle.text= category.title;
+    CGSize size=[category.summary sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT-20, 200)];
     _subTitle.frame=CGRectMake(10, 205, SCREENWIT-10, size.height);
-    _subTitle.text=category.Summary;
+    _subTitle.text=category.summary;
     _grayView.frame=CGRectMake(0, 210+size.height, SCREENWIT, 10);
 }
 @end
