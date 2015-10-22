@@ -95,7 +95,17 @@ NS_ASSUME_NONNULL_BEGIN
 // 用户收藏图片列表
 - (void)requestUserCollectImageList:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
-	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished;
+	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
+	
+// 用户评论列表
+- (void)requestUserCommentImageList:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
+	
+// 用户相册列表
+- (void)requestUserAlbumList:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
 	
 @end
 

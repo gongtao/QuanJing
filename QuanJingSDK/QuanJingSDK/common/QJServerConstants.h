@@ -72,10 +72,10 @@ static NSString * const kQJImageDetailPath = @"/imageUser/detail";
 static NSString * const kQJImageCommentPath = @"/imageComment/save.user";
 
 // 图片喜欢
-static NSString * const kQJImageLikePath = @"/userLike/save.user";
+static NSString * const kQJImageLikePath = @"/imageLike/save.user";
 
 // 图片取消喜欢
-static NSString * const kQJImageCancelLikePath = @"/userLike/cancel.user";
+static NSString * const kQJImageCancelLikePath = @"/imageLike/cancel.user";
 
 // 图片收藏
 static NSString * const kQJImageCollectPath = @"/userCollect/save.user";
@@ -88,5 +88,11 @@ static NSString * const kQJImageAddDownloadPath = @"/imageUser/addDownload";
 
 // 用户图片收藏列表
 static NSString * const kQJUserCollectListPath = @"/userCollect/list.user";
+
+// 用户评论列表
+static NSString * const kQJUserCommentImageListPath = @"/imageComment/list.user";
+
+// 用户相册列表
+static NSString * const kQJUserAlbumListPath = @"/album/list.user";
 
 #endif	/* QJServerConstants_h */

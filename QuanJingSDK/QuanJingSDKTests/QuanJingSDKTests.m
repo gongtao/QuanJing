@@ -10,8 +10,8 @@
 
 #import "QuanJingSDK.h"
 
-#define kPhoneNumber        @"18600962172"
-#define kPassword           @"Gongtao1987"
+#define kPhoneNumber	@"18600962172"
+#define kPassword		@"Gongtao1987"
 
 @interface QuanJingSDKTests : XCTestCase
 
@@ -273,14 +273,34 @@
 					XCTFail(@"testImageCategoryExample error: %@", error);
 			}];
 			
+			__block NSNumber * nextCursorIndex = nil;
 			[[QJInterfaceManager sharedManager] requestArticleList:[NSNumber numberWithLongLong:1]
 			cursorIndex:nil
 			pageSize:20
 			finished:^(NSArray * articleObjectArray, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testImageCategoryExample error: %@", error);
+					
+				if (articleObjectArray && (articleObjectArray.count > 0)) {
+					QJArticleObject * obj = [articleObjectArray lastObject];
+					nextCursorIndex = [obj aid];
+				}
 			}];
 			
+			if (nextCursorIndex)
+				[[QJInterfaceManager sharedManager] requestArticleList:[NSNumber numberWithLongLong:1]
+				cursorIndex:nextCursorIndex
+				pageSize:20
+				finished:^(NSArray * articleObjectArray, NSArray * resultArray, NSError * error) {
+					if (error)
+						XCTFail(@"testImageCategoryExample error: %@", error);
+						
+					if (articleObjectArray && (articleObjectArray.count > 0)) {
+						QJArticleObject * obj = [articleObjectArray lastObject];
+						nextCursorIndex = [obj aid];
+					}
+				}];
+				
 			[expectation fulfill];
 		});
 		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
@@ -441,9 +461,23 @@
 			
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
-			[[QJInterfaceManager sharedManager] requestUserCollectImageList:0
+			[[QJInterfaceManager sharedManager] requestUserCollectImageList:1
 			pageSize:20
-			finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
+			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserImageListExample error: %@", error);
+			}];
+			
+			[[QJInterfaceManager sharedManager] requestUserCommentImageList:1
+			pageSize:20
+			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserImageListExample error: %@", error);
+			}];
+			
+			[[QJInterfaceManager sharedManager] requestUserAlbumList:1
+			pageSize:20
+			finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testUserImageListExample error: %@", error);
 			}];

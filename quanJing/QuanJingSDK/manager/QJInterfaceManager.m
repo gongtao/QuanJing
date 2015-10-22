@@ -320,9 +320,11 @@
 	if (pageSize > 0)
 		params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
 		
-	if (!QJ_IS_NUM_NIL(cursorIndex))
+	if (!QJ_IS_NUM_NIL(cursorIndex)) {
 		params[@"cursorIndex"] = cursorIndex;
-		
+		params[@"direction"] = [NSNumber numberWithInt:2];
+	}
+	
 	// When request fails, if it could, retry it 3 times at most.
 	int i = 3;
 	__block NSError * error = nil;
@@ -382,10 +384,10 @@
 		[resultArray addObject:actionObject];
 		
 		if (idx == data.count - 1) {
-			NSNumber * creatTime = obj[@"creatTime"];
+			NSNumber * aid = actionObject.aid;
 			
-			if (!QJ_IS_NUM_NIL(creatTime))
-				nextCursorIndex = creatTime;
+			if (!QJ_IS_NUM_NIL(aid))
+				nextCursorIndex = aid;
 		}
 	}];
 	
@@ -401,9 +403,11 @@
 {
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
 	
-	if (!QJ_IS_NUM_NIL(cursorIndex))
+	if (!QJ_IS_NUM_NIL(cursorIndex)) {
 		params[@"cursorIndex"] = cursorIndex;
-		
+		params[@"direction"] = [NSNumber numberWithInt:2];
+	}
+	
 	if (pageSize > 0)
 		params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
 		
