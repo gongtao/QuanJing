@@ -453,15 +453,19 @@
 	if (!error) {
 		NSLog(@"%@", responseObject);
 		NSDictionary * dataDic = responseObject[@"data"];
-		QJUser * newUser = [[QJUser alloc] initWithJson:dataDic];
 		
+		if (self.currentUser)
+			[self.currentUser setPropertiesFromJson:dataDic];
+		else
+			self.currentUser = [[QJUser alloc] initWithJson:dataDic];
+			
 		if (finished)
-			finished(newUser, dataDic, error);
+			finished(self.currentUser, dataDic, error);
 		return;
 	}
 	
 	if (finished)
-		finished(nil, nil, error);
+		finished(self.currentUser, nil, error);
 }
 
 @end
