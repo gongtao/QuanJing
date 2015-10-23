@@ -176,7 +176,10 @@
 	if (!error) {
 		NSLog(@"%@", responseObject);
 		NSDictionary * data = responseObject[@"data"];
-		NSNumber * userId = data[@"userId"];
+        NSNumber * userId = data[@"userId"];
+        
+        self.currentUser = [[QJUser alloc] init];
+        self.currentUser.uid = userId;
 		
 		if (finished)
 			finished(userId, data[@"ticket"], error);
@@ -269,7 +272,10 @@
 	if (!error) {
 		NSLog(@"%@", responseObject);
 		NSDictionary * data = responseObject[@"data"];
-		NSNumber * userId = data[@"userId"];
+        NSNumber * userId = data[@"userId"];
+        
+        self.currentUser = [[QJUser alloc] init];
+        self.currentUser.uid = userId;
 		
 		if (finished)
 			finished(userId, data[@"ticket"], error);
