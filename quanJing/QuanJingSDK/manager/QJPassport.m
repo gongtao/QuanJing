@@ -81,7 +81,7 @@
 - (void)registerUser:(NSString *)phoneNumber
 	password:(NSString *)password
 	code:(NSString *)code
-	finished:(void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished
+	finished:(void (^)(NSNumber * userId, NSString * ticket, NSError * error))finished
 {
 	NSParameterAssert(phoneNumber);
 	NSParameterAssert(password);
@@ -121,11 +121,15 @@
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
-		NSDictionary * dataDic = responseObject[@"data"];
-		QJUser * user = [[QJUser alloc] initWithJson:dataDic];
+		NSDictionary * data = responseObject[@"data"];
+		NSNumber * userId = data[@"userId"];
+		
+		if (!self.currentUser)
+			self.currentUser = [[QJUser alloc] init];
+		self.currentUser.uid = userId;
 		
 		if (finished)
-			finished(user, dataDic, error);
+			finished(userId, data[@"ticket"], error);
 		return;
 	}
 	
@@ -176,10 +180,11 @@
 	if (!error) {
 		NSLog(@"%@", responseObject);
 		NSDictionary * data = responseObject[@"data"];
-        NSNumber * userId = data[@"userId"];
-        
-        self.currentUser = [[QJUser alloc] init];
-        self.currentUser.uid = userId;
+		NSNumber * userId = data[@"userId"];
+		
+		if (!self.currentUser)
+			self.currentUser = [[QJUser alloc] init];
+		self.currentUser.uid = userId;
 		
 		if (finished)
 			finished(userId, data[@"ticket"], error);
@@ -272,10 +277,11 @@
 	if (!error) {
 		NSLog(@"%@", responseObject);
 		NSDictionary * data = responseObject[@"data"];
-        NSNumber * userId = data[@"userId"];
-        
-        self.currentUser = [[QJUser alloc] init];
-        self.currentUser.uid = userId;
+		NSNumber * userId = data[@"userId"];
+		
+		if (!self.currentUser)
+			self.currentUser = [[QJUser alloc] init];
+		self.currentUser.uid = userId;
 		
 		if (finished)
 			finished(userId, data[@"ticket"], error);

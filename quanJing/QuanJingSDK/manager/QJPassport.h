@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)registerUser:(NSString *)phoneNumber
 	password:(NSString *)password
 	code:(NSString *)code
-	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished;
+	finished:(nullable void (^)(NSNumber * userId, NSString * ticket, NSError * error))finished;
 	
 // 登录
 - (void)loginUser:(NSString *)userName
