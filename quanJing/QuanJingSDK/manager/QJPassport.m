@@ -137,7 +137,7 @@
 
 - (void)loginUser:(NSString *)userName
 	password:(NSString *)password
-	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished
+	finished:(void (^)(NSNumber * userId, NSString * ticket, NSError * error))finished
 {
 	NSParameterAssert(userName);
 	NSParameterAssert(password);
@@ -179,12 +179,12 @@
 		NSNumber * userId = data[@"userId"];
 		
 		if (finished)
-			finished(userId.integerValue, data[@"ticket"], error);
+			finished(userId, data[@"ticket"], error);
 		return;
 	}
 	
 	if (finished)
-		finished(0, nil, error);
+		finished(nil, nil, error);
 }
 
 - (NSError *)sendLoginSMS:(NSString *)phoneNumber
@@ -230,7 +230,7 @@
 // 短信登录
 - (void)loginUser:(NSString *)phoneNumber
 	code:(NSString *)code
-	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished
+	finished:(void (^)(NSNumber * userId, NSString * ticket, NSError * error))finished
 {
 	NSParameterAssert(phoneNumber);
 	NSParameterAssert(code);
@@ -272,12 +272,12 @@
 		NSNumber * userId = data[@"userId"];
 		
 		if (finished)
-			finished(userId.integerValue, data[@"ticket"], error);
+			finished(userId, data[@"ticket"], error);
 		return;
 	}
 	
 	if (finished)
-		finished(0, nil, error);
+		finished(nil, nil, error);
 }
 
 - (BOOL)isLogin
