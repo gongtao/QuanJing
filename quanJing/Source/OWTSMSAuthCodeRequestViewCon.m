@@ -13,23 +13,36 @@
 #import <QBFlatButton/QBFlatButton.h>
 #import "CTCheckbox.h"
 #import "TTTAttributedLabel.h"
+#import "NSTimer+Blocks.h"
+#import "QuanJingSDK.h"
+#import "OWTUserManager.h"
 @interface OWTSMSAuthCodeRequestViewCon ()<TTTAttributedLabelDelegate>
 {
     
+    __weak IBOutlet UIImageView *backImage;
+    __weak IBOutlet UILabel *verifyTitle;
     __weak IBOutlet UIView *backView;
     __weak IBOutlet UITextField *_cellphoneTextField;
 
     __weak IBOutlet TTTAttributedLabel *agreementLable;
+    
+    __weak IBOutlet UITextField *_codeTextField;
+    __weak IBOutlet UILabel *titleBtn;
 
+    __weak IBOutlet UIButton *verifyBtn;
     __weak IBOutlet UIButton *checkBtn;
 
     __weak IBOutlet UIButton *detailButton;
+    NSTimer* _resendTimer;
+    NSTimeInterval _resendTimeLeft;
 }
 
 @end
 
 @implementation OWTSMSAuthCodeRequestViewCon
-
+{
+    BOOL _isLogin;
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -39,13 +52,29 @@
     }
     return self;
 }
-
 - (void)setup
 {
     self.navigationItem.title = NSLocalizedString(@"SMSAUTH_REQUEST_VIEWCON_TITLE", @"SMS Auth");
     checkBtn.tag=0;
+    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickHide:)];
+    backImage.userInteractionEnabled=YES;
+    [backImage addGestureRecognizer:tap];
 }
-
+-(void)onClickHide:(UIGestureRecognizer *)sender
+{
+    NSLog(@"dd");
+}
+-(void)isLogin:(BOOL)islogin
+{
+    
+    if (islogin) {
+    titleBtn.text=@"登录";
+        _isLogin=YES;
+    }else {
+    titleBtn.text=@"下一步";
+        _isLogin=NO;
+    }
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -120,6 +149,7 @@
 {
     [super viewWillDisappear:animated];
     [_cellphoneTextField resignFirstResponder];
+    [_codeTextField resignFirstResponder];
 }
 
 - (void)setCellphone:(NSString *)cellphone
@@ -127,10 +157,47 @@
     _cellphone = cellphone;
     _cellphoneTextField.text = cellphone;
 }
+#pragma mark - timer
+-(void)resendTimerCheck
+{
+    if (_resendTimeLeft > 0)
+    {
+        verifyTitle.text=[NSString stringWithFormat:@"%d秒后重发", (int)_resendTimeLeft];
+    }
+    else
+    {
+        verifyTitle.text=@"重发";
+        [self stopResendTimer];
+    }
+
+}
+- (void)startResendTimer
+{
+    
+    _resendTimeLeft = 60;
+    [self resendTimerCheck];
+    
+    verifyBtn.enabled = NO;
+    
+    _resendTimer = [NSTimer scheduledTimerWithTimeInterval:1
+                                                     block:^{
+                                                         _resendTimeLeft -= 1;
+                                                         [self resendTimerCheck];
+                                                     }
+                                                   repeats:YES];
+}
+- (void)stopResendTimer
+{
+    if (verifyBtn != nil)
+    {
+        [_resendTimer invalidate];
+        _resendTimer = nil;
+    }
+    verifyBtn.enabled = YES;
+}
 
 #pragma mark - Code Request Related
 - (IBAction)requestAuthCode:(id)sender {
-    NSLog(@"cellphone = %@",_cellphoneTextField.text);
     if (![self hasValidCellphoneInput])
     {
         [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"请输入正确的号码", @"请输入正确的号码")];
@@ -144,29 +211,41 @@
         [_cellphoneTextField becomeFirstResponder];
         return;
     }
+    if (_codeTextField.text==nil) {
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"请输入验证码", @"请输入验证码")];
+        return;
+    }
+    QJPassport *pt=[QJPassport sharedPassport];
+    if (_isLogin) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [pt loginUser:_cellphone code:_codeTextField.text finished:^(NSNumber * userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
+                if (error) {
+                    return ;
+                }
+                [SVProgressHUD dismiss];
+                OWTUserManager* um = GetUserManager();
+                [um refreshCurrentUserSuccess:^{
+                    if (_successFunc != nil)
+                    {
+                        _successFunc();
+                    }
+                }
+                                      failure:^(NSError* error){
+                                          if (error == nil)
+                                          {
+                                              return;
+                                          }
+                                          
+                                      }];
+            }];
+        });
+    }else
+    {
+        if (_doneFunc!=nil) {
+            _doneFunc(_cellphone,_codeTextField.text);
+        }
     
-    _cellphone = _cellphoneTextField.text;
-    
-    OWTAuthManager* am = GetAuthManager();
-    [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
-                         maskType:SVProgressHUDMaskTypeBlack];
-    
-    [am authWithSMSCellphone:_cellphone
-                     success:^{
-                         [SVProgressHUD dismiss];
-                         if (_doneFunc != nil)
-                         {
-                             _doneFunc(_cellphone);
-                         }
-                     }
-                     failure:^(NSError* error) {
-                         if (error == nil)
-                         {
-                             return;
-                         }
-                         
-                         [SVProgressHUD showError:error];
-                     }];
+    }
 
 }
 
@@ -202,4 +281,36 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
+- (IBAction)verifyBtn1:(UIButton *)sender {
+    if (![self hasValidCellphoneInput])
+    {
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"请输入正确的号码", @"请输入正确的号码")];
+        [_cellphoneTextField becomeFirstResponder];
+        return;
+    }
+    
+    if (checkBtn.tag==0 )
+    {
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"没有同意全景服务条款", @"请输入正确的号码")];
+        [_cellphoneTextField becomeFirstResponder];
+        return;
+    }
+        _cellphone = _cellphoneTextField.text;
+    [self startResendTimer];
+    QJPassport *pt=[QJPassport sharedPassport];
+    if (_isLogin) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+         NSError *error=[pt sendLoginSMS:_cellphone];
+            if (error) {
+                [SVProgressHUD showError:error];
+            }
+        });
+    }else{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError *error=[pt sendRegistSMS:_cellphone];
+            if (error) {
+                [SVProgressHUD showError:error];
+            }
+        });    }
+}
 @end

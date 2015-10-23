@@ -16,7 +16,7 @@ static NSString* kWTClientID = @"3ae125d6e9a009a6fcce3f081f4ce5ff";
 
 @implementation HXChatInitModel
 
-+ (NSArray*)getCountAndPWDbyMD5
++ (NSArray*)getCountAndPWDbyMD5;
 {
 //    获取 当前用户的token
 //    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
@@ -24,11 +24,11 @@ static NSString* kWTClientID = @"3ae125d6e9a009a6fcce3f081f4ce5ff";
 //    OWTAccessToken* accessToken = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     
     //本机当前登陆用户的userID
-    OWTUser *userInfo = GetUserManager().currentUser;
+    OWTUser *user=GetUserManager().currentUser;
     
-    NSString *huanxinCount = [@"qj" stringByAppendingString:userInfo.userID];
+    NSString *huanxinCount = [@"qj" stringByAppendingString:user.userID];
     
-    const char *cStr = [userInfo.userID UTF8String];
+    const char *cStr = [user.userID UTF8String];
     unsigned char result[16];
     CC_MD5(cStr, strlen(cStr), result);
     NSString *passWord =  [NSString stringWithFormat:

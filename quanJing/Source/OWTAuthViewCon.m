@@ -79,13 +79,15 @@
  
     _loginRegisterSelectionViewCon.doneWithLoginFunc = ^{
         wself.isRegistering = NO;
+
         [wself pushViewCon:wself.smsAuthCodeRequestViewCon animated:YES];
+        [wself.smsAuthCodeRequestViewCon isLogin:YES];
         [wself showRequestViewConAnimated:YES];
     };
-
     _loginRegisterSelectionViewCon.doneWithRegisterFunc = ^{
         wself.isRegistering = YES;
         [wself pushViewCon:wself.smsAuthCodeRequestViewCon animated:YES];
+        [wself.smsAuthCodeRequestViewCon isLogin:NO];
         [wself showRequestViewConAnimated:YES];
     };
     
@@ -110,8 +112,9 @@
     _smsAuthCodeRequestViewCon.cancelBlock = ^{
         wself.cancelBlock();
     };
-    _smsAuthCodeRequestViewCon.doneFunc = ^(NSString* cellphone) {
+    _smsAuthCodeRequestViewCon.doneFunc = ^(NSString* cellphone,NSString *code) {
         wself.smsAuthCodeVerifyViewCon.cellphone1 = cellphone;
+        wself.smsAuthCodeVerifyViewCon.cellphone=code;
         wself.smsAuthCodeVerifyViewCon.cancelBlock = ^{
             wself.cancelBlock();
         };

@@ -7,9 +7,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OWTSMSAuthCodeVerifyViewCon">
             <connections>
-                <outlet property="_timeBtn" destination="CbA-RW-sgb" id="1NK-QI-vjl"/>
                 <outlet property="_verificationCodeTextField" destination="Oh3-t6-6pk" id="0gQ-ig-LxN"/>
                 <outlet property="backView" destination="5mg-iF-Utq" id="09Y-Gh-3Bq"/>
+                <outlet property="passwordTextField" destination="b4d-ck-b6I" id="gBT-wQ-mtm"/>
                 <outlet property="view" destination="Onf-Zh-Rxh" id="hIh-ez-C1d"/>
             </connections>
         </placeholder>
@@ -39,14 +39,14 @@
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="红色小手机.png" translatesAutoresizingMaskIntoConstraints="NO" id="b0H-0S-woz">
                             <rect key="frame" x="35" y="353" width="10" height="20"/>
                         </imageView>
-                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="输入6位短信验证码" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Oh3-t6-6pk">
+                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="再次输入密码" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Oh3-t6-6pk">
                             <rect key="frame" x="60" y="351" width="221" height="23"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="16"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ae8-D8-g8W">
-                            <rect key="frame" x="172" y="427" width="130" height="30"/>
+                            <rect key="frame" x="15" y="411" width="287" height="30"/>
                             <state key="normal" title="Button" image="登陆背景.png">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
@@ -54,17 +54,8 @@
                                 <action selector="loginClick:" destination="-1" eventType="touchUpInside" id="94Z-hJ-4Uk"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CbA-RW-sgb">
-                            <rect key="frame" x="17" y="427" width="130" height="30"/>
-                            <state key="normal">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="reSendClick:" destination="-1" eventType="touchUpInside" id="m0y-g1-rvj"/>
-                            </connections>
-                        </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="登录" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Od2-bG-S3G">
-                            <rect key="frame" x="209" y="431" width="56" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="完成" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Od2-bG-S3G">
+                            <rect key="frame" x="132" y="415" width="56" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -72,6 +63,18 @@
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="文案.png" translatesAutoresizingMaskIntoConstraints="NO" id="bEh-qa-tUj">
                             <rect key="frame" x="91" y="188" width="203" height="21"/>
                         </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="密码背景.png" translatesAutoresizingMaskIntoConstraints="NO" id="XiU-II-Hxr">
+                            <rect key="frame" x="15" y="291" width="290" height="29"/>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="红色小手机.png" translatesAutoresizingMaskIntoConstraints="NO" id="ICi-nb-skT">
+                            <rect key="frame" x="35" y="296" width="10" height="20"/>
+                        </imageView>
+                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="输入密码" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="b4d-ck-b6I">
+                            <rect key="frame" x="60" y="294" width="221" height="23"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="16"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>

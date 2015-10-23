@@ -104,7 +104,7 @@
 
 
 #pragma -mark 获取好友列表借口
-- (void)getUserFriendByUser:(OWTUser*)user
+- (void)getUserFriendByUser:(NSString*)userid
                       success:(void (^)())success
                       failure:(void (^)(NSError*))failure;
 #pragma mark - Albums

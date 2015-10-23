@@ -16,6 +16,8 @@
 #import <NSTimer-Blocks/NSTimer+Blocks.h>
 #import "OWTLoginRegisterSelectionViewCon.h"
 #import "UIColor+HexString.h"
+#import "NSTimer+Blocks.h"
+#import "QuanJingSDK.h"
 @interface OWTSMSAuthCodeVerifyViewCon ()
 {
    
@@ -23,6 +25,7 @@
     __weak IBOutlet UIView *backView;
     IBOutlet UITextField* _verificationCodeTextField;
     
+    __weak IBOutlet UITextField *passwordTextField;
     __weak IBOutlet UIButton *_timeBtn;
     NSTimer* _resendTimer;
     NSTimeInterval _resendTimeLeft;
@@ -89,13 +92,12 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self startResendTimer];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self stopResendTimer];
 }
 
 - (void)setCellphone:(NSString *)cellphone
@@ -109,167 +111,16 @@
     [self.navigationController pushViewController:licenseViewCon animated:YES];
 }
 
-- (void)resendTimerCheck
-{
-    if (_resendTimeLeft > 0)
-    {
-        [_timeBtn setTitle:[NSString stringWithFormat:@"%d秒后重发", (int)_resendTimeLeft]
-                       forState:UIControlStateNormal];
-        [_timeBtn setTitle:[NSString stringWithFormat:@"%d秒后重发", (int)_resendTimeLeft]
-                       forState:UIControlStateDisabled];
-    }
-    else
-    {
-        [_timeBtn setTitle:@"重发"
-                       forState:UIControlStateNormal];
-        [_timeBtn setTitle:@"重发"
-                       forState:UIControlStateDisabled];
-        [self stopResendTimer];
-    }
-}
 
-- (void)startResendTimer
-{
-    [self stopResendTimer];
-    
-    _resendTimeLeft = 60;
-    [self resendTimerCheck];
-    
-    _timeBtn.enabled = NO;
-    
-    _resendTimer = [NSTimer scheduledTimerWithTimeInterval:1
-                                                     block:^{
-                                                         _resendTimeLeft -= 1;
-                                                         [self resendTimerCheck];
-                                                     }
-                                                   repeats:YES];
-}
-
-- (void)stopResendTimer
-{
-    if (_timeBtn != nil)
-    {
-        [_resendTimer invalidate];
-        _resendTimer = nil;
-    }
-    _timeBtn.enabled = YES;
-}
-
-- (IBAction)reRequestAuthCode:(id)sender
-{
-    OWTAuthManager* am = GetAuthManager();
-    [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
-                         maskType:SVProgressHUDMaskTypeBlack];
-    
-    [am authWithSMSCellphone:_cellphone
-                     success:^{
-                         [SVProgressHUD dismiss];
-                         [self startResendTimer];
-                     }
-                     failure:^(NSError* error) {
-                         if (error == nil)
-                         {
-                             return;
-                         }
-                         
-//                         [SVProgressHUD showError:error];
-                     }];
-}
 
 #pragma mark - Code Verification Related
 
-- (void)verifyCode
-{
-    [self verifyCode:nil];
-}
-- (IBAction)reSendClick:(id)sender {
-    OWTAuthManager* am = GetAuthManager();
-    [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
-                         maskType:SVProgressHUDMaskTypeBlack];
-    
-    [am authWithSMSCellphone:_cellphone
-                     success:^{
-                         [SVProgressHUD dismiss];
-                         [self startResendTimer];
-                     }
-                     failure:^(NSError* error) {
-                         if (error == nil)
-                         {
-                             return;
-                         }
-                         
-                         //                         [SVProgressHUD showError:error];
-                     }];
-
-}
-
-- (IBAction)verifyCode:(id)sender
-{
-    if (![self hasValidVerificationCode])
-    {
-        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"SMSAUTH_PLEASE_INPUT_VERIFICATION_CODE", @"Please input 6 digits verification code.")];
-        [_verificationCodeTextField becomeFirstResponder];
-        return;
-    }
-    
-    NSString* verificationCode = _verificationCodeTextField.text;
-    
-    OWTAuthManager* am = GetAuthManager();
-    [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
-                         maskType:SVProgressHUDMaskTypeBlack];
-    
-    [am authWithSMSCellphone:_cellphone
-            verificationCode:verificationCode
-                     success:^{
-                         [SVProgressHUD dismiss];
-
-                         OWTUserManager* um = GetUserManager();
-                         [um refreshCurrentUserSuccess:^{
-                             if (_successFunc != nil)
-                             {
-                                 _successFunc();
-                             }
-                         }
-                                               failure:^(NSError* error){
-                                                   if (error == nil)
-                                                   {
-                                                       return;
-                                                   }
-                                                   
-//                                                   [SVProgressHUD showError:error];
-                                               }];
-                     }
-                     failure:^(NSError* error) {
-                         if (error == nil)
-                         {
-                             return;
-                         }
-
-//                         [SVProgressHUD showError:error];
-                     }];
-}
-- (IBAction)back:(id)sender {
-  //  OWTLoginRegisterSelectionViewCon *rsv = [[OWTLoginRegisterSelectionViewCon alloc]init];
-  //  [self.navigationController popViewControllerAnimated:YES];
-  ///  [self.navigationController popToViewController:rsv animated:YES];
-    [self dismissViewControllerAnimated:YES completion:nil];
-    _cancelBlock();
-    NSLog(@"cancle clicked");
-}
-
-- (BOOL)hasValidVerificationCode
-{
-    NSString* verificationCode = _verificationCodeTextField.text;
-    return [verificationCode isValidNumberOfDigitNum:6];
-}
 - (IBAction)loginClick:(id)sender {
-    if (![self hasValidVerificationCode])
-    {
-        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"SMSAUTH_PLEASE_INPUT_VERIFICATION_CODE", @"Please input 6 digits verification code.")];
-        [_verificationCodeTextField becomeFirstResponder];
+
+    if (_verificationCodeTextField.text==nil||passwordTextField.text==nil||[_verificationCodeTextField.text isEqualToString:passwordTextField.text]) {
+        [SVProgressHUD showError:@"密码填写有误"];
         return;
     }
-    
     NSString* verificationCode = _verificationCodeTextField.text;
     
     OWTAuthManager* am = GetAuthManager();
@@ -308,15 +159,6 @@
 
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    if (textField == _verificationCodeTextField)
-    {
-        [self verifyCode:self];
-    }
-    
-    return YES;
-}
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];

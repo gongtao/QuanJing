@@ -226,6 +226,8 @@
 		A3192D901B85A9F700692378 /* b3.png in Resources */ = {isa = PBXBuildFile; fileRef = A3192D8F1B85A9F700692378 /* b3.png */; };
 		A31CCF001A72369B00C2B4EA /* OWTShowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A31CCEFE1A72369B00C2B4EA /* OWTShowCell.m */; };
 		A31CCF011A72369B00C2B4EA /* OWTShowCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A31CCEFF1A72369B00C2B4EA /* OWTShowCell.xib */; };
+		A32412CE1BD9D25E002DE597 /* 验证码.png in Resources */ = {isa = PBXBuildFile; fileRef = A32412CD1BD9D25E002DE597 /* 验证码.png */; settings = {ASSET_TAGS = (); }; };
+		A32412D01BD9D335002DE597 /* kuang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A32412CF1BD9D335002DE597 /* kuang@2x.png */; settings = {ASSET_TAGS = (); }; };
 		A32F10C01B3146AD00FF9F7C /* OQJHomeViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A32F10BF1B3146AD00FF9F7C /* OQJHomeViewCon.m */; };
 		A33C2A991B4B791100779337 /* LJCoreData2.m in Sources */ = {isa = PBXBuildFile; fileRef = A33C2A981B4B791100779337 /* LJCoreData2.m */; };
 		A33C2A9C1B4B793A00779337 /* LJCaptionss.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A33C2A9A1B4B793A00779337 /* LJCaptionss.xcdatamodeld */; };
@@ -1269,6 +1271,8 @@
 		A31CCEFD1A72369B00C2B4EA /* OWTShowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTShowCell.h; sourceTree = "<group>"; };
 		A31CCEFE1A72369B00C2B4EA /* OWTShowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTShowCell.m; sourceTree = "<group>"; };
 		A31CCEFF1A72369B00C2B4EA /* OWTShowCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OWTShowCell.xib; sourceTree = "<group>"; };
+		A32412CD1BD9D25E002DE597 /* 验证码.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "验证码.png"; sourceTree = "<group>"; };
+		A32412CF1BD9D335002DE597 /* kuang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kuang@2x.png"; sourceTree = "<group>"; };
 		A32F10BE1B3146AD00FF9F7C /* OQJHomeViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OQJHomeViewCon.h; sourceTree = "<group>"; };
 		A32F10BF1B3146AD00FF9F7C /* OQJHomeViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OQJHomeViewCon.m; sourceTree = "<group>"; };
 		A33C2A971B4B791100779337 /* LJCoreData2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJCoreData2.h; sourceTree = "<group>"; };
@@ -3624,9 +3628,11 @@
 		A39A71361BAEBA8C00B59BEE /* 登陆 */ = {
 			isa = PBXGroup;
 			children = (
+				A32412CF1BD9D335002DE597 /* kuang@2x.png */,
 				A3B729861BB28D3D001D1C7D /* 返回@2x.png */,
 				A3C957E21BB129D000EADD73 /* 文案.png */,
 				A39A71511BAFB38B00B59BEE /* 小框.png */,
+				A32412CD1BD9D25E002DE597 /* 验证码.png */,
 				A39A714D1BAFB38200B59BEE /* 红色对号.png */,
 				A39A714E1BAFB38200B59BEE /* 红色小手机.png */,
 				A39A713B1BAF9C1B00B59BEE /* 小手机.png */,
@@ -5030,6 +5036,7 @@
 				E01391231B0C3EA500051B78 /* VoiceSearchFeedback001.png in Resources */,
 				9078434819010B740008C528 /* OWTFeedViewCon.xib in Resources */,
 				A31CCF011A72369B00C2B4EA /* OWTShowCell.xib in Resources */,
+				A32412D01BD9D335002DE597 /* kuang@2x.png in Resources */,
 				E0BCFF591B0DC109009D1D20 /* sr_refresh.png in Resources */,
 				A36A0D4B1B68C58D00F720C1 /* markdown.css in Resources */,
 				E013916E1B0C3EA500051B78 /* group_participant_add@2x.png in Resources */,
@@ -5088,6 +5095,7 @@
 				E09413271B85DA09000160D7 /* wechatSound1@2x.png in Resources */,
 				A3C957E11BB128F600EADD73 /* 设置.png in Resources */,
 				E01391331B0C3EA500051B78 /* VoiceSearchFeedback009.png in Resources */,
+				A32412CE1BD9D25E002DE597 /* 验证码.png in Resources */,
 				E01391341B0C3EA500051B78 /* VoiceSearchFeedback009@2x.png in Resources */,
 				E013916C1B0C3EA500051B78 /* newFriends@2x.png in Resources */,
 				A38346FB1BB3CF6400D7BC94 /* 消息@2x.png in Resources */,

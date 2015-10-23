@@ -192,62 +192,33 @@
     
     [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
                          maskType:SVProgressHUDMaskTypeBlack];
-//    QJPassport *pt=[QJPassport sharedPassport];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        
-//    });
-//    [pt loginUser:username password:password finished:^(NSInteger userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
-//        [SVProgressHUD dismiss];
-//        if (error==nil) {
-//            OWTUserManager* um = GetUserManager();
-//            [um refreshCurrentUserSuccess:^{
-//                if (_successFunc != nil)
-//                {
-//                    _successFunc();
-//                }
-//            }
-//                                  failure:^(NSError* error){
-//                                      if (error == nil)
-//                                      {
-//                                          return;
-//                                      }
-//                                      
-//                                  }];
-//
-//        }
-//        
-//    }];
-    [am authWithUsername:username
-                password:password
-                 success:^{
-                     [SVProgressHUD dismiss];
-                     OWTUserManager* um = GetUserManager();
-                     [um refreshCurrentUserSuccess:^{
-                         if (_successFunc != nil)
-                         {
-                             _successFunc();
-                         }
-                     }
-                                           failure:^(NSError* error){
-                                               if (error == nil)
-                                               {
-                                                   return;
-                                               }
-                                               
-                                                                                          }];
-                 }
-                 failure:^(NSError* error) {
-                     [SVProgressHUD dismiss];
-                     if (error == nil)
-                     {
-                         return;
-                     }
-                     
-                     //                  [SVProgressHUD showError:error];
-                     //                  [SVProgressHUD showErrorWithStatus:@"请输入相册名称"];
-                 }];
+    QJPassport *pt=[QJPassport sharedPassport];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [pt loginUser:username password:password finished:^(NSNumber * userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
+        [SVProgressHUD dismiss];
+        if (error==nil) {
+            OWTUserManager* um = GetUserManager();
+            [um refreshCurrentUserSuccess:^{
+                if (_successFunc != nil)
+                {
+                    _successFunc();
+                }
+            }
+                                  failure:^(NSError* error){
+                                      if (error == nil)
+                                      {
+                                          return;
+                                      }
+                                      
+                                  }];
+        }else {
+            [SVProgressHUD showError:error];
+        }
+        
+    }];
+    });
 
-}
+   }
 
 //- (BOOL)hasValidUsernameInput
 //{

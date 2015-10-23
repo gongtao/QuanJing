@@ -56,6 +56,11 @@
 {
     [_data appendData:data];
 }
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    [self putIn];
+
+}
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
 NSArray *arr=[NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingMutableContainers error:nil];
@@ -63,23 +68,25 @@ NSArray *arr=[NSJSONSerialization JSONObjectWithData:_data options:NSJSONReading
     NSDictionary *dict=arr[0];
     NSString *str=[userDefaults objectForKey:@"id"];
     NSString *imgUrl=[userDefaults objectForKey:@"ImgUrl"];
-    if (imgUrl==nil) {
-        [advertisetion setImageWithURL:[NSURL URLWithString:dict[@"ImgUrl"]]];
-    }
-    if ([str isEqualToString:@"0"]) {
+    if ([dict[@"id"] isEqualToString:@"0"]) {
+
         [userDefaults removeObjectForKey:@"ImgUrl"];
-        [userDefaults removeObjectForKey:@"id"];
+//        [userDefaults removeObjectForKey:@"id"];
+        [userDefaults synchronize];
+        [self putIn];
     }else {
+        if (imgUrl!=nil) {
+            [advertisetion setImageWithURL:[NSURL URLWithString:dict[@"ImgUrl"]]];
+        }
+        [self performSelector:@selector(putIn) withObject:nil afterDelay:3];
     if (![str isEqualToString:dict[@"id"]]) {
         [userDefaults setValue:dict[@"id"] forKey:@"id"];
         [userDefaults setValue:dict[@"ImgUrl"] forKey:@"ImgUrl"];
     }}
-    [userDefaults synchronize];
 }
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:YES];
-    [self performSelector:@selector(putIn) withObject:nil afterDelay:3];
 }
 -(void)putIn
 {
