@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QJPassport : NSObject
 
-@property (nonatomic, strong, nullable) QJUser *currentUser;
+@property (nonatomic, strong, nullable) QJUser * currentUser;
 
 + (instancetype)sharedPassport;
 
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 登录
 - (void)loginUser:(NSString *)userName
 	password:(NSString *)password
-	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished;
+	finished:(void (^)(NSNumber * userId, NSString * ticket, NSError * error))finished;
 	
 // 发送登录短信
 - (NSError *)sendLoginSMS:(NSString *)phoneNumber;
@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 短信登录
 - (void)loginUser:(NSString *)phoneNumber
 	code:(NSString *)code
-	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished;
+	finished:(void (^)(NSNumber * userId, NSString * ticket, NSError * error))finished;
 	
 // 判断是否登录
 - (BOOL)isLogin;
@@ -56,6 +56,12 @@ NS_ASSUME_NONNULL_BEGIN
 // 用户信息修改
 - (void)requestModifyUserInfo:(QJUser *)user
 	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished;
+	
+// 用户关注列表
+- (void)requestUserFollowList:(nullable NSNumber *)userId
+	pageNum:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
 	
 @end
 

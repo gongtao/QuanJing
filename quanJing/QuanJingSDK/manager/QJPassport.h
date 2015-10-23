@@ -57,6 +57,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestModifyUserInfo:(QJUser *)user
 	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished;
 	
+// 用户关注列表
+- (void)requestUserFollowList:(nullable NSNumber *)userId
+	pageNum:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
+	
 @end
 
 NS_ASSUME_NONNULL_END

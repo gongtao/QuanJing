@@ -29,9 +29,16 @@
 	// imageId
 	NSNumber * imageId = json[@"id"];
 	
-	if (!QJ_IS_NUM_NIL(imageId))
+	if (!QJ_IS_NUM_NIL(imageId)) {
 		self.imageId = imageId;
+	}
+	else {
+		imageId = json[@"imageId"];
 		
+		if (!QJ_IS_NUM_NIL(imageId))
+			self.imageId = imageId;
+	}
+	
 	// userId
 	NSNumber * userId = json[@"userId"];
 	
@@ -47,9 +54,16 @@
 	// url
 	NSString * url = json[@"url"];
 	
-	if (!QJ_IS_STR_NIL(url))
+	if (!QJ_IS_STR_NIL(url)) {
 		self.url = url;
+	}
+	else {
+		NSString * imageUrl = json[@"imageUrl"];
 		
+		if (!QJ_IS_STR_NIL(imageUrl))
+			self.url = imageUrl;
+	}
+	
 	// bgcolor
 	NSString * bgcolor = json[@"bgcolor"];
 	
@@ -66,13 +80,13 @@
 	NSNumber * height = json[@"height"];
 	
 	if (!QJ_IS_NUM_NIL(height))
-        self.height = height;
-    
-    // imageType
-    NSNumber * imageType = json[@"imageType"];
-    
-    if (!QJ_IS_NUM_NIL(imageType))
-        self.imageType = imageType;
+		self.height = height;
+		
+	// imageType
+	NSNumber * imageType = json[@"imageType"];
+	
+	if (!QJ_IS_NUM_NIL(imageType))
+		self.imageType = imageType;
 		
 	// brand
 	NSString * brand = json[@"brand"];

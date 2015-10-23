@@ -129,7 +129,7 @@
 
 - (void)loginUser:(NSString *)userName
 	password:(NSString *)password
-	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished
+	finished:(void (^)(NSNumber * userId, NSString * ticket, NSError * error))finished
 {
 	NSParameterAssert(userName);
 	NSParameterAssert(password);
@@ -165,19 +165,19 @@
 		NSLog(@"%@", operation.responseObject);
 		NSDictionary * data = operation.responseObject[@"data"];
 		NSNumber * userId = data[@"userId"];
-        
-        self.currentUser = [[QJUser alloc] init];
-        self.currentUser.uid = userId;
-        
+		
+		self.currentUser = [[QJUser alloc] init];
+		self.currentUser.uid = userId;
+		
 		if (finished)
-			finished(userId.integerValue, data[@"ticket"], error);
+			finished(userId, data[@"ticket"], error);
 		return;
 	}
-    
-    self.currentUser = nil;
+	
+	self.currentUser = nil;
 	
 	if (finished)
-		finished(0, nil, error);
+		finished(nil, nil, error);
 }
 
 - (NSError *)sendLoginSMS:(NSString *)phoneNumber
@@ -219,7 +219,7 @@
 // 短信登录
 - (void)loginUser:(NSString *)phoneNumber
 	code:(NSString *)code
-	finished:(void (^)(NSInteger userId, NSString * ticket, NSError * error))finished
+	finished:(void (^)(NSNumber * userId, NSString * ticket, NSError * error))finished
 {
 	NSParameterAssert(phoneNumber);
 	NSParameterAssert(code);
@@ -254,20 +254,20 @@
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
 		NSDictionary * data = operation.responseObject[@"data"];
-        NSNumber * userId = data[@"userId"];
-        
-        self.currentUser = [[QJUser alloc] init];
-        self.currentUser.uid = userId;
+		NSNumber * userId = data[@"userId"];
+		
+		self.currentUser = [[QJUser alloc] init];
+		self.currentUser.uid = userId;
 		
 		if (finished)
-			finished(userId.integerValue, data[@"ticket"], error);
+			finished(userId, data[@"ticket"], error);
 		return;
 	}
-    
-    self.currentUser = nil;
+	
+	self.currentUser = nil;
 	
 	if (finished)
-		finished(0, nil, error);
+		finished(nil, nil, error);
 }
 
 - (BOOL)isLogin
@@ -297,8 +297,8 @@
 	[cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * cookie, NSUInteger idx, BOOL * stop) {
 		[cookieJar deleteCookie:cookie];
 	}];
-    
-    self.currentUser = nil;
+	
+	self.currentUser = nil;
 }
 
 #pragma mark - 用户信息
@@ -331,13 +331,12 @@
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
 		NSDictionary * dataDic = operation.responseObject[@"data"];
-        if (self.currentUser) {
-            [self.currentUser setPropertiesFromJson:dataDic];
-        }
-        else {
-            self.currentUser = [[QJUser alloc] initWithJson:dataDic];
-        }
 		
+		if (self.currentUser)
+			[self.currentUser setPropertiesFromJson:dataDic];
+		else
+			self.currentUser = [[QJUser alloc] initWithJson:dataDic];
+			
 		if (finished)
 			finished(self.currentUser, dataDic, error);
 		return;
@@ -437,21 +436,89 @@
 	
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
-        NSDictionary * dataDic = operation.responseObject[@"data"];
-        if (self.currentUser) {
-            [self.currentUser setPropertiesFromJson:dataDic];
-        }
-        else {
-            self.currentUser = [[QJUser alloc] initWithJson:dataDic];
-        }
-        
-        if (finished)
-            finished(self.currentUser, dataDic, error);
-        return;
-    }
-    
-    if (finished)
-        finished(self.currentUser, nil, error);
+		NSDictionary * dataDic = operation.responseObject[@"data"];
+		
+		if (self.currentUser)
+			[self.currentUser setPropertiesFromJson:dataDic];
+		else
+			self.currentUser = [[QJUser alloc] initWithJson:dataDic];
+			
+		if (finished)
+			finished(self.currentUser, dataDic, error);
+		return;
+	}
+	
+	if (finished)
+		finished(self.currentUser, nil, error);
+}
+
+#pragma mark - 用户列表
+
+- (void)requestUserFollowList:(NSNumber *)userId
+	pageNum:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished
+{
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	
+	if (!QJ_IS_NUM_NIL(userId))
+		params[@"userId"] = userId;
+		
+	if (pageNum == 0)
+		pageNum = 1;
+	params[@"pageNum"] = [NSNumber numberWithUnsignedInteger:pageNum];
+	
+	if (pageSize > 0)
+		params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
+		
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	NSError * error = nil;
+	AFHTTPRequestOperation * operation = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		operation = [self.httpRequestManager GET:kQJUserFollowListPath
+			parameters:params
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			dispatch_semaphore_signal(sem);
+		}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		error = [QJUtils errorFromOperation:operation];
+		i--;
+	} while (error && i >= 0);
+	
+	NSLog(@"%@", operation.request.URL);
+	
+	BOOL isLastPage = NO;
+	
+	if (!error) {
+		NSLog(@"%@", operation.responseObject);
+		NSDictionary * dataDic = operation.responseObject[@"data"];
+		
+		NSNumber * lastPageNum = dataDic[@"isLastPage"];
+		
+		if (!QJ_IS_NUM_NIL(lastPageNum))
+			isLastPage = lastPageNum.boolValue;
+			
+		NSArray * dataArray = dataDic[@"list"];
+		
+		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+			[resultArray addObject:[[QJUser alloc] initWithJson:obj]];
+		}];
+		
+		if (finished)
+			finished(resultArray, isLastPage, dataArray, error);
+		return;
+	}
+	
+	if (finished)
+		finished(nil, isLastPage, nil, error);
 }
 
 @end

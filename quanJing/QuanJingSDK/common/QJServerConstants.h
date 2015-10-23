@@ -95,4 +95,7 @@ static NSString * const kQJImageAddDownloadPath = @"/imageUser/addDownload";
 // 用户收藏图片列表
 static NSString * const kQJUserCollectListPath = @"/userCollect/list.user";
 
+// 用户关注列表
+static NSString * const kQJUserFollowListPath = @"/userFollow/list";
+
 #endif	/* QJServerConstants_h */

@@ -103,4 +103,7 @@ static NSString * const kQJUserCommentImageListPath = @"/imageComment/list.user"
 // 用户相册列表
 static NSString * const kQJUserAlbumListPath = @"/album/list.user";
 
+// 用户关注列表
+static NSString * const kQJUserFollowListPath = @"/userFollow/list";
+
 #endif	/* QJServerConstants_h */

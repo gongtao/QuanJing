@@ -8,6 +8,8 @@
 
 #import <XCTest/XCTest.h>
 
+#import <Photos/Photos.h>
+
 #import "QuanJingSDK.h"
 
 #define kPhoneNumber	@"18600962172"
@@ -72,7 +74,7 @@
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testUserRegistExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			[[QJPassport sharedPassport] registerUser:kPhoneNumber
-			password:@"Gongtao1987"
+			password:kPassword
 			code:@"278715"
 			finished:^(QJUser * user, NSDictionary * userDic, NSError * error) {
 				if (error)
@@ -121,7 +123,7 @@
 			// Login
 			[[QJPassport sharedPassport] loginUser:kPhoneNumber
 			code:@"536528"
-			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
+			finished:^(NSNumber *userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testLoginSMSExample error: %@", error);
 			}];
@@ -152,8 +154,8 @@
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			// Login
 			[[QJPassport sharedPassport] loginUser:kPhoneNumber
-			password:@"Gongtao1987"
-			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
+			password:kPassword
+			finished:^(NSNumber *userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testUserExample error: %@", error);
 			}];
@@ -281,7 +283,7 @@
 				if (error)
 					XCTFail(@"testImageCategoryExample error: %@", error);
 					
-                cursorIndex = nextCursorIndex;
+				cursorIndex = nextCursorIndex;
 			}];
 			
 			if (cursorIndex)
@@ -292,7 +294,7 @@
 					if (error)
 						XCTFail(@"testImageCategoryExample error: %@", error);
 						
-                    cursorIndex = nextCursorIndex;
+					cursorIndex = nextCursorIndex;
 				}];
 				
 			[expectation fulfill];
@@ -315,8 +317,8 @@
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			// Login
 			[[QJPassport sharedPassport] loginUser:kPhoneNumber
-			password:@"Gongtao1987"
-			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
+			password:kPassword
+			finished:^(NSNumber *userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testActionExample error: %@", error);
 			}];
@@ -350,12 +352,12 @@
 			error = [[QJInterfaceManager sharedManager] requestCollectAction:actionId];
 			
 			if (error)
-                XCTFail(@"testUserExample error: %@", error);
-            
-            error = [[QJInterfaceManager sharedManager] requestCollectCancelAction:actionId];
-            
-            if (error)
-                XCTFail(@"testUserExample error: %@", error);
+				XCTFail(@"testUserExample error: %@", error);
+				
+			error = [[QJInterfaceManager sharedManager] requestCollectCancelAction:actionId];
+			
+			if (error)
+				XCTFail(@"testUserExample error: %@", error);
 				
 			error = [[QJInterfaceManager sharedManager] requestCommentAction:actionId comment:@"赞"];
 			
@@ -392,8 +394,8 @@
 			
 			// Login
 			[[QJPassport sharedPassport] loginUser:kPhoneNumber
-			password:@"Gongtao1987"
-			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
+			password:kPassword
+			finished:^(NSNumber *userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testActionExample error: %@", error);
 			}];
@@ -452,8 +454,8 @@
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			// Login
 			[[QJPassport sharedPassport] loginUser:kPhoneNumber
-			password:@"Gongtao1987"
-			finished:^(NSInteger userId, NSString * ticket, NSError * error) {
+			password:kPassword
+			finished:^(NSNumber *userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testActionExample error: %@", error);
 			}];
@@ -485,6 +487,72 @@
 		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
 			if (error)
 				XCTFail(@"testUserImageListExample error: %@", error);
+		}];
+	}];
+}
+
+- (void)testUserListExample
+{
+	// This is an example of a functional test case.
+	// Use XCTAssert and related functions to verify your tests produce the correct results.
+	[self measureBlock:^{
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testUserImageListExample"];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			__block NSNumber * mainId = nil;
+			// Login
+			[[QJPassport sharedPassport] loginUser:kPhoneNumber
+			password:kPassword
+			finished:^(NSNumber * userId, NSString * ticket, NSError * error) {
+				if (error)
+					XCTFail(@"testActionExample error: %@", error);
+				mainId = userId;
+			}];
+			
+			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
+			
+			[[QJPassport sharedPassport] requestUserFollowList:nil
+			pageNum:1
+			pageSize:20
+			finished:^(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserImageListExample error: %@", error);
+			}];
+			[expectation fulfill];
+		});
+		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
+			if (error)
+				XCTFail(@"testUserImageListExample error: %@", error);
+		}];
+	}];
+}
+
+#pragma mark - 发布图片
+
+- (void)testSendImageExample
+{
+	// This is an example of a functional test case.
+	// Use XCTAssert and related functions to verify your tests produce the correct results.
+	[self measureBlock:^{
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testActionExample"];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			__block PHAssetCollection * assetCollection = nil;
+			// User Library Album
+			PHFetchResult * libraryAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum
+			subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary
+			options:nil];
+			[libraryAlbums enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL * stop) {
+				if ([obj isKindOfClass:[PHAssetCollection class]]) {
+					assetCollection = (PHAssetCollection *)obj;
+					
+					*stop = YES;
+				}
+			}];
+			
+			[expectation fulfill];
+		});
+		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
+			if (error)
+				XCTFail(@"testActionExample error: %@", error);
 		}];
 	}];
 }
