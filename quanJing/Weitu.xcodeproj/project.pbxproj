@@ -4885,7 +4885,7 @@
 				ORGANIZATIONNAME = "SparkingSoft Co., Ltd";
 				TargetAttributes = {
 					9044E3C018CAE4D800784D38 = {
-						DevelopmentTeam = T3BNK5WMQ7;
+						DevelopmentTeam = B6DQ38AV7Y;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -6069,7 +6069,7 @@
 					"-force_load",
 					"\"$(SRCROOT)/libEaseMobClientSDKLite.a\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -6225,7 +6225,7 @@
 					"-force_load",
 					"\"$(SRCROOT)/libEaseMobClientSDKLite.a\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = NO;

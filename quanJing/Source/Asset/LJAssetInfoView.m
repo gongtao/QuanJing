@@ -37,6 +37,10 @@
     UIImageView *_commentView;
     UIImageView *_backgroudView;
     UIImageView *_commentBackView;
+    UIButton *_reportBtn;
+    UIButton *_reportTapBtn;
+    UIView *_tapBackView;
+    UITapGestureRecognizer *_tap1;
 }
 - (instancetype)init
 {
@@ -95,12 +99,15 @@
     _captionLabel=[LJUIController createLabelWithFrame:CGRectZero Font:13 Text:nil];
     _userID=[LJUIController createLabelWithFrame:CGRectZero Font:13 Text:nil];
 
+    _reportBtn = [LJUIController createButtonWithFrame:CGRectMake(SCREENWIT-10-40, _userID.frame.origin.y, 40, 17.5) imageName:@"举报" title:@"" target:self action:@selector(reportAction:)];
+    
     [self addSubview:_downloadButton];
     [self addSubview:_collectButton];
     [self addSubview:_shareButton];
     [self addSubview:_likeButton];
     [self addSubview:_captionLabel];
     [self addSubview:_userID];
+    //[self addSubview:_reportBtn];
    
     _openComment=[LJUIController createLabelWithFrame:CGRectZero Font:12 Text:@"查看全部评论"];
     _openComment.userInteractionEnabled=YES;
@@ -121,7 +128,53 @@
     
     _line1.backgroundColor=[UIColor grayColor];
                             [self addSubview:_line1 ];
+    
+    _reportTapBtn=[LJUIController createButtonWithFrame:CGRectMake(0, 0, 57, 41) imageName:@"jubao" title:nil target:self action:@selector(jubao)];
+    _reportTapBtn.hidden=YES;
+    [_assetImageView addSubview:_reportTapBtn];
+    
+    _tapBackView=[[UIView alloc]initWithFrame:CGRectZero];
+    [_assetImageView addSubview:_tapBackView];
+    [_assetImageView sendSubviewToBack:_assetImageView];
+    
+    _tap1=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickBack:)];
+    [_tapBackView addGestureRecognizer:_tap1];
+    _tapBackView.hidden=YES;
+    UILongPressGestureRecognizer * LongP = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(onLongAction:)];
+    
+    [_assetImageView addGestureRecognizer:LongP];
+
 }
+
+-(void)onClickBack:(UIGestureRecognizer *)sender
+{
+    _reportTapBtn.hidden=YES;
+    _tapBackView.hidden=YES;
+}
+-(void)jubao
+{
+    RKObjectManager *om=[RKObjectManager sharedManager];
+    //OWTAsset * asset1 = _asset[_imageNum];
+    _reportTapBtn.hidden=YES;
+    _tapBackView.hidden=YES;
+    NSDictionary *dict=@{@"url":_asset.webURL};
+    [om postObject:nil path:@"report" parameters:dict success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        NSDictionary *dict=mappingResult.dictionary;
+        [SVProgressHUD showSuccessWithStatus:@"举报成功"];
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"%@",error);
+    }];
+}
+
+-(void)onLongAction:(UIGestureRecognizer *)sender
+{
+    _reportTapBtn.hidden=NO;
+    _reportTapBtn.center=CGPointMake(_assetImageView.bounds.size.width/2, _assetImageView.bounds.size.height/2);
+    _tapBackView.hidden=NO;
+    [_assetImageView bringSubviewToFront:_tapBackView];
+    [_assetImageView bringSubviewToFront:_reportTapBtn];
+}
+
 -(void)setUpUI
 {
     _avatarImageView.clipsToBounds = YES;
@@ -182,6 +235,7 @@
     viewHeight+=(10+scr/width*height);
     //标签 编号
     _userID.frame=CGRectMake(10, viewHeight+10, 200, 20);
+    _reportBtn.frame = CGRectMake(SCREENWIT-10-40, _userID.frame.origin.y, 40, 17.5);
     if (_asset.oriPic != nil && _asset.oriPic.length > 0)
         _userID.text =[NSString stringWithFormat:@"编号：%@", _asset.oriPic];
     else
@@ -337,6 +391,10 @@
 
 -(void)clickImage
 {
+    if (![_reportTapBtn isHidden]) {
+        [self onClickBack:nil];
+         return;
+    }
     if (_canClick==YES) {
         if (_showAction != nil)
         {
@@ -400,6 +458,14 @@
         _controller.isOpen=NO;
         _reloadView();
         label.text=@"查看全部评论";
+    }
+}
+
+- (void)reportAction:(UIButton*)sender
+{
+    if (_reportAction != nil)
+    {
+        _reportAction();
     }
 }
 

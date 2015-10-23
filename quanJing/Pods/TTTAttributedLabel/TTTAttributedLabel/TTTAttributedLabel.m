@@ -413,6 +413,60 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
     self.inactiveLinkAttributes = [NSDictionary dictionaryWithDictionary:mutableInactiveLinkAttributes];
 }
 
+
+- (void)reCommonInit {
+    self.userInteractionEnabled = YES;
+    self.multipleTouchEnabled = NO;
+    
+    self.textInsets = UIEdgeInsetsZero;
+    self.lineHeightMultiple = 1.0f;
+    
+    self.links = [NSArray array];
+    
+    NSMutableDictionary *mutableLinkAttributes = [NSMutableDictionary dictionary];
+    [mutableLinkAttributes setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCTUnderlineStyleAttributeName];
+    
+    NSMutableDictionary *mutableActiveLinkAttributes = [NSMutableDictionary dictionary];
+    [mutableActiveLinkAttributes setObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kCTUnderlineStyleAttributeName];
+    
+    NSMutableDictionary *mutableInactiveLinkAttributes = [NSMutableDictionary dictionary];
+    [mutableInactiveLinkAttributes setObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kCTUnderlineStyleAttributeName];
+    
+    if ([NSMutableParagraphStyle class]) {
+        [mutableLinkAttributes setObject:[UIColor whiteColor] forKey:(NSString *)kCTForegroundColorAttributeName];
+        [mutableActiveLinkAttributes setObject:[UIColor redColor] forKey:(NSString *)kCTForegroundColorAttributeName];
+        [mutableInactiveLinkAttributes setObject:[UIColor grayColor] forKey:(NSString *)kCTForegroundColorAttributeName];
+        
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        
+        [mutableLinkAttributes setObject:paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+        [mutableActiveLinkAttributes setObject:paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+        [mutableInactiveLinkAttributes setObject:paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+    } else {
+        [mutableLinkAttributes setObject:(__bridge id)[[UIColor blueColor] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
+        [mutableActiveLinkAttributes setObject:(__bridge id)[[UIColor redColor] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
+        [mutableInactiveLinkAttributes setObject:(__bridge id)[[UIColor grayColor] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
+        
+        CTLineBreakMode lineBreakMode = kCTLineBreakByWordWrapping;
+        CTParagraphStyleSetting paragraphStyles[1] = {
+            {.spec = kCTParagraphStyleSpecifierLineBreakMode, .valueSize = sizeof(CTLineBreakMode), .value = (const void *)&lineBreakMode}
+        };
+        CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(paragraphStyles, 1);
+        
+        [mutableLinkAttributes setObject:(__bridge id)paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+        [mutableActiveLinkAttributes setObject:(__bridge id)paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+        [mutableInactiveLinkAttributes setObject:(__bridge id)paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+        
+        CFRelease(paragraphStyle);
+    }
+    
+    self.linkAttributes = [NSDictionary dictionaryWithDictionary:mutableLinkAttributes];
+    self.activeLinkAttributes = [NSDictionary dictionaryWithDictionary:mutableActiveLinkAttributes];
+    self.inactiveLinkAttributes = [NSDictionary dictionaryWithDictionary:mutableInactiveLinkAttributes];
+}
+
+
 - (void)dealloc {
     if (_framesetter) {
         CFRelease(_framesetter);

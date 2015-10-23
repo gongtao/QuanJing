@@ -369,6 +369,8 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
 - (void)addLinkToTransitInformation:(NSDictionary *)components
                           withRange:(NSRange)range;
 
+-(void)reCommonInit;
+
 @end
 
 /**
