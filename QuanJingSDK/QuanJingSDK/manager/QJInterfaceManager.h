@@ -64,6 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 圈子收藏
 - (NSError *)requestCollectAction:(NSNumber *)actionId;
 
+// 圈子取消收藏
+- (NSError *)requestCollectCancelAction:(NSNumber *)actionId;
+
 // 圈子评论
 - (NSError *)requestCommentAction:(NSNumber *)actionId comment:(NSString *)comment;
 

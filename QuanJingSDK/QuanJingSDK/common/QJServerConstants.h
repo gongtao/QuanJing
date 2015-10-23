@@ -67,6 +67,9 @@ static NSString * const kQJCancelLikeActionPath = @"/action/likeCancel.user";
 // 圈子收藏
 static NSString * const kQJCollectActionPath = @"/action/collect.user";
 
+// 圈子取消收藏
+static NSString * const kQJCollectCancelActionPath = @"/action/collectCancel.user";
+
 // 圈子评论
 static NSString * const kQJCommentActionPath = @"/action/comment.user";
 

@@ -553,6 +553,42 @@
 	return error;
 }
 
+- (NSError *)requestCollectCancelAction:(NSNumber *)actionId
+{
+	NSParameterAssert(actionId);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"actionId"] = actionId;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	NSError * error = nil;
+	AFHTTPRequestOperation * operation = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		operation = [self.httpRequestManager GET:kQJCollectCancelActionPath
+			parameters:params
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			dispatch_semaphore_signal(sem);
+		}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		error = [QJUtils errorFromOperation:operation];
+		i--;
+	} while (error && i >= 0);
+	
+	NSLog(@"%@", operation.request.URL);
+	
+	if (!error)
+		NSLog(@"%@", operation.responseObject);
+		
+	return error;
+}
+
 - (NSError *)requestCommentAction:(NSNumber *)actionId comment:(NSString *)comment
 {
 	NSParameterAssert(actionId);
@@ -1050,23 +1086,23 @@
 	
 	if (!error)
 		NSLog(@"%@", operation.responseObject);
-//        NSDictionary * dataDic = operation.responseObject[@"data"];
-//
-//        NSNumber * lastPageNum = dataDic[@"isLastPage"];
-//
-//        if (!QJ_IS_NUM_NIL(lastPageNum))
-//            isLastPage = lastPageNum.boolValue;
-//
-//        NSArray * dataArray = dataDic[@"list"];
-//
-//        __block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
-//        [dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-//            [resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
-//        }];
-//
-//        if (finished)
-//            finished(resultArray, isLastPage, dataArray, error);
-//        return;
+	//        NSDictionary * dataDic = operation.responseObject[@"data"];
+	//
+	//        NSNumber * lastPageNum = dataDic[@"isLastPage"];
+	//
+	//        if (!QJ_IS_NUM_NIL(lastPageNum))
+	//            isLastPage = lastPageNum.boolValue;
+	//
+	//        NSArray * dataArray = dataDic[@"list"];
+	//
+	//        __block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+	//        [dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+	//            [resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
+	//        }];
+	//
+	//        if (finished)
+	//            finished(resultArray, isLastPage, dataArray, error);
+	//        return;
 	
 	if (finished)
 		finished(nil, isLastPage, nil, error);

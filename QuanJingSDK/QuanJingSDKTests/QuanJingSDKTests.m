@@ -350,7 +350,12 @@
 			error = [[QJInterfaceManager sharedManager] requestCollectAction:actionId];
 			
 			if (error)
-				XCTFail(@"testUserExample error: %@", error);
+                XCTFail(@"testUserExample error: %@", error);
+            
+            error = [[QJInterfaceManager sharedManager] requestCollectCancelAction:actionId];
+            
+            if (error)
+                XCTFail(@"testUserExample error: %@", error);
 				
 			error = [[QJInterfaceManager sharedManager] requestCommentAction:actionId comment:@"赞"];
 			
