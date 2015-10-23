@@ -20,8 +20,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable NSError *)errorFromOperation:(AFHTTPRequestOperation *)operation;
 
+///---------------------------------
+/// @name NSString And JSON Object
+///---------------------------------
+
++ (NSString *)stringFromJSONObject:(id)object error:(NSError * __autoreleasing *)error;
+
++ (id)jsonObjectFromString:(NSString *)jsonString error:(NSError * __autoreleasing *)error;
+
 @end
 
 NS_ASSUME_NONNULL_END
 
-#endif
+#endif /* ifndef QJUtils_h */

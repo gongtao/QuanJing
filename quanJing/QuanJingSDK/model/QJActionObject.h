@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSArray * comments;
 
-@property (nonatomic, strong, nullable) NSString * content;
+@property (nonatomic, strong, nullable) NSArray * images;
 
 @property (nonatomic, strong, nullable) NSDate * creatTime;
 

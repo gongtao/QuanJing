@@ -18,6 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable NSError *)errorFromOperation:(NSDictionary *)responseObject;
 
++ (NSString *)stringFromJSONObject:(id)object error:(NSError * __autoreleasing *)error;
+
++ (id)jsonObjectFromString:(NSString *)jsonString error:(NSError * __autoreleasing *)error;
+
 @end
 
 NS_ASSUME_NONNULL_END

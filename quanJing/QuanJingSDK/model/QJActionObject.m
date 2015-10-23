@@ -8,6 +8,10 @@
 
 #import "QJActionObject.h"
 
+#import "QJImageObject.h"
+
+#import "QJUtils.h"
+
 #import "QJCoreMacros.h"
 
 @implementation QJActionObject
@@ -37,12 +41,23 @@
 		self.comments = array;
 	}
 	
-	// content
+	// images
 	NSString * content = json[@"content"];
 	
-	if (!QJ_IS_STR_NIL(content))
-		self.content = content;
+	if (!QJ_IS_STR_NIL(content)) {
+		NSArray * images = [QJUtils jsonObjectFromString:content error:nil];
 		
+		if (!QJ_IS_ARRAY_NIL(images)) {
+			__block NSMutableArray * array = [[NSMutableArray alloc] init];
+			[images enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+				imageObject.imageType = [NSNumber numberWithInt:2];
+				[array addObject:imageObject];
+			}];
+			self.images = array;
+		}
+	}
+	
 	// creatTime
 	NSNumber * creatTime = json[@"creatTime"];
 	

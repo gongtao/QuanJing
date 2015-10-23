@@ -197,7 +197,9 @@
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-			[resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
+			QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+			imageObject.imageType = [NSNumber numberWithInt:1];
+			[resultArray addObject:imageObject];
 		}];
 		
 		if (finished)
