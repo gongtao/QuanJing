@@ -71,3 +71,12 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+//albumId = "<null>";
+//comment = "<null>";
+//coverUrl = "<null>";
+//open = 1;
+//position = "<null>";
+//rank = 100;
+//title = "<null>";
+//user = "<null>";

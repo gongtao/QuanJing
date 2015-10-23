@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <Photos/Photos.h>
+#import "AFNetworking.h"
 
 #import "QuanJingSDK.h"
 
@@ -76,7 +76,7 @@
 			[[QJPassport sharedPassport] registerUser:kPhoneNumber
 			password:kPassword
 			code:@"278715"
-			finished:^(QJUser * user, NSDictionary * userDic, NSError * error) {
+			finished:^(NSNumber * userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testUserRegistExample error: %@", error);
 			}];
@@ -123,7 +123,7 @@
 			// Login
 			[[QJPassport sharedPassport] loginUser:kPhoneNumber
 			code:@"536528"
-			finished:^(NSNumber *userId, NSString * ticket, NSError * error) {
+			finished:^(NSNumber * userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testLoginSMSExample error: %@", error);
 			}];
@@ -155,12 +155,14 @@
 			// Login
 			[[QJPassport sharedPassport] loginUser:kPhoneNumber
 			password:kPassword
-			finished:^(NSNumber *userId, NSString * ticket, NSError * error) {
+			finished:^(NSNumber * userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testUserExample error: %@", error);
 			}];
 			
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
+            
+            NSLog(@"%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"kCookieDictionaryKey"]);
 			
 			__block QJUser * modifyUser = nil;
 			[[QJPassport sharedPassport] requestUserInfo:^(QJUser * user, NSDictionary * userDic, NSError * error) {
@@ -318,7 +320,7 @@
 			// Login
 			[[QJPassport sharedPassport] loginUser:kPhoneNumber
 			password:kPassword
-			finished:^(NSNumber *userId, NSString * ticket, NSError * error) {
+			finished:^(NSNumber * userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testActionExample error: %@", error);
 			}];
@@ -395,7 +397,7 @@
 			// Login
 			[[QJPassport sharedPassport] loginUser:kPhoneNumber
 			password:kPassword
-			finished:^(NSNumber *userId, NSString * ticket, NSError * error) {
+			finished:^(NSNumber * userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testActionExample error: %@", error);
 			}];
@@ -455,7 +457,7 @@
 			// Login
 			[[QJPassport sharedPassport] loginUser:kPhoneNumber
 			password:kPassword
-			finished:^(NSNumber *userId, NSString * ticket, NSError * error) {
+			finished:^(NSNumber * userId, NSString * ticket, NSError * error) {
 				if (error)
 					XCTFail(@"testActionExample error: %@", error);
 			}];
@@ -535,18 +537,46 @@
 	[self measureBlock:^{
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testActionExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			__block PHAssetCollection * assetCollection = nil;
-			// User Library Album
-			PHFetchResult * libraryAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum
-			subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary
-			options:nil];
-			[libraryAlbums enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL * stop) {
-				if ([obj isKindOfClass:[PHAssetCollection class]]) {
-					assetCollection = (PHAssetCollection *)obj;
-					
-					*stop = YES;
-				}
+			// Login
+			[[QJPassport sharedPassport] loginUser:kPhoneNumber
+			password:kPassword
+			finished:^(NSNumber * userId, NSString * ticket, NSError * error) {
+				if (error)
+					XCTFail(@"testActionExample error: %@", error);
 			}];
+			
+			NSString * url = @"http://b.hiphotos.baidu.com/image/pic/item/faf2b2119313b07e73cdc2690ad7912397dd8c5b.jpg";
+			NSData * imageData1 = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]
+			returningResponse:nil
+			error:nil];
+			
+			url = @"http://a.hiphotos.baidu.com/image/pic/item/1f178a82b9014a90aeefd5dcaf773912b21beefa.jpg";
+			NSData * imageData2 = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]
+			returningResponse:nil
+			error:nil];
+			
+			dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+			AFHTTPRequestOperationManager * manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://mapp.tiankong.com"]];
+			[manager POST:@"/imageUser/save.user"
+			parameters:@{@"tag": @"美女",
+						 @"open": [NSNumber numberWithInt:1]}
+			constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
+                [formData appendPartWithFileData:imageData1
+                                            name:@"f1"
+                                        fileName:@"upload1.jpg"
+                                        mimeType:@"application/octet-stream"];
+                [formData appendPartWithFileData:imageData1
+                                            name:@"f2"
+                                        fileName:@"upload2.jpg"
+                                        mimeType:@"application/octet-stream"];
+            }
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+				dispatch_semaphore_signal(sem);
+			}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+				dispatch_semaphore_signal(sem);
+			}];
+			dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 			
 			[expectation fulfill];
 		});
