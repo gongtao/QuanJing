@@ -139,6 +139,8 @@
                      failure(error);
                  }
              }else {
+                 [self initHuanXinSDK:nil];
+                 [self getFirendList:nil];
                  if (success != nil)
                  {
                      success();
@@ -268,10 +270,11 @@
     //就是一个异步的线程
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //耗时操作
-        
+        QJPassport *pt=[QJPassport sharedPassport];
+//稍后修改；
         OWTUserManager* um = GetUserManager();
         __block NSArray * friendsArray = [NSArray array];
-        [um getUserFriendByUser:user
+        [um getUserFriendByUser:nil
                         success:^{
                             
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -1414,9 +1417,10 @@
                        success:(void (^)())success
                        failure:(void (^)(NSError*))failure
 {
+   QJUser *cuUser=[QJPassport sharedPassport].currentUser;
     RKObjectManager* om = [RKObjectManager sharedManager];
     [om getObject:nil
-             path:[NSString stringWithFormat:@"users/%@/friends", user.userID]
+             path:[NSString stringWithFormat:@"users/%@/friends", cuUser.uid]
        parameters:nil
           success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
               [o logResponse];

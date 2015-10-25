@@ -10,7 +10,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "OWTAccessToken.h"
 #import "OWTUserManager.h"
-
+#import "QuanJingSDK.h"
 static NSString* kWTStoreKeyAccessToken = @"WTAccessToken";
 static NSString* kWTClientID = @"3ae125d6e9a009a6fcce3f081f4ce5ff";
 
@@ -24,11 +24,11 @@ static NSString* kWTClientID = @"3ae125d6e9a009a6fcce3f081f4ce5ff";
 //    OWTAccessToken* accessToken = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     
     //本机当前登陆用户的userID
-    OWTUser *user=GetUserManager().currentUser;
+//    OWTUser *user=GetUserManager().currentUser;
+    QJUser *user=[QJPassport sharedPassport].currentUser;
+    NSString *huanxinCount = [@"qj" stringByAppendingString:user.uid.stringValue];
     
-    NSString *huanxinCount = [@"qj" stringByAppendingString:user.userID];
-    
-    const char *cStr = [user.userID UTF8String];
+    const char *cStr = [user.uid.stringValue UTF8String];
     unsigned char result[16];
     CC_MD5(cStr, strlen(cStr), result);
     NSString *passWord =  [NSString stringWithFormat:

@@ -136,7 +136,7 @@
     QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [fm requestImageSearchKey:keyword pageNum:1 pageSize:50 finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+        [fm requestImageSearchKey:keyword pageNum:1 pageSize:50 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [_searchBar resignFirstResponder];
                 [_searchResultsViewCon setKeyword:keyword withAssets:imageObjectArray];

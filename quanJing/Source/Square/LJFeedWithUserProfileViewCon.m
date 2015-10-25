@@ -44,7 +44,7 @@
 #import "RESideMenu.h"
 #import "UIColor+HexString.h"
 #import "OWTPhotoUploadViewController.h"
-
+#import "QuanJingSDK.h"
 #define IS_WIDESCREEN ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 
 
@@ -867,6 +867,11 @@
 
 - (void)refreshFeed
 {
+    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+    QJPassport *pt=[QJPassport sharedPassport];
+    [fm requestActionList:nil pageSize:30 userId:pt.currentUser.uid finished:^(NSArray * _Nonnull actionArray, NSArray * _Nonnull resultArray, NSNumber * _Nonnull nextCursorIndex, NSError * _Nonnull error) {
+        
+    }];
     [_feed refreshWithSuccess1:^{
         [self getResourceData];
         [_tableView reloadData];
