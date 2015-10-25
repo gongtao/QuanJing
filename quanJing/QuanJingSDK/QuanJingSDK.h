@@ -23,5 +23,6 @@
   #import "QJActionObject.h"
   #import "QJArticleCategory.h"
   #import "QJArticleObject.h"
+  #import "QJAlbumObject.h"
   #import "QJInterfaceManager.h"
 #endif

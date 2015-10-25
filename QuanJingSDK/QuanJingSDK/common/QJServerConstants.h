@@ -106,4 +106,13 @@ static NSString * const kQJUserAlbumListPath = @"/album/list.user";
 // 用户关注列表
 static NSString * const kQJUserFollowListPath = @"/userFollow/list";
 
+// 用户粉丝列表
+static NSString * const kQJUserFollowMeListPath = @"/userFllow/fllowMe";
+
+// 用户新增关注
+static NSString * const kQJUserFollowUserPath = @"/userFllow/save.user";
+
+// 用户取消关注
+static NSString * const kQJUserCancelFollowUserPath = @"/userFllow/save.user";
+
 #endif	/* QJServerConstants_h */

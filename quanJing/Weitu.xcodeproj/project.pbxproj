@@ -41,6 +41,7 @@
 		31CB73C519B6CDD20081B05E /* OWTAssetCollectViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CB73BA19B6CDD20081B05E /* OWTAssetCollectViewCon.m */; };
 		31F2E33219D96DDA0084F18C /* OQJExploreViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F2E33019D96DDA0084F18C /* OQJExploreViewCon.m */; };
 		31F2E33619D96E310084F18C /* OWTCategoryManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F2E33519D96E310084F18C /* OWTCategoryManager.m */; };
+		31F887971BDCA3EF007E94C8 /* QJAlbumObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887961BDCA3EF007E94C8 /* QJAlbumObject.m */; settings = {ASSET_TAGS = (); }; };
 		6603599A1ACBDA1A00435808 /* OWTAssetPagingViewCon.xib in Resources */ = {isa = PBXBuildFile; fileRef = 660359991ACBDA1A00435808 /* OWTAssetPagingViewCon.xib */; };
 		660A10531AB691AB00C3BCA9 /* SvImageInfoEditUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 660A10501AB691AB00C3BCA9 /* SvImageInfoEditUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		660A10541AB691AB00C3BCA9 /* SvImageInfoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 660A10521AB691AB00C3BCA9 /* SvImageInfoUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -925,6 +926,8 @@
 		31F2E33019D96DDA0084F18C /* OQJExploreViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OQJExploreViewCon.m; path = ../../OQJExploreViewCon.m; sourceTree = "<group>"; };
 		31F2E33419D96E310084F18C /* OWTCategoryManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OWTCategoryManager.h; path = ../OWTCategoryManager.h; sourceTree = "<group>"; };
 		31F2E33519D96E310084F18C /* OWTCategoryManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OWTCategoryManager.m; path = ../OWTCategoryManager.m; sourceTree = "<group>"; };
+		31F887951BDCA3EF007E94C8 /* QJAlbumObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJAlbumObject.h; sourceTree = "<group>"; };
+		31F887961BDCA3EF007E94C8 /* QJAlbumObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJAlbumObject.m; sourceTree = "<group>"; };
 		660359991ACBDA1A00435808 /* OWTAssetPagingViewCon.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OWTAssetPagingViewCon.xib; sourceTree = "<group>"; };
 		660A104F1AB691AB00C3BCA9 /* SvImageInfoEditUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SvImageInfoEditUtils.h; sourceTree = "<group>"; };
 		660A10501AB691AB00C3BCA9 /* SvImageInfoEditUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SvImageInfoEditUtils.m; sourceTree = "<group>"; };
@@ -2408,6 +2411,8 @@
 				311D8B941BD7982E0003AE4E /* QJArticleCategory.m */,
 				311D8B951BD7982E0003AE4E /* QJArticleObject.h */,
 				311D8B961BD7982E0003AE4E /* QJArticleObject.m */,
+				31F887951BDCA3EF007E94C8 /* QJAlbumObject.h */,
+				31F887961BDCA3EF007E94C8 /* QJAlbumObject.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -4891,7 +4896,7 @@
 				ORGANIZATIONNAME = "SparkingSoft Co., Ltd";
 				TargetAttributes = {
 					9044E3C018CAE4D800784D38 = {
-						DevelopmentTeam = B6DQ38AV7Y;
+						DevelopmentTeam = T3BNK5WMQ7;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -5449,6 +5454,7 @@
 				E0B99B651B05966000ED7831 /* PSTGridLayoutItem.m in Sources */,
 				311D8B981BD7982E0003AE4E /* QJArticleObject.m in Sources */,
 				66A4FA651AA9A1B7006F6547 /* AGImagePreviewController.m in Sources */,
+				31F887971BDCA3EF007E94C8 /* QJAlbumObject.m in Sources */,
 				A34A29F61B95496A0061614A /* LJExploreViewController.m in Sources */,
 				E0B95D181B60A5240003059B /* OWTCategoryManagerlife.m in Sources */,
 				A3EFF8521B8468F000DC6255 /* LJClassTableViewCell.m in Sources */,

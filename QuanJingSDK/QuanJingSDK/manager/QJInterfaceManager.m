@@ -18,6 +18,8 @@
 
 #import "QJArticleObject.h"
 
+#import "QJAlbumObject.h"
+
 #import "QJServerConstants.h"
 
 #import "QJCoreMacros.h"
@@ -199,9 +201,10 @@
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 			QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
-            if (!QJ_IS_NUM_NIL(imageId) && [imageId isEqualToNumber:imageObject.imageId]) {
-                return;
-            }
+			
+			if (!QJ_IS_NUM_NIL(imageId) && [imageId isEqualToNumber:imageObject.imageId])
+				return;
+				
 			imageObject.imageType = [NSNumber numberWithInt:1];
 			[resultArray addObject:imageObject];
 		}];
@@ -1090,25 +1093,26 @@
 	
 	BOOL isLastPage = NO;
 	
-	if (!error)
+	if (!error) {
 		NSLog(@"%@", operation.responseObject);
-	//        NSDictionary * dataDic = operation.responseObject[@"data"];
-	//
-	//        NSNumber * lastPageNum = dataDic[@"isLastPage"];
-	//
-	//        if (!QJ_IS_NUM_NIL(lastPageNum))
-	//            isLastPage = lastPageNum.boolValue;
-	//
-	//        NSArray * dataArray = dataDic[@"list"];
-	//
-	//        __block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
-	//        [dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-	//            [resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
-	//        }];
-	//
-	//        if (finished)
-	//            finished(resultArray, isLastPage, dataArray, error);
-	//        return;
+		NSDictionary * dataDic = operation.responseObject[@"data"];
+		
+		NSNumber * lastPageNum = dataDic[@"isLastPage"];
+		
+		if (!QJ_IS_NUM_NIL(lastPageNum))
+			isLastPage = lastPageNum.boolValue;
+			
+		NSArray * dataArray = dataDic[@"list"];
+		
+		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+			[resultArray addObject:[[QJAlbumObject alloc] initWithJson:obj]];
+		}];
+		
+		if (finished)
+			finished(resultArray, isLastPage, dataArray, error);
+		return;
+	}
 	
 	if (finished)
 		finished(nil, isLastPage, nil, error);

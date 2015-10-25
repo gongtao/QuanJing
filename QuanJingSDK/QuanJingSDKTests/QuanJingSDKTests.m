@@ -161,8 +161,8 @@
 			}];
 			
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
-            
-            NSLog(@"%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"kCookieDictionaryKey"]);
+			
+			NSLog(@"%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"kCookieDictionaryKey"]);
 			
 			__block QJUser * modifyUser = nil;
 			[[QJPassport sharedPassport] requestUserInfo:^(QJUser * user, NSDictionary * userDic, NSError * error) {
@@ -228,6 +228,7 @@
 			[[QJInterfaceManager sharedManager] requestImageSearchKey:@"家"
 			pageNum:1
 			pageSize:20
+			currentImageId:nil
 			finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testImageSearchExample error: %@", error);
@@ -386,9 +387,6 @@
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			NSNumber * imageId = [NSNumber numberWithLongLong:900006405];
 			NSNumber * imageType = [NSNumber numberWithLongLong:1];
-            
-//            NSNumber * imageId = [NSNumber numberWithLongLong:1155552];
-//            NSNumber * imageType = [NSNumber numberWithLongLong:2];
 			
 			[[QJInterfaceManager sharedManager] requestImageDetail:imageId
 			imageType:imageType
@@ -496,6 +494,8 @@
 	}];
 }
 
+#pragma mark - 用户关注和粉丝
+
 - (void)testUserListExample
 {
 	// This is an example of a functional test case.
@@ -515,6 +515,13 @@
 			
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
+			NSNumber * careUserId = [NSNumber numberWithLongLong:966487];
+			
+			NSError * error = [[QJPassport sharedPassport] requestUserFollowUser:careUserId];
+			
+			if (error)
+				XCTFail(@"testUserImageListExample error: %@", error);
+				
 			[[QJPassport sharedPassport] requestUserFollowList:nil
 			pageNum:1
 			pageSize:20
@@ -522,6 +529,20 @@
 				if (error)
 					XCTFail(@"testUserImageListExample error: %@", error);
 			}];
+			
+			error = [[QJPassport sharedPassport] requestUserCancelFollowUser:careUserId];
+			
+			if (error)
+				XCTFail(@"testUserImageListExample error: %@", error);
+				
+			[[QJPassport sharedPassport] requestUserFollowMeList:nil
+			pageNum:1
+			pageSize:20
+			finished:^(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserImageListExample error: %@", error);
+			}];
+			
 			[expectation fulfill];
 		});
 		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
@@ -564,15 +585,15 @@
 			parameters:@{@"tag": @"美女",
 						 @"open": [NSNumber numberWithInt:1]}
 			constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
-                [formData appendPartWithFileData:imageData1
-                                            name:@"f1"
-                                        fileName:@"upload1.jpg"
-                                        mimeType:@"application/octet-stream"];
-                [formData appendPartWithFileData:imageData1
-                                            name:@"f2"
-                                        fileName:@"upload2.jpg"
-                                        mimeType:@"application/octet-stream"];
-            }
+				[formData appendPartWithFileData:imageData1
+				name:@"f1"
+				fileName:@"upload1.jpg"
+				mimeType:@"application/octet-stream"];
+				[formData appendPartWithFileData:imageData1
+				name:@"f2"
+				fileName:@"upload2.jpg"
+				mimeType:@"application/octet-stream"];
+			}
 			success:^(AFHTTPRequestOperation * operation, id responseObject) {
 				dispatch_semaphore_signal(sem);
 			}

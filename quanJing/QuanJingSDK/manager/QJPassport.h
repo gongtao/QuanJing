@@ -63,6 +63,18 @@ NS_ASSUME_NONNULL_BEGIN
 	pageSize:(NSUInteger)pageSize
 	finished:(nullable void (^)(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
 	
+// 用户粉丝列表
+- (void)requestUserFollowMeList:(nullable NSNumber *)userId
+	pageNum:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
+	
+// 用户关注
+- (NSError *)requestUserFollowUser:(NSNumber *)userId;
+
+// 用户取消关注
+- (NSError *)requestUserCancelFollowUser:(NSNumber *)userId;
+
 @end
 
 NS_ASSUME_NONNULL_END
