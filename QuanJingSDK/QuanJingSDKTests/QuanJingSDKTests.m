@@ -478,18 +478,59 @@
 				if (error)
 					XCTFail(@"testUserImageListExample error: %@", error);
 			}];
-			
-			[[QJInterfaceManager sharedManager] requestUserAlbumList:1
-			pageSize:20
-			finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
-				if (error)
-					XCTFail(@"testUserImageListExample error: %@", error);
-			}];
 			[expectation fulfill];
 		});
 		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
 			if (error)
 				XCTFail(@"testUserImageListExample error: %@", error);
+		}];
+	}];
+}
+
+#pragma mark - 用户相册
+
+- (void)testUserAlbumExample
+{
+	// This is an example of a functional test case.
+	// Use XCTAssert and related functions to verify your tests produce the correct results.
+	[self measureBlock:^{
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testUserAlbumExample"];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			// Login
+			[[QJPassport sharedPassport] loginUser:kPhoneNumber
+			password:kPassword
+			finished:^(NSNumber * userId, NSString * ticket, NSError * error) {
+				if (error)
+					XCTFail(@"testUserAlbumExample error: %@", error);
+			}];
+			
+			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
+			
+			__block NSNumber * albumId = nil;
+			[[QJInterfaceManager sharedManager] requestUserAlbumList:1
+			pageSize:20
+			finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserAlbumExample error: %@", error);
+					
+				if (albumObjectArray && (albumObjectArray.count > 0)) {
+					QJAlbumObject * albumObject = [albumObjectArray firstObject];
+					albumId = albumObject.aid;
+				}
+			}];
+			
+			[[QJInterfaceManager sharedManager] requestUserAlbumImageList:albumId
+			pageNum:1
+			pageSize:20
+			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserAlbumExample error: %@", error);
+			}];
+			[expectation fulfill];
+		});
+		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
+			if (error)
+				XCTFail(@"testUserAlbumExample error: %@", error);
 		}];
 	}];
 }
@@ -516,6 +557,14 @@
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
 			NSNumber * careUserId = [NSNumber numberWithLongLong:966487];
+			
+			[[QJPassport sharedPassport] requestUserFollowList:careUserId
+			pageNum:1
+			pageSize:20
+			finished:^(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserImageListExample error: %@", error);
+			}];
 			
 			NSError * error = [[QJPassport sharedPassport] requestUserFollowUser:careUserId];
 			

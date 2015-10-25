@@ -100,9 +100,6 @@ static NSString * const kQJUserCollectListPath = @"/userCollect/list.user";
 // 用户评论列表
 static NSString * const kQJUserCommentImageListPath = @"/imageComment/list.user";
 
-// 用户相册列表
-static NSString * const kQJUserAlbumListPath = @"/album/list.user";
-
 // 用户关注列表
 static NSString * const kQJUserFollowListPath = @"/userFollow/list";
 
@@ -114,5 +111,14 @@ static NSString * const kQJUserFollowUserPath = @"/userFllow/save.user";
 
 // 用户取消关注
 static NSString * const kQJUserCancelFollowUserPath = @"/userFllow/save.user";
+
+// 关注用户的图片列表
+static NSString * const kQJUserFollowUserImageListPath = @"/imageUser/followDetail.user";
+
+// 用户相册列表
+static NSString * const kQJUserAlbumListPath = @"/album/list.user";
+
+// 用户相册图片列表
+static NSString * const kQJUserAlbumImageListPath = @"/album/show.user";
 
 #endif	/* QJServerConstants_h */

@@ -111,6 +111,12 @@ NS_ASSUME_NONNULL_BEGIN
 	pageSize:(NSUInteger)pageSize
 	finished:(nullable void (^)(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
 	
+// 用户相册的图片列表
+- (void)requestUserAlbumImageList:(NSNumber *)albumId
+	pageNum:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
+	
 @end
 
 NS_ASSUME_NONNULL_END
