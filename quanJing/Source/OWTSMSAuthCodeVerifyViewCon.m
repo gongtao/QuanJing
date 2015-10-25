@@ -122,29 +122,33 @@
         [passwordTextField resignFirstResponder];
         return;
     }
+    [SVProgressHUD show];
     QJPassport *pt=[QJPassport sharedPassport];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [pt registerUser:_cellphone1 password:passwordTextField.text code:_cellphone finished:^(NSNumber * _Nonnull userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
-            if (error) {
-                [SVProgressHUD showError:error];
-            }else {
-                [SVProgressHUD showSuccessWithStatus:@"注册成功"];
-                OWTUserManager* um = GetUserManager();
-                [um refreshCurrentUserSuccess:^{
-                    if (_successFunc != nil)
-                    {
-                        _successFunc();
+        [pt registerUser:_cellphone1 password:passwordTextField.text code:_code finished:^(NSNumber * _Nonnull userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [SVProgressHUD dismiss];
+                if (error) {
+                    [SVProgressHUD showError:error];
+                }else {
+                    [SVProgressHUD showSuccessWithStatus:@"注册成功"];
+                    OWTUserManager* um = GetUserManager();
+                    [um refreshCurrentUserSuccess:^{
+                        if (_successFunc != nil)
+                        {
+                            _successFunc();
+                        }
                     }
+                                          failure:^(NSError* error){
+                                              if (error == nil)
+                                              {
+                                                  return;
+                                              }
+                                          }];
+                    
                 }
-                                      failure:^(NSError* error){
-                                          if (error == nil)
-                                          {
-                                              return;
-                                          }
-                                      }];
-                
-            }
-
+  
+            });
         }];
             });
 }

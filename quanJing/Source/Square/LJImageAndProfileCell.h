@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "QuanJingSDK.h"
 @interface LJImageAndProfileCell : UITableViewCell <UIScrollViewDelegate>
 {
 	void (^commentcb)(OWTActivityData *, NSInteger);
@@ -18,7 +19,6 @@
 @property(nonatomic, assign) NSInteger imageNum;
 @property(nonatomic, readonly) OWTUser * user;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier withViewController:(UIViewController *)viewConctroller withComment:(void (^)(OWTActivityData *, NSInteger))cb;
-
-- (void)customCell:(NSArray *)data withUserInformation:(NSArray *)users withLike:(NSArray *)like withComment:(NSArray *)comment withActivityData:(OWTActivityData *)activityData withImageNumber:(NSInteger)number;
-- (NSArray *)getTheAllCellHeight:(NSArray *)data withUserInformation:(NSArray *)users withLike:(NSArray *)like withComment:(NSArray *)comment withActivityData:(NSArray *)activityData;
+-(void)customcell:(QJActionObject*)actionModel withImageNumber:(NSInteger)number;
+-(NSArray *)getTheAllCellHeight:(NSArray *)actionList;
 @end

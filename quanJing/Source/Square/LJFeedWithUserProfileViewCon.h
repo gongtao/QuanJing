@@ -15,6 +15,7 @@
 @property(nonatomic,readonly)NSMutableArray *heights;
 @property(nonatomic,readonly)NSMutableArray *likes;
 @property(nonatomic,readonly)NSMutableArray *comment;
+@property(nonatomic,readonly)NSMutableArray *activeList;
 @property(nonatomic,copy)NSString *replyid;
 @property(nonatomic,copy)NSMutableArray *assets;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;

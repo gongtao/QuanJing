@@ -75,7 +75,8 @@
     NSMutableArray *_customViews;
     RESideMenu *_sideMenu;
     UIView *_headView;
-
+    NSNumber *_cuIndex;
+    
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -136,10 +137,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     isFirst=YES;
-    _assets=[[NSMutableArray alloc]init];
-    _comment=[[NSMutableArray alloc]init];
-    _likes=[[NSMutableArray alloc]init];
-    _heights=[[NSMutableArray alloc]init];
+    [self setUpData];
     self.view.backgroundColor = GetThemer().themeColorBackground;
     [self setupTableView];
     // [self setupRefreshControl];
@@ -149,6 +147,14 @@
     [self setupAddButton];
     [self setUpHeadView];
 //    [self setupNavMenu];
+}
+-(void)setUpData
+{
+    _assets=[[NSMutableArray alloc]init];
+    _comment=[[NSMutableArray alloc]init];
+    _likes=[[NSMutableArray alloc]init];
+    _heights=[[NSMutableArray alloc]init];
+    _cuIndex=[[NSNumber alloc]init];
 }
 - (void)setupAddButton
 {
@@ -620,7 +626,10 @@
     return nil;
 }
 
-
+-(void)getTheCellHeight;
+{
+    _heights=(NSMutableArray *)[_cell getTheAllCellHeight:_activeList];
+}
 -(void)getResourceData
 {
     [_assets removeAllObjects];
@@ -655,11 +664,11 @@
         [_assets addObject:assets];
         [_comment addObject:comments];
     }
-    _heights=(NSMutableArray *)[_cell getTheAllCellHeight:_assets withUserInformation:_feed.userInformations withLike:_likes withComment:_comment withActivityData:_feed.activitiles];
+
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self numberOfItems];
+    return  _activeList.count;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -712,7 +721,7 @@
     };
     
     cell.number=indexPath.row;
-    [cell customCell:_assets[indexPath.row] withUserInformation:_feed.userInformations withLike:_likes[indexPath.row] withComment:_comment[indexPath.row] withActivityData:_feed.activitiles[indexPath.row] withImageNumber:_imageNum];
+    [cell customcell:_activeList[indexPath.row] withImageNumber:_imageNum];
     _imageNum=0;
     return cell;
 }
@@ -869,28 +878,19 @@
 {
     QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
     QJPassport *pt=[QJPassport sharedPassport];
-    [fm requestActionList:nil pageSize:30 userId:pt.currentUser.uid finished:^(NSArray * _Nonnull actionArray, NSArray * _Nonnull resultArray, NSNumber * _Nonnull nextCursorIndex, NSError * _Nonnull error) {
-        
-    }];
-    [_feed refreshWithSuccess1:^{
-        [self getResourceData];
-        [_tableView reloadData];
-        [_tableView headerEndRefreshing];
-    }
-                       failure:^(NSError* error) {
-                           [_tableView headerEndRefreshing];
-                           OWTAuthManager* am = GetAuthManager();
-                           if (!am.isAuthenticated)
-                           {
-                        
-                           }
-                           else{
-                           if (![NetStatusMonitor isExistenceNetwork]) {
-                               [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-                               return ;
-                           }
-                           [SVProgressHUD showError:error];
-                           }}];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [fm requestActionList:nil pageSize:30 userId:pt.currentUser.uid finished:^(NSArray * _Nonnull actionArray, NSArray * _Nonnull resultArray, NSNumber * _Nonnull nextCursorIndex, NSError * _Nonnull error) {
+            [_tableView headerEndRefreshing];
+            if (error) {
+                [SVProgressHUD showError:error];
+            }else {
+                [self getTheCellHeight];
+                _cuIndex=nextCursorIndex;
+                [_activeList addObjectsFromArray:actionArray];
+                [_tableView reloadData];
+            }
+        }];
+    });
 }
 
 

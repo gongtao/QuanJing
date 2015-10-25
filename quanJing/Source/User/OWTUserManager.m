@@ -149,93 +149,93 @@
          }];
  
      });
-        RKObjectManager* om = [RKObjectManager sharedManager];
-    [om getObjectsAtPath:@"users/me"
-              parameters:nil
-                 success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
-                     [o logResponse];
-                     
-                     NSDictionary* resultObjects = result.dictionary;
-                     OWTServerError* error = resultObjects[@"error"];
-                     if (error != nil)
-                     {
-                         if (failure != nil)
-                         {
-                             failure([error toNSError]);
-                         }
-                         return;
-                     }
-                     
-                     OWTUserData* userData = resultObjects[@"user"];
-                     if (userData == nil)
-                     {
-                         if (failure != nil)
-                         {
-                             failure([[OWTServerError unknownError] toNSError]);
-                         }
-                         return;
-                     }
-                     
-                     OWTUser* user = [self registerUserData:userData];
-                     if (_currentUser == nil)
-                     {
-                         _currentUser = user;
-                         NSString *urlPath =  _currentUser.avatarImageInfo.url;
-                         
-                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                             //耗时操作
-                             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlPath]]];
-                             
-                             if (image != nil) {
-                                 //更新数据
-                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                     [_currentUser setCurrentImage:image];
-                                 });}
-                         });
-                     }
-                     else
-                     {
-                         AssertTR(_currentUser == user);
-                     }
-
-                     [self initHuanXinSDK:user];
-                     [self getFirendList:user];
-
-                     NSArray* relatedAssetDatas = resultObjects[@"relatedAssets"];
-                     if (relatedAssetDatas == nil)
-                     {
-                         if (failure != nil)
-                         {
-                             failure([[OWTServerError unknownError] toNSError]);
-                         }
-                         return;
-                     }
-                     [GetAssetManager() registerAssetDatas:relatedAssetDatas];
-                     
-                     NSArray* relatedUserDatas = resultObjects[@"relatedUsers"];
-                     if (relatedUserDatas == nil)
-                     {
-                         if (failure != nil)
-                         {
-                             failure([[OWTServerError unknownError] toNSError]);
-                         }
-                         return;
-                     }
-                     [GetUserManager() registerUserDatas:relatedUserDatas];
-
-                     if (success != nil)
-                     {
-                         success();
-                     }
-                 }
-                 failure:^(RKObjectRequestOperation* o, NSError* error) {
-                     OWTUserManager* am = GetUserManager();
-                     am.ifLoginFail = YES;
-                     if (failure != nil)
-                     {
-                         failure(error);
-                     }
-                 }];
+//        RKObjectManager* om = [RKObjectManager sharedManager];
+//    [om getObjectsAtPath:@"users/me"
+//              parameters:nil
+//                 success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
+//                     [o logResponse];
+//                     
+//                     NSDictionary* resultObjects = result.dictionary;
+//                     OWTServerError* error = resultObjects[@"error"];
+//                     if (error != nil)
+//                     {
+//                         if (failure != nil)
+//                         {
+//                             failure([error toNSError]);
+//                         }
+//                         return;
+//                     }
+//                     
+//                     OWTUserData* userData = resultObjects[@"user"];
+//                     if (userData == nil)
+//                     {
+//                         if (failure != nil)
+//                         {
+//                             failure([[OWTServerError unknownError] toNSError]);
+//                         }
+//                         return;
+//                     }
+//                     
+//                     OWTUser* user = [self registerUserData:userData];
+//                     if (_currentUser == nil)
+//                     {
+//                         _currentUser = user;
+//                         NSString *urlPath =  _currentUser.avatarImageInfo.url;
+//                         
+//                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//                             //耗时操作
+//                             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlPath]]];
+//                             
+//                             if (image != nil) {
+//                                 //更新数据
+//                                 dispatch_async(dispatch_get_main_queue(), ^{
+//                                     [_currentUser setCurrentImage:image];
+//                                 });}
+//                         });
+//                     }
+//                     else
+//                     {
+//                         AssertTR(_currentUser == user);
+//                     }
+//
+//                     [self initHuanXinSDK:user];
+//                     [self getFirendList:user];
+//
+//                     NSArray* relatedAssetDatas = resultObjects[@"relatedAssets"];
+//                     if (relatedAssetDatas == nil)
+//                     {
+//                         if (failure != nil)
+//                         {
+//                             failure([[OWTServerError unknownError] toNSError]);
+//                         }
+//                         return;
+//                     }
+//                     [GetAssetManager() registerAssetDatas:relatedAssetDatas];
+//                     
+//                     NSArray* relatedUserDatas = resultObjects[@"relatedUsers"];
+//                     if (relatedUserDatas == nil)
+//                     {
+//                         if (failure != nil)
+//                         {
+//                             failure([[OWTServerError unknownError] toNSError]);
+//                         }
+//                         return;
+//                     }
+//                     [GetUserManager() registerUserDatas:relatedUserDatas];
+//
+//                     if (success != nil)
+//                     {
+//                         success();
+//                     }
+//                 }
+//                 failure:^(RKObjectRequestOperation* o, NSError* error) {
+//                     OWTUserManager* am = GetUserManager();
+//                     am.ifLoginFail = YES;
+//                     if (failure != nil)
+//                     {
+//                         failure(error);
+//                     }
+//                 }];
 }
 
 -(void)initHuanXinSDK:(OWTUser*)user
@@ -318,7 +318,8 @@
     }
     //获取用户信息在URL后追加usrId即可，不需要json格式参数
     RKObjectManager* om = [RKObjectManager sharedManager];
-    [om getObjectsAtPath:[NSString stringWithFormat:@"users/%@", user.userID]
+    QJUser *user1=[QJPassport sharedPassport].currentUser;
+    [om getObjectsAtPath:[NSString stringWithFormat:@"users/%@", user1.uid]
               parameters:nil
                  success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
                      [o logResponse];

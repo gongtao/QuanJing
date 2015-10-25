@@ -44,6 +44,7 @@
 #import "OWTAppDelegate.h"
 #import "LJExploreViewController.h"
 #import "LJExploreViewController1.h"
+#import "QuanJingSDK.h"
 static const CGFloat kDefaultPlaySoundInterval = 3.0;
 
 @interface OWTMainViewCon ()<IChatManagerDelegate>
@@ -231,7 +232,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
         else
         {
             OWTUserManager* um = GetUserManager();
-            if (um.currentUser == nil)
+            if ([QJPassport sharedPassport].currentUser == nil)
             {
                 [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
                 

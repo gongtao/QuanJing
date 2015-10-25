@@ -114,7 +114,7 @@
     };
     _smsAuthCodeRequestViewCon.doneFunc = ^(NSString* cellphone,NSString *code) {
         wself.smsAuthCodeVerifyViewCon.cellphone1 = cellphone;
-        wself.smsAuthCodeVerifyViewCon.cellphone=code;
+        wself.smsAuthCodeVerifyViewCon.code=code;
         wself.smsAuthCodeVerifyViewCon.cancelBlock = ^{
             wself.cancelBlock();
         };

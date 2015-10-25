@@ -11,7 +11,7 @@
 
 @interface OWTSMSAuthCodeVerifyViewCon : UIViewController<TTTAttributedLabelDelegate, UITextFieldDelegate>
 @property(nonatomic,copy)NSString *cellphone1;
-@property (nonatomic, copy) NSString* cellphone;
+@property (nonatomic, copy) NSString* code;
 @property (nonatomic, strong) void (^successFunc)();
 @property (nonatomic, strong) void (^cancelBlock) ();
 - (void)verifyCode;

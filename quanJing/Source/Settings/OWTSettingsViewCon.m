@@ -16,7 +16,7 @@
 #import "OWTSMSInviteViewCon.h"
 #import <SIAlertView/SIAlertView.h>
 #import "LJCollectionViewController.h"
-
+#import "QuanJingSDK.h"
 #import "OQJHomeViewCon.h"
 @interface OWTSettingsViewCon ()
 {
@@ -177,8 +177,8 @@
     [alertView addButtonWithTitle:@"退出"
                              type:SIAlertViewButtonTypeDestructive
                           handler:^(SIAlertView *alert) {
-                              [GetAuthManager() logout];
-                              
+                            
+                              [[QJPassport sharedPassport]logout];
 //                              [self.navigationController popToRootViewControllerAnimated:NO];
 //                              [[NSNotificationCenter defaultCenter] postNotificationName:kWTLoggedOutNotification object:nil];
 //                               [self.navigationController popToRootViewControllerAnimated:YES];
