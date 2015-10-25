@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSDate * creatTime;
 
+@property (nonatomic, strong, nullable) NSString * descript;
+
 - (instancetype)initWithJson:(nullable NSDictionary *)json;
 
 @end

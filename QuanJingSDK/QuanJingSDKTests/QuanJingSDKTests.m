@@ -632,13 +632,15 @@
 			AFHTTPRequestOperationManager * manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://mapp.tiankong.com"]];
 			[manager POST:@"/imageUser/save.user"
 			parameters:@{@"tag": @"美女",
-						 @"open": [NSNumber numberWithInt:1]}
+						 @"open": [NSNumber numberWithInt:1],
+                         @"albumId":[NSNumber numberWithLongLong:1178007],
+                         @"title":@"美女"}
 			constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
 				[formData appendPartWithFileData:imageData1
 				name:@"f1"
 				fileName:@"upload1.jpg"
 				mimeType:@"application/octet-stream"];
-				[formData appendPartWithFileData:imageData1
+				[formData appendPartWithFileData:imageData2
 				name:@"f2"
 				fileName:@"upload2.jpg"
 				mimeType:@"application/octet-stream"];

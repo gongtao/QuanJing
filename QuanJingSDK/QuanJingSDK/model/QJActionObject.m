@@ -98,6 +98,12 @@
 	
 	if (!QJ_IS_NUM_NIL(userId))
 		self.userId = userId;
+    
+    // descript
+    NSString * descript = json[@"text"];
+    
+    if (!QJ_IS_STR_NIL(descript))
+        self.descript = descript;
 }
 
 @end
