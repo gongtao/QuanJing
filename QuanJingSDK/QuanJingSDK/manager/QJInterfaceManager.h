@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestImageSearchKey:(NSString *)key
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
+	currentImageId:(NSNumber *)imageId
 	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished;
 	
 // 首页根分类

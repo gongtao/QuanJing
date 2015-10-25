@@ -150,6 +150,7 @@
 - (void)requestImageSearchKey:(NSString *)key
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
+	currentImageId:(NSNumber *)imageId
 	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished
 {
 	NSParameterAssert(key);
@@ -198,6 +199,10 @@
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 			QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+			
+			if (!QJ_IS_NUM_NIL(imageId) && [imageId isEqualToNumber:imageObject.imageId])
+				return;
+				
 			imageObject.imageType = [NSNumber numberWithInt:1];
 			[resultArray addObject:imageObject];
 		}];
