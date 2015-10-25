@@ -190,19 +190,24 @@
     NSString* username = usernameTextField.text;
     NSString* password = _passwordTextField.text;
     
-    [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
-                         maskType:SVProgressHUDMaskTypeBlack];
+//    [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
+//                         maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD show];
     QJPassport *pt=[QJPassport sharedPassport];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     [pt loginUser:username password:password finished:^(NSNumber * userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
-        [SVProgressHUD dismiss];
+        
         if (error==nil) {
             OWTUserManager* um = GetUserManager();
             [um refreshCurrentUserSuccess:^{
-                if (_successFunc != nil)
-                {
-                    _successFunc();
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [SVProgressHUD dismiss];
+                    if (_successFunc != nil)
+                    {
+                        _successFunc();
+                    }
+ 
+                });
             }
                                   failure:^(NSError* error){
                                       if (error == nil)

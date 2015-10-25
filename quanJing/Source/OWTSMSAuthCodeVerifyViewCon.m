@@ -117,46 +117,36 @@
 
 - (IBAction)loginClick:(id)sender {
 
-    if (_verificationCodeTextField.text==nil||passwordTextField.text==nil||[_verificationCodeTextField.text isEqualToString:passwordTextField.text]) {
-        [SVProgressHUD showError:@"密码填写有误"];
+    if (_verificationCodeTextField.text==nil||passwordTextField.text==nil||![_verificationCodeTextField.text isEqualToString:passwordTextField.text]) {
+        [SVProgressHUD showErrorWithStatus:@"密码填写有误"];
+        [passwordTextField resignFirstResponder];
         return;
     }
-    NSString* verificationCode = _verificationCodeTextField.text;
-    
-    OWTAuthManager* am = GetAuthManager();
-    [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
-                         maskType:SVProgressHUDMaskTypeBlack];
-    
-    [am authWithSMSCellphone:_cellphone1
-            verificationCode:verificationCode
-                     success:^{
-                         [SVProgressHUD dismiss];
-                         
-                         OWTUserManager* um = GetUserManager();
-                         [um refreshCurrentUserSuccess:^{
-                             if (_successFunc != nil)
-                             {
-                                 _successFunc();
-                             }
-                         }
-                                               failure:^(NSError* error){
-                                                   if (error == nil)
-                                                   {
-                                                       return;
-                                                   }
-                                                   
-                                                   //                                                   [SVProgressHUD showError:error];
-                                               }];
-                     }
-                     failure:^(NSError* error) {
-                         if (error == nil)
-                         {
-                             return;
-                         }
-                         
-                         //                         [SVProgressHUD showError:error];
-                     }];
+    QJPassport *pt=[QJPassport sharedPassport];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [pt registerUser:_cellphone1 password:passwordTextField.text code:_cellphone finished:^(NSNumber * _Nonnull userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
+            if (error) {
+                [SVProgressHUD showError:error];
+            }else {
+                [SVProgressHUD showSuccessWithStatus:@"注册成功"];
+                OWTUserManager* um = GetUserManager();
+                [um refreshCurrentUserSuccess:^{
+                    if (_successFunc != nil)
+                    {
+                        _successFunc();
+                    }
+                }
+                                      failure:^(NSError* error){
+                                          if (error == nil)
+                                          {
+                                              return;
+                                          }
+                                      }];
+                
+            }
 
+        }];
+            });
 }
 
 -(void)dealloc

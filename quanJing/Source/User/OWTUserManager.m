@@ -134,7 +134,16 @@
     }
      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
          [pt requestUserInfo:^(QJUser * _Nonnull user, NSDictionary * _Nonnull userDic, NSError * _Nonnull error) {
-             
+             if (error) {
+                 if (failure) {
+                     failure(error);
+                 }
+             }else {
+                 if (success != nil)
+                 {
+                     success();
+                 }
+             }
          }];
  
      });

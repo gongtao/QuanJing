@@ -9,6 +9,7 @@
 #import "OWTUserManager.h"
 #import "HuanXinManager.h"
 #import "UIColor+HexString.h"
+#import "QuanJingSDK.h"
 static NSString* kWTStoreKeyAccessToken = @"WTAccessToken";
 static NSString* kWTClientID = @"3ae125d6e9a009a6fcce3f081f4ce5ff";
 
@@ -87,7 +88,8 @@ static NSString* kWTClientID = @"3ae125d6e9a009a6fcce3f081f4ce5ff";
 
 - (BOOL)isAuthenticated
 {
-    if (_accessToken != nil)
+   QJPassport *pt=[QJPassport sharedPassport];
+    if (pt.isLogin)
     {
         return true;
     }
