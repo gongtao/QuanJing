@@ -691,29 +691,28 @@
             }
         }
     }
-    OWTActivityData *activity=_feed.activitiles[indexPath.row];
-    NSString* ownerUserID = activity.userID;
+    
     cell.headerImagecb = ^{
         
-        OWTUser* ownerUser = [GetUserManager() userForID:ownerUserID];
-        //OWTUser *ownerUser=[self userAtIndexPath:indexPath];
-        if (ownerUser != nil)
-        {
+//        OWTUser* ownerUser = [GetUserManager() userForID:ownerUserID];
+//        //OWTUser *ownerUser=[self userAtIndexPath:indexPath];
+//        if (ownerUser != nil)
+//        {
+//            
+//            if(_userViewCon1){
+//                [_userViewCon1 adealloc];
+//                _userViewCon1 = nil;
+//            }
+//            _userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
+//            _userViewCon1.hidesBottomBarWhenPushed = YES;
+//            _userViewCon1.ifFirstEnter = YES;
+//            _userViewCon1.rightTriggle = YES;
+//            __weak __typeof(&*self)weakSelf = self;
+//            [weakSelf.navigationController pushViewController:_userViewCon1 animated:YES];
+//            _userViewCon1.user =ownerUser;
+        
             
-            if(_userViewCon1){
-                [_userViewCon1 adealloc];
-                _userViewCon1 = nil;
-            }
-            _userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
-            _userViewCon1.hidesBottomBarWhenPushed = YES;
-            _userViewCon1.ifFirstEnter = YES;
-            _userViewCon1.rightTriggle = YES;
-            __weak __typeof(&*self)weakSelf = self;
-            [weakSelf.navigationController pushViewController:_userViewCon1 animated:YES];
-            _userViewCon1.user =ownerUser;
-            
-            
-        }
+//        }
     };
     
     cell.number=indexPath.row;

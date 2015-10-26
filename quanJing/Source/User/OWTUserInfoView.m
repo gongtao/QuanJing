@@ -65,7 +65,7 @@ typedef enum
     _avatarView.layer.borderWidth = 1.0;
 }
 
-- (void)setUser:(OWTUser*)user
+- (void)setUser:(QJUser*)user
 {
     _user = user;
     [self updateWithUser];
@@ -73,9 +73,8 @@ typedef enum
 
 - (void)updateWithUser
 {
-    [self updateNickname:_user.nickname];
-    self.avatarView.placeholderImage = [UIImage imageNamed:@"我的页面默认头像.jpg"];
-    [self.avatarView setImageWithInfoAsThumbnail:_user.avatarImageInfo];
+    [self updateNickname:_user.nickName];
+    [self.avatarView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:_user.avatar size:self.avatarView.bounds.size]] placeholderImage:[UIImage imageNamed:@"5"]];
     self.avatarView.userInteractionEnabled =YES;
     UITapGestureRecognizer*tapRecognizerleft=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
     [self.avatarView addGestureRecognizer:tapRecognizerleft];
@@ -88,130 +87,10 @@ typedef enum
     
     UITapGestureRecognizer*tapRecognizerleft2=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
     [_nameLabel addGestureRecognizer:tapRecognizerleft2];
-
-
-//    if (_user.signature != nil)
-//    {
-//        [self updateSignature:_user.signature];
-//    }
-//    else
-//    {
-//        [self updateSignature:@""];
-//    }
-
-    OWTUserAssetsInfo* assetsInfo = _user.assetsInfo;
-    if (assetsInfo != nil)
-    {
-        NSInteger photoNum = assetsInfo.publicAssetNum;
-        if (_user.isCurrentUser)
-        {
-            photoNum += assetsInfo.privateAssetNum;
-        }
-
-        [self updatePhotoNum:photoNum];
-//        [self updateLikesNum:assetsInfo.likedAssetNum];
-        [self updateLikesNum: photoNum];
-    }
-    else
-    {
-        [self updatePhotoNum:0];
-        [self updateLikesNum:0];
-    }
-
-    OWTUserFellowshipInfo* fellowshipInfo = _user.fellowshipInfo;
-    if (fellowshipInfo != nil)
-    {
-        [self updateFollowingNum:_user.assetsInfo.lightbox];
-        [self updateFollowerNum:fellowshipInfo.followerNum with:fellowshipInfo.followingNum ];
-    }
-    else
-    {
-        [self updateFollowingNum:0];
-        [self updateFollowerNum:0 with:0];
-    }
-    
-    
-    NSString *urlstring = [NSString stringWithFormat:@"http://api.tiankong.com/qjapi/users/%@/lightbox",_user.userID];
-    NSURL *url1 = [NSURL URLWithString:urlstring];
-    NSError *error;
-    //利用三方解析json数据
-    //sleep(10);
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSURLRequest *request =[NSURLRequest requestWithURL:url1];
-        NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];        //通知主线程刷新
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (response!=nil) {
-                NSDictionary *dic0 =[NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:nil];
-                NSArray *dic1 = [dic0 objectForKey:@"assets"];
-                if (assetsInfo != nil)
-                {
-                    NSInteger photoNum = assetsInfo.publicAssetNum;
-                    if (_user.isCurrentUser)
-                    {
-                        photoNum += assetsInfo.privateAssetNum;
-                    }
-                    
-                    [self updatePhotoNum:photoNum];
-                    
-                    //        [self updatedownloadNum:assetsInfo.downloadAssetNum];
-//                    if(dic1.count> _colloctionLikeNum){
-//                        _colloctionLikeNum = dic1.count;
-//                    [self updateFollowingNum:dic1.count];
-//                    }
-                    
-                }
-                
-                else
-                {
-                    [self updatePhotoNum:0];
-                    
-                    [self updateFollowingNum:0];
-                    
-                    
-                }
-                
-                [self updateBasedOnIsCurrentUser];
-                
-            }
-        }); 
-        
-    });
-    
-    
-
-//    NSLog(@"ooooooooooooooo%@",response);
-    //NSJSONSerialization解析
-//    NSDictionary *dic0 =[NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:nil];
-////     NSLog(@"ooooooooooooooo%@",dic0);
-//    NSArray *dic1 = [dic0 objectForKey:@"assets"];
-////     NSLog(@"ooooooooooooooo%d",dic1.count);
-//    //    NSLog(@"arr0 =%@",dic1);
-//       //
-//    if (assetsInfo != nil)
-//    {
-//        NSInteger photoNum = assetsInfo.publicAssetNum;
-//        if (_user.isCurrentUser)
-//        {
-//            photoNum += assetsInfo.privateAssetNum;
-//        }
-//        
-//        [self updatePhotoNum:photoNum];
-//        
-//        //        [self updatedownloadNum:assetsInfo.downloadAssetNum];
-//        [self updateFollowingNum:dic1.count];
-//        
-//    }
-//    
-//    else
-//    {
-//        [self updatePhotoNum:0];
-//        
-//        [self updateFollowingNum:0];
-//        
-//        
-//    }
-//
-//    [self updateBasedOnIsCurrentUser];
+    [self updateLikesNum:_user.uploadAmount.intValue];
+    [self updateFollowingNum:_user.uploadAmount.intValue];
+    [self updateFollowerNum:_user.followAmount.intValue with:_user.fansAmount.intValue];
+    [self updatePhotoNum:_selfNum];
 }
 
 #pragma mark - Action
@@ -305,9 +184,9 @@ typedef enum
 }
 - (void)updateBasedOnIsCurrentUser
 {
-    BOOL isCurrentUser = [_user isCurrentUser];
+//    BOOL isCurrentUser = [_user isCurrentUser];
 
-    if (isCurrentUser)
+    if (0)
     {
         [_actionButton setTitle:@"编辑个人信息" forState:UIControlStateNormal];
         _actionButtonType = nWTUserInfoViewActionButtonEdit;

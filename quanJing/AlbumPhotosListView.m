@@ -1400,10 +1400,9 @@
             OWTUserInfoView* userInfoView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader
                                                                                withReuseIdentifier:@"UserInfoView"
                                                                                       forIndexPath:indexPath];
-            
-            userInfoView.user = _user;
-            
             __weak AlbumPhotosListView* wself = self;
+            userInfoView.selfNum=wself.dataSource.count;
+            userInfoView.user = [QJPassport sharedPassport].currentUser;
             userInfoView.editUserInfoAction = ^{ [wself editUserInfo]; };
             userInfoView.showLikedAssetsAction = ^{ [wself showLikedAssets]; };
             userInfoView.showFollowingsAction = ^{ [wself showFollowings]; };

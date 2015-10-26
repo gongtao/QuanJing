@@ -231,6 +231,7 @@
 		A301E8091A7B39EE0086D989 /* OQJSelectedViewCon2.xib in Resources */ = {isa = PBXBuildFile; fileRef = A301E8071A7B39EE0086D989 /* OQJSelectedViewCon2.xib */; };
 		A301E80D1A7B74F10086D989 /* OWTUserSharedAssetsViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A301E80C1A7B74F10086D989 /* OWTUserSharedAssetsViewCon.m */; };
 		A30542251B8EC01E00A202FD /* LJAssetLikeModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A30542241B8EC01E00A202FD /* LJAssetLikeModel.m */; };
+		A309F37B1BDE1C31003EB0B1 /* 5@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A309F37A1BDE1C31003EB0B1 /* 5@3x.png */; settings = {ASSET_TAGS = (); }; };
 		A3192D901B85A9F700692378 /* b3.png in Resources */ = {isa = PBXBuildFile; fileRef = A3192D8F1B85A9F700692378 /* b3.png */; };
 		A31CCF001A72369B00C2B4EA /* OWTShowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A31CCEFE1A72369B00C2B4EA /* OWTShowCell.m */; };
 		A31CCF011A72369B00C2B4EA /* OWTShowCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A31CCEFF1A72369B00C2B4EA /* OWTShowCell.xib */; };
@@ -1285,6 +1286,7 @@
 		A301E80C1A7B74F10086D989 /* OWTUserSharedAssetsViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OWTUserSharedAssetsViewCon.m; path = ../../OWTUserSharedAssetsViewCon.m; sourceTree = "<group>"; };
 		A30542231B8EC01E00A202FD /* LJAssetLikeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJAssetLikeModel.h; sourceTree = "<group>"; };
 		A30542241B8EC01E00A202FD /* LJAssetLikeModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJAssetLikeModel.m; sourceTree = "<group>"; };
+		A309F37A1BDE1C31003EB0B1 /* 5@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "5@3x.png"; sourceTree = "<group>"; };
 		A3192D8F1B85A9F700692378 /* b3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = b3.png; sourceTree = "<group>"; };
 		A31CCEDD1A71EF1600C2B4EA /* OWTUserInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTUserInfoView.h; sourceTree = "<group>"; };
 		A31CCEFD1A72369B00C2B4EA /* OWTShowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTShowCell.h; sourceTree = "<group>"; };
@@ -3726,6 +3728,7 @@
 		A3C957D91BB11CCE00EADD73 /* 我 */ = {
 			isa = PBXGroup;
 			children = (
+				A309F37A1BDE1C31003EB0B1 /* 5@3x.png */,
 				A3C957EE1BB14DFF00EADD73 /* 我背景.jpg */,
 				A3C957E01BB128F600EADD73 /* 设置.png */,
 				A3C957DA1BB11CDE00EADD73 /* 我的页面搜索icon.png */,
@@ -5222,6 +5225,7 @@
 				E0BCFF311B0D842C009D1D20 /* chatBar_more_camera.png in Resources */,
 				E013916B1B0C3EA500051B78 /* nav_createGroup@2x.png in Resources */,
 				A39A71441BAFA46900B59BEE /* 登陆背景.png in Resources */,
+				A309F37B1BDE1C31003EB0B1 /* 5@3x.png in Resources */,
 				A3B1A6281BA90DFF0044B645 /* 搜索.png in Resources */,
 				A36A0CBD1B68B6DB00F720C1 /* UMSocialSDKResourcesNew.bundle in Resources */,
 				A35D65FF1B2EB719006EC936 /* ic_back_white.png in Resources */,

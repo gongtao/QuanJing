@@ -11,9 +11,10 @@
 
 
 #import "singleton.h"
+#import "QuanJingSDK.h"
 @interface OWTUserInfoView : UICollectionReusableView
 
-@property (nonatomic, strong) OWTUser* user;
+@property(nonatomic,strong)QJUser *user;
 @property (nonatomic, strong) void (^editUserInfoAction)();
 
 @property (nonatomic, strong) void (^showAssetsAction)();
