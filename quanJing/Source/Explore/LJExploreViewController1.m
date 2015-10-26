@@ -33,9 +33,7 @@
 #import "OWTexploreModel.h"
 #import "MJRefresh.h"
 #import "ASIHTTPRequest.h"
-#import "LJCoreData1.h"
 #import "OQJExploreViewCon1.h"
-#import "LJHuancunModel.h"
 #import "OWTUserManager.h"
 #import "NetStatusMonitor.h"
 #import "UIColor+HexString.h"
@@ -51,7 +49,6 @@ static const int kDefaultLoadItemNum1 = 10;
     NSArray *arrAll;
     XHRefreshControl* _refreshControl;
     NSMutableArray *dataArr;
-    LJCoreData1 *_coreData1;
     OWTUser *_user;
 }
 
@@ -118,7 +115,6 @@ static const int kDefaultLoadItemNum1 = 10;
     //    dataArr = [[NSMutableArray alloc]init];
     isFirst=YES;
     _categories = [[NSMutableArray alloc]init];
-    _coreData1=[LJCoreData1 shareInstance];
     _user=GetUserManager().currentUser;
     [self setUpNavigationBar];
     [self setUpScrollView];

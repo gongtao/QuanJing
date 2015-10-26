@@ -27,11 +27,9 @@
 #import "OQJExploreViewConlvyouinternational.h"
 #import "OWTCategoryViewCon.h"
 #import "OQJSelectedViewCon.h"
-#import "OQJExploreViewCon.h"
 #import "OWTCategoryManagerlife.h"
 #import "OWTUserManager.h"
-#import "LJCoreData1.h"
-#import "LJHuancunModel.h"
+
 #import "MBProgressHUD.h"
 #import "NetStatusMonitor.h"
 #import "JCTopic.h"
@@ -590,6 +588,9 @@
 	[_tabBarHider hideTabBar];
 	[self.view setHidden:YES];
 	NSInteger selectTag = sender.view.tag - 100;
+    if (!_categaryBeautiful || selectTag >= _categaryBeautiful.count) {
+        return;
+    }
 	
 	QJHomeIndexObject * model = _categaryBeautiful[selectTag];
 	BOOL isSearch = [model.type isEqualToString:@"search"];

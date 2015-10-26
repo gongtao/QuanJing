@@ -102,8 +102,8 @@
         NSString *num=[NSString stringWithFormat:@"%d",caption1.number.intValue+1];
         caption1.number=num;
         caption1.imageData=imageData;
-        [_managedObjectContext save:nil];
     }
+    [_managedObjectContext save:nil];
 }
 -(void)updateNum:(NSString *)number with:(NSString *)caption
 {

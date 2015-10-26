@@ -17,7 +17,6 @@
 #import <SIAlertView/SIAlertView.h>
 #import "LJCollectionViewController.h"
 #import "QuanJingSDK.h"
-#import "OQJHomeViewCon.h"
 @interface OWTSettingsViewCon ()
 {
     RETableViewManager* _manager;

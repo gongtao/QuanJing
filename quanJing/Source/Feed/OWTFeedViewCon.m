@@ -30,8 +30,8 @@
 
 #import "OWTCategoryManagerlife.h"
 #import "OWTUserManager.h"
-#import "LJCoreData1.h"
-#import "LJHuancunModel.h"
+
+
 #import "MBProgressHUD.h"
 #import "NetStatusMonitor.h"
 
@@ -44,7 +44,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     OWTFeed* _feed;
     OWTTabBarHider* _tabBarHider;
     BOOL ifFirstEnter;
-    LJCoreData1 *_cacheData;
     OWTUser *_user;
     NSMutableData *localCacheData;
     MBProgressHUD * _progress;
