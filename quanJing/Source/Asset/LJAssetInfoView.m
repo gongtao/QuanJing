@@ -27,6 +27,7 @@
 #import "OWTComment.h"
 #import "OWTUserViewCon.h"
 #import "UIColor+HexString.h"
+
 @implementation LJAssetInfoView
 {
     UILabel *_line1;
@@ -157,9 +158,8 @@
     //OWTAsset * asset1 = _asset[_imageNum];
     _reportTapBtn.hidden=YES;
     _tapBackView.hidden=YES;
-    NSDictionary *dict=@{@"url":_asset.webURL};
+    NSDictionary *dict=@{@"url":_asset.url};
     [om postObject:nil path:@"report" parameters:dict success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSDictionary *dict=mappingResult.dictionary;
         [SVProgressHUD showSuccessWithStatus:@"举报成功"];
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"%@",error);
@@ -216,19 +216,32 @@
 
 
 }
--(void)customViewWithAsset:(OWTAsset *)asset withLikes:(NSArray *)LikeBodys withOpen:(BOOL)isOpen withController:(OWTAssetViewCon *)controller
+
+-(NSString*)getPreferredLanguage
+{
+    NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];
+    NSArray* languages = [defs objectForKey:@"AppleLanguages"];
+    NSString* preferredLang = [languages objectAtIndex:0];
+    NSLog(@"Preferred Language:%@", preferredLang);
+    return preferredLang;
+}
+
+-(void)customViewWithAsset:(QJImageObject *)asset withLikes:(NSArray *)LikeBodys withOpen:(BOOL)isOpen withController:(OWTAssetViewCon *)controller isLikeTrigger:(BOOL)trigger
 {
     _likes=LikeBodys;
     _controller=controller;
     _asset=asset;
+    _taptrigger = trigger;
     CGFloat viewHeight=0;
     //头像定制
     _assetImageView.backgroundColor=[UIColor blackColor];
-    float width=_asset.imageInfo.width;
-    float height=_asset.imageInfo.height;
+    float width = [_asset.width floatValue];
+    float height = [_asset.height floatValue];
     float scr=SCREENWIT-20;
     _assetImageView.frame=CGRectMake(10, 10, SCREENWIT-20,scr/width*height);
-    [_assetImageView setImageWithURL:[NSURL URLWithString:_asset.imageInfo.url]];
+    
+    NSString *adpatUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:_asset.url size:CGSizeMake(scr, scr/width*height)];
+    [_assetImageView setImageWithURL:[NSURL URLWithString:adpatUrl]];
 
     UITapGestureRecognizer*tapRecognizerleft=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
     [self.assetImageView addGestureRecognizer:tapRecognizerleft];
@@ -236,14 +249,19 @@
     //标签 编号
     _userID.frame=CGRectMake(10, viewHeight+10, 200, 20);
     _reportBtn.frame = CGRectMake(SCREENWIT-10-40, _userID.frame.origin.y, 40, 17.5);
-    if (_asset.oriPic != nil && _asset.oriPic.length > 0)
-        _userID.text =[NSString stringWithFormat:@"编号：%@", _asset.oriPic];
-    else
-        _userID.text =[NSString stringWithFormat:@"编号：%@", _asset.assetID];
-    if (_asset.caption.length>0) {
+    //*To do 编号 待补全*/
+    //if (_asset.oriPic != nil && _asset.oriPic.length > 0)
+        _userID.text =[NSString stringWithFormat:@"编号：%@",@"to_do"];
+   // else
+        _userID.text =[NSString stringWithFormat:@"编号：%@", @"to_do"];
+    
+    //查看系统语言配置
+   //NSString *laugeEnv = [self getPreferredLanguage];
+    
+    if (_asset.captionCn.length>0) {
         _captionLabel.hidden=NO;
         _captionLabel.frame=CGRectMake(10, viewHeight+30,SCREENWIT-20 , 20);
-        _captionLabel.text=[NSString stringWithFormat:@"标签：%@",_asset.caption];
+        _captionLabel.text=[NSString stringWithFormat:@"标签：%@",_asset.captionCn];
         viewHeight+=50;}
     else {
         _captionLabel.hidden=YES;
@@ -283,7 +301,8 @@
             UIImageView *likebody=[LJUIController createCircularImageViewWithFrame:CGRectMake(likeWidth, viewHeight+likeHeight, imageHeight, imageHeight) imageName:@"头像"];
             //            likebody.clipsToBounds=YES;
             //            likebody.contentMode=UIViewContentModeCenter;
-            [likebody setImageWithURL:[NSURL URLWithString:model.smallURL]placeholderImage:[UIImage imageNamed:@"头像.png"]];
+            
+            [likebody setImageWithURL:[NSURL URLWithString:model.url]placeholderImage:[UIImage imageNamed:@"头像.png"]];
             UITapGestureRecognizer *liketap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onLikeTap:)];
             likebody.userInteractionEnabled=YES;
             likebody.tag=700+i;
@@ -294,7 +313,8 @@
         likeHeight+=imageHeight;
     }
     viewHeight+=likeHeight;
-    NSArray *comment=asset.comments;
+    NSArray *comment = asset.comments;
+
     CGFloat commentHeight=0;
     _line1.hidden=YES;
     _commentView.hidden=YES;
@@ -307,17 +327,16 @@
         _commentView.hidden=NO;
         _commentView.frame=CGRectMake(25, viewHeight+4, 12, 12);
         for (NSInteger i=0;i<comment.count;i++) {
-            OWTComment *commentModel=comment[i];
-            OWTUser* user = [GetUserManager() userForID:commentModel.userID];;
+            QJCommentObject *commentModel = comment[i];
             UIImageView *commentImage=[LJUIController createCircularImageViewWithFrame:CGRectMake(45, viewHeight+commentHeight+3, imageHeight, imageHeight) imageName:nil];
             commentImage.tag=500+i;
             UITapGestureRecognizer *commentTap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onCommentTap:)];
             commentImage.userInteractionEnabled=YES;
-            [commentImage setImageWithURL:[NSURL URLWithString:user.avatarImageInfo.smallURL]];
+            [commentImage setImageWithURL:[NSURL URLWithString:commentModel.user.avatar]];
             [commentImage addGestureRecognizer:commentTap];
             [self addSubview:commentImage];
-            NSString *name=user.nickname;
-            NSString *commentContent=[NSString stringWithFormat:@"%@",commentModel.content];
+            NSString *name= commentModel.user.nickName;
+            NSString *commentContent=[NSString stringWithFormat:@"%@",commentModel.comment];
             NSString *commentText=[NSString stringWithFormat:@"%@:%@",name,commentContent];
                 NSMutableAttributedString *attString=[[NSMutableAttributedString alloc]initWithString:commentText];
                 NSRange range1=[commentText rangeOfString:name];
@@ -368,8 +387,10 @@
 }
 -(BOOL)isLiked:(NSArray *)likes
 {
+    QJUser *currentUser = [QJPassport sharedPassport].currentUser;
+
     for (LJAssetLikeModel *model in likes) {
-        if ([model.userID isEqualToString:GetUserManager().currentUser.userID ]) {
+        if ([model.userID isEqualToString:[currentUser.uid stringValue]]) {
             return YES;
         }
     }
@@ -406,29 +427,29 @@
 
 - (void)updateCaptionLabel
 {
-    if (_asset.caption != nil && _asset.caption.length > 0)
+    if (_asset.captionCn != nil && _asset.captionCn.length > 0)
     {
         _captionLabel.hidden = NO;
-        _captionLabel.text = [NSString stringWithFormat:@"标签：%@", _asset.caption];
-        if (_asset.oriPic != nil && _asset.oriPic.length > 0)
-            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.oriPic];
-        else
-            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.assetID];
+        _captionLabel.text = [NSString stringWithFormat:@"标签：%@", _asset.captionCn];
+        //if (_asset.oriPic != nil && _asset.oriPic.length > 0)
+            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", @"to_do"];
+       // else
+       //     _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.assetID];
     }
     else
     {
         _captionLabel.hidden = YES;
         _captionLabel.text = @"";
-        if (_asset.oriPic != nil && _asset.oriPic.length > 0)
-            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.oriPic];
-        else
-            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.assetID];
+//        if (_asset.oriPic != nil && _asset.oriPic.length > 0)
+//            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.oriPic];
+//        else
+            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", @"to_do"];
     }
 }
 
 - (void)updateLikesLabel
 {
-    NSInteger likeNum = _asset.likeNum;
+    NSInteger likeNum = _asset.likes.count;
     if (likeNum == 0)
     {
         _likesLabel.text = @"尚未被喜欢";
@@ -441,7 +462,7 @@
 
 - (void)updateLatestCommentsView
 {
-    [_latestCommentsView setComments:self.asset.latestComments commentNum:self.asset.commentNum];
+   // [_latestCommentsView setComments:self.asset.comments commentNum:self.asset.commentNum];
 }
 #pragma mark buttonClick AND  tap
 -(void)openCommentTap:(UIGestureRecognizer*)sender
@@ -493,16 +514,15 @@
         _likeAction();
     }
 }
+
 -(void)onLikeTap:(UIGestureRecognizer *)sender
 {
     LJAssetLikeModel *model=_likes[sender.view.tag-700];
     OWTUser* ownerUser = [GetUserManager() userForID:model.userID];
-    
-    
+    QJUser *user = [QJPassport sharedPassport].currentUser;
+
     if (ownerUser != nil)
     {
-        
-        
         OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
         userViewCon1.hidesBottomBarWhenPushed=YES;
         [_controller.navigationController pushViewController:userViewCon1 animated:YES];

@@ -82,6 +82,7 @@
 #import "captionCell.h"
 #import "OWTTabBarHider.h"
 #import "MJRefresh.h"
+#import "QJPassport.h"
 @interface OWTUserInfoAlbumSectionHeaderView : UICollectionReusableView
 {
     KHFlatButton* _uploadButton;
@@ -1529,26 +1530,20 @@
 //编辑按钮触发
 - (void)editUserInfo
 {
-    
     OWTUserInfoEditViewCon* userInfoEditViewCon = [[OWTUserInfoEditViewCon alloc] initWithNibName:nil bundle:nil];
+    _currentUser  = [QJPassport sharedPassport].currentUser;
     userInfoEditViewCon.user = _user;
-    
     userInfoEditViewCon.cancelAction = ^{
-        
         
     };
     
     userInfoEditViewCon.doneFunc = ^{
         _ai=@"dd";
-        
         [self dismissViewControllerAnimated:YES completion:^{
             [self updateRightNavBarItem];
             [_collectionView reloadData];
         }];
     };
-    
-    UINavigationController* navCon = [[UINavigationController alloc] initWithRootViewController:userInfoEditViewCon];
-    //    [self presentViewController:navCon animated:YES completion:nil];
     [_tabBarHider hideTabBar];
     [self.navigationController pushViewController:userInfoEditViewCon  animated:YES];
 }

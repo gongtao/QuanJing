@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "QJImageObject.h"
 #import "OWTImageView.h"
 #import "OWTLatestCommentsView.h"
 #import "OWTAssetViewCon.h"
+#import "QJCommentObject.h"
+
 @interface LJAssetInfoView : UICollectionReusableView
-@property (nonatomic, strong) OWTAsset* asset;
+@property (nonatomic, strong) QJImageObject* asset;
 
 @property (nonatomic, strong) void ((^downloadAction)());
 @property (nonatomic, strong) void ((^collectAction)());
@@ -37,9 +40,12 @@
 @property (nonatomic, strong) NSLayoutConstraint* avatarImageViewWidthConstraint;
 @property (nonatomic, strong) NSLayoutConstraint* avatarImageViewToNicknameLabelSpacingConstraint;
 
+@property (nonatomic, assign)BOOL taptrigger;
 @property (weak, nonatomic)  UILabel *picMarkLabel;
 @property (nonatomic, strong) OWTUser* assetOwnerUser;
 @property(nonatomic,strong)OWTAssetViewCon *controller;
--(void)customViewWithAsset:(OWTAsset *)asset withLikes:(NSArray *)LikeBodys withOpen:(BOOL)isOpen withController:(OWTAssetViewCon*)controller;
+@property (nonatomic, strong)QJCommentObject *localComment;
+
+-(void)customViewWithAsset:(QJImageObject *)asset withLikes:(NSArray *)LikeBodys withOpen:(BOOL)isOpen withController:(OWTAssetViewCon*)controller isLikeTrigger:(BOOL)trigger;
 
 @end

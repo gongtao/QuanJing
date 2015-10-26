@@ -26,6 +26,7 @@ static NSString* kWTClientID = @"3ae125d6e9a009a6fcce3f081f4ce5ff";
     //本机当前登陆用户的userID
 //    OWTUser *user=GetUserManager().currentUser;
     QJUser *user=[QJPassport sharedPassport].currentUser;
+    
     NSString *huanxinCount = [@"qj" stringByAppendingString:user.uid.stringValue];
     
     const char *cStr = [user.uid.stringValue UTF8String];

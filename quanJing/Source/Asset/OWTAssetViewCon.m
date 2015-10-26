@@ -13,7 +13,6 @@
 #import "AlbumPhotosListView1.h"
 #import "OWTAssetInfoViewa.h"
 #import "OWTFont.h"
-#import "OWTAsset.h"
 #import "UIViewController+WTExt.h"
 #import "OWTCommentsViewCon.h"
 #import "OWTAuthManager.h"
@@ -50,7 +49,7 @@
 #import "QuanJingSDK.h"
 static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
-@interface OWTAssetViewCon ()
+@interface OWTAssetViewCon ()<NSCopying>
 {
     OWaterFlowLayout* _waterFlowLayout;
     UICollectionView* _collectionView;
@@ -61,9 +60,11 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     ASIHTTPRequest *_asi;
     NSMutableArray *_likeBodys;
     UIImageView *_backView;
+    BOOL _isLikeTap;
+    QJCommentObject *_tmpComment;
 }
 
-@property (nonatomic, strong) OWTAsset* asset;
+@property (nonatomic, strong) QJImageObject* imageAsset;
 @property (nonatomic, strong) OWTUser* assetOwnerUser;
 
 @property (nonatomic, strong) UICollectionView* collectionView;
@@ -81,6 +82,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 @property (nonatomic, assign) NSInteger jan;
 @property(nonatomic,strong)NSNumber *imageId;
 @property(nonatomic,strong)NSNumber *imageType;
+@property (nonatomic, strong)NSMutableOrderedSet *searchResults;
 @end
 
 @implementation OWTAssetViewCon
@@ -95,20 +97,23 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 {
     return [self initWithAsset:asset deletionAllowed:NO onDeleteAction:nil];
 }
--(instancetype)initWithImageId:(NSNumber*)imageId imageType:(NSNumber*)imageType
+
+// 新的接口
+-(instancetype)initWithImageId:(QJImageObject*)imageAsset imageType:(NSNumber*)imageType
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self)
     {
-        _likeBodys=[[NSMutableArray alloc]init];
-        _users=[[NSMutableArray alloc]init];
-        _imageId=imageId;
-        _imageType=imageType;
-        _isOpen=NO;
+        _likeBodys = [[NSMutableArray alloc]init];
+        _users = [[NSMutableArray alloc]init];
+        _imageAsset = imageAsset;
+        _imageType = imageType;
+        _isOpen = NO;
         [self setup];
     }
     return self;
 }
+
 - (instancetype)initWithAsset:(OWTAsset*)asset
               deletionAllowed:(BOOL)deletionAllowed
                onDeleteAction:(void (^)())onDeleteAction
@@ -116,7 +121,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     self = [super initWithNibName:nil bundle:nil];
     if (self)
     {
-        _asset = asset;
+        _imageAsset = asset;
         _deletionAllowed = deletionAllowed;
         _onDeleteAction = onDeleteAction;
         _likeBodys=[[NSMutableArray alloc]init];
@@ -147,29 +152,18 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 //    _collectionView.footerRefreshingText=@"";
 //    _collectionView.footerReleaseToRefreshText=@"";
     //
-    if (_asset != nil)
+    if (_imageAsset != nil)
     {
-        _assetOwnerUser = [GetUserManager() userForID:_asset.ownerUserID];
+        //_assetOwnerUser = [GetUserManager() userForID:_asset.ownerUserID];
         
         if (_assetOwnerUser != nil)
         {
-            OWTImageInfo* avatarImageInfo = _assetOwnerUser.avatarImageInfo;
-            if (avatarImageInfo != nil)
-            {
-                
-            }
-            else
-            {
-            }
             
             NSRange aa=[_assetOwnerUser.nickname rangeOfString:@"全景"];
             if (aa.location != NSNotFound) {
                 
                 //
                 _jan=1;
-                
-                
-                
             }
             else
             {
@@ -185,7 +179,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     {
     }
     //
-            [_collectionView registerClass:[LJAssetInfoView class] forSupplementaryViewOfKind:kWaterFlowElementKindSectionHeader withReuseIdentifier:@"AssetInfoViewa"];
+    [_collectionView registerClass:[LJAssetInfoView class] forSupplementaryViewOfKind:kWaterFlowElementKindSectionHeader withReuseIdentifier:@"AssetInfoViewa"];
     
     [_collectionView registerClass:OWTImageCell.class forCellWithReuseIdentifier:kWaterFlowCellID];
     _collectionView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -234,21 +228,52 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     [_textField resignFirstResponder];
     _textField.text=nil;
 }
+
 -(void)onSendBtn1:(UIButton *)sender
 {
     if (_textField.text.length>0) {
-        [self postComment:_textField.text success:^{
-            [_textField resignFirstResponder];
-            _textField.text=nil;
-            [SVProgressHUD dismiss];
-        } failure:^{
-            [SVProgressHUD dismiss];
-        }];
+        [SVProgressHUD showWithStatus:@"发送评论中..." maskType:SVProgressHUDMaskTypeClear];
+        [self postComment];
     }
     else{
         [SVProgressHUD showErrorWithStatus:@"请输入评论内容"];
     }
 }
+
+-(void)postComment
+{
+    QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSError *error = [fm requestImageComment:_imageAsset.imageId imageType:_imageType comment:_textField.text];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error != nil){
+                if (![NetStatusMonitor isExistenceNetwork]) {
+                    [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+                }else{
+                    [SVProgressHUD showError:error];
+                }
+                return ;
+            }
+            [SVProgressHUD dismiss];
+            _tmpComment = [[QJCommentObject alloc]init];
+            _tmpComment.user = [QJPassport sharedPassport].currentUser;
+            _tmpComment.comment = _textField.text;
+            _tmpComment.time = [self getDate];
+            [_collectionView reloadData];
+            
+        });
+    });
+}
+
+-(NSDate*)getDate
+{
+    NSDate *date = [NSDate date];
+    NSTimeZone *zone = [NSTimeZone systemTimeZone];
+    NSInteger interval = [zone secondsFromGMTForDate: date];
+    NSDate *localeDate = [date  dateByAddingTimeInterval: interval];
+    return localeDate;
+}
+
 #pragma mark keyboardNotification
 - (void)keyboardWillAppear2:(NSNotification *)notification
 {
@@ -390,6 +415,10 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self getLikesBody];
+    _searchResults = [[NSMutableOrderedSet alloc]init];
+    [self loadRelatedAssetsInSearch];
+
 
 }
 
@@ -400,14 +429,13 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     [_collectionView reloadData];
     [self substituteNavigationBarBackItem];
     [self updateNavBarButtons];
-    [self loadRelatedAssetsIfNecessary];
     [_tabBarHider hideTabBar];
     
 }
 - (void)updateNavBarButtons
 {
     OWTUser* currentUser = GetUserManager().currentUser;
-    if (currentUser != nil && [currentUser isOwnerOf:_asset])
+    if (currentUser != nil && [currentUser isOwnerOf:_imageAsset])
     {
         static UIImage* kEditImage = nil;
         if (kEditImage == nil)
@@ -440,93 +468,97 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     }
 }
 
-- (void)loadRelatedAssetsIfNecessary
+-(void)mergeAssets:(NSArray*)imageObjectArray
 {
-    if (_asset.relatedAssets != nil)
-    {
+    [_searchResults addObjectsFromArray:imageObjectArray];
+    [self reloadData];
+
+}
+
+- (void)loadRelatedAssetsInSearch
+{
+    if(_imageAsset.tag == nil){
         return;
     }
+    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [fm requestImageSearchKey:_imageAsset.tag pageNum:_searchResults.count/50+1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (imageObjectArray.count==0) {
+                    [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+                }
+                [self mergeAssets:imageObjectArray];
+                [SVProgressHUD dismiss];
+                
+            });
+        }];
+    });
     
-    __weak typeof(self) wself = self;
-    
-    OWTAssetManager* am = GetAssetManager();
-    [am queryRelatedAssetsForAsset:_asset
-                           success:^{
-                               [wself reloadData];
-                           }
-                           failure:^(NSError* error){
-                               if (![NetStatusMonitor isExistenceNetwork]) {
-                                   [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-                                   return ;
-                               }
-                               [SVProgressHUD showError:error];
-                           }];
 }
 
 - (void)editAsset
 {
-    LJAssetEditView *ljvc=[[LJAssetEditView alloc]initWithAsset:self.asset deletionAllowed:_deletionAllowed];
-    OWTAssetEditViewCon* editViewCon = [[OWTAssetEditViewCon alloc] initWithAsset:self.asset deletionAllowed:_deletionAllowed];
-    ljvc.doneAction = ^(EWTDoneType doneType) {
-        switch (doneType)
-        {
-            case nWTDoneTypeCancelled:
-                [self dismissViewControllerAnimated:YES completion:nil];
-                break;
-            case nWTDoneTypeUpdated:
-                [self reloadData];
-                [self dismissViewControllerAnimated:YES completion:nil];
-                break;
-            case nWTDoneTypeDeleted:
-            {
-                AssertTR(_deletionAllowed);
-                [self dismissViewControllerAnimated:YES completion:^{
-                    if (_onDeleteAction != nil)
-                    {
-                        _onDeleteAction();
-                    }
-                    [self.navigationController popViewControllerAnimated:YES];
-                }];
-                break;
-            }
-            default:
-                break;
-        }
-    };
-    editViewCon.doneAction=^(EWTDoneType doneType) {
-        switch (doneType)
-        {
-            case nWTDoneTypeCancelled:
-                [self dismissViewControllerAnimated:YES completion:nil];
-                break;
-            case nWTDoneTypeUpdated:
-                [self reloadData];
-                [self dismissViewControllerAnimated:YES completion:nil];
-                break;
-            case nWTDoneTypeDeleted:
-            {
-                AssertTR(_deletionAllowed);
-                [self dismissViewControllerAnimated:YES completion:^{
-                    if (_onDeleteAction != nil)
-                    {
-                        _onDeleteAction();
-                    }
-                    [self.navigationController popViewControllerAnimated:YES];
-                }];
-                break;
-            }
-            default:
-                break;
-        }
-    };
-
-    UINavigationController* navCon = [[UINavigationController alloc] initWithRootViewController:editViewCon];
-    UINavigationController *navc=[[UINavigationController alloc]initWithRootViewController:ljvc];
-    [self presentViewController:navCon animated:YES completion:nil];
+//    LJAssetEditView *ljvc=[[LJAssetEditView alloc]initWithAsset:self.asset deletionAllowed:_deletionAllowed];
+//    OWTAssetEditViewCon* editViewCon = [[OWTAssetEditViewCon alloc] initWithAsset:self.asset deletionAllowed:_deletionAllowed];
+//    ljvc.doneAction = ^(EWTDoneType doneType) {
+//        switch (doneType)
+//        {
+//            case nWTDoneTypeCancelled:
+//                [self dismissViewControllerAnimated:YES completion:nil];
+//                break;
+//            case nWTDoneTypeUpdated:
+//                [self reloadData];
+//                [self dismissViewControllerAnimated:YES completion:nil];
+//                break;
+//            case nWTDoneTypeDeleted:
+//            {
+//                AssertTR(_deletionAllowed);
+//                [self dismissViewControllerAnimated:YES completion:^{
+//                    if (_onDeleteAction != nil)
+//                    {
+//                        _onDeleteAction();
+//                    }
+//                    [self.navigationController popViewControllerAnimated:YES];
+//                }];
+//                break;
+//            }
+//            default:
+//                break;
+//        }
+//    };
+//    editViewCon.doneAction=^(EWTDoneType doneType) {
+//        switch (doneType)
+//        {
+//            case nWTDoneTypeCancelled:
+//                [self dismissViewControllerAnimated:YES completion:nil];
+//                break;
+//            case nWTDoneTypeUpdated:
+//                [self reloadData];
+//                [self dismissViewControllerAnimated:YES completion:nil];
+//                break;
+//            case nWTDoneTypeDeleted:
+//            {
+//                AssertTR(_deletionAllowed);
+//                [self dismissViewControllerAnimated:YES completion:^{
+//                    if (_onDeleteAction != nil)
+//                    {
+//                        _onDeleteAction();
+//                    }
+//                    [self.navigationController popViewControllerAnimated:YES];
+//                }];
+//                break;
+//            }
+//            default:
+//                break;
+//        }
+//    };
+//
+//    UINavigationController* navCon = [[UINavigationController alloc] initWithRootViewController:editViewCon];
+//    UINavigationController *navc=[[UINavigationController alloc]initWithRootViewController:ljvc];
+//    [self presentViewController:navCon animated:YES completion:nil];
 }
 
-#pragma mark - Button Actions
-
+#pragma mark - Button Actions 点击赞过的人
 - (void)likeButtonPressed
 {
     OWTAuthManager* am = GetAuthManager();
@@ -568,6 +600,8 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
         }
     }
 }
+
+#pragma -mark 判断对改图片是否已点过赞
 -(BOOL)isLiked:(NSArray *)likes
 {
     for (LJAssetLikeModel *model in likes) {
@@ -590,7 +624,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                                                  ^{
                                                      [am showAuthViewConWithSuccess:^{
                                                          OWTCommentsViewCon* commentsViewCon = [[OWTCommentsViewCon alloc] initWithNibName:nil bundle:nil];
-                                                         commentsViewCon.asset = _asset;
+                                                         commentsViewCon.asset = _imageAsset;
                                                          UINavigationController* navCon = [[UINavigationController alloc] initWithRootViewController:commentsViewCon];
                                                          navCon.view.backgroundColor = [UIColor whiteColor];
                                                          [self presentViewController:navCon animated:YES completion:nil];
@@ -613,7 +647,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     else
     {
         OWTCommentsViewCon* commentsViewCon = [[OWTCommentsViewCon alloc] initWithNibName:nil bundle:nil];
-        commentsViewCon.asset = _asset;
+        commentsViewCon.asset = _imageAsset;
         GetThemer().ifCommentPop = true;
         UINavigationController* navCon = [[UINavigationController alloc] initWithRootViewController:commentsViewCon];
         navCon.view.backgroundColor = [UIColor whiteColor];
@@ -627,79 +661,123 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 {
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     
-    NSString* action = liked ? @"like" : @"unlike";
+    if(liked){
+        QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError *error = [fm requestImageLike:_imageAsset.imageId imageType:_imageType];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error != nil){
+                    if (![NetStatusMonitor isExistenceNetwork]) {
+                        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+                    }else{
+                        [SVProgressHUD showError:error];
+                    }
+                    return ;
+                }
+                _isLikeTap = YES;
+                [self getLikesBody];
+                
+                [SVProgressHUD dismiss];
+            });
+        });
+        
+    }
+    else{
+        QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError *error = [fm requestImageCancelLike:_imageAsset.imageId imageType:_imageType];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error != nil){
+                    if (![NetStatusMonitor isExistenceNetwork]) {
+                        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+                    }else{
+                        [SVProgressHUD showError:error];
+                    }
+                    return ;
+                }
+                _isLikeTap = YES;
+                [self getLikesBody];
+                [SVProgressHUD dismiss];
+            });
+        });
     
-    RKObjectManager* om = [RKObjectManager sharedManager];
-    [om postObject:nil
-              path:[NSString stringWithFormat:@"assets1/%@/likes", _asset.assetID]
-        parameters:@{ @"action" : action }
-           success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
-               [o logResponse];
-               
-               NSDictionary* resultObjects = result.dictionary;
-               OWTServerError* error = resultObjects[@"error"];
-               if (error != nil)
-               {
-                   if (![NetStatusMonitor isExistenceNetwork]) {
-                       [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-                   }else{
-                       [SVProgressHUD showServerError:error];
-                   }
-                   if (failure != nil)
-                   {
-                       failure();
-                   }
-                   return;
-               }
-               
-               OWTUser* currentUser = GetUserManager().currentUser;
-               
-               if (liked)
-               {
-                   [_asset markLikedByUser:currentUser.userID];
-                   currentUser.assetsInfo.likedAssetNum = currentUser.assetsInfo.likedAssetNum + 1;
-                   currentUser.assetsInfo.likedAssets = nil;
-               }
-               else
-               {
-                   [_asset markUnlikedByUser:currentUser.userID];
-                   currentUser.assetsInfo.likedAssetNum = currentUser.assetsInfo.likedAssetNum - 1;
-                   if (currentUser.assetsInfo.likedAssetNum < 0)
-                   {
-                       currentUser.assetsInfo.likedAssetNum = 0;
-                   }
-                   currentUser.assetsInfo.likedAssets = nil;
-               }
-               
-               [self getLikesBody];
-               
-               [SVProgressHUD dismiss];
-               
-               if (success != nil)
-               {
-                   success();
-               }
-           }
-           failure:^(RKObjectRequestOperation* o, NSError* error) {
-               [o logResponse];
-               if (![NetStatusMonitor isExistenceNetwork]) {
-                   [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-               }else{
-                   [SVProgressHUD showError:error];
-               }
-               
-               if (failure != nil)
-               {
-                   failure();
-               }
-           }
-     ];
+    }
+    
+    
+//    NSString* action = liked ? @"like" : @"unlike";
+//
+//    RKObjectManager* om = [RKObjectManager sharedManager];
+//    [om postObject:nil
+//              path:[NSString stringWithFormat:@"assets1/%@/likes", _imageAsset.imageId]
+//        parameters:@{ @"action" : action }
+//           success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
+//               [o logResponse];
+//               
+//               NSDictionary* resultObjects = result.dictionary;
+//               OWTServerError* error = resultObjects[@"error"];
+//               if (error != nil)
+//               {
+//                   if (![NetStatusMonitor isExistenceNetwork]) {
+//                       [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+//                   }else{
+//                       [SVProgressHUD showServerError:error];
+//                   }
+//                   if (failure != nil)
+//                   {
+//                       failure();
+//                   }
+//                   return;
+//               }
+//               
+//               OWTUser* currentUser = GetUserManager().currentUser;
+//               
+//               
+//               if (liked)
+//               {
+//                   //[_asset markLikedByUser:currentUser.userID];
+//                   currentUser.assetsInfo.likedAssetNum = currentUser.assetsInfo.likedAssetNum + 1;
+//                   currentUser.assetsInfo.likedAssets = nil;
+//               }
+//               else
+//               {
+//                   //[_asset markUnlikedByUser:currentUser.userID];
+//                   currentUser.assetsInfo.likedAssetNum = currentUser.assetsInfo.likedAssetNum - 1;
+//                   if (currentUser.assetsInfo.likedAssetNum < 0)
+//                   {
+//                       currentUser.assetsInfo.likedAssetNum = 0;
+//                   }
+//                   currentUser.assetsInfo.likedAssets = nil;
+//               }
+//               
+//               [self getLikesBody];
+//               
+//               [SVProgressHUD dismiss];
+//               
+//               if (success != nil)
+//               {
+//                   success();
+//               }
+//           }
+//           failure:^(RKObjectRequestOperation* o, NSError* error) {
+//               [o logResponse];
+//               if (![NetStatusMonitor isExistenceNetwork]) {
+//                   [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+//               }else{
+//                   [SVProgressHUD showError:error];
+//               }
+//               
+//               if (failure != nil)
+//               {
+//                   failure();
+//               }
+//           }
+//     ];
 }
 
 #pragma mark - Data Reloading
 -(void)getAllAssetData
 {
-dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     [[QJInterfaceManager sharedManager]requestImageDetail:_imageId imageType:_imageType finished:^(QJImageObject * _Nonnull imageObject, NSError * _Nonnull error) {
         
     }];
@@ -710,63 +788,67 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 }
 -(void)getCommentBody
 {
-        if (_asset == nil)
-        {
-            return;
-        }
-        RKObjectManager* om = [RKObjectManager sharedManager];
-        [om getObject:nil
-                 path:[NSString stringWithFormat:@"assets1/%@/comments", _asset.assetID]
-           parameters:nil
-              success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
-                  [o logResponse];
-                  
-                  NSDictionary* resultObjects = result.dictionary;
-                  OWTServerError* error = resultObjects[@"error"];
-                  if (error != nil)
-                  {
-                      [SVProgressHUD showServerError:error];
-                      return;
-                  }
-                  NSArray* commentDatas = resultObjects[@"comments"];
-                  if (commentDatas == nil)
-                  {
-//                      [SVProgressHUD showGeneralError];
-                      return;
-                  }
-                  OWTUserManager *um=GetUserManager();
-                  for (OWTUserData *user in  resultObjects[@"users"]) {
-                      [um registerUserData:user];
-                  }
-                  _asset.comments = [NSMutableArray arrayWithCapacity:commentDatas.count];
-                  for (OWTCommentData* commentData in commentDatas)
-                  {
-                      OWTComment* comment = [OWTComment new];
-                      [comment mergeWithData:commentData];
-                      [_asset.comments addObject:comment];
-                  }
-                  [_collectionView reloadData];
-                  [SVProgressHUD dismiss];
-              }
-              failure:^(RKObjectRequestOperation* o, NSError* error) {
-                  [o logResponse];
-                  if (![NetStatusMonitor isExistenceNetwork]) {
-                      [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-                      return ;
-                  }
-                  [SVProgressHUD showError:error];
-              }
-         ];
+//        if (_asset == nil)
+//        {
+//            return;
+//        }
+//        RKObjectManager* om = [RKObjectManager sharedManager];
+//        [om getObject:nil
+//                 path:[NSString stringWithFormat:@"assets1/%@/comments", _asset.assetID]
+//           parameters:nil
+//              success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
+//                  [o logResponse];
+//                  
+//                  NSDictionary* resultObjects = result.dictionary;
+//                  OWTServerError* error = resultObjects[@"error"];
+//                  if (error != nil)
+//                  {
+//                      [SVProgressHUD showServerError:error];
+//                      return;
+//                  }
+//                  NSArray* commentDatas = resultObjects[@"comments"];
+//                  if (commentDatas == nil)
+//                  {
+////                      [SVProgressHUD showGeneralError];
+//                      return;
+//                  }
+//                  OWTUserManager *um=GetUserManager();
+//                  for (OWTUserData *user in  resultObjects[@"users"]) {
+//                      [um registerUserData:user];
+//                  }
+//                  _asset.comments = [NSMutableArray arrayWithCapacity:commentDatas.count];
+//                  for (OWTCommentData* commentData in commentDatas)
+//                  {
+//                      OWTComment* comment = [OWTComment new];
+//                      [comment mergeWithData:commentData];
+//                      [_asset.comments addObject:comment];
+//                  }
+//                  [_collectionView reloadData];
+//                  [SVProgressHUD dismiss];
+//              }
+//              failure:^(RKObjectRequestOperation* o, NSError* error) {
+//                  [o logResponse];
+//                  if (![NetStatusMonitor isExistenceNetwork]) {
+//                      [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+//                      return ;
+//                  }
+//                  [SVProgressHUD showError:error];
+//              }
+//         ];
 }
 -(void)getLikesBody
 {
-    
-    NSString *urlStr=[NSString stringWithFormat:@"http://api.tiankong.com/qjapi/assets1/%@",_asset.assetID];
-    _asi=[[ASIHTTPRequest alloc]initWithURL:[NSURL URLWithString:urlStr]];
-    _asi.delegate=self;
-    [_asi startAsynchronous];
-    
+    NSArray *allLikes = _imageAsset.likes;
+    for (QJUser *user in allLikes) {
+        LJAssetLikeModel *model=[[LJAssetLikeModel alloc]init];
+        model.url = user.avatar;
+        model.nickname = user.nickName;
+        model.userID = [user.uid stringValue];
+        [_likeBodys addObject:model];
+    }
+    [_collectionView reloadData];
 }
+
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     [SVProgressHUD showErrorWithStatus:@"网络不好"];
@@ -813,10 +895,10 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 {
     if (indexPath.section == 0)
     {
-        OWTAsset* relatedAsset = [self relatedAssetAtIndexPath:indexPath];
-        if (relatedAsset != nil && relatedAsset.imageInfo != nil)
+        QJImageObject* relatedAsset = [self relatedAssetAtIndexPath:indexPath];
+        if (relatedAsset != nil && relatedAsset.width != nil && relatedAsset.height != nil)
         {
-            return relatedAsset.imageInfo.imageSize;
+            return CGSizeMake([relatedAsset.width floatValue], [relatedAsset.height floatValue]);
         }
         else
         {
@@ -839,30 +921,30 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (_asset == nil)
+    if (_imageAsset == nil)
     {
         return 0;
     }
     
-    if (_asset.relatedAssets == nil)
+    if (_searchResults == nil)
     {
         return 0;
     }
     
-    return _asset.relatedAssets.count;
+    return _searchResults.count;
 }
 
-- (OWTAsset*)relatedAssetAtIndexPath:(NSIndexPath*)indexPath
+- (QJImageObject*)relatedAssetAtIndexPath:(NSIndexPath*)indexPath
 {
-    if (_asset == nil || _asset.relatedAssets == nil)
+    if (_imageAsset == nil || _searchResults == nil)
     {
         return nil;
     }
     
     NSInteger row = indexPath.row;
-    if (row < _asset.relatedAssets.count)
+    if (row < _searchResults.count)
     {
-        return [_asset.relatedAssets objectAtIndex:row];
+        return [_searchResults objectAtIndex:row];
     }
     else
     {
@@ -875,19 +957,10 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 {
     OWTImageCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:kWaterFlowCellID forIndexPath:indexPath];
     
-    OWTAsset* asset = [self relatedAssetAtIndexPath:indexPath];
+    QJImageObject* asset = [self relatedAssetAtIndexPath:indexPath];
     if (asset != nil)
     {
-        if (asset.imageInfo != nil)
-        {
-            //            [cell setImageWithInfo:asset.imageInfo];
-            [cell.imageView setImageWithURL:[NSURL URLWithString:asset.imageInfo.smallURL]];
-        }
-        else
-        {
-            [cell setImageWithInfo:nil];
-            cell.backgroundColor = [UIColor lightGrayColor];
-        }
+        [cell.imageView setImageWithURL:[NSURL URLWithString:asset.url]];
     }
     
     return cell;
@@ -900,12 +973,15 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     {
         
             LJAssetInfoView* assetInfoViewa = [collectionView dequeueReusableSupplementaryViewOfKind:kWaterFlowElementKindSectionHeader withReuseIdentifier:@"AssetInfoViewa" forIndexPath:indexPath];
+       
             for (UIView *view in assetInfoViewa.subviews) {
                 if (view.tag>=500) {
                     [view removeFromSuperview];
                 }
             }
-            [assetInfoViewa customViewWithAsset:_asset withLikes:_likeBodys withOpen:_isOpen withController:self];
+            [assetInfoViewa customViewWithAsset:_imageAsset withLikes:_likeBodys withOpen:_isOpen withController:self isLikeTrigger:_isLikeTap];
+            assetInfoViewa.localComment = _tmpComment;
+            _isLikeTap = _isLikeTap?NO:NO;
             assetInfoViewa.canClick=YES;
             __weak OWTAssetViewCon* wself = self;
             assetInfoViewa.likeAction=^{[wself likeButtonPressed];};
@@ -927,7 +1003,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 {
     [SVProgressHUD showWithStatus:@"保存图片中..." maskType:SVProgressHUDMaskTypeBlack];
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
-    NSURL* url = [NSURL URLWithString:self.asset.imageInfo.url];
+    NSURL* url = [NSURL URLWithString:_imageAsset.url];
     [manager downloadWithURL:url
                      options:SDWebImageHighPriority
                     progress:nil
@@ -969,7 +1045,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                                          OWTAssetManager* am = GetAssetManager();
                                                          
                                                          [SVProgressHUD show];
-                                                         [am updateAsset:_asset
+                                                         [am updateAsset:_imageAsset
                                                          belongingAlbums:_belongingAlbums
                                                                  success:^{
                                                                      [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
@@ -1003,7 +1079,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         OWTAssetManager* am = GetAssetManager();
         
         [SVProgressHUD show];
-        [am updateAsset:_asset
+        [am updateAsset:_imageAsset
         belongingAlbums:_belongingAlbums
                 success:^{
                     [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
@@ -1027,7 +1103,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     [SVProgressHUD showWithStatus:@"准备图片中..." maskType:SVProgressHUDMaskTypeBlack];
     
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
-    NSURL* url = [NSURL URLWithString:self.asset.imageInfo.url];
+    NSURL* url = [NSURL URLWithString:_imageAsset.url];
     if (_isSquare!=YES) {
         
         [manager downloadWithURL:url
@@ -1036,7 +1112,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                        completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, BOOL finished){
                            if (image != nil)
                            {
-                               NSString *urlStr = _asset.webURL;
+                               NSString *urlStr = _imageAsset.url;
                                [SVProgressHUD dismiss];
                                [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeNone;
                                [UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeDefault;
@@ -1044,10 +1120,10 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                [UMSocialData defaultData].extConfig.wechatTimelineData.url =  urlStr;
                                [UMSocialData defaultData].extConfig.qqData.url =  urlStr;
                                [UMSocialData defaultData].extConfig.qzoneData.url =  urlStr;
-                               [UMSocialData defaultData].extConfig.qqData.title = _asset.caption;
-                               [UMSocialData defaultData].extConfig.qzoneData.title =_asset.caption;
-                               [UMSocialData defaultData].extConfig.wechatSessionData.title =_asset.caption;
-                               [UMSocialData defaultData].extConfig.wechatTimelineData.title =_asset.caption;
+                               [UMSocialData defaultData].extConfig.qqData.title = _imageAsset.captionCn;
+                               [UMSocialData defaultData].extConfig.qzoneData.title =_imageAsset.captionCn;
+                               [UMSocialData defaultData].extConfig.wechatSessionData.title =_imageAsset.captionCn;
+                               [UMSocialData defaultData].extConfig.wechatTimelineData.title =_imageAsset.captionCn;
                                //                           [[UMSocialData defaultData].urlResource setResourceType:UMSocialUrlResourceTypeImage url:urlStr];
                                [UMSocialSnsService presentSnsIconSheetView:self
                                                                     appKey:nil
@@ -1086,23 +1162,23 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
 - (void)showOwnerUser
 {
-    OWTUser* ownerUser = [GetUserManager() userForID:_asset.ownerUserID];
-    //    NSLog(@"ddddddddddddddddd%@",_asset.ownerUserID);
-    if (ownerUser != nil)
-    {
-        
-        OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
-        [self.navigationController pushViewController:userViewCon1 animated:YES];
-        userViewCon1.user =ownerUser;
-        
-    }
+//    OWTUser* ownerUser = [GetUserManager() userForID:_asset.ownerUserID];
+//    //    NSLog(@"ddddddddddddddddd%@",_asset.ownerUserID);
+//    if (ownerUser != nil)
+//    {
+//        
+//        OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
+//        [self.navigationController pushViewController:userViewCon1 animated:YES];
+//        userViewCon1.user =ownerUser;
+//        
+//    }
 }
 
 - (void)reportAsset
 {
     OWTAssetManager* am = GetAssetManager();
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [am reportInappropriateAsset:_asset
+    [am reportInappropriateAsset:_imageAsset
                          success:^{
                              [SVProgressHUD showSuccessWithStatus:@"感谢您的举报，我们会尽快处理！"];
                          }
@@ -1119,14 +1195,14 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     if (section == 0)
     {
             CGFloat viewHeight=0;
-            float width=_asset.imageInfo.width;
-            float height=_asset.imageInfo.height;
+            float width=[_imageAsset.width floatValue];
+            float height=[_imageAsset.height floatValue];
             float scr=SCREENWIT-20;
             viewHeight+=(10+scr/width*height);
             //四个按钮定制
             viewHeight+=(10+30);
             //标签 编号
-        if (_asset.caption.length>0) {
+        if (_imageAsset.captionCn.length>0) {
             viewHeight+=50;}
         else {
             viewHeight+=30;
@@ -1148,7 +1224,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             likeHeight+=imageHeight;
         }
         viewHeight+=likeHeight;
-        NSArray *comment=_asset.comments;
+        NSArray *comment=_imageAsset.comments;
         CGFloat commentHeight=0;
         if (comment.count!=0) {
             viewHeight+=10;
@@ -1190,7 +1266,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     {
         if (_jan==1) {
             OWTAssetInfoView* calculatingAssetInfoView = self.assetInfoView;
-            calculatingAssetInfoView.asset = _asset;
+            calculatingAssetInfoView.asset = _imageAsset;
             CGSize fittingSize = [calculatingAssetInfoView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
             CGFloat aspectRatio = fittingSize.height / fittingSize.width;
             fittingSize.width = self.view.bounds.size.width;
@@ -1257,7 +1333,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 {
     if (indexPath.section == 0)
     {
-        OWTAsset* relatedAsset = [self relatedAssetAtIndexPath:indexPath];
+        QJImageObject* relatedAsset = [self relatedAssetAtIndexPath:indexPath];
         if (relatedAsset != nil)
         {
             OWTAssetViewCon* relatedAssetViewCon = [[OWTAssetViewCon alloc] initWithAsset:relatedAsset];
@@ -1284,112 +1360,38 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 //头像事件
 -(void)showAssetAction
 {
-    //添加事件
-    NSLog(@"1111111111111111111111111111111111111111111111");
-    RKObjectManager* om = [RKObjectManager sharedManager];
-    [om getObject:nil
-             path:[NSString stringWithFormat:@"assets/%@/related_assets", _asset.assetID]
-       parameters:nil
-          success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
-              [o logResponse];
-              NSDictionary* resultObjects = result.dictionary;
-              
-              OWTServerError* error = resultObjects[@"error"];
-              
-              if (error != nil)
-                  
-              {
-                  return;
-              }
-              NSArray* relatedAssetDatas = resultObjects[@"assets"];
-              
-              if (relatedAssetDatas == nil)
-                  
-              {
-                  
-                  
-                  
-                  return;
-                  
-              }
-              
-              NSMutableArray* relatedAssets = [GetAssetManager() registerAssetDatasAndReturnAssets:relatedAssetDatas];
-              
-              
-              
-              [_asset mergeWithRelatedAssets:relatedAssets];
-              
-              NSMutableArray *array = [[NSMutableArray alloc]init];
-              [array addObject:_asset];
-              
-              for (id object in relatedAssetDatas) {
-                  
-                  OWTAsset *asset1 = object;
-                  
-                  [array addObject:asset1];
-                  
-              }
-              NSMutableArray *FSArr = [[NSMutableArray alloc]init];
-              
-              NSMutableArray *imagesUrl = [[NSMutableArray alloc]init];
-              
-              for (int i=0; i<array.count; i++) {
-                  
-                  OWTAsset *asset1 = array[i];
-                  
-                  [imagesUrl addObject: asset1.imageInfo.url];
-                  
-                  
-                  
-                  FSBasicImage *firstPhoto = [[FSBasicImage alloc] initWithImageURL:[NSURL URLWithString:asset1.imageInfo.url] name:asset1.caption];
-                  
-                  [FSArr addObject:firstPhoto];
-                  
-                  
-                  
-              }
-              FSBasicImageSource *photoSource = [[FSBasicImageSource alloc] initWithImages:FSArr];
-              
-              self.imageViewController = [[FSImageViewerViewController alloc] initWithImageSource:photoSource imageIndex:0 withViewController:self];
-              
-              //    [self.imageViewController moveToImageAtIndex:0 animated:NO];
-              
-              
-              
-              
-              
-              self.imageViewController.navigationController.navigationBarHidden =YES;
-              
-              if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-                  
-                  [self.navigationController presentViewController:_imageViewController animated:YES completion:nil];
-                  
-              }
-              
-              else {
-                  
-                  [self.navigationController pushViewController:_imageViewController animated:YES];
-                  
-              }
-              
-              
-              
-              
-              
-          }
-     
-          failure:^(RKObjectRequestOperation* o, NSError* error) {
-              
-              [o logResponse];
-              
-              
-              
-          }
-     
-     ];
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    [array addObject:_imageAsset];
+    float imageWith = SCREENWIT;
+    float imagehigh = [_imageAsset.width floatValue]*imageWith/[_imageAsset.height floatValue] ;
+    NSString *adaptUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:_imageAsset.url size:CGSizeMake(imageWith, imagehigh) ];
+    for (id object in _searchResults) {
+        QJImageObject *asset1 = object;
+        [array addObject:asset1];
+    }
+    NSMutableArray *FSArr = [[NSMutableArray alloc]init];
+    for (int i=0; i<array.count; i++) {
+        QJImageObject *asset1 = array[i];
+        FSBasicImage *firstPhoto = [[FSBasicImage alloc] initWithImageURL:[NSURL URLWithString:adaptUrl] name:asset1.captionCn];
+        [FSArr addObject:firstPhoto];
+    }
+    FSBasicImageSource *photoSource = [[FSBasicImageSource alloc] initWithImages:FSArr];
     
-    
+    self.imageViewController = [[FSImageViewerViewController alloc] initWithImageSource:photoSource imageIndex:0 withViewController:self];
+
+    self.imageViewController.navigationController.navigationBarHidden =YES;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        
+        [self.navigationController presentViewController:_imageViewController animated:YES completion:nil];
+    }
+    else {
+        
+        [self.navigationController pushViewController:_imageViewController animated:YES];
+        
+    }
 }
+
+//底部的评论按钮事件
 - (void)postComment:(NSString*)content
             success:(void (^)())success
             failure:(void (^)())failure
@@ -1398,7 +1400,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     
     RKObjectManager* om = [RKObjectManager sharedManager];
     [om postObject:nil
-              path:[NSString stringWithFormat:@"assets1/%@/comments", _asset.assetID]
+              path:[NSString stringWithFormat:@"assets1/%@/comments", _imageAsset.imageId]
         parameters:@{ @"action" : @"addComment",
                       @"content" : content }
            success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
@@ -1434,7 +1436,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                OWTComment* comment = [OWTComment new];
                [comment mergeWithData:commentData];
                
-               [_asset addComment:comment];
+               //[_asset addComment:comment];
                
                [_collectionView reloadData];
                if (success!=nil) {

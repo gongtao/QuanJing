@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "OWaterFlowLayout.h"
+#import "QJImageObject.h"
+
 @class FSImageViewerViewController;
 @interface OWTAssetViewCon : UIViewController<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OWaterFlowLayoutDataSource>
 
@@ -21,5 +23,7 @@
 - (instancetype)initWithAsset:(OWTAsset*)asset
               deletionAllowed:(BOOL)deletionAllowed
                onDeleteAction:(void (^)())onDeleteAction;
--(instancetype)initWithImageId:(NSNumber*)imageId imageType:(NSNumber*)imageType ;
+
+
+-(instancetype)initWithImageId:(QJImageObject*)imageModel imageType:(NSNumber*)imageType ;
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "QJUser.h"
 
 #import "XHRefreshControl.h"
 
@@ -18,6 +18,7 @@
 
 
 @property (nonatomic, strong) OWTUser* user;
+@property (nonatomic, strong) QJUser*  currentUser;
 @property (nonatomic, strong) OWTAssetFlowViewCon* assetViewCon1;
 @property (nonatomic, copy) NSMutableOrderedSet* assets1;
 
