@@ -41,6 +41,14 @@
 		31CB73C519B6CDD20081B05E /* OWTAssetCollectViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CB73BA19B6CDD20081B05E /* OWTAssetCollectViewCon.m */; };
 		31F2E33619D96E310084F18C /* OWTCategoryManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F2E33519D96E310084F18C /* OWTCategoryManager.m */; };
 		31F887971BDCA3EF007E94C8 /* QJAlbumObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887961BDCA3EF007E94C8 /* QJAlbumObject.m */; settings = {ASSET_TAGS = (); }; };
+		31F887C41BDE1231007E94C8 /* QJDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887C31BDE1231007E94C8 /* QJDatabaseManager.m */; settings = {ASSET_TAGS = (); }; };
+		31F887C71BDE1308007E94C8 /* database.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 31F887C51BDE1308007E94C8 /* database.xcdatamodeld */; settings = {ASSET_TAGS = (); }; };
+		31F887D41BDE16F7007E94C8 /* QJAdviseCaption+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887C91BDE16F7007E94C8 /* QJAdviseCaption+CoreDataProperties.m */; settings = {ASSET_TAGS = (); }; };
+		31F887D51BDE16F7007E94C8 /* QJAdviseCaption.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887CB1BDE16F7007E94C8 /* QJAdviseCaption.m */; settings = {ASSET_TAGS = (); }; };
+		31F887D61BDE16F7007E94C8 /* QJSearchWord+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887CD1BDE16F7007E94C8 /* QJSearchWord+CoreDataProperties.m */; settings = {ASSET_TAGS = (); }; };
+		31F887D71BDE16F7007E94C8 /* QJSearchWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887CF1BDE16F7007E94C8 /* QJSearchWord.m */; settings = {ASSET_TAGS = (); }; };
+		31F887D81BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887D11BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.m */; settings = {ASSET_TAGS = (); }; };
+		31F887D91BDE16F7007E94C8 /* QJImageCaption.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887D31BDE16F7007E94C8 /* QJImageCaption.m */; settings = {ASSET_TAGS = (); }; };
 		6603599A1ACBDA1A00435808 /* OWTAssetPagingViewCon.xib in Resources */ = {isa = PBXBuildFile; fileRef = 660359991ACBDA1A00435808 /* OWTAssetPagingViewCon.xib */; };
 		660A10531AB691AB00C3BCA9 /* SvImageInfoEditUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 660A10501AB691AB00C3BCA9 /* SvImageInfoEditUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		660A10541AB691AB00C3BCA9 /* SvImageInfoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 660A10521AB691AB00C3BCA9 /* SvImageInfoUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -921,6 +929,21 @@
 		31F2E33519D96E310084F18C /* OWTCategoryManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OWTCategoryManager.m; path = ../OWTCategoryManager.m; sourceTree = "<group>"; };
 		31F887951BDCA3EF007E94C8 /* QJAlbumObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJAlbumObject.h; sourceTree = "<group>"; };
 		31F887961BDCA3EF007E94C8 /* QJAlbumObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJAlbumObject.m; sourceTree = "<group>"; };
+		31F887C21BDE1231007E94C8 /* QJDatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJDatabaseManager.h; sourceTree = "<group>"; };
+		31F887C31BDE1231007E94C8 /* QJDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJDatabaseManager.m; sourceTree = "<group>"; };
+		31F887C61BDE1308007E94C8 /* database.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = database.xcdatamodel; sourceTree = "<group>"; };
+		31F887C81BDE16F7007E94C8 /* QJAdviseCaption+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QJAdviseCaption+CoreDataProperties.h"; sourceTree = "<group>"; };
+		31F887C91BDE16F7007E94C8 /* QJAdviseCaption+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QJAdviseCaption+CoreDataProperties.m"; sourceTree = "<group>"; };
+		31F887CA1BDE16F7007E94C8 /* QJAdviseCaption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJAdviseCaption.h; sourceTree = "<group>"; };
+		31F887CB1BDE16F7007E94C8 /* QJAdviseCaption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJAdviseCaption.m; sourceTree = "<group>"; };
+		31F887CC1BDE16F7007E94C8 /* QJSearchWord+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QJSearchWord+CoreDataProperties.h"; sourceTree = "<group>"; };
+		31F887CD1BDE16F7007E94C8 /* QJSearchWord+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QJSearchWord+CoreDataProperties.m"; sourceTree = "<group>"; };
+		31F887CE1BDE16F7007E94C8 /* QJSearchWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJSearchWord.h; sourceTree = "<group>"; };
+		31F887CF1BDE16F7007E94C8 /* QJSearchWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJSearchWord.m; sourceTree = "<group>"; };
+		31F887D01BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QJImageCaption+CoreDataProperties.h"; sourceTree = "<group>"; };
+		31F887D11BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QJImageCaption+CoreDataProperties.m"; sourceTree = "<group>"; };
+		31F887D21BDE16F7007E94C8 /* QJImageCaption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJImageCaption.h; sourceTree = "<group>"; };
+		31F887D31BDE16F7007E94C8 /* QJImageCaption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJImageCaption.m; sourceTree = "<group>"; };
 		660359991ACBDA1A00435808 /* OWTAssetPagingViewCon.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OWTAssetPagingViewCon.xib; sourceTree = "<group>"; };
 		660A104F1AB691AB00C3BCA9 /* SvImageInfoEditUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SvImageInfoEditUtils.h; sourceTree = "<group>"; };
 		660A10501AB691AB00C3BCA9 /* SvImageInfoEditUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SvImageInfoEditUtils.m; sourceTree = "<group>"; };
@@ -3325,6 +3348,21 @@
 		A33C2A961B4B725100779337 /* coreData */ = {
 			isa = PBXGroup;
 			children = (
+				31F887C21BDE1231007E94C8 /* QJDatabaseManager.h */,
+				31F887C31BDE1231007E94C8 /* QJDatabaseManager.m */,
+				31F887C51BDE1308007E94C8 /* database.xcdatamodeld */,
+				31F887C81BDE16F7007E94C8 /* QJAdviseCaption+CoreDataProperties.h */,
+				31F887C91BDE16F7007E94C8 /* QJAdviseCaption+CoreDataProperties.m */,
+				31F887CA1BDE16F7007E94C8 /* QJAdviseCaption.h */,
+				31F887CB1BDE16F7007E94C8 /* QJAdviseCaption.m */,
+				31F887CC1BDE16F7007E94C8 /* QJSearchWord+CoreDataProperties.h */,
+				31F887CD1BDE16F7007E94C8 /* QJSearchWord+CoreDataProperties.m */,
+				31F887CE1BDE16F7007E94C8 /* QJSearchWord.h */,
+				31F887CF1BDE16F7007E94C8 /* QJSearchWord.m */,
+				31F887D01BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.h */,
+				31F887D11BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.m */,
+				31F887D21BDE16F7007E94C8 /* QJImageCaption.h */,
+				31F887D31BDE16F7007E94C8 /* QJImageCaption.m */,
 				A3604FCA1B28195D00A68FDA /* LJCoreData.h */,
 				A3604FCB1B28195D00A68FDA /* LJCoreData.m */,
 				A3604FCD1B2819FB00A68FDA /* LJCaption.xcdatamodeld */,
@@ -5420,6 +5458,7 @@
 				A3D604481A81FB7F00609053 /* singleton.m in Sources */,
 				A37CAD211B183D2E00F16955 /* LJAssetEditView.m in Sources */,
 				E0B99BC51B05976000ED7831 /* DXMessageToolBar.m in Sources */,
+				31F887C71BDE1308007E94C8 /* database.xcdatamodeld in Sources */,
 				E0BC01E81B0E1432009D1D20 /* GroupBansViewController.m in Sources */,
 				E0B99BF91B05985400ED7831 /* WCAlertView.m in Sources */,
 				90F1C6AD1905AF2D00C1582A /* OWTUserMeNavCon.m in Sources */,
@@ -5450,6 +5489,7 @@
 				E027FA801B5925860090F04D /* ExcPhotoRecThread.m in Sources */,
 				311BF04819B2E9250046C11D /* OQJCategoryCell.m in Sources */,
 				E0B99B821B05968B00ED7831 /* MWZoomingScrollView.m in Sources */,
+				31F887D81BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.m in Sources */,
 				66D799DB1AD5222F0030AE48 /* FSImageViewerViewController.m in Sources */,
 				A38F4D621A649C1F00FD1912 /* XHCircleView1.m in Sources */,
 				A3B729811BB28B0F001D1C7D /* OWTAssetEditViewCon.m in Sources */,
@@ -5471,6 +5511,7 @@
 				E0B99B351B05959F00ED7831 /* NSDate+Category.m in Sources */,
 				9099854D1904EF7F00A0DD78 /* OWTExploreViewCon.m in Sources */,
 				A3BBA8BA1B71B29F00DB319D /* LJCoreData3.xcdatamodeld in Sources */,
+				31F887D71BDE16F7007E94C8 /* QJSearchWord.m in Sources */,
 				66D799581AD3D90B0030AE48 /* FSPhotoView.m in Sources */,
 				90E241FC195D4C25001F3EF7 /* OWTUserPrivateInfo.m in Sources */,
 				A3C957C61BB0FFAF00EADD73 /* OWTPhotoUploadImageCollectionCell.m in Sources */,
@@ -5688,6 +5729,7 @@
 				A3604FC01B27DEF000A68FDA /* ASIDownloadCache.m in Sources */,
 				90E241ED195D4539001F3EF7 /* OWTCommentData.m in Sources */,
 				31CB73BC19B6CDD20081B05E /* OWTAssetInfoView.m in Sources */,
+				31F887D51BDE16F7007E94C8 /* QJAdviseCaption.m in Sources */,
 				A36C52DE1B60F25900AD8BB3 /* StartViewController.m in Sources */,
 				90956444191D01510088BA48 /* OWTRoundImageView.m in Sources */,
 				E0B99C951B05A1D600ED7831 /* HuanXinManager.m in Sources */,
@@ -5701,6 +5743,7 @@
 				E0127E9F1B41027E00D0E19C /* ChineseToPinyin.m in Sources */,
 				E0B99BB11B0596D400ED7831 /* UIImageView+EMHighlightedWebCache.m in Sources */,
 				9090760119A0405F00F9C81A /* UIButton+HitTestExt.m in Sources */,
+				31F887C41BDE1231007E94C8 /* QJDatabaseManager.m in Sources */,
 				90E2421D195D4C93001F3EF7 /* OWTAlbum.m in Sources */,
 				E0B99BA61B0596D400ED7831 /* EMSDWebImageDecoder.m in Sources */,
 				9027964B195C86B600142201 /* WTDataModel.xcdatamodeld in Sources */,
@@ -5724,6 +5767,7 @@
 				E0B99C981B05A1D600ED7831 /* HXVoiceViewController.m in Sources */,
 				E0B99B7E1B05968B00ED7831 /* MWPhoto.m in Sources */,
 				E0A7D93E1B704872005A569C /* DealErrorPageViewController.m in Sources */,
+				31F887D91BDE16F7007E94C8 /* QJImageCaption.m in Sources */,
 				31CB73C519B6CDD20081B05E /* OWTAssetCollectViewCon.m in Sources */,
 				A35B027C1A67FFCF00C677F4 /* OWTPhotoUploadInfoViewCon.m in Sources */,
 				A33C2A9C1B4B793A00779337 /* LJCaptionss.xcdatamodeld in Sources */,
@@ -5765,12 +5809,14 @@
 				A3604FCF1B2819FB00A68FDA /* LJCaption.xcdatamodeld in Sources */,
 				3131894E19C79D8400C42120 /* OWTAssetInfoViewa.m in Sources */,
 				90D4667F194E596F00A53E3E /* OWTFollowerUsersViewCon.m in Sources */,
+				31F887D61BDE16F7007E94C8 /* QJSearchWord+CoreDataProperties.m in Sources */,
 				A35B02791A67FFCF00C677F4 /* OWTCaptureSourceSelectViewCon.m in Sources */,
 				9049CC84190967FD00945E86 /* OWTFont.m in Sources */,
 				A3FEB05B1B2C170F00422C68 /* LJFavorite.m in Sources */,
 				E0BC01F01B0E1542009D1D20 /* EMRemarkImageView.m in Sources */,
 				A37CACF91B182D9B00F16955 /* LJLike.m in Sources */,
 				900C8A7019609EB200D79C97 /* OWTAlbumItem.m in Sources */,
+				31F887D41BDE16F7007E94C8 /* QJAdviseCaption+CoreDataProperties.m in Sources */,
 				E0127EA01B41027E00D0E19C /* ContactsViewController.m in Sources */,
 				E0B99BD51B05978A00ED7831 /* EMChatTimeCell.m in Sources */,
 				A30542251B8EC01E00A202FD /* LJAssetLikeModel.m in Sources */,
@@ -6246,6 +6292,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
+		31F887C51BDE1308007E94C8 /* database.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				31F887C61BDE1308007E94C8 /* database.xcdatamodel */,
+			);
+			currentVersion = 31F887C61BDE1308007E94C8 /* database.xcdatamodel */;
+			path = database.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		90279649195C86B600142201 /* WTDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (

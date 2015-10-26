@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8195" systemVersion="14F27" minimumToolsVersion="Xcode 7.0">
+    <entity name="QJAdviseCaption" representedClassName="QJAdviseCaption" syncable="YES">
+        <attribute name="caption" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="imageUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="number" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="QJImageCaption" representedClassName="QJImageCaption" syncable="YES">
+        <attribute name="caption" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageUrl" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="isSelfInsert" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+    </entity>
+    <entity name="QJSearchWord" representedClassName="QJSearchWord" syncable="YES">
+        <attribute name="detailed" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="word" attributeType="String" indexed="YES" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="QJSearchWord" positionX="-63" positionY="-18" width="128" height="75"/>
+        <element name="QJImageCaption" positionX="-54" positionY="9" width="128" height="90"/>
+        <element name="QJAdviseCaption" positionX="-36" positionY="36" width="128" height="90"/>
+    </elements>
+</model>
