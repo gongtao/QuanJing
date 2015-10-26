@@ -201,4 +201,57 @@
 	}];
 }
 
+#pragma mark - QJImageCaption
+
+- (QJImageCaption *)setImageCaptionByImageUrl:(NSString *)imageUrl
+	caption:(NSString *)caption
+	isSelfInsert:(BOOL)isSelfInsert
+	context:(NSManagedObjectContext *)context
+{
+	QJImageCaption * object = [self getImageCaptionByUrl:imageUrl context:context];
+	
+	if (!object)
+		object = [NSEntityDescription insertNewObjectForEntityForName:ImageCaption_Entity
+			inManagedObjectContext:context];
+	object.imageUrl = imageUrl;
+	object.caption = caption;
+	object.isSelfInsert = [NSNumber numberWithBool:isSelfInsert];
+	return object;
+}
+
+- (QJImageCaption *)getImageCaptionByUrl:(NSString *)imageUrl context:(NSManagedObjectContext *)context
+{
+	NSFetchRequest * request = [[NSFetchRequest alloc] init];
+	NSEntityDescription * entity = [NSEntityDescription entityForName:ImageCaption_Entity
+		inManagedObjectContext:context];
+		
+	[request setEntity:entity];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", kImageUrl, imageUrl]];
+	
+	NSError * error;
+	NSArray * results = [context executeFetchRequest:request error:&error];
+	
+	if (!error && (results.count > 0))
+		return results[0];
+		
+	return nil;
+}
+
+- (NSArray *)getAllImageCaptions:(NSManagedObjectContext *)context
+{
+	NSFetchRequest * request = [[NSFetchRequest alloc] init];
+	NSEntityDescription * entity = [NSEntityDescription entityForName:ImageCaption_Entity
+		inManagedObjectContext:context];
+		
+	[request setEntity:entity];
+	
+	NSError * error;
+	NSArray * results = [context executeFetchRequest:request error:&error];
+	
+	if (!error && (results.count > 0))
+		return results;
+		
+	return nil;
+}
+
 @end
