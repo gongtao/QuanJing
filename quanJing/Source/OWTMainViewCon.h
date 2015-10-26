@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OWTMainViewCon : UITabBarController<UITabBarControllerDelegate>
+@interface OWTMainViewCon : UITabBarController <UITabBarControllerDelegate>
 
--(void)jumpToChatList;
+- (void)jumpToChatList;
 
 @end

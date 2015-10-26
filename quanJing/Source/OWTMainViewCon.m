@@ -43,6 +43,7 @@
 #import "LJExploreViewController.h"
 #import "LJExploreViewController1.h"
 #import "QuanJingSDK.h"
+#import "QJDatabaseManager.h"
 static const CGFloat kDefaultPlaySoundInterval = 3.0;
 
 @interface OWTMainViewCon () <IChatManagerDelegate>
@@ -217,7 +218,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 			[self showAuthViewCon];
 		else
 			[[NSNotificationCenter defaultCenter]postNotificationName:@"refreshFeed" object:nil];
-			
 	}
 	
 	//
@@ -249,7 +249,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 							[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
 						else
 							[SVProgressHUD showError:error];
-							
 					}
 				}];
 			}
@@ -316,7 +315,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	_userMeNavCon = [[OWTUserMeNavCon alloc] initWithNibName:nil bundle:nil];
 	OWTFont * icon = [OWTFont userIconWithSize:32];
 	icon.drawingPositionAdjustment = UIOffsetMake(0, -2);
-	UIImage * tabBarIcon = [icon imageWithSize:CGSizeMake(32, 32)];
+	//	UIImage * tabBarIcon = [icon imageWithSize:CGSizeMake(32, 32)];
 	
 	_userMeNavCon.navigationBar.translucent = NO;
 }
@@ -330,115 +329,117 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 
 - (void)asigo:(id)obj
 {
+	_array = (NSArray *)obj;
+	NSLog(@"%@", _array);
+	
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+		if (_array.count > 0) {
+			dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+			QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
+			
+			for (NSInteger i = _array.count - 1; i >= 0; i--) {
+				NSDictionary * dict = _array[i];
+				__weak QJDatabaseManager * weakManager = manager;
+				[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * concurrencyContext) {
+					QJImageCaption * model = [weakManager getImageCaptionByUrl:dict[@"imageurl"]
+					context:concurrencyContext];
+					
+					if ((model == nil) || model.isSelfInsert.boolValue)
+						[self getResouceWithImageUrl:dict[@"imageurl"]
+						model:model
+						context:concurrencyContext];
+				}
+				finished:^(NSManagedObjectContext * mainContext) {
+					dispatch_semaphore_signal(sem);
+				}];
+				dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+			}
+		}
+	});
+}
+
+- (void)getResouceWithImageUrl:(NSString *)imageUrl
+	model:(QJImageCaption *)model
+	context:(NSManagedObjectContext *)context
+{
+	// 获取图片缩略图
+	ALAssetsLibrary * assetsLibrary = [[ALAssetsLibrary alloc] init];
+	__block ALAsset * asset = nil;
+	
+	dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+	
+	[assetsLibrary assetForURL:[NSURL URLWithString:imageUrl]
+	resultBlock:^(ALAsset * resultAsset) {
+		asset = resultAsset;
+		dispatch_semaphore_signal(sem);
+	}
+	failureBlock:^(NSError * error) {
+		dispatch_semaphore_signal(sem);
+	}];
+	dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+	
+	if (!asset || ![[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto])
+		return;
+		
+		
+	UIImage * image = [UIImage imageWithCGImage:asset.thumbnail];
+	NSData * data = UIImageJPEGRepresentation(image, 1.0f);
+	NSString * imageurl = [data base64Encoding];
+	
+	// 上传图片获取Tag
+	NSError * error = nil;
+	NSData * mData = [PostFormData bulidPostFormData:imageurl forKey:@"base64"];
+	
 	NSString * strUrl = @"http://api.tiankong.com/qjapi/pictag";
 	NSURL * url = [NSURL URLWithString:strUrl];
 	
 	_request = [NSMutableURLRequest requestWithURL:url];
 	_request.HTTPMethod = @"POST";
 	[_request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-	
-	_array = (NSArray *)obj;
-	NSLog(@"%@", _array);
-	
-	dispatch_queue_t dispatchQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-	dispatch_async(dispatchQueue, ^{
-		if (_array.count > 0)
-			for (NSInteger i = _array.count - 1; i >= 0; i--) {
-				NSDictionary * dict = _array[i];
-				LJCaptionModel * model = [[LJCoreData shareIntance]check:dict[@"imageurl"]];
-				
-				// _isSI=model.isSelfInsert;
-				// _caption=model.caption;
-				if ((model == nil) || [model.isSelfInsert isEqualToString:@"yes"])
-					//                [_lock lock];
-					[self getResouceWithImage:dict[@"image"] withNumber:i];
-					//                [_lock unlock];
-			}
-			
-	});
-}
-
-- (void)getResouceWithImage:(UIImage *)image withNumber:(NSInteger)number
-{
-	NSData * data = UIImageJPEGRepresentation(image, 1.0f);
-	NSString * imageurl = [data base64Encoding];
-	
-	[self ASIHttpRequestWithImageurl:imageurl withNumber:number];
-	data = nil;
-	imageurl = nil;
-}
-
-- (void)ASIHttpRequestWithImageurl:(NSString *)imageurl withNumber:(NSInteger)number
-{
-	NSError * error = nil;
-	NSData * mData = [PostFormData bulidPostFormData:imageurl forKey:@"base64"];
-	
 	_request.HTTPBody = mData;
-	NSURLResponse * reponse = [[NSURLResponse alloc]init];
-	NSData * received = nil;
-	received = [NSURLConnection sendSynchronousRequest:_request returningResponse:&reponse error:&error];
 	
-	if (received != nil)
-		[self requestFinisheda1:received number:number];
+	NSURLResponse * reponse = [[NSURLResponse alloc] init];
+	NSData * received = [NSURLConnection sendSynchronousRequest:_request returningResponse:&reponse error:&error];
+	
+	if (!error && received) {
+		QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
 		
-	imageurl = nil;
-	mData = nil;
-}
-
-- (void)requestFinisheda1:(NSData *)responseData number:(NSInteger)num
-{
-	UIApplication * application = [UIApplication sharedApplication];
-	
-	application.networkActivityIndicatorVisible = YES;
-	NSDictionary * dict2 = _array[num];
-	NSString * imageUrl = dict2[@"imageurl"];
-	NSThread * thread = [NSThread currentThread];
-	
-	if (thread != nil)
-		NSLog(@"main不是主线程下  %@", thread);
+		NSMutableString * caption = [[NSMutableString alloc]init];
+		NSDate * date = [asset valueForProperty:ALAssetPropertyDate];
+		NSString * timeCap = [NSString stringWithFormat:@"%@", date];
 		
-	if (thread.isMainThread)
-		NSLog(@"main主线程下");
-	NSMutableString * caption = [[NSMutableString alloc]init];
-	[_assetsLibrary assetForURL:[NSURL URLWithString:imageUrl] resultBlock:^(ALAsset * asset) {
-		if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
-			NSDate * date = [asset valueForProperty:ALAssetPropertyDate];
-			NSString * timeCap = [NSString stringWithFormat:@"%@", date];
+		if (timeCap.length > 0)
+			[caption appendFormat:@" %@", [self getTheTime:timeCap]];
 			
-			if (timeCap.length > 0)
-				[caption appendFormat:@" %@", [self getTheTime:timeCap]];
-			NSDictionary * dict = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
-			// NSString *str=[[NSString alloc]initWithData:_data encoding:NSUTF8StringEncoding];
-			NSArray * arr = dict[@"scene_understanding"][@"matches"];
-			NSInteger arrayCont = arr.count;
+		NSDictionary * dict = [NSJSONSerialization JSONObjectWithData:received options:NSJSONReadingMutableContainers error:nil];
+		NSArray * arr = dict[@"scene_understanding"][@"matches"];
+		
+		for (NSDictionary * dict1 in arr) {
+			if (dict1 == arr[0])
+				[caption appendString:[NSString stringWithFormat:@" %@ ", dict1[@"tag"]]];
+			else
+				[caption appendString:[NSString stringWithFormat:@"%@ ", dict1[@"tag"]]];
+			BOOL ret = [[LJCoreData2 shareIntance] check2:dict1[@"tag"]];
 			
-			for (NSDictionary * dict1 in arr) {
-				if (dict1 == arr[0])
-					[caption appendString:[NSString stringWithFormat:@" %@ ", dict1[@"tag"]]];
-				else
-					[caption appendString:[NSString stringWithFormat:@"%@ ", dict1[@"tag"]]];
-                BOOL ret = [[LJCoreData2 shareIntance]check2:dict1[@"tag"]];
-				UIImage * image = dict2[@"image"];
-				NSData * data = UIImageJPEGRepresentation(image, 1.0f);
-				
-				if (ret == NO)
-					[[LJCoreData2 shareIntance]insert2:imageUrl withCaption:dict1[@"tag"] with:@"1" withData:data];
-				else
-					[[LJCoreData2 shareIntance]update2:data with:dict1[@"tag"]];
-			}
-			
-			NSLog(@"拿到的 caption：%@", caption);
-			LJCaptionModel * model = [[LJCoreData shareIntance]check:dict[@"imageurl"]];
-			
-			if ([model.isSelfInsert isEqualToString:@"yes"]) {
-				[caption appendString:[NSString stringWithFormat:@" %@", _caption]];
-				[[LJCoreData shareIntance]update:imageUrl with:caption];
-			}
-			else {
-				[[LJCoreData shareIntance]insert:imageUrl withCaption:caption with:@""];
-			}
+			if (ret == NO)
+				[[LJCoreData2 shareIntance] insert2:imageUrl withCaption:dict1[@"tag"] with:@"1" withData:data];
+			else
+				[[LJCoreData2 shareIntance] update2:data with:dict1[@"tag"]];
 		}
-	} failureBlock:^(NSError * error) {}];
+		
+		NSLog(@"拿到的 caption：%@", caption);
+		
+		if (model && model.isSelfInsert) {
+			[caption appendString:[NSString stringWithFormat:@" %@", _caption]];
+			model.caption = caption;
+		}
+		else {
+			[manager setImageCaptionByImageUrl:imageUrl
+			caption:caption
+			isSelfInsert:NO
+			context:context];
+		}
+	}
 }
 
 - (NSString *)getTheTime:(NSString *)date
@@ -503,7 +504,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		usingBlock:^(NSNotification * notification, id observer) {
 		if (!self.isTabBarHidden)
 			[self setTabBarHidden:YES animated:YES];
-			
 	}];
 	
 		[nc addObserver:self
@@ -513,7 +513,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		usingBlock:^(NSNotification * notification, id observer) {
 		if (self.isTabBarHidden)
 			[self setTabBarHidden:YES animated:YES];
-			
 	}];
 #endif
 
@@ -663,7 +662,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 							[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
 						else
 							[SVProgressHUD showError:error];
-							
 					}
 				}];
 				return NO;
@@ -701,7 +699,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 							[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
 						else
 							[SVProgressHUD showError:error];
-							
 					}
 				}];
 				return NO;
