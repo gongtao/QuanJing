@@ -154,6 +154,7 @@
     _comment=[[NSMutableArray alloc]init];
     _likes=[[NSMutableArray alloc]init];
     _heights=[[NSMutableArray alloc]init];
+    _activeList=[[NSMutableArray alloc]init];
     _cuIndex=[[NSNumber alloc]init];
 }
 - (void)setupAddButton
@@ -528,8 +529,8 @@
 }
 -(void)onSendBtn:(UIButton *)sender
 {
-    OWTUser *user=GetUserManager().currentUser;
-    RKObjectManager *um=[RKObjectManager sharedManager];
+    QJUser *user=[QJPassport sharedPassport].currentUser;
+    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
     NSArray *arr=[_textField.text componentsSeparatedByString:@" "];
     BOOL ret=NO;
     for (NSString *str in arr) {
@@ -538,28 +539,24 @@
         }
     }
     if (_textField.text!=nil&&_textField.text.length!=0&&ret) {
-        NSMutableArray *comments=_comment[_pageNum];
-        NSMutableArray *likes=_likes[_pageNum];
-        LJComment *ljcomment=[[LJComment alloc]init];
-        ljcomment.activityId=_activityData.commentid;
-        ljcomment.content=_textField.text;
-        ljcomment.userid=user.userID;
-        if (_replyid.length!=0) {
-            ljcomment.replyuserid=_replyid;
-        }
-        else{
-            ljcomment.replyuserid=@"0";
-        }
-        [comments addObject:ljcomment];
-        [_comment replaceObjectAtIndex:_pageNum withObject:comments];
+        QJActionObject *actionModel=_activeList[_pageNum];
+        NSMutableArray *comments=(NSMutableArray *)actionModel.comments;
+        NSMutableArray *likes=(NSMutableArray *)actionModel.likes;
+        QJCommentObject *commentModel=[[QJCommentObject alloc]init];
+        commentModel.user=user;
+        commentModel.comment=_textField.text;
+        commentModel.time=[NSDate date];
+        [comments addObject:commentModel];
+        actionModel.comments=comments;
+        [_activeList replaceObjectAtIndex:_pageNum withObject:actionModel];
         NSString *str;
         CGFloat imageHeight=(SCREENWIT-100)/9;
         CGFloat x=SCREENWIT-10-imageHeight;
-        if (_replyid.length!=0) {
-            str=[NSString stringWithFormat:@"%@%@%@   ",_replyid,_textField.text,user.userID];
+        if (0) {
+            str=[NSString stringWithFormat:@"%@%@%@   ",_replyid,_textField.text,user.uid];
         }else
         {
-            str=[NSString stringWithFormat:@"%@%@ ",_textField.text,user.userID];
+            str=[NSString stringWithFormat:@"%@%@ ",_textField.text,user.uid];
         }
         CGSize size=[str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(x, 500)];
         NSString *h=_heights[_pageNum];
@@ -581,20 +578,19 @@
         [_heights replaceObjectAtIndex:_pageNum withObject:he];
         [self reloadData:_pageNum];
         
-        if (_replyid.length!=0) {
-            [um postObject:nil path:@"activity/comment" parameters:@{@"Activityid":_activityData.commentid,@"Content":_textField.text,@"Replyuserid":_replyid} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-            }
-                   failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                       
-                   }];
+        if (0) {
+
         }
         else{
-            [um postObject:nil path:@"activity/comment" parameters:@{@"Activityid":_activityData.commentid,@"Content":_textField.text} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-            }
-                   failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                       
-                   }];
-            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError *error= [fm requestCommentAction:actionModel.aid comment:_textField.text];
+                if (error==nil) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                    [self reloadData:_pageNum];
+                    });
+
+                }
+            });
         }}
     [_textField resignFirstResponder];
     _textField.text=nil;
@@ -846,24 +842,24 @@
 
 - (void)loadMoreFeedItems
 {
-    [_feed loadMoreWithSuccess1:^{
-        [self getResourceData];
-        [_tableView reloadData];
-        [_tableView footerEndRefreshing];
-        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_allNum-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-    }
-                        failure:^(NSError* error) {
-                            [_tableView footerEndRefreshing];
-                            if (![NetStatusMonitor isExistenceNetwork]) {
-                                [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-                                return ;
-                            }
-                            else{
-                                [SVProgressHUD showError:error];
-                            }
-                            
-                            
-                        }];
+    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [fm requestActionList:_cuIndex pageSize:30 userId:nil finished:^(NSArray * _Nonnull actionArray, NSArray * _Nonnull resultArray, NSNumber * _Nonnull nextCursorIndex, NSError * _Nonnull error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_tableView footerEndRefreshing];
+                if (error) {
+                    [SVProgressHUD showError:error];
+                }else {
+                    [_activeList addObjectsFromArray:actionArray];
+                    [self getTheCellHeight];
+                    _cuIndex=nextCursorIndex;
+                    [_tableView reloadData];
+                }
+                
+            });
+        }];
+    });
+
 }
 
 
@@ -879,16 +875,20 @@
     QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
     QJPassport *pt=[QJPassport sharedPassport];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [fm requestActionList:nil pageSize:30 userId:pt.currentUser.uid finished:^(NSArray * _Nonnull actionArray, NSArray * _Nonnull resultArray, NSNumber * _Nonnull nextCursorIndex, NSError * _Nonnull error) {
-            [_tableView headerEndRefreshing];
-            if (error) {
-                [SVProgressHUD showError:error];
-            }else {
-                [self getTheCellHeight];
-                _cuIndex=nextCursorIndex;
-                [_activeList addObjectsFromArray:actionArray];
-                [_tableView reloadData];
-            }
+        [fm requestActionList:nil pageSize:30 userId:nil finished:^(NSArray * _Nonnull actionArray, NSArray * _Nonnull resultArray, NSNumber * _Nonnull nextCursorIndex, NSError * _Nonnull error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_tableView headerEndRefreshing];
+                if (error) {
+                    [SVProgressHUD showError:error];
+                }else {
+                    [_activeList removeAllObjects];
+                    [_activeList addObjectsFromArray:actionArray];
+                    [self getTheCellHeight];
+                    _cuIndex=nextCursorIndex;
+                    [_tableView reloadData];
+                }
+
+            });
         }];
     });
 }

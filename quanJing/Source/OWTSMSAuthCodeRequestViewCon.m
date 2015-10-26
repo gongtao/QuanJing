@@ -222,21 +222,22 @@
                 if (error) {
                     return ;
                 }
-                [SVProgressHUD dismiss];
-                OWTUserManager* um = GetUserManager();
-                [um refreshCurrentUserSuccess:^{
-                    if (_successFunc != nil)
-                    {
-                        _successFunc();
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [SVProgressHUD dismiss];
+                    OWTUserManager* um = GetUserManager();
+                    [um refreshCurrentUserSuccess:^{
+                        if (_successFunc != nil)
+                        {
+                            _successFunc();
+                        }
                     }
-                }
-                                      failure:^(NSError* error){
-                                          if (error == nil)
-                                          {
-                                              return;
-                                          }
-                                          
-                                      }];
+                                          failure:^(NSError* error){
+                                              if (error == nil)
+                                              {
+                                                  return;
+                                               }
+                                          }];
+                });
             }];
         });
     }else

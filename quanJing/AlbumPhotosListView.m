@@ -81,7 +81,7 @@
 #import "LJCaptionModel.h"
 #import "captionCell.h"
 #import "OWTTabBarHider.h"
-
+#import "MJRefresh.h"
 @interface OWTUserInfoAlbumSectionHeaderView : UICollectionReusableView
 {
     KHFlatButton* _uploadButton;
@@ -570,6 +570,7 @@
 
 - (void)setupRefreshControl
 {
+    
     _refreshControl = [[XHRefreshControl alloc] initWithScrollView:_collectionView delegate:self];
 }
 
@@ -605,6 +606,10 @@
     _assert = [[NSMutableArray alloc]init];
     _allAsserts=[[NSMutableArray alloc]init];
     dataSource=[NSMutableArray array];
+    [self setUpTableView];
+        }
+-(void)setUpTableView
+{
     CGRect viewFrame=self.view.frame;
     _photoCellSize = (viewFrame.size.width - 30.0) / 3;
     self.maintableview=[[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewFrame.size.width, viewFrame.size.height-120+14) style:UITableViewStylePlain];
@@ -613,6 +618,10 @@
     [self.maintableview setDelegate:self];
     [self.maintableview setDataSource:self];
     [self.view addSubview:self.maintableview];
+    [self.maintableview addHeaderWithTarget:self action:@selector(refresh)];
+    self.maintableview.headerRefreshingText=@"";
+    self.maintableview.headerPullToRefreshText=@"";
+    self.maintableview.headerReleaseToRefreshText=@"";
     _searchBar=[[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 44.0)];
     _searchBar.delegate=self;
     _searchBar.placeholder=@"搜索";
@@ -620,9 +629,8 @@
     [self getImgsWithGroup:assetGroup];
     
     _maintableview.tableHeaderView =_collectionView;
-    
-    _refreshControl = [[XHRefreshControl alloc] initWithScrollView:_maintableview delegate:self];
     [self getCaptionsResouce];
+
 }
 -(void)changeSearchBarBackcolor:(UISearchBar *)mySearchBar
 {
@@ -1327,28 +1335,32 @@
 
 - (void)refresh
 {
-    
-    OWTUserManager* um = GetUserManager();
-    
-    [um refreshPublicInfoForUser:_user
-                         success:^{
-                             [_refreshControl endPullDownRefreshing];
-                             [self loadAlbumsAgain];
-                             [self getImgsWithGroup:_reloadAssetGroup];
-                             [_collectionView reloadData];
-                             
-                         }
-                         failure:^(NSError* error) {
-                             [_refreshControl endPullDownRefreshing];
-                             [_collectionView reloadData];
-                             if (![NetStatusMonitor isExistenceNetwork]) {
-                                 [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-                             }
-                             else{
-                                 [SVProgressHUD showError:error];
-                             }
-                             
-                         }];
+    [self.maintableview headerEndRefreshing];
+                                 [self loadAlbumsAgain];
+                                 [self getImgsWithGroup:_reloadAssetGroup];
+                                 [_collectionView reloadData];
+   
+//    OWTUserManager* um = GetUserManager();
+//    
+//    [um refreshPublicInfoForUser:_user
+//                         success:^{
+//                             [_refreshControl endPullDownRefreshing];
+//                             [self loadAlbumsAgain];
+//                             [self getImgsWithGroup:_reloadAssetGroup];
+//                             [_collectionView reloadData];
+//                             
+//                         }
+//                         failure:^(NSError* error) {
+//                             [_refreshControl endPullDownRefreshing];
+//                             [_collectionView reloadData];
+//                             if (![NetStatusMonitor isExistenceNetwork]) {
+//                                 [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+//                             }
+//                             else{
+//                                 [SVProgressHUD showError:error];
+//                             }
+//                             
+//                         }];
 }
 
 #pragma mark - Collection View Datasource
