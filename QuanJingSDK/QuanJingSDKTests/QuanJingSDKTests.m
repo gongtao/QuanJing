@@ -337,7 +337,7 @@
 					XCTFail(@"testActionExample error: %@", error);
 					
 				if (actionArray && (actionArray.count > 0)) {
-					QJActionObject * actionObject = [actionArray lastObject];
+					QJActionObject * actionObject = [actionArray firstObject];
 					actionId = actionObject.aid;
 				}
 			}];
@@ -347,20 +347,20 @@
 			if (error)
 				XCTFail(@"testActionExample error: %@", error);
 				
-			error = [[QJInterfaceManager sharedManager] requestCancelLikeAction:actionId];
-			
-			if (error)
-				XCTFail(@"testUserExample error: %@", error);
+//			error = [[QJInterfaceManager sharedManager] requestCancelLikeAction:actionId];
+//			
+//			if (error)
+//				XCTFail(@"testUserExample error: %@", error);
 				
 			error = [[QJInterfaceManager sharedManager] requestCollectAction:actionId];
 			
 			if (error)
 				XCTFail(@"testUserExample error: %@", error);
 				
-			error = [[QJInterfaceManager sharedManager] requestCollectCancelAction:actionId];
-			
-			if (error)
-				XCTFail(@"testUserExample error: %@", error);
+//			error = [[QJInterfaceManager sharedManager] requestCollectCancelAction:actionId];
+//			
+//			if (error)
+//				XCTFail(@"testUserExample error: %@", error);
 				
 			error = [[QJInterfaceManager sharedManager] requestCommentAction:actionId comment:@"赞"];
 			
@@ -677,12 +677,12 @@
 					XCTFail(@"testActionExample error: %@", error);
 			}];
 			
-			NSString * url = @"http://b.hiphotos.baidu.com/image/pic/item/faf2b2119313b07e73cdc2690ad7912397dd8c5b.jpg";
+			NSString * url = @"http://f.hiphotos.baidu.com/image/pic/item/2cf5e0fe9925bc3161866ee25ddf8db1ca1370f4.jpg";
 			NSData * imageData1 = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]
 			returningResponse:nil
 			error:nil];
 			
-			url = @"http://a.hiphotos.baidu.com/image/pic/item/1f178a82b9014a90aeefd5dcaf773912b21beefa.jpg";
+			url = @"http://g.hiphotos.baidu.com/image/pic/item/d0c8a786c9177f3e117088eb75cf3bc79e3d568b.jpg";
 			NSData * imageData2 = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]
 			returningResponse:nil
 			error:nil];
@@ -690,10 +690,10 @@
 			dispatch_semaphore_t sem = dispatch_semaphore_create(0);
 			AFHTTPRequestOperationManager * manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://mapp.tiankong.com"]];
 			[manager POST:@"/imageUser/save.user"
-			parameters:@{@"tag": @"美女",
+			parameters:@{@"tag": @"赵丽颖",
 						 @"open": [NSNumber numberWithInt:1],
 						 @"albumId":[NSNumber numberWithLongLong:1178007],
-						 @"title":@"美女"}
+						 @"title":@"赵丽颖"}
 			constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
 				[formData appendPartWithFileData:imageData1
 				name:@"f1"
