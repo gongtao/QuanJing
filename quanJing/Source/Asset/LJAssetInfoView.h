@@ -46,6 +46,6 @@
 @property(nonatomic,strong)OWTAssetViewCon *controller;
 @property (nonatomic, strong)QJCommentObject *localComment;
 
--(void)customViewWithAsset:(QJImageObject *)asset withLikes:(NSArray *)LikeBodys withOpen:(BOOL)isOpen withController:(OWTAssetViewCon*)controller isLikeTrigger:(BOOL)trigger;
+-(void)customViewWithAsset:(QJImageObject *)asset withOpen:(BOOL)isOpen withController:(OWTAssetViewCon*)controller isLikeTrigger:(BOOL)trigger;
 
 @end

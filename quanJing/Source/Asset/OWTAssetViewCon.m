@@ -61,7 +61,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     NSMutableArray *_likeBodys;
     UIImageView *_backView;
     BOOL _isLikeTap;
-    QJCommentObject *_tmpComment;
 }
 
 @property (nonatomic, strong) QJImageObject* imageAsset;
@@ -104,8 +103,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     self = [super initWithNibName:nil bundle:nil];
     if (self)
     {
-        _likeBodys = [[NSMutableArray alloc]init];
-        _users = [[NSMutableArray alloc]init];
         _imageAsset = imageAsset;
         _imageType = imageType;
         _isOpen = NO;
@@ -124,8 +121,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
         _imageAsset = asset;
         _deletionAllowed = deletionAllowed;
         _onDeleteAction = onDeleteAction;
-        _likeBodys=[[NSMutableArray alloc]init];
-        _users=[[NSMutableArray alloc]init];
         _isOpen=NO;
         [self setup];
     }
@@ -255,12 +250,15 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                 return ;
             }
             [SVProgressHUD dismiss];
-            _tmpComment = [[QJCommentObject alloc]init];
-            _tmpComment.user = [QJPassport sharedPassport].currentUser;
-            _tmpComment.comment = _textField.text;
-            _tmpComment.time = [self getDate];
+            QJCommentObject *commentModel=[[QJCommentObject alloc]init];
+            commentModel.comment=_textField.text;
+            commentModel.user=[QJPassport sharedPassport].currentUser;
+            commentModel.time=[self getDate];
+            NSMutableArray *comment=(NSMutableArray *)_imageAsset.comments;
+            [comment addObject:commentModel];
+            _imageAsset.comments=comment;
             [_collectionView reloadData];
-            
+            [self backViewTap];
         });
     });
 }
@@ -277,13 +275,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 #pragma mark keyboardNotification
 - (void)keyboardWillAppear2:(NSNotification *)notification
 {
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:[note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
-//    [UIView setAnimationCurve:[note.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
-//    [UIView setAnimationBeginsFromCurrentState:YES];
-//
-//    [self.view layoutIfNeeded];
-//    [UIView commitAnimations];
     if ([_textField isFirstResponder]) {
     OWTAuthManager* am = GetAuthManager();
     if (!am.isAuthenticated)
@@ -415,11 +406,9 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self getLikesBody];
     _searchResults = [[NSMutableOrderedSet alloc]init];
     [self loadRelatedAssetsInSearch];
-
-
+    [self getAllAssetData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -496,68 +485,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     
 }
 
-- (void)editAsset
-{
-//    LJAssetEditView *ljvc=[[LJAssetEditView alloc]initWithAsset:self.asset deletionAllowed:_deletionAllowed];
-//    OWTAssetEditViewCon* editViewCon = [[OWTAssetEditViewCon alloc] initWithAsset:self.asset deletionAllowed:_deletionAllowed];
-//    ljvc.doneAction = ^(EWTDoneType doneType) {
-//        switch (doneType)
-//        {
-//            case nWTDoneTypeCancelled:
-//                [self dismissViewControllerAnimated:YES completion:nil];
-//                break;
-//            case nWTDoneTypeUpdated:
-//                [self reloadData];
-//                [self dismissViewControllerAnimated:YES completion:nil];
-//                break;
-//            case nWTDoneTypeDeleted:
-//            {
-//                AssertTR(_deletionAllowed);
-//                [self dismissViewControllerAnimated:YES completion:^{
-//                    if (_onDeleteAction != nil)
-//                    {
-//                        _onDeleteAction();
-//                    }
-//                    [self.navigationController popViewControllerAnimated:YES];
-//                }];
-//                break;
-//            }
-//            default:
-//                break;
-//        }
-//    };
-//    editViewCon.doneAction=^(EWTDoneType doneType) {
-//        switch (doneType)
-//        {
-//            case nWTDoneTypeCancelled:
-//                [self dismissViewControllerAnimated:YES completion:nil];
-//                break;
-//            case nWTDoneTypeUpdated:
-//                [self reloadData];
-//                [self dismissViewControllerAnimated:YES completion:nil];
-//                break;
-//            case nWTDoneTypeDeleted:
-//            {
-//                AssertTR(_deletionAllowed);
-//                [self dismissViewControllerAnimated:YES completion:^{
-//                    if (_onDeleteAction != nil)
-//                    {
-//                        _onDeleteAction();
-//                    }
-//                    [self.navigationController popViewControllerAnimated:YES];
-//                }];
-//                break;
-//            }
-//            default:
-//                break;
-//        }
-//    };
-//
-//    UINavigationController* navCon = [[UINavigationController alloc] initWithRootViewController:editViewCon];
-//    UINavigationController *navc=[[UINavigationController alloc]initWithRootViewController:ljvc];
-//    [self presentViewController:navCon animated:YES completion:nil];
-}
-
 #pragma mark - Button Actions 点击赞过的人
 - (void)likeButtonPressed
 {
@@ -590,7 +517,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     }
     else
     {
-        if ([self isLiked:_likeBodys])
+        if ([self isLike:_imageAsset.likes])
         {
             [self markLikedByMe:NO success:nil failure:nil];
         }
@@ -602,13 +529,12 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 }
 
 #pragma -mark 判断对改图片是否已点过赞
--(BOOL)isLiked:(NSArray *)likes
+- (BOOL)isLike:(NSArray *)like
 {
-    for (LJAssetLikeModel *model in likes) {
-        if ([model.userID isEqualToString:GetUserManager().currentUser.userID ]) {
+    for (QJUser * ljlike in like)
+        if ([[QJPassport sharedPassport].currentUser.uid.stringValue isEqualToString:ljlike.uid.stringValue])
             return YES;
-        }
-    }
+    
     return NO;
 }
 - (void)commentButtonPressed
@@ -675,8 +601,10 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                     return ;
                 }
                 _isLikeTap = YES;
-                [self getLikesBody];
-                
+                NSMutableArray *likesArr=(NSMutableArray *)_imageAsset.likes;
+                [likesArr addObject:[QJPassport sharedPassport].currentUser];
+                _imageAsset.likes=likesArr;
+                [_collectionView reloadData];
                 [SVProgressHUD dismiss];
             });
         });
@@ -696,7 +624,17 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                     return ;
                 }
                 _isLikeTap = YES;
-                [self getLikesBody];
+                NSMutableArray *likesArr=(NSMutableArray *)_imageAsset.likes;
+                int i=0;
+                for (QJUser *user in likesArr) {
+                    if ([user.uid.stringValue isEqualToString:[QJPassport sharedPassport].currentUser.uid.stringValue]) {
+                        break;
+                    }
+                    i++;
+                }
+                [likesArr removeObjectAtIndex:i];
+                _imageAsset.likes=likesArr;
+                [_collectionView reloadData];
                 [SVProgressHUD dismiss];
             });
         });
@@ -704,170 +642,22 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     }
     
     
-//    NSString* action = liked ? @"like" : @"unlike";
-//
-//    RKObjectManager* om = [RKObjectManager sharedManager];
-//    [om postObject:nil
-//              path:[NSString stringWithFormat:@"assets1/%@/likes", _imageAsset.imageId]
-//        parameters:@{ @"action" : action }
-//           success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
-//               [o logResponse];
-//               
-//               NSDictionary* resultObjects = result.dictionary;
-//               OWTServerError* error = resultObjects[@"error"];
-//               if (error != nil)
-//               {
-//                   if (![NetStatusMonitor isExistenceNetwork]) {
-//                       [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-//                   }else{
-//                       [SVProgressHUD showServerError:error];
-//                   }
-//                   if (failure != nil)
-//                   {
-//                       failure();
-//                   }
-//                   return;
-//               }
-//               
-//               OWTUser* currentUser = GetUserManager().currentUser;
-//               
-//               
-//               if (liked)
-//               {
-//                   //[_asset markLikedByUser:currentUser.userID];
-//                   currentUser.assetsInfo.likedAssetNum = currentUser.assetsInfo.likedAssetNum + 1;
-//                   currentUser.assetsInfo.likedAssets = nil;
-//               }
-//               else
-//               {
-//                   //[_asset markUnlikedByUser:currentUser.userID];
-//                   currentUser.assetsInfo.likedAssetNum = currentUser.assetsInfo.likedAssetNum - 1;
-//                   if (currentUser.assetsInfo.likedAssetNum < 0)
-//                   {
-//                       currentUser.assetsInfo.likedAssetNum = 0;
-//                   }
-//                   currentUser.assetsInfo.likedAssets = nil;
-//               }
-//               
-//               [self getLikesBody];
-//               
-//               [SVProgressHUD dismiss];
-//               
-//               if (success != nil)
-//               {
-//                   success();
-//               }
-//           }
-//           failure:^(RKObjectRequestOperation* o, NSError* error) {
-//               [o logResponse];
-//               if (![NetStatusMonitor isExistenceNetwork]) {
-//                   [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-//               }else{
-//                   [SVProgressHUD showError:error];
-//               }
-//               
-//               if (failure != nil)
-//               {
-//                   failure();
-//               }
-//           }
-//     ];
 }
 
 #pragma mark - Data Reloading
 -(void)getAllAssetData
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    [[QJInterfaceManager sharedManager]requestImageDetail:_imageId imageType:_imageType finished:^(QJImageObject * _Nonnull imageObject, NSError * _Nonnull error) {
-        
+    [[QJInterfaceManager sharedManager]requestImageDetail:_imageAsset.imageId imageType:_imageType finished:^(QJImageObject * _Nonnull imageObject, NSError * _Nonnull error) {
+        if (error ==nil) {
+            _imageAsset=imageObject;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_collectionView reloadData];
+            });
+        }
+    
     }];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-    });
 });
-}
--(void)getCommentBody
-{
-//        if (_asset == nil)
-//        {
-//            return;
-//        }
-//        RKObjectManager* om = [RKObjectManager sharedManager];
-//        [om getObject:nil
-//                 path:[NSString stringWithFormat:@"assets1/%@/comments", _asset.assetID]
-//           parameters:nil
-//              success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
-//                  [o logResponse];
-//                  
-//                  NSDictionary* resultObjects = result.dictionary;
-//                  OWTServerError* error = resultObjects[@"error"];
-//                  if (error != nil)
-//                  {
-//                      [SVProgressHUD showServerError:error];
-//                      return;
-//                  }
-//                  NSArray* commentDatas = resultObjects[@"comments"];
-//                  if (commentDatas == nil)
-//                  {
-////                      [SVProgressHUD showGeneralError];
-//                      return;
-//                  }
-//                  OWTUserManager *um=GetUserManager();
-//                  for (OWTUserData *user in  resultObjects[@"users"]) {
-//                      [um registerUserData:user];
-//                  }
-//                  _asset.comments = [NSMutableArray arrayWithCapacity:commentDatas.count];
-//                  for (OWTCommentData* commentData in commentDatas)
-//                  {
-//                      OWTComment* comment = [OWTComment new];
-//                      [comment mergeWithData:commentData];
-//                      [_asset.comments addObject:comment];
-//                  }
-//                  [_collectionView reloadData];
-//                  [SVProgressHUD dismiss];
-//              }
-//              failure:^(RKObjectRequestOperation* o, NSError* error) {
-//                  [o logResponse];
-//                  if (![NetStatusMonitor isExistenceNetwork]) {
-//                      [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-//                      return ;
-//                  }
-//                  [SVProgressHUD showError:error];
-//              }
-//         ];
-}
--(void)getLikesBody
-{
-    NSArray *allLikes = _imageAsset.likes;
-    for (QJUser *user in allLikes) {
-        LJAssetLikeModel *model=[[LJAssetLikeModel alloc]init];
-        model.url = user.avatar;
-        model.nickname = user.nickName;
-        model.userID = [user.uid stringValue];
-        [_likeBodys addObject:model];
-    }
-    [_collectionView reloadData];
-}
-
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    [SVProgressHUD showErrorWithStatus:@"网络不好"];
-}
--(void)requestFinished:(ASIHTTPRequest *)request
-{
-    [_likeBodys removeAllObjects];
-    NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
-    for (NSDictionary *dict1 in dict[@"assteuser"][@"relatedUsers"]) {
-        LJAssetLikeModel *model=[[LJAssetLikeModel alloc]init];
-        model.smallURL=dict1[@"avatarImageInfo"][@"smallURL"];
-        model.url=dict1[@"avatarImageInfo"][@"url"];
-        model.nickname=dict1[@"nickname"];
-        model.Signature=dict1[@"Signature"];
-        model.userID=dict1[@"userID"];
-        [_likeBodys addObject:model];
-    }
-    [_collectionView reloadData];
-
 }
 - (void)reloadData
 {
@@ -877,7 +667,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)updateLikeButton
 {
-    if ([self isLiked:_likeBodys])
+    if ([self isLike:_likeBodys])
     {
 //        [_likeButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
 //        [_likeButton setTintColor:[UIColor redColor]];
@@ -979,8 +769,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                     [view removeFromSuperview];
                 }
             }
-            [assetInfoViewa customViewWithAsset:_imageAsset withLikes:_likeBodys withOpen:_isOpen withController:self isLikeTrigger:_isLikeTap];
-            assetInfoViewa.localComment = _tmpComment;
+            [assetInfoViewa customViewWithAsset:_imageAsset  withOpen:_isOpen withController:self isLikeTrigger:_isLikeTap];
             _isLikeTap = _isLikeTap?NO:NO;
             assetInfoViewa.canClick=YES;
             __weak OWTAssetViewCon* wself = self;
@@ -1191,7 +980,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (CGFloat)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout heightForHeaderInSection:(NSInteger)section
 {
-    NSArray *LikeBodys=_likeBodys;
+    NSArray *LikeBodys=_imageAsset.likes;
     if (section == 0)
     {
             CGFloat viewHeight=0;
@@ -1213,8 +1002,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
         if (LikeBodys.count!=0) {
             CGFloat likeWidth=45;
             CGFloat likeheight=0;
-            for (NSInteger i=0;i<LikeBodys.count;i++) {
-                LJAssetLikeModel *model=LikeBodys[i];
+            for (NSInteger i=0;i<LikeBodys.count;i++){
                 if (likeWidth+imageHeight+5>SCREENWIT-25) {
                     likeWidth=45;
                     likeHeight+=(imageHeight+5);
@@ -1232,14 +1020,16 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                 viewHeight+=20;
                             }
             for (NSInteger i=0;i<comment.count;i++) {
-                OWTComment *commentModel=comment[i];
-                OWTUser* user = [GetUserManager() userForID:commentModel.userID];;
-                NSString *name=user.nickname;
-                NSString *commentContent=[NSString stringWithFormat:@"%@",commentModel.content];
+                QJCommentObject *commentModel=comment[i];
+                NSString *name;
+                if (commentModel.user.nickName) {
+                    name=commentModel.user.nickName;
+                }
+                else{
+                name=@"小熊";
+                }
+                NSString *commentContent=[NSString stringWithFormat:@"%@",commentModel.comment];
                 NSString *commentText=[NSString stringWithFormat:@"%@:%@",name,commentContent];
-                NSMutableAttributedString *attString=[[NSMutableAttributedString alloc]initWithString:commentText];
-                NSRange range1=[commentText rangeOfString:name];
-
                 CGSize size2=[commentText sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT-75-imageHeight, 500)];
                 if (size2.height>imageHeight) {
                     commentHeight=commentHeight+size2.height+5;

@@ -226,9 +226,9 @@
     return preferredLang;
 }
 
--(void)customViewWithAsset:(QJImageObject *)asset withLikes:(NSArray *)LikeBodys withOpen:(BOOL)isOpen withController:(OWTAssetViewCon *)controller isLikeTrigger:(BOOL)trigger
+-(void)customViewWithAsset:(QJImageObject *)asset  withOpen:(BOOL)isOpen withController:(OWTAssetViewCon *)controller isLikeTrigger:(BOOL)trigger
 {
-    _likes=LikeBodys;
+    _likes=asset.likes;
     _controller=controller;
     _asset=asset;
     _taptrigger = trigger;
@@ -271,7 +271,7 @@
     //四个按钮定制
     
     _shareButton.frame=CGRectMake(SCREENWIT-60, viewHeight+5,45, 17.5);
-    if ([self isLiked:LikeBodys]) {
+    if ([self isLiked:_likes]) {
     [_likeButton setBackgroundImage:[UIImage imageNamed:@"赞01"] forState:UIControlStateNormal];
     }
     else
@@ -287,13 +287,13 @@
     CGFloat likeHeight=0;
     CGFloat imageHeight=20;
     _heartView.hidden=YES;
-    if (LikeBodys.count!=0) {
+    if (_likes.count!=0) {
         _heartView.hidden=NO;
         _heartView.frame=CGRectMake(25, viewHeight+4, 12, 12);
         CGFloat likeWidth=45;
         CGFloat likeheight=0;
-        for (NSInteger i=0;i<LikeBodys.count;i++) {
-            LJAssetLikeModel *model=LikeBodys[i];
+        for (NSInteger i=0;i<_likes.count;i++) {
+            QJUser *modelUser=_likes[i];
             if (likeWidth+imageHeight+5>SCREENWIT-25) {
                 likeWidth=45;
                 likeHeight+=(imageHeight+5);
@@ -302,7 +302,7 @@
             //            likebody.clipsToBounds=YES;
             //            likebody.contentMode=UIViewContentModeCenter;
             
-            [likebody setImageWithURL:[NSURL URLWithString:model.url]placeholderImage:[UIImage imageNamed:@"头像.png"]];
+            [likebody setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:modelUser.avatar size:likebody.bounds.size]]placeholderImage:[UIImage imageNamed:@"头像.png"]];
             UITapGestureRecognizer *liketap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onLikeTap:)];
             likebody.userInteractionEnabled=YES;
             likebody.tag=700+i;
@@ -389,8 +389,8 @@
 {
     QJUser *currentUser = [QJPassport sharedPassport].currentUser;
 
-    for (LJAssetLikeModel *model in likes) {
-        if ([model.userID isEqualToString:[currentUser.uid stringValue]]) {
+    for (QJUser *user in likes) {
+        if ([user.uid.stringValue isEqualToString:[currentUser.uid stringValue]]) {
             return YES;
         }
     }

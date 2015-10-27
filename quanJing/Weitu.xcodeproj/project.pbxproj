@@ -273,6 +273,7 @@
 		A3604FCC1B28195D00A68FDA /* LJCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = A3604FCB1B28195D00A68FDA /* LJCoreData.m */; };
 		A3604FCF1B2819FB00A68FDA /* LJCaption.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A3604FCD1B2819FB00A68FDA /* LJCaption.xcdatamodeld */; };
 		A3604FD21B281A4400A68FDA /* LJCaptionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3604FD11B281A4400A68FDA /* LJCaptionModel.m */; };
+		A365952F1BDF0896005A714F /* 5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A365952E1BDF0896005A714F /* 5@2x.png */; settings = {ASSET_TAGS = (); }; };
 		A36A0CB31B68B6DB00F720C1 /* UMSocialLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A36A0C991B68B6DB00F720C1 /* UMSocialLocalizable.strings */; };
 		A36A0CB41B68B6DB00F720C1 /* libUMSocial_Sdk_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A36A0CA71B68B6DB00F720C1 /* libUMSocial_Sdk_4.2.3.a */; };
 		A36A0CB51B68B6DB00F720C1 /* UMSCommentDetailController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A36A0CA91B68B6DB00F720C1 /* UMSCommentDetailController.xib */; };
@@ -1361,6 +1362,7 @@
 		A3604FCE1B2819FB00A68FDA /* LJCaption.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LJCaption.xcdatamodel; sourceTree = "<group>"; };
 		A3604FD01B281A4400A68FDA /* LJCaptionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJCaptionModel.h; sourceTree = "<group>"; };
 		A3604FD11B281A4400A68FDA /* LJCaptionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJCaptionModel.m; sourceTree = "<group>"; };
+		A365952E1BDF0896005A714F /* 5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "5@2x.png"; sourceTree = "<group>"; };
 		A36A0C9A1B68B6DB00F720C1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/UMSocialLocalizable.strings; sourceTree = "<group>"; };
 		A36A0C9C1B68B6DB00F720C1 /* UMSocial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSocial.h; sourceTree = "<group>"; };
 		A36A0C9D1B68B6DB00F720C1 /* UMSocialAccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSocialAccountManager.h; sourceTree = "<group>"; };
@@ -3729,6 +3731,7 @@
 			isa = PBXGroup;
 			children = (
 				A309F37A1BDE1C31003EB0B1 /* 5@3x.png */,
+				A365952E1BDF0896005A714F /* 5@2x.png */,
 				A3C957EE1BB14DFF00EADD73 /* 我背景.jpg */,
 				A3C957E01BB128F600EADD73 /* 设置.png */,
 				A3C957DA1BB11CDE00EADD73 /* 我的页面搜索icon.png */,
@@ -5153,6 +5156,7 @@
 				E01391451B0C3EA500051B78 /* VoiceSearchFeedback018.png in Resources */,
 				E01391661B0C3EA500051B78 /* group_invitee_delete@2x.png in Resources */,
 				E09544521BC92F95000D5C26 /* 启动2-3.png in Resources */,
+				A365952F1BDF0896005A714F /* 5@2x.png in Resources */,
 				9013C44D1952CA8A00D19FFD /* OWTSMSContactTableViewCell.xib in Resources */,
 				E01391391B0C3EA500051B78 /* VoiceSearchFeedback012.png in Resources */,
 				A3D4CFF41BB24F0E008482FD /* 下载图标0.png in Resources */,
