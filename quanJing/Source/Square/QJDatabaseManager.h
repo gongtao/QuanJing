@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedManager;
 
-- (BOOL)saveContext:(NSManagedObjectContext *)context;
+- (BOOL)saveContext:(nullable NSManagedObjectContext *)context;
 
 - (BOOL)saveContext;
 
@@ -37,35 +37,36 @@ NS_ASSUME_NONNULL_BEGIN
 - (QJImageCaption *)setImageCaptionByImageUrl:(NSString *)imageUrl
 	caption:(nullable NSString *)caption
 	isSelfInsert:(BOOL)isSelfInsert
-	context:(NSManagedObjectContext *)context;
+	context:(nullable NSManagedObjectContext *)context;
 	
 - (QJImageCaption *)getImageCaptionByUrl:(NSString *)imageUrl
-	context:(NSManagedObjectContext *)context;
+	context:(nullable NSManagedObjectContext *)context;
 	
-- (NSArray *)getAllImageCaptions:(NSManagedObjectContext *)context;
+- (NSArray *)getAllImageCaptions:(nullable NSManagedObjectContext *)context;
 
 // QJImageCaption
 - (QJAdviseCaption *)setAdviseCaptionByImageUrl:(NSString *)imageUrl
 	caption:(nullable NSString *)caption
 	number:(nullable NSNumber *)number
-	context:(NSManagedObjectContext *)context;
+	context:(nullable NSManagedObjectContext *)context;
 	
 - (QJAdviseCaption *)getAdviseCaptionByUrl:(NSString *)imageUrl
-	context:(NSManagedObjectContext *)context;
+	context:(nullable NSManagedObjectContext *)context;
 	
-- (NSArray *)getAdviseCaptionsByCaption:(NSString *)caption context:(NSManagedObjectContext *)context;
-
-- (NSArray *)getAllAdviseCaptions:(NSManagedObjectContext *)context;
+- (NSArray *)getAdviseCaptionsByCaption:(NSString *)caption
+	context:(nullable NSManagedObjectContext *)context;
+	
+- (NSArray *)getAllAdviseCaptions:(nullable NSManagedObjectContext *)context;
 
 // QJSearchWord
 - (QJSearchWord *)setSearchWordByWord:(NSString *)word
 	detailed:(NSString *)detailed
-	context:(NSManagedObjectContext *)context;
+	context:(nullable NSManagedObjectContext *)context;
 	
 - (QJSearchWord *)getSearchWordByWord:(NSString *)word
-	context:(NSManagedObjectContext *)context;
+	context:(nullable NSManagedObjectContext *)context;
 	
-- (NSArray *)getAllSearchWords:(NSManagedObjectContext *)context;
+- (NSArray *)getAllSearchWords:(nullable NSManagedObjectContext *)context;
 
 @end
 

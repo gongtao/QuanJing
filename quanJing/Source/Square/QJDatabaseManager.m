@@ -51,6 +51,9 @@
 
 - (BOOL)saveContext:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	__block BOOL result = YES;
 	NSError * error;
 	
@@ -94,7 +97,7 @@
 
 - (BOOL)saveContext
 {
-	return [self saveContext:self.managedObjectContext];
+	return [self saveContext:nil];
 }
 
 #pragma mark - Property
@@ -208,6 +211,9 @@
 	isSelfInsert:(BOOL)isSelfInsert
 	context:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	QJImageCaption * object = [self getImageCaptionByUrl:imageUrl context:context];
 	
 	if (!object)
@@ -221,6 +227,9 @@
 
 - (QJImageCaption *)getImageCaptionByUrl:(NSString *)imageUrl context:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	NSFetchRequest * request = [[NSFetchRequest alloc] init];
 	NSEntityDescription * entity = [NSEntityDescription entityForName:ImageCaption_Entity
 		inManagedObjectContext:context];
@@ -239,6 +248,9 @@
 
 - (NSArray *)getAllImageCaptions:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	NSFetchRequest * request = [[NSFetchRequest alloc] init];
 	NSEntityDescription * entity = [NSEntityDescription entityForName:ImageCaption_Entity
 		inManagedObjectContext:context];
@@ -261,6 +273,9 @@
 	number:(NSNumber *)number
 	context:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	QJAdviseCaption * object = [self getAdviseCaptionByUrl:imageUrl context:context];
 	
 	if (!object)
@@ -275,6 +290,9 @@
 - (QJAdviseCaption *)getAdviseCaptionByUrl:(NSString *)imageUrl
 	context:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	NSFetchRequest * request = [[NSFetchRequest alloc] init];
 	NSEntityDescription * entity = [NSEntityDescription entityForName:AdviseCaption_Entity
 		inManagedObjectContext:context];
@@ -293,6 +311,9 @@
 
 - (NSArray *)getAdviseCaptionsByCaption:(NSString *)caption context:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	NSFetchRequest * request = [[NSFetchRequest alloc] init];
 	NSEntityDescription * entity = [NSEntityDescription entityForName:AdviseCaption_Entity
 		inManagedObjectContext:context];
@@ -311,6 +332,9 @@
 
 - (NSArray *)getAllAdviseCaptions:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	NSFetchRequest * request = [[NSFetchRequest alloc] init];
 	NSEntityDescription * entity = [NSEntityDescription entityForName:AdviseCaption_Entity
 		inManagedObjectContext:context];
@@ -332,6 +356,9 @@
 	detailed:(NSString *)detailed
 	context:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	QJSearchWord * object = [self getSearchWordByWord:word context:context];
 	
 	if (!object)
@@ -345,6 +372,9 @@
 - (QJSearchWord *)getSearchWordByWord:(NSString *)word
 	context:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	NSFetchRequest * request = [[NSFetchRequest alloc] init];
 	NSEntityDescription * entity = [NSEntityDescription entityForName:SearchWord_Entity
 		inManagedObjectContext:context];
@@ -363,6 +393,9 @@
 
 - (NSArray *)getAllSearchWords:(NSManagedObjectContext *)context
 {
+	if (!context)
+		context = self.managedObjectContext;
+		
 	NSFetchRequest * request = [[NSFetchRequest alloc] init];
 	NSEntityDescription * entity = [NSEntityDescription entityForName:SearchWord_Entity
 		inManagedObjectContext:context];
