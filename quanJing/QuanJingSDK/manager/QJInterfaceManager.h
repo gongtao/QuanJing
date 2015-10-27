@@ -132,6 +132,7 @@ NS_ASSUME_NONNULL_BEGIN
 	
 // 用户上传头像的临时文件
 - (void)requestUserAvatarTempData:(NSData *)imageData
+	extension:(nullable NSString *)extension
 	finished:(nullable void (^)(NSString * imageUrl, NSDictionary * imageDic, NSError * error))finished;
 	
 @end

@@ -1421,6 +1421,7 @@
 #pragma mark - 用户上传图片
 
 - (void)requestUserAvatarTempData:(NSData *)imageData
+	extension:(nullable NSString *)extension
 	finished:(nullable void (^)(NSString * imageUrl, NSDictionary * imageDic, NSError * error))finished
 {
 	NSParameterAssert(imageData);
@@ -1438,7 +1439,7 @@
 			parameters:nil constructingBodyWithBlock:^(id < AFMultipartFormData > formData) {
 			[formData appendPartWithFileData:imageData
 			name:@"f1"
-			fileName:@"upload1.jpg"
+			fileName:[NSString stringWithFormat:@"upload1.%@", extension]
 			mimeType:@"application/octet-stream"];
 		}];
 		AFHTTPRequestOperation * operation = [self.httpRequestManager HTTPRequestOperationWithRequest:request
