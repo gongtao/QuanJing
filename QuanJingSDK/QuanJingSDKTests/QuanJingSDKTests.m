@@ -468,6 +468,7 @@
 			[[QJInterfaceManager sharedManager] requestUserImageList:nil
 			pageNum:1
 			pageSize:20
+			currentImageId:nil
 			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testUserImageListExample error: %@", error);
