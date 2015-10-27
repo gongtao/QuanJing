@@ -35,7 +35,7 @@
 	static dispatch_once_t predicate;
 	
 	dispatch_once(&predicate, ^{
-		sharedManagerInstance = [[QJDatabaseManager alloc] init];
+        sharedManagerInstance = [[QJDatabaseManager alloc] init];
 	});
 	
 	return sharedManagerInstance;
@@ -51,7 +51,12 @@
 
 - (void)databaseInitialize
 {
-	[self managedObjectContext];
+    NSPersistentStoreCoordinator * coordinator = [self persistentStoreCoordinator];
+    
+    if (coordinator != nil) {
+        _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+    }
 }
 
 - (BOOL)saveContext:(NSManagedObjectContext *)context
@@ -111,15 +116,6 @@
 // If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
 - (NSManagedObjectContext *)managedObjectContext
 {
-	if (_managedObjectContext != nil)
-		return _managedObjectContext;
-		
-	NSPersistentStoreCoordinator * coordinator = [self persistentStoreCoordinator];
-	
-	if (coordinator != nil) {
-		_managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-		[_managedObjectContext setPersistentStoreCoordinator:coordinator];
-	}
 	return _managedObjectContext;
 }
 
