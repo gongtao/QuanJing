@@ -465,6 +465,14 @@
 			
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
+			[[QJInterfaceManager sharedManager] requestUserLikeImageList:nil
+			pageNum:1
+			pageSize:20
+			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserImageListExample error: %@", error);
+			}];
+			
 			[[QJInterfaceManager sharedManager] requestUserCollectImageList:1
 			pageSize:20
 			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
@@ -557,6 +565,11 @@
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
 			NSNumber * careUserId = [NSNumber numberWithLongLong:966487];
+			[[QJPassport sharedPassport] requestOtherUserInfo:careUserId
+			finished:^(QJUser * user, NSDictionary * userDic, NSError * error) {
+				if (error)
+					XCTFail(@"testUserExample error: %@", error);
+			}];
 			
 			[[QJPassport sharedPassport] requestUserFollowList:careUserId
 			pageNum:1
@@ -633,8 +646,8 @@
 			[manager POST:@"/imageUser/save.user"
 			parameters:@{@"tag": @"美女",
 						 @"open": [NSNumber numberWithInt:1],
-                         @"albumId":[NSNumber numberWithLongLong:1178007],
-                         @"title":@"美女"}
+						 @"albumId":[NSNumber numberWithLongLong:1178007],
+						 @"title":@"美女"}
 			constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
 				[formData appendPartWithFileData:imageData1
 				name:@"f1"

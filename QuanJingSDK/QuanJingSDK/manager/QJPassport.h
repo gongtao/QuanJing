@@ -53,6 +53,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 用户信息查询
 - (void)requestUserInfo:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished;
 
+// 其他用户信息查询
+- (void)requestOtherUserInfo:(NSNumber *)userId
+	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished;
+	
 // 用户信息修改
 - (void)requestModifyUserInfo:(QJUser *)user
 	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished;

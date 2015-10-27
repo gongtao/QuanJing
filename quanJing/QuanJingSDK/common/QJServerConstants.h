@@ -35,6 +35,9 @@ static NSString * const kQJUserLoginSMSPath = @"/user/smsLogin";
 // 用户信息
 static NSString * const kQJUserInfoPath = @"/user/info.user";
 
+// 其他用户信息
+static NSString * const kQJOtherUserInfoPath = @"/user/info/%@";
+
 // 修改用户信息
 static NSString * const kQJUserInfoModifyPath = @"/user/update.user";
 
@@ -97,6 +100,9 @@ static NSString * const kQJUserCollectListPath = @"/userCollect/list.user";
 
 // 用户评论列表
 static NSString * const kQJUserCommentImageListPath = @"/imageComment/list.user";
+
+// 用户喜欢图片列表
+static NSString * const kQJUserLikeImageListPath = @"/imageLike/list";
 
 // 用户关注列表
 static NSString * const kQJUserFollowListPath = @"/userFollow/list";

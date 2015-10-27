@@ -106,6 +106,12 @@ NS_ASSUME_NONNULL_BEGIN
 	pageSize:(NSUInteger)pageSize
 	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
 	
+// 用户喜欢图片列表
+- (void)requestUserLikeImageList:(nullable NSNumber *)userId
+	pageNum:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
+	
 // 关注用户的图片列表
 - (void)requestUserFollowUserImageList:(NSNumber *)userId
 	pageNum:(NSUInteger)pageNum

@@ -408,6 +408,54 @@
 		finished(self.currentUser, nil, error);
 }
 
+// 其他用户信息查询
+- (void)requestOtherUserInfo:(NSNumber *)userId
+	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished
+{
+	NSParameterAssert(userId);
+	
+	NSString * url = [NSString stringWithFormat:kQJOtherUserInfoPath, userId];
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	NSError * error = nil;
+	AFHTTPRequestOperation * operation = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		operation = [self.httpRequestManager GET:url
+			parameters:nil
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			dispatch_semaphore_signal(sem);
+		}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		error = [QJUtils errorFromOperation:operation];
+		i--;
+	} while (error && i >= 0);
+	
+	NSLog(@"%@", operation.request.URL);
+	
+	if (!error) {
+		NSLog(@"%@", operation.responseObject);
+		NSDictionary * dataDic = operation.responseObject[@"data"];
+		
+		if (self.currentUser)
+			[self.currentUser setPropertiesFromJson:dataDic];
+		else
+			self.currentUser = [[QJUser alloc] initWithJson:dataDic];
+			
+		if (finished)
+			finished(self.currentUser, dataDic, error);
+		return;
+	}
+	
+	if (finished)
+		finished(self.currentUser, nil, error);
+}
+
 - (void)requestModifyUserInfo:(QJUser *)user
 	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished
 {

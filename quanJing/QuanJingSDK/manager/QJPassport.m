@@ -432,6 +432,58 @@
 		finished(self.currentUser, nil, error);
 }
 
+// 其他用户信息查询
+- (void)requestOtherUserInfo:(NSNumber *)userId
+	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished
+{
+	NSParameterAssert(userId);
+	
+	NSString * url = [NSString stringWithFormat:kQJOtherUserInfoPath, userId];
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:url
+		parameters:nil
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+	} while (error && i >= 0);
+	
+	if (!error) {
+		NSLog(@"%@", responseObject);
+		NSDictionary * dataDic = responseObject[@"data"];
+		
+		if (self.currentUser)
+			[self.currentUser setPropertiesFromJson:dataDic];
+		else
+			self.currentUser = [[QJUser alloc] initWithJson:dataDic];
+			
+		if (finished)
+			finished(self.currentUser, dataDic, error);
+		return;
+	}
+	
+	if (finished)
+		finished(self.currentUser, nil, error);
+}
+
 - (void)requestModifyUserInfo:(QJUser *)user
 	finished:(nullable void (^)(QJUser * user, NSDictionary * userDic, NSError * error))finished
 {
