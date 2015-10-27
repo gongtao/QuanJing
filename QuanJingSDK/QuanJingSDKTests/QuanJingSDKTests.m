@@ -465,6 +465,14 @@
 			
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
+			[[QJInterfaceManager sharedManager] requestUserImageList:nil
+			pageNum:1
+			pageSize:20
+			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserImageListExample error: %@", error);
+			}];
+			
 			[[QJInterfaceManager sharedManager] requestUserLikeImageList:nil
 			pageNum:1
 			pageSize:20
@@ -610,6 +618,43 @@
 		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
 			if (error)
 				XCTFail(@"testUserImageListExample error: %@", error);
+		}];
+	}];
+}
+
+#pragma mark - 上传用户头像
+
+- (void)testSendAvatarExample
+{
+	// This is an example of a functional test case.
+	// Use XCTAssert and related functions to verify your tests produce the correct results.
+	[self measureBlock:^{
+		XCTestExpectation * expectation = [self expectationWithDescription:@"testSendAvatarExample"];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			// Login
+			[[QJPassport sharedPassport] loginUser:kPhoneNumber
+			password:kPassword
+			finished:^(NSNumber * userId, NSString * ticket, NSError * error) {
+				if (error)
+					XCTFail(@"testSendAvatarExample error: %@", error);
+			}];
+			
+			NSString * url = @"http://b.hiphotos.baidu.com/image/pic/item/faf2b2119313b07e73cdc2690ad7912397dd8c5b.jpg";
+			NSData * imageData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]
+			returningResponse:nil
+			error:nil];
+			
+			[[QJInterfaceManager sharedManager] requestUserAvatarTempData:imageData
+			finished:^(NSString * imageUrl, NSDictionary * imageDic, NSError * error) {
+				if (error)
+					XCTFail(@"testSendAvatarExample error: %@", error);
+			}];
+			
+			[expectation fulfill];
+		});
+		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
+			if (error)
+				XCTFail(@"testSendAvatarExample error: %@", error);
 		}];
 	}];
 }

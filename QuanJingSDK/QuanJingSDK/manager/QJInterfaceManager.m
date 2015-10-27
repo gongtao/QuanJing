@@ -929,6 +929,73 @@
 
 #pragma mark - 用户列表
 
+- (void)requestUserImageList:(nullable NSNumber *)userId
+	pageNum:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished
+{
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	
+	if (!QJ_IS_NUM_NIL(userId))
+		params[@"userId"] = userId;
+		
+	if (pageNum == 0)
+		pageNum = 1;
+	params[@"pageNum"] = [NSNumber numberWithUnsignedInteger:pageNum];
+	
+	if (pageSize > 0)
+		params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
+		
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	NSError * error = nil;
+	AFHTTPRequestOperation * operation = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		operation = [self.httpRequestManager GET:kQJUserImageListPath
+			parameters:params
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			dispatch_semaphore_signal(sem);
+		}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		error = [QJUtils errorFromOperation:operation];
+		i--;
+	} while (error && i >= 0);
+	
+	NSLog(@"%@", operation.request.URL);
+	
+	BOOL isLastPage = NO;
+	
+	if (!error) {
+		NSLog(@"%@", operation.responseObject);
+		NSDictionary * dataDic = operation.responseObject[@"data"];
+		
+		NSNumber * lastPageNum = dataDic[@"isLastPage"];
+		
+		if (!QJ_IS_NUM_NIL(lastPageNum))
+			isLastPage = lastPageNum.boolValue;
+			
+		NSArray * dataArray = dataDic[@"list"];
+		
+		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+			[resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
+		}];
+		
+		if (finished)
+			finished(resultArray, isLastPage, dataArray, error);
+		return;
+	}
+	
+	if (finished)
+		finished(nil, isLastPage, nil, error);
+}
+
 - (void)requestUserCollectImageList:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
 	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished
@@ -1062,10 +1129,9 @@
 {
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
 	
-    if (!QJ_IS_NUM_NIL(userId)) {
-        params[@"userId"] = userId;
-    }
-    
+	if (!QJ_IS_NUM_NIL(userId))
+		params[@"userId"] = userId;
+		
 	if (pageNum == 0)
 		pageNum = 1;
 	params[@"pageNum"] = [NSNumber numberWithUnsignedInteger:pageNum];
@@ -1325,6 +1391,63 @@
 	
 	if (finished)
 		finished(nil, isLastPage, nil, error);
+}
+
+#pragma mark - 用户上传图片
+
+- (void)requestUserAvatarTempData:(NSData *)imageData
+	finished:(nullable void (^)(NSString * imageUrl, NSDictionary * imageDic, NSError * error))finished
+{
+	NSParameterAssert(imageData);
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	NSError * error = nil;
+	AFHTTPRequestOperation * operation = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		operation = [self.httpRequestManager POST:kQJUserPostTempAvatarPath
+			parameters:nil
+			constructingBodyWithBlock:^(id < AFMultipartFormData > formData) {
+			[formData appendPartWithFileData:imageData
+			name:@"f1"
+			fileName:@"upload1.jpg"
+			mimeType:@"application/octet-stream"];
+		}
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			dispatch_semaphore_signal(sem);
+		}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		error = [QJUtils errorFromOperation:operation];
+		i--;
+	} while (error && i >= 0);
+	
+	NSLog(@"%@", operation.request.URL);
+	
+	if (!error) {
+		NSLog(@"%@", operation.responseObject);
+		NSArray * dataArray = operation.responseObject[@"data"];
+		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, nil, error);
+			return;
+		}
+		
+		NSDictionary * data = [dataArray firstObject];
+		
+		if (finished)
+			finished(data[@"url"], data, error);
+		return;
+	}
+	
+	if (finished)
+		finished(nil, nil, error);
 }
 
 @end

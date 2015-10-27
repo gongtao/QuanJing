@@ -101,6 +101,9 @@ static NSString * const kQJUserCollectListPath = @"/userCollect/list.user";
 // 用户评论列表
 static NSString * const kQJUserCommentImageListPath = @"/imageComment/list.user";
 
+// 用户的图片列表
+static NSString * const kQJUserImageListPath = @"/imageUser/list";
+
 // 用户喜欢图片列表
 static NSString * const kQJUserLikeImageListPath = @"/imageLike/list";
 
@@ -124,5 +127,8 @@ static NSString * const kQJUserAlbumListPath = @"/album/list.user";
 
 // 用户相册图片列表
 static NSString * const kQJUserAlbumImageListPath = @"/album/show.user";
+
+// 用户上传头像临时文件
+static NSString * const kQJUserPostTempAvatarPath = @"/upload/pic";
 
 #endif	/* QJServerConstants_h */

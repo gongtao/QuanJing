@@ -96,6 +96,12 @@ NS_ASSUME_NONNULL_BEGIN
 // 图片添加一次下载
 - (NSError *)requestImageAddDownload:(NSNumber *)imageId imageType:(NSNumber *)imageType;
 
+// 用户上传的图片列表
+- (void)requestUserImageList:(nullable NSNumber *)userId
+	pageNum:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
+	
 // 用户收藏图片列表
 - (void)requestUserCollectImageList:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
@@ -122,6 +128,10 @@ NS_ASSUME_NONNULL_BEGIN
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
 	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
+	
+// 用户上传头像的临时文件
+- (void)requestUserAvatarTempData:(NSData *)imageData
+	finished:(nullable void (^)(NSString * imageUrl, NSDictionary * imageDic, NSError * error))finished;
 	
 @end
 

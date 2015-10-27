@@ -17,7 +17,8 @@
 #define ImageCaption_Entity		@"QJImageCaption"
 
 #define kDBImageUrl				@"imageUrl"
-#define kDBWord                 @"word"
+#define kDBWord					@"word"
+#define kDBCaption				@"caption"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 	
 // QJImageCaption
 - (QJImageCaption *)setImageCaptionByImageUrl:(NSString *)imageUrl
-	caption:(NSString *)caption
+	caption:(nullable NSString *)caption
 	isSelfInsert:(BOOL)isSelfInsert
 	context:(NSManagedObjectContext *)context;
 	
@@ -45,13 +46,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 // QJImageCaption
 - (QJAdviseCaption *)setAdviseCaptionByImageUrl:(NSString *)imageUrl
-	caption:(NSString *)caption
-	number:(NSNumber *)number
+	caption:(nullable NSString *)caption
+	number:(nullable NSNumber *)number
 	context:(NSManagedObjectContext *)context;
 	
 - (QJAdviseCaption *)getAdviseCaptionByUrl:(NSString *)imageUrl
 	context:(NSManagedObjectContext *)context;
 	
+- (NSArray *)getAdviseCaptionsByCaption:(NSString *)caption context:(NSManagedObjectContext *)context;
+
 - (NSArray *)getAllAdviseCaptions:(NSManagedObjectContext *)context;
 
 // QJSearchWord

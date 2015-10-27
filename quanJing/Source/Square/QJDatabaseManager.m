@@ -291,6 +291,24 @@
 	return nil;
 }
 
+- (NSArray *)getAdviseCaptionsByCaption:(NSString *)caption context:(NSManagedObjectContext *)context
+{
+	NSFetchRequest * request = [[NSFetchRequest alloc] init];
+	NSEntityDescription * entity = [NSEntityDescription entityForName:AdviseCaption_Entity
+		inManagedObjectContext:context];
+		
+	[request setEntity:entity];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", kDBCaption, caption]];
+	
+	NSError * error;
+	NSArray * results = [context executeFetchRequest:request error:&error];
+	
+	if (!error && (results.count > 0))
+		return results;
+		
+	return nil;
+}
+
 - (NSArray *)getAllAdviseCaptions:(NSManagedObjectContext *)context
 {
 	NSFetchRequest * request = [[NSFetchRequest alloc] init];

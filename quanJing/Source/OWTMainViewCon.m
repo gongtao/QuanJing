@@ -126,7 +126,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 
 - (void)setUpDesignTabBar
 {
-	NSArray * text = nil;
 	NSArray * image1 = @[@"主页01", @"发现00", @"圈00", @"我00"];
 	NSArray * image2 = @[@"主页00", @"发现01", @"圈01", @"我01"];
 	
@@ -381,7 +380,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	if (!asset || ![[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto])
 		return;
 		
-		
 	UIImage * image = [UIImage imageWithCGImage:asset.thumbnail];
 	NSData * data = UIImageJPEGRepresentation(image, 1.0f);
 	NSString * imageurl = [data base64Encoding];
@@ -419,12 +417,19 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 				[caption appendString:[NSString stringWithFormat:@" %@ ", dict1[@"tag"]]];
 			else
 				[caption appendString:[NSString stringWithFormat:@"%@ ", dict1[@"tag"]]];
-			BOOL ret = [[LJCoreData2 shareIntance] check2:dict1[@"tag"]];
+				
+			NSArray * adviseCaptionArray = [manager getAdviseCaptionsByCaption:dict1[@"tag"] context:context];
 			
-			if (ret == NO)
-				[[LJCoreData2 shareIntance] insert2:imageUrl withCaption:dict1[@"tag"] with:@"1" withData:data];
+			if (!adviseCaptionArray)
+				[manager setAdviseCaptionByImageUrl:imageUrl
+				caption:dict1[@"tag"]
+				number:[NSNumber numberWithLong:1]
+				context:context];
 			else
-				[[LJCoreData2 shareIntance] update2:data with:dict1[@"tag"]];
+				[adviseCaptionArray enumerateObjectsUsingBlock:^(QJAdviseCaption * obj, NSUInteger idx, BOOL * stop) {
+					NSInteger num = obj.number.integerValue;
+					obj.number = [NSNumber numberWithInteger:num];
+				}];
 		}
 		
 		NSLog(@"拿到的 caption：%@", caption);
