@@ -48,7 +48,7 @@
 	else {
 		NSString * nickname = json[@"nickname"];
 		
-		if (!QJ_IS_NUM_NIL(nickname))
+		if (!QJ_IS_STR_NIL(nickname))
 			self.nickName = nickname;
 		else
 			self.nickName = nil;

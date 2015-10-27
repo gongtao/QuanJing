@@ -16,7 +16,8 @@
 #define SearchWord_Entity		@"QJSearchWord"
 #define ImageCaption_Entity		@"QJImageCaption"
 
-#define kImageUrl				@"imageUrl"
+#define kDBImageUrl				@"imageUrl"
+#define kDBWord                 @"word"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)performDatabaseUpdateBlock:(nullable void (^)(NSManagedObjectContext * concurrencyContext))updateBlock
 	finished:(nullable void (^)(NSManagedObjectContext * mainContext))finished;
 	
+// QJImageCaption
 - (QJImageCaption *)setImageCaptionByImageUrl:(NSString *)imageUrl
 	caption:(NSString *)caption
 	isSelfInsert:(BOOL)isSelfInsert
@@ -40,6 +42,27 @@ NS_ASSUME_NONNULL_BEGIN
 	context:(NSManagedObjectContext *)context;
 	
 - (NSArray *)getAllImageCaptions:(NSManagedObjectContext *)context;
+
+// QJImageCaption
+- (QJAdviseCaption *)setAdviseCaptionByImageUrl:(NSString *)imageUrl
+	caption:(NSString *)caption
+	number:(NSNumber *)number
+	context:(NSManagedObjectContext *)context;
+	
+- (QJAdviseCaption *)getAdviseCaptionByUrl:(NSString *)imageUrl
+	context:(NSManagedObjectContext *)context;
+	
+- (NSArray *)getAllAdviseCaptions:(NSManagedObjectContext *)context;
+
+// QJSearchWord
+- (QJSearchWord *)setSearchWordByWord:(NSString *)word
+	detailed:(NSString *)detailed
+	context:(NSManagedObjectContext *)context;
+	
+- (QJSearchWord *)getSearchWordByWord:(NSString *)word
+	context:(NSManagedObjectContext *)context;
+	
+- (NSArray *)getAllSearchWords:(NSManagedObjectContext *)context;
 
 @end
 

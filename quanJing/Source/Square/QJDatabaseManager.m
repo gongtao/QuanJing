@@ -226,7 +226,7 @@
 		inManagedObjectContext:context];
 		
 	[request setEntity:entity];
-	[request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", kImageUrl, imageUrl]];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", kDBImageUrl, imageUrl]];
 	
 	NSError * error;
 	NSArray * results = [context executeFetchRequest:request error:&error];
@@ -241,6 +241,112 @@
 {
 	NSFetchRequest * request = [[NSFetchRequest alloc] init];
 	NSEntityDescription * entity = [NSEntityDescription entityForName:ImageCaption_Entity
+		inManagedObjectContext:context];
+		
+	[request setEntity:entity];
+	
+	NSError * error;
+	NSArray * results = [context executeFetchRequest:request error:&error];
+	
+	if (!error && (results.count > 0))
+		return results;
+		
+	return nil;
+}
+
+#pragma mark - QJAdviseCaption
+
+- (QJAdviseCaption *)setAdviseCaptionByImageUrl:(NSString *)imageUrl
+	caption:(NSString *)caption
+	number:(NSNumber *)number
+	context:(NSManagedObjectContext *)context
+{
+	QJAdviseCaption * object = [self getAdviseCaptionByUrl:imageUrl context:context];
+	
+	if (!object)
+		object = [NSEntityDescription insertNewObjectForEntityForName:AdviseCaption_Entity
+			inManagedObjectContext:context];
+	object.imageUrl = imageUrl;
+	object.caption = caption;
+	object.number = number;
+	return object;
+}
+
+- (QJAdviseCaption *)getAdviseCaptionByUrl:(NSString *)imageUrl
+	context:(NSManagedObjectContext *)context
+{
+	NSFetchRequest * request = [[NSFetchRequest alloc] init];
+	NSEntityDescription * entity = [NSEntityDescription entityForName:AdviseCaption_Entity
+		inManagedObjectContext:context];
+		
+	[request setEntity:entity];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", kDBImageUrl, imageUrl]];
+	
+	NSError * error;
+	NSArray * results = [context executeFetchRequest:request error:&error];
+	
+	if (!error && (results.count > 0))
+		return results[0];
+		
+	return nil;
+}
+
+- (NSArray *)getAllAdviseCaptions:(NSManagedObjectContext *)context
+{
+	NSFetchRequest * request = [[NSFetchRequest alloc] init];
+	NSEntityDescription * entity = [NSEntityDescription entityForName:AdviseCaption_Entity
+		inManagedObjectContext:context];
+		
+	[request setEntity:entity];
+	
+	NSError * error;
+	NSArray * results = [context executeFetchRequest:request error:&error];
+	
+	if (!error && (results.count > 0))
+		return results;
+		
+	return nil;
+}
+
+#pragma mark - QJSearchWord
+
+- (QJSearchWord *)setSearchWordByWord:(NSString *)word
+	detailed:(NSString *)detailed
+	context:(NSManagedObjectContext *)context
+{
+	QJSearchWord * object = [self getSearchWordByWord:word context:context];
+	
+	if (!object)
+		object = [NSEntityDescription insertNewObjectForEntityForName:SearchWord_Entity
+			inManagedObjectContext:context];
+	object.word = word;
+	object.detailed = detailed;
+	return object;
+}
+
+- (QJSearchWord *)getSearchWordByWord:(NSString *)word
+	context:(NSManagedObjectContext *)context
+{
+	NSFetchRequest * request = [[NSFetchRequest alloc] init];
+	NSEntityDescription * entity = [NSEntityDescription entityForName:SearchWord_Entity
+		inManagedObjectContext:context];
+		
+	[request setEntity:entity];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", kDBWord, word]];
+	
+	NSError * error;
+	NSArray * results = [context executeFetchRequest:request error:&error];
+	
+	if (!error && (results.count > 0))
+		return results[0];
+		
+	return nil;
+}
+
+- (NSArray *)getAllSearchWords:(NSManagedObjectContext *)context
+{
+	NSFetchRequest * request = [[NSFetchRequest alloc] init];
+	NSEntityDescription * entity = [NSEntityDescription entityForName:SearchWord_Entity
 		inManagedObjectContext:context];
 		
 	[request setEntity:entity];

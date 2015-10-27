@@ -120,7 +120,7 @@
 		[commentArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 			[resultArray addObject:[[QJCommentObject alloc] initWithJson:obj]];
 		}];
-		self.comments = commentArray;
+		self.comments = resultArray;
 	}
 	
 	// creatTime
@@ -155,7 +155,7 @@
 		[likeArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 			[resultArray addObject:[[QJUser alloc] initWithJson:obj]];
 		}];
-		self.likes = likeArray;
+		self.likes = resultArray;
 	}
 	
 	// md5
