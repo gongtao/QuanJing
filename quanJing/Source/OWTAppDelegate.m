@@ -40,11 +40,11 @@
 #import <Fabric/Fabric.h>
 #import "advertisetionViewController.h"
 #import <Crashlytics/Crashlytics.h>
+#import "QJDatabaseManager.h"
 @interface OWTAppDelegate ()
-{
-}
+{}
 
-@property (nonatomic, strong) OWTMainViewCon* mainViewCon;
+@property (nonatomic, strong) OWTMainViewCon * mainViewCon;
 
 @end
 
@@ -52,253 +52,264 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	[[QJDatabaseManager sharedManager] databaseInitialize];
+	[Fabric with:@[[Crashlytics class]]];
+	[self setup];
+	
+	UIScreen * screen = [UIScreen mainScreen];
+	self.window = [[UIWindow alloc] initWithFrame:screen.bounds];
+	self.window.tintColor = GetThemer().themeTintColor;
+	self.window.backgroundColor = [UIColor colorWithRed:235 / 255.0 green:235 / 255.0 blue:235 / 255.0 alpha:1.0];
+	NSString * userPhoneName = [[UIDevice currentDevice] name];
+	NSLog(@"手机别名: %@", userPhoneName);
+	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+	[self.window makeKeyAndVisible];
+	[self addSplashScreen];
+	return YES;
+}
 
-    [Fabric with:@[[Crashlytics class]]];
-    [self setup];
-    
-    UIScreen* screen = [UIScreen mainScreen];
-    self.window = [[UIWindow alloc] initWithFrame:screen.bounds];
-    self.window.tintColor =GetThemer().themeTintColor;
-    self.window.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
-        NSString* userPhoneName = [[UIDevice currentDevice] name];
-    NSLog(@"手机别名: %@", userPhoneName);
-    NSUserDefaults *userDefaults=[NSUserDefaults standardUserDefaults];
-    [self.window makeKeyAndVisible];
-    [self addSplashScreen];
-    return YES;
-}
--(void)addSplashScreen
+- (void)addSplashScreen
 {
-    advertisetionViewController *avc=[[advertisetionViewController alloc]init];
-    self.window.rootViewController=avc;
+	advertisetionViewController * avc = [[advertisetionViewController alloc]init];
+	
+	self.window.rootViewController = avc;
 }
+
 - (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    
-   
-}
+{}
+
 /*
 */
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-
-    NSInteger cont = application.applicationIconBadgeNumber;
-    if (cont>0) {
-        if (_mainViewCon) {
-            [_mainViewCon jumpToChatList];
-        }
-    }
+	NSInteger cont = application.applicationIconBadgeNumber;
+	
+	if (cont > 0)
+		if (_mainViewCon)
+			[_mainViewCon jumpToChatList];
 }
 
 #pragma mark - Setup
 
 - (void)setup
 {
-    [self setupThemer];
-    [self setupLogger];
-    [self setupManagers];
-    [self setupShareSDK];
-    [self setupUMengAnalytics];
-    [self setupCrittercism];
-    [self setupHXStatus];
-    [self initHuanXinSDK];
+	[self setupThemer];
+	[self setupLogger];
+	[self setupManagers];
+	[self setupShareSDK];
+	[self setupUMengAnalytics];
+	[self setupCrittercism];
+	[self setupHXStatus];
+	[self initHuanXinSDK];
 }
 
--(void) initHuanXinSDK
+- (void)initHuanXinSDK
 {
-    NSDictionary *dic = [[NSUserDefaults standardUserDefaults]objectForKey:@"HxChatData"];
-    if (dic) {
-        //[[NSUserDefaults standardUserDefaults]removeObjectForKey:@"HxChatData"];
-       //[[NSUserDefaults standardUserDefaults]synchronize];
-    }
-    
-   [[EaseMob sharedInstance] registerSDKWithAppKey:@"panorama#quanjing" apnsCertName:@"huanXinAPNPush"];
-    [self registerRemoteNotification];
-    
+	NSDictionary * dic = [[NSUserDefaults standardUserDefaults]objectForKey:@"HxChatData"];
+	
+	if (dic) {
+		// [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"HxChatData"];
+		// [[NSUserDefaults standardUserDefaults]synchronize];
+	}
+	
+	[[EaseMob sharedInstance] registerSDKWithAppKey:@"panorama#quanjing" apnsCertName:@"huanXinAPNPush"];
+	[self registerRemoteNotification];
 }
 
--(void)setupHXStatus
+- (void)setupHXStatus
 {
-    HXLoginStatus *hxStatus = [[HXLoginStatus alloc]init];
-    self.hxStatus = hxStatus;
+	HXLoginStatus * hxStatus = [[HXLoginStatus alloc]init];
+	
+	self.hxStatus = hxStatus;
 }
+
 - (void)setupThemer
 {
-
-    _themer = [[OWTGlobalThemer alloc] init];
-    [_themer apply];
-    
-    
-
+	_themer = [[OWTGlobalThemer alloc] init];
+	[_themer apply];
 }
 
 - (void)setupLogger
 {
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+	[DDLog addLogger:[DDTTYLogger sharedInstance]];
 }
 
 - (void)setupManagers
 {
-    _dataManager = [[OWTDataManager alloc] init];
-    _authManager = [[OWTAuthManager alloc] init];
-    _userManager = [[OWTUserManager alloc] init];
-    _feedManager = [[OWTFeedManager alloc] init];
-    _categoryManager = [[OWTCategoryManager alloc] init];
-    
-    _assetManager = [[OWTAssetManager alloc] init];
-    _activityManager = [[OWTActivityManager alloc] init];
+	_dataManager = [[OWTDataManager alloc] init];
+	_authManager = [[OWTAuthManager alloc] init];
+	_userManager = [[OWTUserManager alloc] init];
+	_feedManager = [[OWTFeedManager alloc] init];
+	_categoryManager = [[OWTCategoryManager alloc] init];
+	
+	_assetManager = [[OWTAssetManager alloc] init];
+	_activityManager = [[OWTActivityManager alloc] init];
+	
+	_searchManager = [[OWTSearchManager alloc] init];
+	
+	_categoryManagerlife = [[OWTCategoryManagerlife alloc] init];
+	
+	// 六大板块
+	_categoryManagerlvyou = [[OWTCategoryManagerlvyou alloc] init];
+	_categoryManagerlvyouinternational = [[OWTCategoryManagerlvyouinternational alloc] init];
+	_categoryManagershishang = [[OWTCategoryManagershishang alloc] init];
+	_categoryManagerqiche = [[OWTCategoryManagerqiche alloc] init];
+	_categoryManagermeishi = [[OWTCategoryManagermeishi alloc] init];
+	_categoryManagerjiaju = [[OWTCategoryManagerjiaju alloc] init];
+	_categoryManagerbaike = [[OWTCategoryManagerbaike alloc] init];
+}
 
-    _searchManager = [[OWTSearchManager alloc] init];
-   
-    _categoryManagerlife = [[OWTCategoryManagerlife alloc] init];
-    
-      //六大板块
-    _categoryManagerlvyou = [[OWTCategoryManagerlvyou alloc] init];
-    _categoryManagerlvyouinternational = [[OWTCategoryManagerlvyouinternational alloc] init];
-    _categoryManagershishang = [[OWTCategoryManagershishang alloc] init];
-    _categoryManagerqiche = [[OWTCategoryManagerqiche alloc] init];
-    _categoryManagermeishi = [[OWTCategoryManagermeishi alloc] init];
-    _categoryManagerjiaju = [[OWTCategoryManagerjiaju alloc] init];
-    _categoryManagerbaike = [[OWTCategoryManagerbaike alloc] init];
-}
 - (void)setupShareSDK
-{   //友盟的appkey
-    [UMSocialData setAppKey:@"53f9f64efd98c56a4c04cb99"];
-    //微信的appkey
-    [UMSocialWechatHandler setWXAppId:@"wxd38f9d0119a4fcc4" appSecret:@"c69879f1d25cd22877670ff61309b2e7" url:@"http://www.umeng.com/social"];
-    //qq的appkey
-    [UMSocialQQHandler setQQWithAppId:@"1103410983" appKey:@"sF1AZahQ09LQ35l5" url:@"http://www.umeng.com/social"];
-    //新浪的分享
-    [UMSocialSinaHandler openSSOWithRedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
+{	// 友盟的appkey
+	[UMSocialData setAppKey:@"53f9f64efd98c56a4c04cb99"];
+	// 微信的appkey
+	[UMSocialWechatHandler setWXAppId:@"wxd38f9d0119a4fcc4" appSecret:@"c69879f1d25cd22877670ff61309b2e7" url:@"http://www.umeng.com/social"];
+	// qq的appkey
+	[UMSocialQQHandler setQQWithAppId:@"1103410983" appKey:@"sF1AZahQ09LQ35l5" url:@"http://www.umeng.com/social"];
+	// 新浪的分享
+	[UMSocialSinaHandler openSSOWithRedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
 }
+
 - (void)setupUMengAnalytics
 {
-    NSString* kWTUMengAppKey = @"53f9f64efd98c56a4c04cb99";
-    NSString* channelID;
+	NSString * kWTUMengAppKey = @"53f9f64efd98c56a4c04cb99";
+	NSString * channelID;
+	
 #if DEBUG
-    channelID = @"DebugBuild";
+		channelID = @"DebugBuild";
 #else
-    channelID = @"";
+		channelID = @"";
 #endif
-    
-    [MobClick startWithAppkey:kWTUMengAppKey reportPolicy:SEND_INTERVAL channelId:channelID];
 
-    [self dumpUMengDeviceID];
+	[MobClick startWithAppkey:kWTUMengAppKey reportPolicy:SEND_INTERVAL channelId:channelID];
+	
+	[self dumpUMengDeviceID];
 }
 
 - (void)dumpUMengDeviceID
 {
-    NSString *deviceID = nil;
-
-    Class cls = NSClassFromString(@"UMANUtil");
-    if (cls != nil)
-    {
-        SEL deviceIDSelector = NSSelectorFromString(@"openUDIDString");
-        IMP imp = [cls methodForSelector:deviceIDSelector];
-        if (imp != nil)
-        {
-            id (*func)(id, SEL) = (void *)imp;
-            deviceID = func(cls, deviceIDSelector);
-        }
-    }
-    DDLogDebug(@"{\"oid\": \"%@\"}", deviceID);
+	NSString * deviceID = nil;
+	
+	Class cls = NSClassFromString(@"UMANUtil");
+	
+	if (cls != nil) {
+		SEL deviceIDSelector = NSSelectorFromString(@"openUDIDString");
+		IMP imp = [cls methodForSelector:deviceIDSelector];
+		
+		if (imp != nil) {
+			id (* func)(id, SEL) = (void *)imp;
+			deviceID = func(cls, deviceIDSelector);
+		}
+	}
+	DDLogDebug(@"{\"oid\": \"%@\"}", deviceID);
 }
 
 - (void)setupCrittercism
 {
-    [Crittercism enableWithAppID: @"537d9cb828ae454447000001"];
+	[Crittercism enableWithAppID:@"537d9cb828ae454447000001"];
 }
+
 #pragma mark - Simple testing
 // 将得到的deviceToken传给SDK
 - (void)application:(UIApplication *)application
-didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
-    [[EaseMob sharedInstance] application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+	didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+	[[EaseMob sharedInstance] application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
+
 // 打印收到的apns信息
--(void)didReiveceRemoteNotificatison:(NSDictionary *)userInfo{
-    NSError *parseError = nil;
-    NSData  *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
-                                                        options:NSJSONWritingPrettyPrinted error:&parseError];
-    NSString *str =  [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"推送内容"
-                                                    message:str
-                                                   delegate:nil
-                                          cancelButtonTitle:NSLocalizedString(@"ok", @"OK")
-                                          otherButtonTitles:nil];
-    [alert show];
-    
+- (void)didReiveceRemoteNotificatison:(NSDictionary *)userInfo
+{
+	NSError * parseError = nil;
+	NSData * jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
+		options:NSJSONWritingPrettyPrinted error:&parseError];
+	NSString * str = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+	
+	UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"推送内容"
+		message:str
+		delegate:nil
+		cancelButtonTitle:NSLocalizedString(@"ok", @"OK")
+		otherButtonTitles:nil];
+		
+	[alert show];
 }
 
 // 注册deviceToken失败，此处失败，与环信SDK无关，一般是您的环境配置或者证书配置有误
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
-    [[EaseMob sharedInstance] application:application didFailToRegisterForRemoteNotificationsWithError:error];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"apns.failToRegisterApns", Fail to register apns)
-                                                    message:error.description
-                                                   delegate:nil
-                                          cancelButtonTitle:NSLocalizedString(@"ok", @"OK")
-                                          otherButtonTitles:nil];
-    [alert show];
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+	[[EaseMob sharedInstance] application:application didFailToRegisterForRemoteNotificationsWithError:error];
+	UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"apns.failToRegisterApns", Fail to register apns)
+		message:error.description
+		delegate:nil
+		cancelButtonTitle:NSLocalizedString(@"ok", @"OK")
+		otherButtonTitles:nil];
+	[alert show];
 }
 
 // 注册推送
-- (void)registerRemoteNotification{
-    UIApplication *application = [UIApplication sharedApplication];
-    application.applicationIconBadgeNumber = 0;
-    
-    if([application respondsToSelector:@selector(registerUserNotificationSettings:)])
-    {
-        UIUserNotificationType notificationTypes = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
-        [application registerUserNotificationSettings:settings];
-    }
-    
+- (void)registerRemoteNotification
+{
+	UIApplication * application = [UIApplication sharedApplication];
+	
+	application.applicationIconBadgeNumber = 0;
+	
+	if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+		UIUserNotificationType notificationTypes = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
+		UIUserNotificationSettings * settings = [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
+		[application registerUserNotificationSettings:settings];
+	}
+	
 #if !TARGET_IPHONE_SIMULATOR
-    //iOS8 注册APNS
-    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
-        [application registerForRemoteNotifications];
-    }else{
-        UIRemoteNotificationType notificationTypes = UIRemoteNotificationTypeBadge |
-        UIRemoteNotificationTypeSound |
-        UIRemoteNotificationTypeAlert;
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
-    }
+		// iOS8 注册APNS
+		if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
+			[application registerForRemoteNotifications];
+		}
+		else {
+			UIRemoteNotificationType notificationTypes = UIRemoteNotificationTypeBadge |
+				UIRemoteNotificationTypeSound |
+				UIRemoteNotificationTypeAlert;
+			[[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
+		}
 #endif
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    UIView *a = [[UIView alloc]init];
-    a.frame = CGRectMake(100, 100, 100, 100);
-    a.backgroundColor = [UIColor blueColor];
-    [application.keyWindow addSubview:a];
-    if (_mainViewCon) {
-        [_mainViewCon jumpToChatList];
-    }
+	UIView * a = [[UIView alloc]init];
+	
+	a.frame = CGRectMake(100, 100, 100, 100);
+	a.backgroundColor = [UIColor blueColor];
+	[application.keyWindow addSubview:a];
+	
+	if (_mainViewCon)
+		[_mainViewCon jumpToChatList];
 }
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    if (_mainViewCon) {
-        [_mainViewCon jumpToChatList];
-    }
-
+	if (_mainViewCon)
+		[_mainViewCon jumpToChatList];
+		
 }
+
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
-    if (_mainViewCon) {
-        [_mainViewCon jumpToChatList];
-    }
+	if (_mainViewCon)
+		[_mainViewCon jumpToChatList];
 }
+
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    return  [UMSocialSnsService handleOpenURL:url];
+	return [UMSocialSnsService handleOpenURL:url];
 }
+
 - (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+	openURL:(NSURL *)url
+	sourceApplication:(NSString *)sourceApplication
+	annotation:(id)annotation
 {
-    return  [UMSocialSnsService handleOpenURL:url];
+	return [UMSocialSnsService handleOpenURL:url];
 }
+
 @end

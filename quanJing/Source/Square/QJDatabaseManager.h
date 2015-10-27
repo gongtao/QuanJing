@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedManager;
 
+- (void)databaseInitialize;
+
 - (BOOL)saveContext:(nullable NSManagedObjectContext *)context;
 
 - (BOOL)saveContext;

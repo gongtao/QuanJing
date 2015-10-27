@@ -12,11 +12,11 @@
 
 @interface QJDatabaseManager ()
 
-@property (readonly, strong, nonatomic) NSManagedObjectContext * managedObjectContext;
+@property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
 
-@property (readonly, strong, nonatomic) NSManagedObjectModel * managedObjectModel;
+@property (strong, nonatomic) NSManagedObjectModel * managedObjectModel;
 
-@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator * persistentStoreCoordinator;
+@property (strong, nonatomic) NSPersistentStoreCoordinator * persistentStoreCoordinator;
 
 @end
 
@@ -47,6 +47,11 @@
 	
 	if (self) {}
 	return self;
+}
+
+- (void)databaseInitialize
+{
+	[self managedObjectContext];
 }
 
 - (BOOL)saveContext:(NSManagedObjectContext *)context
