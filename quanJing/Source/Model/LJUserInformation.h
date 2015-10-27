@@ -24,4 +24,8 @@
 @property(nonatomic,copy)NSString *Userinfo;
 
 -(void)userAdaptInformation:(QJUser*)user;
+
+-(NSNumber*)cityCode2CityName:(NSInteger)cityCode ;
+
+-(NSString*)cityName2CityCode:(NSString*)cityName;
 @end

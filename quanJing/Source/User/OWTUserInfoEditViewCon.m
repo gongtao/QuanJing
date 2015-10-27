@@ -207,7 +207,7 @@
         }
         //出生地
         if ([self BirthLocation]==nil||[[self BirthLocation]isEqualToString:@"保密"]) {
-            params[@"bornArea"]=@"0";
+            params[@"bornArea"]= [NSNumber numberWithInt:27 ];;
         }else {
             NSMutableString *str=(NSMutableString *)[self BirthLocation];
             NSArray *arr=[str componentsSeparatedByString:@" - "];
@@ -222,7 +222,7 @@
         
         //居住城市
         if ([self City]==nil||[[self City]isEqualToString:@"保密"]) {
-            params[@"stayArea"]=@"0";
+            params[@"stayArea"]= [NSNumber numberWithInt:27 ];
         }else
         {
             NSMutableString *str=(NSMutableString *)[self City];
@@ -236,7 +236,7 @@
             }}
         //出没地
         if ([self HomeCity]==nil||[[self HomeCity]isEqualToString:@"保密"]) {
-            params[@"stayAreaAddress"]=@"0";
+            params[@"stayAreaAddress"] = [NSNumber numberWithInt:27 ];
         }else{
             NSMutableString *str=(NSMutableString *)[self HomeCity];
             NSArray *arr=[str componentsSeparatedByString:@" - "];
@@ -304,6 +304,7 @@
             [fm requestUserAvatarTempData:imageData  extension:@"jpg" finished:^(NSString * imageUrl, NSDictionary * imageDic, NSError * error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (error == nil) {
+                        [self updateAvatarByURL:imageUrl];
                         NSLog(@"头像上传成功");
                     }else{
                         [SVProgressHUD showErrorWithStatus:@"头像上传失败"];
@@ -316,6 +317,32 @@
   }];
 }
 
+
+-(void)updateAvatarByURL:(NSString*)url
+{
+    QJUser *user = [[QJUser alloc]init];
+    user.avatar = url;
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[QJPassport sharedPassport] requestModifyUserInfo:user finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error == nil) {
+                    NSLog(@"修改成功,修改全局user");
+                    [SVProgressHUD dismiss];
+                    QJUser *updataUser = [[QJPassport sharedPassport] currentUser];
+                    updataUser = user;
+                    [self.navigationController popViewControllerAnimated:YES];
+                    if (_doneFunc != nil){
+                        _doneFunc();
+                    }
+                }else{
+                    [SVProgressHUD showError:error];
+                }
+            });
+        }];
+        
+    });
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
