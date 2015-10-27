@@ -347,21 +347,21 @@
 			if (error)
 				XCTFail(@"testActionExample error: %@", error);
 				
-//			error = [[QJInterfaceManager sharedManager] requestCancelLikeAction:actionId];
-//			
-//			if (error)
-//				XCTFail(@"testUserExample error: %@", error);
-				
+			//			error = [[QJInterfaceManager sharedManager] requestCancelLikeAction:actionId];
+			//
+			//			if (error)
+			//				XCTFail(@"testUserExample error: %@", error);
+			
 			error = [[QJInterfaceManager sharedManager] requestCollectAction:actionId];
 			
 			if (error)
 				XCTFail(@"testUserExample error: %@", error);
 				
-//			error = [[QJInterfaceManager sharedManager] requestCollectCancelAction:actionId];
-//			
-//			if (error)
-//				XCTFail(@"testUserExample error: %@", error);
-				
+			//			error = [[QJInterfaceManager sharedManager] requestCollectCancelAction:actionId];
+			//
+			//			if (error)
+			//				XCTFail(@"testUserExample error: %@", error);
+			
 			error = [[QJInterfaceManager sharedManager] requestCommentAction:actionId comment:@"赞"];
 			
 			if (error)
@@ -646,6 +646,7 @@
 			error:nil];
 			
 			[[QJInterfaceManager sharedManager] requestUserAvatarTempData:imageData
+			extension:@"jpg"
 			finished:^(NSString * imageUrl, NSDictionary * imageDic, NSError * error) {
 				if (error)
 					XCTFail(@"testSendAvatarExample error: %@", error);
