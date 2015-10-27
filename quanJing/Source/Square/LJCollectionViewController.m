@@ -77,40 +77,33 @@
 }
 -(void)getDataSourceWithDict1:(NSDictionary *)dict
 {
-    RKObjectManager *um=[RKObjectManager sharedManager];
-    _user=GetUserManager().currentUser;
-    [um getObject:nil path:[NSString stringWithFormat:@"users/%@/comment",_user.userID] parameters:dict success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSDictionary *dict=mappingResult.dictionary;
-        if (!loadMore) {
-            [_assets removeAllObjects];
-            [_collectionView headerEndRefreshing];
-        }else
-        {
-            [_collectionView footerEndRefreshing];
-        }
-        for (OWTAsset *asset in dict[@"assets"]) {
-            [_assets addObject:asset];
-        }
-        [SVProgressHUD dismiss];
-        [self getCellHeight];
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        if (!loadMore) {
-            [_collectionView headerEndRefreshing];
-        }else
-        {
-            [_collectionView footerEndRefreshing];
-        }
-
-        [SVProgressHUD showErrorWithStatus:@"网络有点慢"];
-    }];
+    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [fm requestUserCommentImageList:page pageSize:50 finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error==nil) {
+                        if (!loadMore) {
+                            [_assets removeAllObjects];
+                            [_collectionView headerEndRefreshing];
+                        }else
+                        {
+                            [_collectionView footerEndRefreshing];
+                        }
+                        [_assets addObjectsFromArray:imageObjectArray];
+                        [self getCellHeight];
+                    }
+                });
+                            }];
+    });
+    
     
 }
 -(void)getCellHeight
 {
     [_cellHeights removeAllObjects];
-    for (OWTAsset *asset in _assets) {
-        OWTImageInfo *imageInfo=asset.imageInfo;
-        NSString *str=[NSString stringWithFormat:@"%f",imageInfo.height*(ITEMWIDTH/imageInfo.width)];
+    for (QJImageObject *asset in _assets) {
+        
+        NSString *str=[NSString stringWithFormat:@"%f",asset.height.floatValue*(ITEMWIDTH/asset.width.floatValue)];
         [_cellHeights addObject:str];
         NSLog(@"%@",str);
     }
@@ -148,14 +141,13 @@
 {
     LJCollectionCell *cell=(LJCollectionCell *)[collectionView dequeueReusableCellWithReuseIdentifier:CELL_IDENTIFIER forIndexPath:indexPath];
     cell.imageView.frame=cell.bounds;
-    OWTAsset *asset=_assets[indexPath.item];
-    OWTImageInfo *imageinfo=asset.imageInfo;
-    [cell.imageView setImageWithURL:[NSURL URLWithString:imageinfo.url]];
+    QJImageObject *imageModel=_assets[indexPath.item];
+    [cell.imageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:cell.bounds.size]]];
     cell.touchImagecb=^{
-        OWTAsset  *asset1=[[OWTAsset alloc]init];
-        [asset1 mergeWithData:(OWTAssetData *)asset];
-        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset1 deletionAllowed:YES onDeleteAction:^{  }];
-        [self.navigationController pushViewController:assetViewCon animated:YES];
+//        OWTAsset  *asset1=[[OWTAsset alloc]init];
+//        [asset1 mergeWithData:(OWTAssetData *)asset];
+//        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset1 deletionAllowed:YES onDeleteAction:^{  }];
+//        [self.navigationController pushViewController:assetViewCon animated:YES];
     
     };
     
