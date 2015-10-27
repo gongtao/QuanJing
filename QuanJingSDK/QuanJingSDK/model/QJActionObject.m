@@ -45,7 +45,7 @@
 	NSString * content = json[@"content"];
 	
 	if (!QJ_IS_STR_NIL(content)) {
-		NSArray * images = [QJUtils jsonObjectFromString:content error:nil];
+		NSArray * images = [QJUtils jsonObjectFromString:[NSString stringWithFormat:@"(%@)", content] error:nil];
 		
 		if (!QJ_IS_ARRAY_NIL(images)) {
 			__block NSMutableArray * array = [[NSMutableArray alloc] init];

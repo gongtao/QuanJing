@@ -12,8 +12,7 @@
 #import <Foundation/Foundation.h>
 
 // 域名地址
-//static NSString * const kQJServerURL = @"http://mapp.tiankong.com";
-static NSString * const kQJServerURL = @"http://182.92.113.76:8080";
+static NSString * const kQJServerURL = @"http://mapp.tiankong.com";
 
 // 图片故事详情url
 static NSString * const kQJArticleDetailURL = @"http://mapp.tiankong.com/articleSys/show?id=";

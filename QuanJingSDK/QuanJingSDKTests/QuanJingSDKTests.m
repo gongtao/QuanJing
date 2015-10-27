@@ -385,8 +385,9 @@
 	[self measureBlock:^{
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testImageExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			NSNumber * imageId = [NSNumber numberWithLongLong:900006405];
-			NSNumber * imageType = [NSNumber numberWithLongLong:1];
+//            NSNumber * imageId = [NSNumber numberWithLongLong:900006405];
+            NSNumber * imageId = [NSNumber numberWithLongLong:683536917955692];
+			NSNumber * imageType = [NSNumber numberWithLongLong:2];
 			
 			[[QJInterfaceManager sharedManager] requestImageDetail:imageId
 			imageType:imageType
