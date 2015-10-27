@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSString * avatar;
 
-@property (nonatomic, strong, nullable) NSString * bornArea;
+@property (nonatomic, strong, nullable) NSNumber * bornArea;
 
 @property (nonatomic, strong, nullable) NSNumber * collectAmount;
 
@@ -54,11 +54,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSString * realName;
 
-@property (nonatomic, strong, nullable) NSString * residence;
+@property (nonatomic, strong, nullable) NSNumber * residence;
 
 @property (nonatomic, strong, nullable) NSString * starSign;
 
-@property (nonatomic, strong, nullable) NSString * stayArea;
+@property (nonatomic, strong, nullable) NSNumber * stayArea;
 
 @property (nonatomic, strong, nullable) NSString * stayAreaAddress;
 

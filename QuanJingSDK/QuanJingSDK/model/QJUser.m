@@ -71,9 +71,9 @@
 		self.avatar = nil;
 		
 	// bornArea
-	NSString * bornArea = json[@"bornArea"];
+	NSNumber * bornArea = json[@"bornArea"];
 	
-	if (!QJ_IS_STR_NIL(bornArea))
+	if (!QJ_IS_NUM_NIL(bornArea))
 		self.bornArea = bornArea;
 	else
 		self.bornArea = nil;
@@ -207,9 +207,9 @@
 		self.realName = nil;
 		
 	// residence
-	NSString * residence = json[@"residence"];
+	NSNumber * residence = json[@"residence"];
 	
-	if (!QJ_IS_STR_NIL(residence))
+	if (!QJ_IS_NUM_NIL(residence))
 		self.residence = residence;
 	else
 		self.residence = nil;
@@ -223,9 +223,9 @@
 		self.starSign = nil;
 		
 	// stayArea
-	NSString * stayArea = json[@"stayArea"];
+	NSNumber * stayArea = json[@"stayArea"];
 	
-	if (!QJ_IS_STR_NIL(stayArea))
+	if (!QJ_IS_NUM_NIL(stayArea))
 		self.stayArea = stayArea;
 	else
 		self.stayArea = nil;
