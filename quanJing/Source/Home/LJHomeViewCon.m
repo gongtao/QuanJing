@@ -511,6 +511,9 @@
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		QJInterfaceManager * fm = [QJInterfaceManager sharedManager];
 		[fm requestHomeIndex:^(NSDictionary * _Nonnull homeIndexDic, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            if (error!=nil) {
+                return ;
+            }
 			NSString * homeDictionary = NSHomeDirectory();	// 获取根目录
 			NSString * homePath = [homeDictionary stringByAppendingString:@"/Documents/homeIndex.archiver"];
 			BOOL ret = [NSKeyedArchiver archiveRootObject:homeIndexDic toFile:homePath];

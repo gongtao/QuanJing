@@ -425,7 +425,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 			else
 				[adviseCaptionArray enumerateObjectsUsingBlock:^(QJAdviseCaption * obj, NSUInteger idx, BOOL * stop) {
 					NSInteger num = obj.number.integerValue;
-					obj.number = [NSNumber numberWithInteger:num];
+					obj.number = [NSNumber numberWithInteger:num+1];
 				}];
 		}
 		

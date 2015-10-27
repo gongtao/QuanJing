@@ -392,13 +392,13 @@
 
 - (void)onTap3
 {
-	_headerImagecb();
+	_headerImagecb(_number);
 }
 
 - (void)onTapBigImage:(UIGestureRecognizer *)sender
 {
     QJImageObject *imageModel=_assets[sender.view.tag-400];
-    OWTAssetViewCon *assetViewCon=[[OWTAssetViewCon alloc]initWithImageId:imageModel.imageId imageType:imageModel.imageType];
+    OWTAssetViewCon *assetViewCon=[[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:imageModel.imageType];
 	assetViewCon.isSquare = YES;
 	assetViewCon.hidesBottomBarWhenPushed = YES;
 	[_viewContoller.navigationController pushViewController:assetViewCon animated:NO];

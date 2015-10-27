@@ -13,7 +13,7 @@
 	void (^commentcb)(OWTActivityData *, NSInteger);
 }
 @property(nonatomic, strong) UIView * backView;
-@property (nonatomic, strong) void (^headerImagecb)();
+@property (nonatomic, strong) void (^headerImagecb)(NSInteger pageNum);
 @property(nonatomic, strong) void (^assetImagecb)(OWTAsset *);
 @property(nonatomic, assign) NSInteger number;
 @property(nonatomic, assign) NSInteger imageNum;

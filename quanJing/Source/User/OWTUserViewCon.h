@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "XHRefreshControl.h"
-
+#import "QuanJingSDK.h"
 @interface OWTUserViewCon : UIViewController<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, XHRefreshControlDelegate>
 
 @property (nonatomic, strong) OWTUser* user;
-//
+@property(nonatomic,strong)QJUser *quser;
 @property (nonatomic, strong) int (^numberOfAssetsFunc)();
 @property (nonatomic, strong) OWTAsset* (^assetAtIndexFunc)(NSInteger index);
 @property (nonatomic, strong) void (^onAssetSelectedFunc)(OWTAsset* asset);

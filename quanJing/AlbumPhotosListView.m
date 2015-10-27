@@ -83,6 +83,7 @@
 #import "OWTTabBarHider.h"
 #import "MJRefresh.h"
 #import "QJPassport.h"
+#import "QJDatabaseManager.h"
 @interface OWTUserInfoAlbumSectionHeaderView : UICollectionReusableView
 {
     KHFlatButton* _uploadButton;
@@ -631,6 +632,32 @@
     
     _maintableview.tableHeaderView =_collectionView;
     [self getCaptionsResouce];
+}
+-(void)getCaptionsResouce
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
+        dispatch_semaphore_t sem=dispatch_semaphore_create(0);
+        __weak QJDatabaseManager *wmanager=manager;
+        [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
+            NSArray *arr1=[wmanager getAllAdviseCaptions:concurrencyContext];
+            NSMutableArray *arr2=[[NSMutableArray alloc]initWithArray:arr1];
+            if (arr2.count>10) {
+                for (NSInteger i=0;i<10;i++) {
+                    NSInteger y=arc4random()%arr2.count;
+                    [_captionsResouce addObject:arr2[y]];
+                    [arr2 removeObjectAtIndex:y];
+                }
+            }else
+            {
+                [_captionsResouce addObjectsFromArray:arr1];
+            }
+            
+        } finished:^(NSManagedObjectContext * _Nonnull mainContext) {
+            dispatch_semaphore_signal(sem);
+        }];
+        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+    });
 
 }
 -(void)changeSearchBarBackcolor:(UISearchBar *)mySearchBar
@@ -672,21 +699,6 @@
     //        //        [mySearchBar setBackgroundColor:[UIColor clearColor]];
     //        [ mySearchBar setBackgroundColor :[ UIColor colorWithHexString:@"#ffffff"]];
     //    }
-}
--(void)getCaptionsResouce
-{
-    NSArray *arr1=[[LJCoreData2 shareIntance]checkAll2];
-    NSMutableArray *arr2=[[NSMutableArray alloc]initWithArray:arr1];
-    if (arr2.count>10) {
-        for (NSInteger i=0;i<10;i++) {
-            NSInteger y=arc4random()%arr2.count;
-            [_captionsResouce addObject:arr2[y]];
-            [arr2 removeObjectAtIndex:y];
-        }
-    }else
-    {
-        [_captionsResouce addObjectsFromArray:arr1];
-    }
 }
 - (void)didReceiveMemoryWarning
 {

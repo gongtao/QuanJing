@@ -73,9 +73,9 @@ typedef enum
 }
 
 //在外部调用赋值
-- (void)setUser:(OWTUser*)user
+- (void)setUser:(QJUser*)user
 {
-    _user = user;
+    _quser = user;
     [self updateWithUser];
 }
 
@@ -109,56 +109,18 @@ typedef enum
 
 - (void)updateWithUser
 {
-    [self updateNickname:_user.nickname];
+    [self updateNickname:_quser.nickName];
     //通过_user中头像的URL 通过第三方框架 把头像数据 保存到xib初始化出来的视图上做展示
-    self.avatarView.placeholderImage = [UIImage imageNamed:@"我的页面默认头像.jpg"];
-    [self.avatarView setImageWithInfoAsThumbnail:_user.avatarImageInfo];
+    [self.avatarView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:_quser.avatar size:self.avatarView.bounds.size]] placeholderImage:[UIImage imageNamed:@"5"]];
     self.avatarView.userInteractionEnabled =YES;
     UITapGestureRecognizer*tapRecognizerleft=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
     //avatarView是uiimageView的子类
     [self.avatarView addGestureRecognizer:tapRecognizerleft];
     _mAvatarView = self.avatarView;
-    
-    if (_user.signature != nil)
-    {
-        [self updateSignature:_user.signature];
-    }
-    else
-    {
-        [self updateSignature:@""];
-    }
-    
-    OWTUserAssetsInfo* assetsInfo = _user.assetsInfo;
-    if (assetsInfo != nil)
-    {
-        NSInteger photoNum = assetsInfo.publicAssetNum;
-        if (_user.isCurrentUser)
-        {
-            photoNum += assetsInfo.privateAssetNum;
-        }
-        
-        [self updatePhotoNum:photoNum];
-        [self updateLikesNum:assetsInfo.likedAssetNum];
-    }
-    else
-    {
-        [self updatePhotoNum:0];
-        [self updateLikesNum:0];
-    }
-    
-    OWTUserFellowshipInfo* fellowshipInfo = _user.fellowshipInfo;
-    _followingUsers = _user.fellowshipInfo.followingUserIDs;
-    if (fellowshipInfo != nil)
-    {
-        [self updateFollowingNum:fellowshipInfo.followingNum];
-        [self updateFollowerNum:fellowshipInfo.followerNum];
-    }
-    else
-    {
-        [self updateFollowingNum:0];
-        [self updateFollowerNum:0];
-    }
-    
+    [self updatePhotoNum:_quser.uploadAmount.intValue];
+    [self updateFollowerNum:_quser.fansAmount.intValue];
+    [self updateFollowingNum:_quser.followAmount.intValue];
+    [self updateLikesNum:0];
     [self updateBasedOnIsCurrentUser];
 }
 
@@ -273,8 +235,8 @@ typedef enum
 }
 - (void)updateBasedOnIsCurrentUser
 {
-    if ([_user.userID isEqualToString:GetUserManager().currentUser.userID]) {
-        [_actionButton setTitle:[NSString stringWithFormat:@"ID:%@",_user.userID] forState:UIControlStateNormal];
+    if ([_quser.uid.stringValue isEqualToString:[QJPassport sharedPassport].currentUser.uid.stringValue]) {
+        [_actionButton setTitle:[NSString stringWithFormat:@"ID:%@",_quser.uid.stringValue] forState:UIControlStateNormal];
         _actionButtonType = nWTUserInfoViewActionButtonEdit;
         _actionButton.hidden = NO;
         _signatureLabel.hidden = YES;
@@ -287,11 +249,12 @@ typedef enum
         _ifCurrenUserEnter = NO;
 
         _hxChatBeginBtn.hidden=NO;
-        _signatureLabel.text=[NSString stringWithFormat:@"ID:%@",_user.userID];
-        OWTUser* currentUser = GetUserManager().currentUser;
+        _signatureLabel.text=[NSString stringWithFormat:@"ID:%@",_quser.uid.stringValue];
+        QJUser *currentUser=[QJPassport sharedPassport].currentUser;
         if (currentUser != nil)
         {
-            if ([currentUser isFollowingUser:_user])
+            //是否关注
+            if (0)
             {
                 _isCared = YES;
                 _actionButtonType = nWTUserInfoViewActionButtonUnfollow;

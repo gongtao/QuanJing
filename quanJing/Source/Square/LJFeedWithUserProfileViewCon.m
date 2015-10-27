@@ -673,7 +673,6 @@
     LJImageAndProfileCell *cell=[tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell=[[LJImageAndProfileCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier withViewController:self withComment:^(OWTActivityData *activity,NSInteger pageNum){
-            _activityData=activity;
             _pageNum=pageNum;
             [self.view bringSubviewToFront:_backgroundView];
             [_textField becomeFirstResponder];
@@ -692,27 +691,20 @@
         }
     }
     
-    cell.headerImagecb = ^{
+    cell.headerImagecb = ^(NSInteger page){
+        QJActionObject *actionModel=_activeList[page];
+            if(_userViewCon1){
+                [_userViewCon1 adealloc];
+                _userViewCon1 = nil;
+            }
+            _userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
+            _userViewCon1.hidesBottomBarWhenPushed = YES;
+            _userViewCon1.ifFirstEnter = YES;
+            _userViewCon1.rightTriggle = YES;
+            _userViewCon1.quser=actionModel.user;
+            __weak __typeof(&*self)weakSelf = self;
+            [weakSelf.navigationController pushViewController:_userViewCon1 animated:YES];
         
-//        OWTUser* ownerUser = [GetUserManager() userForID:ownerUserID];
-//        //OWTUser *ownerUser=[self userAtIndexPath:indexPath];
-//        if (ownerUser != nil)
-//        {
-//            
-//            if(_userViewCon1){
-//                [_userViewCon1 adealloc];
-//                _userViewCon1 = nil;
-//            }
-//            _userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
-//            _userViewCon1.hidesBottomBarWhenPushed = YES;
-//            _userViewCon1.ifFirstEnter = YES;
-//            _userViewCon1.rightTriggle = YES;
-//            __weak __typeof(&*self)weakSelf = self;
-//            [weakSelf.navigationController pushViewController:_userViewCon1 animated:YES];
-//            _userViewCon1.user =ownerUser;
-        
-            
-//        }
     };
     
     cell.number=indexPath.row;

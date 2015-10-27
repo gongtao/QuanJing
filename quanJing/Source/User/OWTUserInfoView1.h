@@ -10,7 +10,7 @@
 #import "AGIPCPreviewController.h"
 #import "OWTUserViewCon.h"
 #import "OWTRoundImageView.h"
-
+#import "QuanJingSDK.h"
 @protocol OWTUserInfoViewCareDelegate <NSObject>
 
 - (void)didCareButtonPressed:(BOOL)isCared;
@@ -20,6 +20,7 @@
 @interface OWTUserInfoView1 : UICollectionReusableView<AGIPCPreviewControllerDelegate>
 
 @property (nonatomic, strong) OWTUser* user;
+@property(nonatomic,strong)QJUser *quser;
 @property (nonatomic, assign) NSInteger selfNum;
 @property (nonatomic,strong)OWTUserViewCon *owtUserViewVC;
 @property (nonatomic, strong) void (^editUserInfoAction)();
