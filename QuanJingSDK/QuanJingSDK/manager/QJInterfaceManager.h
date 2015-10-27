@@ -100,6 +100,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestUserImageList:(nullable NSNumber *)userId
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
+	currentImageId:(nullable NSNumber *)imageId
 	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
 	
 // 用户收藏图片列表

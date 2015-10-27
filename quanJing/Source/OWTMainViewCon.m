@@ -32,10 +32,7 @@
 #import "NetStatusMonitor.h"
 #import "ExcPhotoRecThread.h"
 
-#import "LJCoreData.h"
-#import "LJCaptionModel.h"
 #import "PostFormData.h"
-#import "LJCoreData2.h"
 
 #import "RRConst.h"
 #import "LJHomeViewCon.h"

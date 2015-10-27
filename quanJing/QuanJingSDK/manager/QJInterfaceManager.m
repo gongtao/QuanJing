@@ -997,6 +997,7 @@
 - (void)requestUserImageList:(nullable NSNumber *)userId
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
+	currentImageId:(nullable NSNumber *)imageId
 	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished
 {
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
@@ -1053,7 +1054,12 @@
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-			[resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
+			QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+			
+			if (!QJ_IS_NUM_NIL(imageId) && [imageObject.imageId isEqualToNumber:imageId])
+				return;
+				
+			[resultArray addObject:imageObject];
 		}];
 		
 		if (finished)
