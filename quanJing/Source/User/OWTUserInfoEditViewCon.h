@@ -10,8 +10,10 @@
 #import "OWTUser.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <QuartzCore/QuartzCore.h>
+#import "QJUser.h"
 @interface OWTUserInfoEditViewCon : UIViewController<UITableViewDelegate,UIActionSheetDelegate>
 
+@property (nonatomic, strong) QJUser* user1;
 @property (nonatomic, strong) OWTUser* user;
 
 @property (nonatomic, strong) void (^cancelAction)();

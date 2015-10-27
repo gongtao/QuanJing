@@ -538,16 +538,20 @@
 		params[@"starSign"] = user.starSign;
 		
 	// bornArea
-	if (!QJ_IS_STR_NIL(user.bornArea))
+	if (!QJ_IS_NUM_NIL(user.bornArea))
 		params[@"bornArea"] = user.bornArea;
 		
 	// residence
-	if (!QJ_IS_STR_NIL(user.residence))
+	if (!QJ_IS_NUM_NIL(user.residence))
 		params[@"residence"] = user.residence;
 		
 	// stayArea
-	if (!QJ_IS_STR_NIL(user.stayArea))
+	if (!QJ_IS_NUM_NIL(user.stayArea))
 		params[@"stayArea"] = user.stayArea;
+    
+    // introduce
+    if (!QJ_IS_STR_NIL(user.introduce))
+        params[@"introduce"] = user.introduce;
 		
 	// When request fails, if it could, retry it 3 times at most.
 	int i = 3;

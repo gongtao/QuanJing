@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "QJUser.h"
 @interface LJUserInformation : NSObject
 @property(nonatomic,copy)NSString *userID;
 @property(nonatomic,copy)NSString *Sex;
@@ -22,4 +22,6 @@
 @property(nonatomic,copy)NSString *Mobile;
 @property(nonatomic,copy)NSString *truename;
 @property(nonatomic,copy)NSString *Userinfo;
+
+-(void)userAdaptInformation:(QJUser*)user;
 @end

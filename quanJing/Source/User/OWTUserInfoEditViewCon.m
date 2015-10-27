@@ -22,6 +22,8 @@
 #import "LJPickerViewController.h"
 #import "LJFavorite.h"
 #import "UIColor+HexString.m"
+#import "QJPassport.h"
+#import "QJInterfaceManager.h"
 @interface OWTUserInfoEditViewCon ()
 {
     NSMutableData *_data;
@@ -38,6 +40,7 @@
     NSString *_birthLocation;
     NSString *_city;
     NSString *_homeCity;
+    BOOL _updatedAvatarAcion;
 }
 
 @property (nonatomic, strong) JMStaticContentTableViewController* tableViewCon;
@@ -68,11 +71,27 @@
 }
 -(void)getResouceData
 {
-    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"http://api.tiankong.com/qjapi/users/%@/info",_user.userID]];
-    NSURLRequest *request=[NSURLRequest requestWithURL:url];
-    _connection=[[NSURLConnection alloc]initWithRequest:request delegate:self];
-    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[QJPassport sharedPassport] requestUserInfo :^(QJUser * user, NSDictionary * userDic, NSError * error){
+            if (error == nil) {
+                QJUser *tmp = [[QJPassport sharedPassport] currentUser];
+                //适配数据到model LJUserInformation
+                [_ljuser userAdaptInformation:tmp];
+                [_tableViewCon.tableView reloadData];
+            }
+            else{
+                [SVProgressHUD showError:error];
+            }
+        }];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            
+        });
+    });
+
 }
+
 -(void)getAreaData
 {
     NSURL *url= [NSURL URLWithString:[NSString stringWithFormat:@"http://api.tiankong.com/qjapi/cdn1/users/reginfo"]];
@@ -82,7 +101,7 @@
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     if (connection==_connection) {
-     [_data appendData:data];
+        [_data appendData:data];
     }else
     {
         [_areaData appendData:data];
@@ -91,7 +110,7 @@
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     if (connection==_connection) {
-     [_data setLength:0];
+        [_data setLength:0];
     }else
     {
         [_areaData setLength:0];
@@ -99,9 +118,8 @@
 }
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-
     if (connection==_connection) {
-       NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingMutableContainers error:nil];
+        NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingMutableContainers error:nil];
         NSDictionary *dict1=dict[@"user"];
         [_ljuser setValuesForKeysWithDictionary:dict1];
         [_tableViewCon.tableView reloadData];
@@ -112,7 +130,6 @@
         _dictOccupation=[[NSArray alloc]initWithArray:dict[@"DictOccupation"]];
         _dictConstellation=[[NSArray alloc]initWithArray:dict[@"DictConstellation"]];
         _dictMarriage=[[NSArray alloc]initWithArray:dict[@"DictMarriage"]];
-        _dictArea=[[NSArray alloc]initWithArray:dict[@"DictArea" ]];
         NSArray *arr=dict[@"DictArea"];
         for (NSDictionary *dict1 in arr) {
             if ([dict1[@"ParentID"]isEqualToString:@"0"]) {
@@ -143,73 +160,69 @@
     self.navigationItem.title = @"编辑个人信息";
     
     self.navigationItem.leftBarButtonItem = [UIBarButtonItem SH_barButtonItemWithTitle:@"取消" style:UIBarButtonItemStyleDone
-        withBlock:^(UIBarButtonItem* sender){
-            [self.navigationController popViewControllerAnimated:YES];
-           if (_cancelAction != nil){
-                _cancelAction(nil);}}];
+                                                                             withBlock:^(UIBarButtonItem* sender){
+                                                                                 [self.navigationController popViewControllerAnimated:YES];
+                                                                                 if (_cancelAction != nil){
+                                                                                     _cancelAction(nil);}}];
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem SH_barButtonItemWithTitle:@"保存"style:UIBarButtonItemStyleDone withBlock:^(UIBarButtonItem* sender) {
-    if ([self truename]==nil||[self truename].length==0||[self truename].length>=10){
-        [SVProgressHUD showErrorWithStatus:@"昵称过长或者没有填写昵称"];
-        return;
+        //昵称
+        if ([self truename]==nil||[self truename].length==0||[self truename].length>=10){
+            [SVProgressHUD showErrorWithStatus:@"昵称过长或者没有填写昵称"];
+            return;
         }
-                                                                                  
+        
         [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
-        maskType:SVProgressHUDMaskTypeBlack];
+                             maskType:SVProgressHUDMaskTypeBlack];
         NSMutableDictionary* params = [NSMutableDictionary dictionary];
-    //[params setObject:_user.userID forKey:@"user_id"];
+        //性别
         if ([self Sex]==nil) {
-            params[@"sex"]=@"0";
+            params[@"gender"]= [NSNumber numberWithInt:0];
         }else{
             if ([[self Sex]isEqualToString:@"男"]) {
-                params[@"sex"]=@"0";
+                params[@"gender"] = [NSNumber numberWithInt:0];
             }else{
-                params[@"sex"]=@"1";}}
+                params[@"gender"] = [NSNumber numberWithInt:1];
+            }
+        }
+        
+        //年龄
         if ([self decade]==nil) {
-            params[@"decade"]=@"0";
-        }else
-        {
-            for (NSDictionary *dict in _dictDecade) {
-                if ([dict[@"DictName"]isEqualToString:[self decade]]) {
-                    params[@"decade"]=dict[@"DictId"];
-                    break;
-                }
-            }
-            }
+            params[@"age"]=@"保密";
+        }else{
+            params[@"age"]=[self decade];
+        }
+        
+        //星座
         if ([self Constellation]==nil) {
-            params[@"Constellation"]=@"0";
+            params[@"starSign"] = @"保密";
         }else {
-            for (NSDictionary *dict in _dictConstellation) {
-                if ([dict[@"DictName"]isEqualToString:[self Constellation]]) {
-                    params[@"Constellation"]=dict[@"DictId"];
-                    break;
-                }
-            }
-            ;}
+                params[@"starSign"] = [self Constellation];
+        }
+        
+        //情感状态
         if ([self Marrige]==nil) {
-            params[@"Marriage"]=@"0";
+            params[@"maritalStatus"]=@"保密";
         }else {
-            for (NSDictionary *dict in _dictMarriage) {
-                if ([dict[@"DictName"]isEqualToString:[self Marrige]]) {
-                    params[@"Marriage"]=dict[@"DictId"];
-                    break;
-                }
-            }
-            }
+            params[@"maritalStatus"]=[self Marrige];
+        }
+        //出生地
         if ([self BirthLocation]==nil||[[self BirthLocation]isEqualToString:@"保密"]) {
-            params[@"BirthLocation"]=@"0";
+            params[@"bornArea"]=@"0";
         }else {
             NSMutableString *str=(NSMutableString *)[self BirthLocation];
             NSArray *arr=[str componentsSeparatedByString:@" - "];
             NSString *str1=arr[1];
             for (NSDictionary *dict in _dictArea) {
                 if ([dict[@"DictName"]isEqualToString:str1]) {
-                    params[@"BirthLocation"]=dict[@"DictId"];
+                    params[@"bornArea"]=dict[@"DictId"];
                     break;
                 }
             }
         }
+        
+        //居住城市
         if ([self City]==nil||[[self City]isEqualToString:@"保密"]) {
-            params[@"City"]=@"0";
+            params[@"stayArea"]=@"0";
         }else
         {
             NSMutableString *str=(NSMutableString *)[self City];
@@ -217,74 +230,90 @@
             NSString *str1=arr[1];
             for (NSDictionary *dict in _dictArea) {
                 if ([dict[@"DictName"]isEqualToString:str1]) {
-                    params[@"City"]=dict[@"DictId"];
+                    params[@"stayArea"]=dict[@"DictId"];
                     break;
                 }
             }}
+        //出没地
         if ([self HomeCity]==nil||[[self HomeCity]isEqualToString:@"保密"]) {
-           params[@"HomeCity"]=@"0";
+            params[@"stayAreaAddress"]=@"0";
         }else{
             NSMutableString *str=(NSMutableString *)[self HomeCity];
             NSArray *arr=[str componentsSeparatedByString:@" - "];
             NSString *str1=arr[1];
             for (NSDictionary *dict in _dictArea) {
                 if ([dict[@"DictName"]isEqualToString:str1]) {
-                    params[@"HomeCity"]=dict[@"DictId"];
+                    params[@"stayAreaAddress"]=dict[@"DictId"];
                     break;
                 }
             }}
+        
+        //职业
         if ([self Occupation]==nil) {
-                    params[@"Occupation"]=@"0";
+            params[@"job"]=@"保密";
         }else {
             for (NSDictionary *dict in _dictOccupation) {
                 if ([dict[@"DictName"]isEqualToString:[self Occupation]]) {
-                    params[@"Occupation"]=dict[@"DictId"];
+                    params[@"job"]= [self Occupation];
                     break;
                 }
             }}
         if ([self Favority]==nil) {
-                    params[@"Favourite"]=@"";
+            params[@"interest"]=@"";
         }else {
-            params[@"Favourite"]=[self Favority];}
+            params[@"interest"]=[self Favority];
+        }
         if ([self truename]==nil) {
-        params[@"nickname"]=@"";
+            params[@"nickname"]=@"";
         }else{
-            params[@"nickname"]=[self truename];}
+            params[@"nickname"]=[self truename];
+        }
+        //签名档
         if ([self userinfo]==nil) {
-            params[@"signature"]=@"";
+            params[@"introduce"]=@"";
         }else{
-            params[@"signature"]=[self userinfo];}
-       
+            params[@"introduce"]=[self userinfo];
+        }
         params[@"PhoneType"]=@"iphone";
-        OWTUserManager* um = GetUserManager();
-        [um modifyUser:_user withDict:params
-       updatedNickname:_updatedNickname
-      updatedSignature:_updatedSignature
-         updatedAvatar:_updatedAvatar
-               success:^{
-                   [SVProgressHUD dismiss];
-                   [self.navigationController popViewControllerAnimated:YES];
-                   if (_doneFunc != nil)
-                   {
-                       _doneFunc();
-                   }
-               }
-               failure:^(NSError* error) {
-                   [SVProgressHUD showError:error];
-               }];
-//        [um modifyUser:_user updatedNickname:[self truename] updatedSignature:[self userinfo] updatedAvatar:_updatedAvatar success:^{
-//            [SVProgressHUD dismiss];
-//                               if (_doneFunc != nil)
-//                               {
-//                                   _doneFunc();
-//                               }
-//        } failure:^(NSError *error) {
-//            [SVProgressHUD showError:error];
-//        }];
+        params[@"id"] = [[QJPassport sharedPassport]currentUser].uid ;
+        QJUser *user = [[QJUser alloc]initWithJson:params];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [[QJPassport sharedPassport] requestModifyUserInfo:user finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error == nil) {
+                        NSLog(@"修改成功,修改全局user");
+                        [SVProgressHUD dismiss];
+                        QJUser *updataUser = [[QJPassport sharedPassport] currentUser];
+                        updataUser = user;
+                        [self.navigationController popViewControllerAnimated:YES];
+                        if (_doneFunc != nil){
+                            _doneFunc();
+                        }
+                    }else{
+                        [SVProgressHUD showError:error];
+                    }
+                });
+            }];
+            
+        });
+        //如果头像被改动
+        if(_updatedAvatarAcion && _updatedAvatar != nil){
+            _updatedAvatarAcion = false;
+            QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+            NSData *imageData = UIImageJPEGRepresentation(_updatedAvatar,0.5);
+            [fm requestUserAvatarTempData:imageData  extension:@"jpg" finished:^(NSString * imageUrl, NSDictionary * imageDic, NSError * error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error == nil) {
+                        NSLog(@"头像上传成功");
+                    }else{
+                        [SVProgressHUD showErrorWithStatus:@"头像上传失败"];
+                        NSLog(@"头像上传失败");
+                    }
+                });
+         }];
+        }
         
-    }];
-
-    
+  }];
 }
 
 - (void)viewDidLoad
@@ -312,7 +341,7 @@
 //设定头像
 - (void)setupAvatarSection
 {
-     _img = [[OWTRoundImageView alloc] initWithFrame:CGRectMake(0, 0, 64, 64)];
+    _img = [[OWTRoundImageView alloc] initWithFrame:CGRectMake(0, 0, 64, 64)];
     __weak OWTUserInfoEditViewCon* wself = self;
     [_tableViewCon addSection:^(JMStaticContentTableViewSection *section, NSUInteger sectionIndex) {
         [section addCell:^(JMStaticContentTableViewCell* staticContentCell, UITableViewCell* cell, NSIndexPath* indexPath) {
@@ -323,27 +352,23 @@
             if (cell != nil)
             {
                 cell.textLabel.text = @"头像";
-                
-               
                 cell.accessoryView = _img;
-                
                 if (wself.updatedAvatar != nil)
                 {
                     [_img setImage:wself.updatedAvatar];
                 }
                 else
                 {
-                    [_img setImageWithInfoAsThumbnail:wself.user.avatarImageInfo];
+                    [_img setImageWithURLString:_user1.avatar primaryColorHex:nil];
+                    
                 }
             }
         }
-           whenSelected:^(NSIndexPath* indexPath) {
-               [wself.tableViewCon.tableView deselectRowAtIndexPath:indexPath animated:YES];
-               
-               
-               [wself takePictureClick];
-               [wself.tableViewCon.tableView reloadData];
-            
+            whenSelected:^(NSIndexPath* indexPath) {
+                [wself.tableViewCon.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                [wself takePictureClick];
+                [wself.tableViewCon.tableView reloadData];
+                
             }];
     }];
 }
@@ -378,49 +403,49 @@
 {
     NSLog(@"buttonIndex = [%d]",buttonIndex);
     switch (buttonIndex) {
-//        case 0://照相机
-//        {
-//            UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-//            imagePicker.delegate = self;
-//            imagePicker.allowsEditing = YES;
-//            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-//            //            [self presentModalViewController:imagePicker animated:YES];
-//            [self presentViewController:imagePicker animated:YES completion:nil];
-//        }
-//            break;
-//        case 1://摄像机
-//        {
-//            UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-//            imagePicker.delegate = self;
-//            imagePicker.allowsEditing = YES;
-//            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-//            imagePicker.videoQuality = UIImagePickerControllerQualityTypeLow;
-//            //            [self presentModalViewController:imagePicker animated:YES];
-//            [self presentViewController:imagePicker animated:YES completion:nil];
-//        }
-//            break;
+            //        case 0://照相机
+            //        {
+            //            UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+            //            imagePicker.delegate = self;
+            //            imagePicker.allowsEditing = YES;
+            //            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            //            //            [self presentModalViewController:imagePicker animated:YES];
+            //            [self presentViewController:imagePicker animated:YES completion:nil];
+            //        }
+            //            break;
+            //        case 1://摄像机
+            //        {
+            //            UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+            //            imagePicker.delegate = self;
+            //            imagePicker.allowsEditing = YES;
+            //            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            //            imagePicker.videoQuality = UIImagePickerControllerQualityTypeLow;
+            //            //            [self presentModalViewController:imagePicker animated:YES];
+            //            [self presentViewController:imagePicker animated:YES completion:nil];
+            //        }
+            //            break;
         case 0://本地相簿
         {
             UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
             imagePicker.delegate = self;
             imagePicker.allowsEditing = YES;
-//            imagePicker.allowsImageEditing=YES;
+            //            imagePicker.allowsImageEditing=YES;
             imagePicker.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor colorWithHexString:@"f6f6f6"] forKey:UITextAttributeTextColor];
             imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
             imagePicker.navigationBar.barTintColor=[UIColor blackColor];
             //            [self presentModalViewController:imagePicker animated:YES];
             [self presentViewController:imagePicker animated:YES completion:nil];
         }
-//            break;
-//        case 3://本地视频
-//        {
-//            UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-//            imagePicker.delegate = self;
-//            imagePicker.allowsEditing = YES;
-//            imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-//            //            [self presentModalViewController:imagePicker animated:YES];
-//            [self presentViewController:imagePicker animated:YES completion:nil];
-//        }
+            //            break;
+            //        case 3://本地视频
+            //        {
+            //            UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+            //            imagePicker.delegate = self;
+            //            imagePicker.allowsEditing = YES;
+            //            imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            //            //            [self presentModalViewController:imagePicker animated:YES];
+            //            [self presentViewController:imagePicker animated:YES completion:nil];
+            //        }
             break;
         default:
             break;
@@ -463,9 +488,11 @@
     success = [fileManager fileExistsAtPath:imageFilePath];
     if(success) {
         success = [fileManager removeItemAtPath:imageFilePath error:&error];
+        _updatedAvatarAcion = YES;
+
     }
     //    UIImage *smallImage=[self scaleFromImage:image toSize:CGSizeMake(80.0f, 80.0f)];//将图片尺寸改为80*80
-//    UIImage *smallImage = [self thumbnailWithImageWithoutScale:image size:CGSizeMake(93, 93)];
+    //    UIImage *smallImage = [self thumbnailWithImageWithoutScale:image size:CGSizeMake(93, 93)];
     [UIImageJPEGRepresentation(image, 1.0f) writeToFile:imageFilePath atomically:YES];//写入文件
     UIImage *selfPhoto = [UIImage imageWithContentsOfFile:imageFilePath];//读取图片文件
     //    [userPhotoButton setImage:selfPhoto forState:UIControlStateNormal];
@@ -613,8 +640,8 @@
                         [SVProgressHUD showErrorWithStatus:@"昵称过长(最长十个字符)或者没有填写昵称"];
                         return;
                     }else{
-                    [wself.navigationController popViewControllerAnimated:YES];
-                    [wself.tableViewCon.tableView reloadData];
+                        [wself.navigationController popViewControllerAnimated:YES];
+                        [wself.tableViewCon.tableView reloadData];
                     }
                 };
                 [wself.navigationController pushViewController:wself.textEditViewCon animated:YES];
@@ -650,7 +677,7 @@
             {
                 cell.textLabel.text = @"手机号码";
                 //cell.accessoryType = UITableViewCellAccessoryNone;
-                cell.detailTextLabel.text = wself.user.privateInfo.cellphone;
+                cell.detailTextLabel.text = wself.user1.phone;
                 for (UIView *view  in cell.subviews) {
                     for (UIView *view1 in view.subviews) {
                         if ([view1 isKindOfClass:[UIImageView class]]) {
@@ -684,97 +711,97 @@
                 ljpicker.dataArray=arr1;
                 ljpicker.backgroundImage=[wself ScreenShot];
                 ljpicker.doneFunc=^{
-                _sex=ljpicker.backString1;
+                    _sex=ljpicker.backString1;
                     [wself.tableViewCon.tableView reloadData];
                 };
-//                [wself.navigationController presentViewController:ljpicker animated:YES completion:nil ];
+                //                [wself.navigationController presentViewController:ljpicker animated:YES completion:nil ];
                 [wself.navigationController pushViewController:ljpicker animated:YES];
-            
+                
             }];
         [section addCell:^(JMStaticContentTableViewCell* staticContentCell, UITableViewCell* cell, NSIndexPath* indexPath) {
-                staticContentCell.cellStyle = UITableViewCellStyleValue1;
-                staticContentCell.highlightable = YES;
-                staticContentCell.reuseIdentifier = @"DetailTextCell";
-                if (cell != nil)
-                {
-                    cell.textLabel.text = @"年龄";
-                    //cell.accessoryType = UITableViewCellAccessoryNone;
-                    cell.detailTextLabel.text = [wself decade];
-                }} whenSelected:^(NSIndexPath *indexPath){
-                    __weak LJPickerViewController *ljpicker=wself.ljPickerView;
-                    NSArray *arr=@[@"保密",@"60后",@"70后",@"80后",@"90后",@"00后"];
-                    NSArray *arr1=@[arr];
-                    ljpicker.dataArray=arr1;
-                    ljpicker.backgroundImage=[wself ScreenShot];
-                    ljpicker.doneFunc=^{
-                        _decade=ljpicker.backString1;
-                        [wself.tableViewCon.tableView reloadData];
-                    };
-                    [wself.navigationController pushViewController:ljpicker animated:YES];
-                    
-                }];
-        [section addCell:^(JMStaticContentTableViewCell* staticContentCell, UITableViewCell* cell, NSIndexPath* indexPath) {
-                    staticContentCell.cellStyle = UITableViewCellStyleValue1;
-                    staticContentCell.highlightable = YES;
-                    staticContentCell.reuseIdentifier = @"DetailTextCell";
-                    if (cell != nil)
-                    {
-                        cell.textLabel.text = @"星座";
-                        //cell.accessoryType = UITableViewCellAccessoryNone;
-                        cell.detailTextLabel.text = [wself Constellation];
-                    }} whenSelected:^(NSIndexPath *indexPath){
-                        __weak LJPickerViewController *ljpicker=wself.ljPickerView;
-                        NSArray *arr=@[@"白羊",@"金牛",@"双子",@"巨蟹",@"狮子",@"处女",@"天枰",@"天蝎",@"射手",@"魔蝎",@"水瓶",@"双鱼"];
-                        NSArray *arr1=@[arr];
-                        ljpicker.dataArray=arr1;
-                        ljpicker.backgroundImage=[wself ScreenShot];
-                        ljpicker.doneFunc=^{
-                            _constellation=ljpicker.backString1;
-                            [wself.tableViewCon.tableView reloadData];
-                        };
-                        [wself.navigationController pushViewController:ljpicker animated:YES];
-                        
-                    }];
-        [section addCell:^(JMStaticContentTableViewCell* staticContentCell, UITableViewCell* cell, NSIndexPath* indexPath) {
-                        staticContentCell.cellStyle = UITableViewCellStyleValue1;
-                        staticContentCell.highlightable = YES;
-                        staticContentCell.reuseIdentifier = @"DetailTextCell";
-                        if (cell != nil)
-                        {
-                            cell.textLabel.text = @"情感状态";
-                            //cell.accessoryType = UITableViewCellAccessoryNone;
-                            cell.detailTextLabel.text =[wself Marrige];
-                        }} whenSelected:^(NSIndexPath *indexPath){
-                            __weak LJPickerViewController *ljpicker=wself.ljPickerView;
-                            NSArray *arr=@[@"保密",@"单身",@"恋爱中",@"订婚",@"已婚",@"离异"];
-                            NSArray *arr1=@[arr];
-                            ljpicker.dataArray=arr1;
-                            ljpicker.backgroundImage=[wself ScreenShot];
-                            ljpicker.doneFunc=^{
-                                _marrige=ljpicker.backString1;
-                                [wself.tableViewCon.tableView reloadData];
-                            };
-                            [wself.navigationController pushViewController:ljpicker animated:YES];
-                            
-                        }];
-        
-        
+            staticContentCell.cellStyle = UITableViewCellStyleValue1;
+            staticContentCell.highlightable = YES;
+            staticContentCell.reuseIdentifier = @"DetailTextCell";
+            if (cell != nil)
+            {
+                cell.textLabel.text = @"年龄";
+                //cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.detailTextLabel.text = [wself decade];
+            }} whenSelected:^(NSIndexPath *indexPath){
+                __weak LJPickerViewController *ljpicker=wself.ljPickerView;
+                NSArray *arr=@[@"保密",@"60后",@"70后",@"80后",@"90后",@"00后"];
+                NSArray *arr1=@[arr];
+                ljpicker.dataArray=arr1;
+                ljpicker.backgroundImage=[wself ScreenShot];
+                ljpicker.doneFunc=^{
+                    _decade=ljpicker.backString1;
+                    [wself.tableViewCon.tableView reloadData];
+                };
+                [wself.navigationController pushViewController:ljpicker animated:YES];
+                
             }];
+        [section addCell:^(JMStaticContentTableViewCell* staticContentCell, UITableViewCell* cell, NSIndexPath* indexPath) {
+            staticContentCell.cellStyle = UITableViewCellStyleValue1;
+            staticContentCell.highlightable = YES;
+            staticContentCell.reuseIdentifier = @"DetailTextCell";
+            if (cell != nil)
+            {
+                cell.textLabel.text = @"星座";
+                //cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.detailTextLabel.text = [wself Constellation];
+            }} whenSelected:^(NSIndexPath *indexPath){
+                __weak LJPickerViewController *ljpicker=wself.ljPickerView;
+                NSArray *arr=@[@"白羊",@"金牛",@"双子",@"巨蟹",@"狮子",@"处女",@"天枰",@"天蝎",@"射手",@"魔蝎",@"水瓶",@"双鱼"];
+                NSArray *arr1=@[arr];
+                ljpicker.dataArray=arr1;
+                ljpicker.backgroundImage=[wself ScreenShot];
+                ljpicker.doneFunc=^{
+                    _constellation=ljpicker.backString1;
+                    [wself.tableViewCon.tableView reloadData];
+                };
+                [wself.navigationController pushViewController:ljpicker animated:YES];
+                
+            }];
+        [section addCell:^(JMStaticContentTableViewCell* staticContentCell, UITableViewCell* cell, NSIndexPath* indexPath) {
+            staticContentCell.cellStyle = UITableViewCellStyleValue1;
+            staticContentCell.highlightable = YES;
+            staticContentCell.reuseIdentifier = @"DetailTextCell";
+            if (cell != nil)
+            {
+                cell.textLabel.text = @"情感状态";
+                //cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.detailTextLabel.text =[wself Marrige];
+            }} whenSelected:^(NSIndexPath *indexPath){
+                __weak LJPickerViewController *ljpicker=wself.ljPickerView;
+                NSArray *arr=@[@"保密",@"单身",@"恋爱中",@"订婚",@"已婚",@"离异"];
+                NSArray *arr1=@[arr];
+                ljpicker.dataArray=arr1;
+                ljpicker.backgroundImage=[wself ScreenShot];
+                ljpicker.doneFunc=^{
+                    _marrige=ljpicker.backString1;
+                    [wself.tableViewCon.tableView reloadData];
+                };
+                [wself.navigationController pushViewController:ljpicker animated:YES];
+                
+            }];
+        
+        
+    }];
 }
 -(UIImage*)ScreenShot{
-         //这里因为我需要全屏接图所以直接改了，宏定义iPadWithd为1024，iPadHeight为768，
-     //    UIGraphicsBeginImageContextWithOptions(CGSizeMake(640, 960), YES, 0);     //设置截屏大小
-         UIGraphicsBeginImageContextWithOptions(CGSizeMake(SCREENWIT, SCREENHEI), YES, 0);     //设置截屏大小
-         [[self.navigationController.view layer] renderInContext:UIGraphicsGetCurrentContext()];
-         UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+    //这里因为我需要全屏接图所以直接改了，宏定义iPadWithd为1024，iPadHeight为768，
+    //    UIGraphicsBeginImageContextWithOptions(CGSizeMake(640, 960), YES, 0);     //设置截屏大小
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(SCREENWIT, SCREENHEI), YES, 0);     //设置截屏大小
+    [[self.navigationController.view layer] renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
     return viewImage;
-//         UIGraphicsEndImageContext();
-//         CGImageRef imageRef = viewImage.CGImage;
-//     //    CGRect rect = CGRectMake(166, 211, 426, 320);//这里可以设置想要截图的区域
-//         CGRect rect = CGRectMake(0, 0, iPadWidth, iPadHeight);//这里可以设置想要截图的区域
-//         CGImageRef imageRefRect =CGImageCreateWithImageInRect(imageRef, rect);
-//         UIImage *sendImage = [[UIImage alloc] initWithCGImage:imageRefRect];
-
+    //         UIGraphicsEndImageContext();
+    //         CGImageRef imageRef = viewImage.CGImage;
+    //     //    CGRect rect = CGRectMake(166, 211, 426, 320);//这里可以设置想要截图的区域
+    //         CGRect rect = CGRectMake(0, 0, iPadWidth, iPadHeight);//这里可以设置想要截图的区域
+    //         CGImageRef imageRefRect =CGImageCreateWithImageInRect(imageRef, rect);
+    //         UIImage *sendImage = [[UIImage alloc] initWithCGImage:imageRefRect];
+    
 }
 - (void)setupSection2
 {
@@ -799,7 +826,7 @@
                     [SVProgressHUD showErrorWithStatus:@"请稍后再试"];
                     return ;
                 }
-
+                
                 ljpicker.dataArray=arr1;
                 ljpicker.isArea=YES;
                 ljpicker.backgroundImage=[wself ScreenShot];
@@ -852,7 +879,7 @@
                     [SVProgressHUD showErrorWithStatus:@"请稍后再试"];
                     return ;
                 }
-
+                
                 ljpicker.dataArray=arr1;
                 ljpicker.isArea=YES;
                 ljpicker.backgroundImage=[wself ScreenShot];
@@ -868,7 +895,7 @@
 {
     __weak OWTUserInfoEditViewCon* wself = self;
     __weak LJUserInformation *wlj=_ljuser;
-
+    
     [_tableViewCon addSection:^(JMStaticContentTableViewSection *section, NSUInteger sectionIndex) {
         [section addCell:^(JMStaticContentTableViewCell* staticContentCell, UITableViewCell* cell, NSIndexPath* indexPath) {
             staticContentCell.cellStyle = UITableViewCellStyleValue1;
@@ -889,7 +916,7 @@
                     _occupation=ljpicker.backString1;
                     [wself.tableViewCon.tableView reloadData];
                 };
-               [wself.navigationController pushViewController:ljpicker animated:YES];
+                [wself.navigationController pushViewController:ljpicker animated:YES];
                 
             }];
         [section addCell:^(JMStaticContentTableViewCell* staticContentCell, UITableViewCell* cell, NSIndexPath* indexPath) {
@@ -906,7 +933,7 @@
                 __weak LJFavorite *ljfavc=wself.favorite;
                 NSMutableString *str=(NSMutableString *)[wself Favority];
                 if (![str isEqualToString:@""]) {
-                NSArray *arr1=[str componentsSeparatedByString:@","];
+                    NSArray *arr1=[str componentsSeparatedByString:@","];
                     [ljfavc.hobbies removeAllObjects];
                     [ljfavc.hobbies addObjectsFromArray:arr1];
                 }
@@ -920,12 +947,12 @@
                 //[wself.navigationController presentViewController:ljfavc animated:YES completion:nil];
                 
             }];
-        }];
+    }];
 }
 
-- (void)setUser:(OWTUser *)user
+- (void)setUser:(QJUser *)user
 {
-    _user = user;
+    _user1 = user;
     [self.tableViewCon.tableView reloadData];
 }
 
@@ -937,7 +964,7 @@
     }
     else
     {
-        return _user.nickname;
+        return _user1.nickName;
     }
 }
 
@@ -953,37 +980,37 @@
     }
 }
 -(NSString *)Sex
-{
-    if (_sex!=nil) {
+{   //如果有改动  返回改动指
+     if (_sex!=nil) {
         return _sex;
     }
     else
-    {
+    {   //没后改动 返回当前值
         return _ljuser.Sex;
     }
 }
 -(NSString *)decade
 {
     if (_decade!=nil) {
-    return _decade;
-}
-else
-{
-    return _ljuser.decade;
-}
+        return _decade;
+    }
+    else
+    {
+        return _ljuser.decade;
+    }
 }
 -(NSString *)Constellation
 {
     if (_constellation!=nil) {
-    return _constellation;
+        return _constellation;
+    }
+    else
+    {
+        return _ljuser.Constellation;
+    }
 }
-else
-{
-    return _ljuser.Constellation;
-}
-}
--(NSString *)BirthLocation
-{if (_birthLocation!=nil) {
+-(NSString *)BirthLocation{
+    if (_birthLocation != nil) {
     return _birthLocation;
 }
 else

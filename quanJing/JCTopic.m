@@ -44,7 +44,9 @@
 -(void)upDate{
     NSMutableArray * tempImageArray = [[NSMutableArray alloc]init];
     _cacheArray = [[NSMutableArray alloc]init];
-    
+    if (self.pics.count <1) {
+        return;
+    }
     [tempImageArray addObject:[self.pics lastObject]];
     for (id obj in self.pics) {
         [tempImageArray addObject:obj];

@@ -304,6 +304,7 @@
          NSError *error=[pt sendLoginSMS:_cellphone];
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
+                    _resendTimeLeft = 3;
                     [SVProgressHUD showError:error];
                 }
     
