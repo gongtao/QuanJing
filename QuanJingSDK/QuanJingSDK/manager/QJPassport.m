@@ -519,7 +519,15 @@
 		
 	// stayArea
 	if (!QJ_IS_NUM_NIL(user.stayArea))
-		params[@"stayArea"] = user.stayArea;
+        params[@"stayArea"] = user.stayArea;
+    
+    // stayArea
+    if (!QJ_IS_NUM_NIL(user.stayAreaAddress))
+        params[@"stayAreaAddress"] = user.stayAreaAddress;
+    
+    // introduce
+    if (!QJ_IS_STR_NIL(user.introduce))
+        params[@"introduce"] = user.introduce;
 		
 	// When request fails, if it could, retry it 3 times at most.
 	int i = 3;
