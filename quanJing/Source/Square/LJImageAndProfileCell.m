@@ -240,7 +240,13 @@
 		_likeBtn.selected = YES;
 		[_likeBtn setBackgroundImage:[UIImage imageNamed:@"发现10_24.png"] forState:UIControlStateNormal];
         QJActionObject *actionModel=_viewContoller.activeList[_number];
-        NSMutableArray *arr=(NSMutableArray *)actionModel.likes;
+        NSMutableArray *arr;
+        if (actionModel.likes) {
+            arr=(NSMutableArray *)actionModel.likes;
+        }else
+        {
+            arr=[[NSMutableArray alloc]init];
+        }
         NSMutableArray * arr1 = (NSMutableArray *)actionModel.comments;
 		if (arr1.count > 0)
 			imageHeight += 20;
@@ -434,7 +440,7 @@
     CGFloat cellHeight = 0;
 //头像部分
     QJUser *user=actionModel.user;
-    [_headerImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_headerImageView.bounds.size]] placeholderImage:nil];
+    [_headerImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_headerImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像"]];
     CGSize size = [user.nickName sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(300, 200)];
     if (0) {
         _careBtn.tag = 0;
@@ -471,6 +477,7 @@
         ImageView = [[UIImageView alloc]initWithFrame:CGRectZero];
         //        ImageView.contentMode=UIViewContentModeScaleAspectFit;
         QJImageObject *imageModel=_assets[0];
+        if (imageModel.width&&imageModel.height) {
         float imageWidth=imageModel.width.floatValue;
         float imageHeight=imageModel.height.floatValue;
         if (imageWidth > imageHeight) {
@@ -492,6 +499,12 @@
                 ImageView.frame = CGRectMake(5, cellHeight, x, height);
                 cellHeight += (10 + height);
             }
+        }
+        }else {
+            ImageView.contentMode = UIViewContentModeScaleAspectFill;
+            ImageView.clipsToBounds = YES;
+            ImageView.frame=CGRectMake(5, cellHeight, x, 320);
+            cellHeight +=330;
         }
         [ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]];
         ImageView.tag = 400 + number;
@@ -519,24 +532,9 @@
         NSInteger pa = 0;
         
         for (QJImageObject *imageModel in _assets) {
-            float imageWidth=imageModel.width.floatValue;
-            float imageHeight=imageModel.height.floatValue;
-            if (imageWidth> imageHeight) {
-                height = x / imageWidth * imageHeight;
-                //                if (imageH>height) {
-                //                ImageView=[[UIImageView alloc]initWithFrame:CGRectMake(pa*x, (imageH-height)/2, x, height)];
-                //                }else {
-                ImageView = [[UIImageView alloc]initWithFrame:CGRectMake(pa * x, 0, x, imageH)];
-                ImageView.clipsToBounds = YES;
-                ImageView.contentMode = UIViewContentModeScaleAspectFill;
-                //                }
-            }
-            else {
-                width = x / imageHeight * imageWidth;
-                ImageView = [[UIImageView alloc]initWithFrame:CGRectMake(pa * x, 0, x, imageH)];
-                ImageView.clipsToBounds = YES;
-                ImageView.contentMode = UIViewContentModeScaleAspectFill;
-            }
+            ImageView = [[UIImageView alloc]initWithFrame:CGRectMake(pa * x, 0, x, imageH)];
+            ImageView.clipsToBounds = YES;
+            ImageView.contentMode = UIViewContentModeScaleAspectFill;
             ImageView.tag = 400 + pa;
             ImageView.userInteractionEnabled = YES;
             [ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]];
@@ -643,7 +641,7 @@
             commentImage.tag = 500 + i;
             UITapGestureRecognizer * commentTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onCommentTap:)];
             commentImage.userInteractionEnabled = YES;
-            [commentImage setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:commentImage.bounds.size]]];
+            [commentImage setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:commentImage.bounds.size]]placeholderImage:[UIImage imageNamed:@"头像"]];
             [commentImage addGestureRecognizer:commentTap];
             [self.contentView addSubview:commentImage];
             

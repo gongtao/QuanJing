@@ -540,7 +540,12 @@
     }
     if (_textField.text!=nil&&_textField.text.length!=0&&ret) {
         QJActionObject *actionModel=_activeList[_pageNum];
-        NSMutableArray *comments=(NSMutableArray *)actionModel.comments;
+        NSMutableArray *comments;
+        if (actionModel.comments) {
+        comments=(NSMutableArray *)actionModel.comments;
+        }else {
+            comments=[[NSMutableArray alloc]init];
+        }
         NSMutableArray *likes=(NSMutableArray *)actionModel.likes;
         QJCommentObject *commentModel=[[QJCommentObject alloc]init];
         commentModel.user=user;

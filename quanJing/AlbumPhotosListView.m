@@ -956,7 +956,11 @@
     
     NSMutableArray *imageUrls=[[NSMutableArray alloc]init];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
+        dispatch_semaphore_t sem=dispatch_semaphore_create(0);
+        __weak QJDatabaseManager *wmanager=manager;
+    [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
         BOOL ret=NO;
         for (NSString *str in someCaptions) {
             if (![str isEqualToString:@""]) {
@@ -1049,7 +1053,10 @@
                 [_maintableview reloadData];
             }
         });
-        
+    } finished:^(NSManagedObjectContext * _Nonnull mainContext) {
+        dispatch_semaphore_signal(sem);
+    }];
+                dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
     });
     
 }
