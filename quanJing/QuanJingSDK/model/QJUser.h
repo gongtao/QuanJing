@@ -64,6 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSNumber * uploadAmount;
 
+@property (nonatomic, strong, nullable) NSNumber * likeAmount;
+
 @property (nonatomic, strong, nullable) NSString * userName;
 
 @property (nonatomic, strong, nullable) NSString * website;

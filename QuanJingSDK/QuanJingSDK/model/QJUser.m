@@ -80,14 +80,6 @@
 	else
 		self.bornArea = nil;
 		
-	// collectAmount
-	NSNumber * collectAmount = json[@"collectAmount"];
-	
-	if (!QJ_IS_NUM_NIL(collectAmount))
-		self.collectAmount = collectAmount;
-	else
-		self.collectAmount = nil;
-		
 	// creatTime
 	NSNumber * creatTime = json[@"creatTime"];
 	
@@ -103,22 +95,6 @@
 		self.email = email;
 	else
 		self.email = nil;
-		
-	// fansAmount
-	NSNumber * fansAmount = json[@"fansAmount"];
-	
-	if (!QJ_IS_NUM_NIL(fansAmount))
-		self.fansAmount = fansAmount;
-	else
-		self.fansAmount = nil;
-		
-	// followAmount
-	NSNumber * followAmount = json[@"followAmount"];
-	
-	if (!QJ_IS_NUM_NIL(followAmount))
-		self.followAmount = followAmount;
-	else
-		self.followAmount = nil;
 		
 	// gender
 	NSNumber * gender = json[@"gender"];
@@ -240,14 +216,6 @@
 	else
 		self.stayAreaAddress = nil;
 		
-	// uploadAmount
-	NSNumber * uploadAmount = json[@"uploadAmount"];
-	
-	if (!QJ_IS_NUM_NIL(uploadAmount))
-		self.uploadAmount = uploadAmount;
-	else
-		self.uploadAmount = nil;
-		
 	// userName
 	NSString * userName = json[@"userName"];
 	
@@ -263,6 +231,51 @@
 		self.website = website;
 	else
 		self.website = nil;
+		
+	// amount
+	NSDictionary * amount = json[@"amount"];
+	
+	if (!QJ_IS_DICT_NIL(amount)) {
+		// collectAmount
+		NSNumber * collectAmount = amount[@"collect"];
+		
+		if (!QJ_IS_NUM_NIL(collectAmount))
+			self.collectAmount = collectAmount;
+		else
+			self.collectAmount = nil;
+			
+		// fansAmount
+		NSNumber * fansAmount = amount[@"fans"];
+		
+		if (!QJ_IS_NUM_NIL(fansAmount))
+			self.fansAmount = fansAmount;
+		else
+			self.fansAmount = nil;
+			
+		// followAmount
+		NSNumber * followAmount = amount[@"follow"];
+		
+		if (!QJ_IS_NUM_NIL(followAmount))
+			self.followAmount = followAmount;
+		else
+			self.followAmount = nil;
+			
+		// likeAmount
+		NSNumber * likeAmount = amount[@"like"];
+		
+		if (!QJ_IS_NUM_NIL(likeAmount))
+			self.likeAmount = likeAmount;
+		else
+			self.likeAmount = nil;
+			
+		// uploadAmount
+		NSNumber * uploadAmount = amount[@"upload"];
+		
+		if (!QJ_IS_NUM_NIL(uploadAmount))
+			self.uploadAmount = uploadAmount;
+		else
+			self.uploadAmount = nil;
+	}
 }
 
 @end
