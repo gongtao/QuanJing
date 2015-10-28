@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QJUtils : NSObject
 
++ (NSString *)realImageUrlFromServerUrl:(NSString *)url;
+
 + (nullable NSError *)errorFromOperation:(AFHTTPRequestOperation *)operation;
 
 ///---------------------------------
@@ -32,4 +34,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-#endif /* ifndef QJUtils_h */
+#endif	/* ifndef QJUtils_h */

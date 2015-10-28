@@ -51,13 +51,14 @@
 
 + (NSString *)thumbnailUrlFromImageUrl:(NSString *)imageUrl size:(CGSize)size
 {
-//	if (size.width <= 0.0)
-//		return imageUrl;
-//		
-//	NSUInteger width = (NSUInteger)size.width;
-//	NSString * url = [imageUrl stringByAppendingString:@"@"];
-//	return [url stringByAppendingString:[NSString stringWithFormat:@"%luw_90Q_1x.jpg", width]];
-    return imageUrl;
+	if ((size.width <= 0.0) && (size.height <= 0.0))
+		return imageUrl;
+		
+	NSUInteger width = (NSUInteger)size.width * [[UIScreen mainScreen] scale];
+	NSUInteger height = (NSUInteger)size.height * [[UIScreen mainScreen] scale];
+	NSString * url = [imageUrl stringByAppendingString:@"@"];
+	NSString * resultUrl = [url stringByAppendingString:[NSString stringWithFormat:@"%luw_%luh_90Q_1x.jpg", width, height]];
+	return resultUrl;
 }
 
 - (instancetype)init

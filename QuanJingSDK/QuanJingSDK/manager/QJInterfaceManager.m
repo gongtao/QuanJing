@@ -51,19 +51,12 @@
 
 + (NSString *)thumbnailUrlFromImageUrl:(NSString *)imageUrl size:(CGSize)size
 {
-	//	if ((size.width <= 0.0) || (size.height <= 0.0))
-	//		return imageUrl;
-	//
-	//	NSString * whStr = nil;
-	//
-	//	if (size.width > size.height)
-	//		whStr = [NSString stringWithFormat:@"%luw", (NSUInteger)size.width];
-	//	else
-	//		whStr = [NSString stringWithFormat:@"%luh", (NSUInteger)size.height];
-	//	NSString * url = [imageUrl stringByAppendingString:@"@"];
-	//	return [url stringByAppendingString:whStr];
-	
-	return imageUrl;
+	if (size.width <= 0.0)
+		return imageUrl;
+		
+	NSUInteger width = (NSUInteger)size.width;
+	NSString * url = [imageUrl stringByAppendingString:@"@"];
+	return [url stringByAppendingString:[NSString stringWithFormat:@"%luw_90Q_1x.jpg", width]];
 }
 
 - (instancetype)init

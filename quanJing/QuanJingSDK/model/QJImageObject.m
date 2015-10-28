@@ -10,6 +10,8 @@
 
 #import "QJCoreMacros.h"
 
+#import "QJUtils.h"
+
 @implementation QJImageObject
 
 - (instancetype)initWithJson:(nullable NSDictionary *)json
@@ -55,13 +57,13 @@
 	NSString * url = json[@"url"];
 	
 	if (!QJ_IS_STR_NIL(url)) {
-		self.url = url;
+		self.url = [QJUtils realImageUrlFromServerUrl:url];
 	}
 	else {
 		NSString * imageUrl = json[@"imageUrl"];
 		
 		if (!QJ_IS_STR_NIL(imageUrl))
-			self.url = imageUrl;
+			self.url = [QJUtils realImageUrlFromServerUrl:imageUrl];
 	}
 	
 	// bgcolor

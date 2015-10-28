@@ -14,6 +14,12 @@
 // 域名地址
 static NSString * const kQJServerURL = @"http://mapp.tiankong.com";
 
+// 要替换的图片域名地址
+static NSString * const kQJFakePhotoServerHost = @"quanjing-photo.oss.aliyuncs.com";
+
+// 图片域名地址
+static NSString * const kQJPhotoServerHost = @"quanjing-photo.img-cn-hangzhou.aliyuncs.com";
+
 // 图片故事详情url
 static NSString * const kQJArticleDetailURL = @"http://mapp.tiankong.com/articleSys/show?id=";
 
@@ -111,13 +117,13 @@ static NSString * const kQJUserLikeImageListPath = @"/imageLike/list";
 static NSString * const kQJUserFollowListPath = @"/userFollow/list";
 
 // 用户粉丝列表
-static NSString * const kQJUserFollowMeListPath = @"/userFllow/fllowMe";
+static NSString * const kQJUserFollowMeListPath = @"/userFollow/fllowMe";
 
 // 用户新增关注
-static NSString * const kQJUserFollowUserPath = @"/userFllow/save.user";
+static NSString * const kQJUserFollowUserPath = @"/userFollow/save.user";
 
 // 用户取消关注
-static NSString * const kQJUserCancelFollowUserPath = @"/userFllow/save.user";
+static NSString * const kQJUserCancelFollowUserPath = @"/userFollow/save.user";
 
 // 关注用户的图片列表
 static NSString * const kQJUserFollowUserImageListPath = @"/imageUser/followDetail.user";

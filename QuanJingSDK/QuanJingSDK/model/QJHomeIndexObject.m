@@ -10,6 +10,8 @@
 
 #import "QJCoreMacros.h"
 
+#import "QJUtils.h"
+
 @implementation QJHomeIndexObject
 
 - (instancetype)initWithJson:(NSDictionary *)json
@@ -34,7 +36,7 @@
 	NSString * imageUrl = json[@"imageUrl"];
 	
 	if (!QJ_IS_STR_NIL(imageUrl))
-		self.imageUrl = imageUrl;
+		self.imageUrl = [QJUtils realImageUrlFromServerUrl:imageUrl];
 		
 	NSString * linkData = json[@"linkData"];
 	

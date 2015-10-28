@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QJUtils : NSObject
 
++ (NSString *)realImageUrlFromServerUrl:(NSString *)url;
+
 + (nullable NSError *)errorFromOperation:(NSDictionary *)responseObject;
 
 + (NSString *)stringFromJSONObject:(id)object error:(NSError * __autoreleasing *)error;

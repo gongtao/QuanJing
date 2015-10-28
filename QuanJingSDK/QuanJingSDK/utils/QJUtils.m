@@ -12,7 +12,24 @@
 
 #import "QJErrorCode.h"
 
+#import "QJServerConstants.h"
+
 @implementation QJUtils
+
+#pragma mark - URL
+
++ (NSString *)realImageUrlFromServerUrl:(NSString *)url
+{
+	if ([url hasPrefix:@"http://"] ||
+		[url hasPrefix:@"https://"])
+		return [url stringByReplacingOccurrencesOfString:kQJFakePhotoServerHost
+			   withString:kQJPhotoServerHost];
+			   
+	NSString * resultUrl = [NSString stringWithFormat:@"http://%@", kQJPhotoServerHost];
+	return [resultUrl stringByAppendingString:url];
+}
+
+#pragma mark - error
 
 + (NSError *)errorFromOperation:(AFHTTPRequestOperation *)operation
 {

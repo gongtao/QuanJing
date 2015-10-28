@@ -10,6 +10,8 @@
 
 #import "QJCoreMacros.h"
 
+#import "QJUtils.h"
+
 @implementation QJImageCategory
 
 - (instancetype)initWithJson:(nullable NSDictionary *)json
@@ -42,7 +44,7 @@
 	NSString * image = json[@"image"];
 	
 	if (!QJ_IS_STR_NIL(image))
-		self.image = image;
+		self.image = [QJUtils realImageUrlFromServerUrl:image];
 		
 	// imageCount
 	NSNumber * imageCount = json[@"imageCount"];

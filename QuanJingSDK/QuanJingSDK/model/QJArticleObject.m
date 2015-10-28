@@ -12,6 +12,8 @@
 
 #import "QJServerConstants.h"
 
+#import "QJUtils.h"
+
 @implementation QJArticleObject
 
 - (instancetype)initWithJson:(nullable NSDictionary *)json
@@ -29,13 +31,13 @@
 		return;
 		
 	// aid
-    NSNumber * aid = json[@"id"];
-    
-    if (!QJ_IS_NUM_NIL(aid)) {
-        self.aid = aid;
-        self.url = [kQJArticleDetailURL stringByAppendingString:[aid stringValue]];
-    }
-		
+	NSNumber * aid = json[@"id"];
+	
+	if (!QJ_IS_NUM_NIL(aid)) {
+		self.aid = aid;
+		self.url = [kQJArticleDetailURL stringByAppendingString:[aid stringValue]];
+	}
+	
 	// categoryId
 	NSNumber * categoryId = json[@"categoryId"];
 	
@@ -82,7 +84,7 @@
 	NSString * coverUrl = json[@"coverUrl"];
 	
 	if (!QJ_IS_STR_NIL(coverUrl))
-		self.coverUrl = coverUrl;
+		self.coverUrl = [QJUtils realImageUrlFromServerUrl:coverUrl];
 		
 	// creatTime
 	NSNumber * creatTime = json[@"creatTime"];

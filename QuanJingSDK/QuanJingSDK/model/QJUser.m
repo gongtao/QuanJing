@@ -10,6 +10,8 @@
 
 #import "QJCoreMacros.h"
 
+#import "QJUtils.h"
+
 @implementation QJUser
 
 - (instancetype)initWithJson:(nullable NSDictionary *)json
@@ -66,7 +68,7 @@
 	NSString * avatar = json[@"avatar"];
 	
 	if (!QJ_IS_STR_NIL(avatar))
-		self.avatar = avatar;
+		self.avatar = [QJUtils realImageUrlFromServerUrl:avatar];
 	else
 		self.avatar = nil;
 		
@@ -231,9 +233,9 @@
 		self.stayArea = nil;
 		
 	// stayAreaAddress
-	NSString * stayAreaAddress = json[@"stayAreaAddress"];
+	NSNumber * stayAreaAddress = json[@"stayAreaAddress"];
 	
-	if (!QJ_IS_STR_NIL(stayAreaAddress))
+	if (!QJ_IS_NUM_NIL(stayAreaAddress))
 		self.stayAreaAddress = stayAreaAddress;
 	else
 		self.stayAreaAddress = nil;
