@@ -47,11 +47,23 @@
 	if (!QJ_IS_NUM_NIL(userId))
 		self.userId = userId;
 		
+	// albumId
+	NSNumber * albumId = json[@"albumId"];
+	
+	if (!QJ_IS_NUM_NIL(albumId))
+		self.albumId = albumId;
+		
 	// tag
 	NSString * tag = json[@"tag"];
 	
 	if (!QJ_IS_STR_NIL(tag))
 		self.tag = tag;
+		
+	// title
+	NSString * title = json[@"title"];
+	
+	if (!QJ_IS_STR_NIL(title))
+		self.title = title;
 		
 	// url
 	NSString * url = json[@"url"];
@@ -201,6 +213,30 @@
 	
 	if (!QJ_IS_STR_NIL(source))
 		self.source = source;
+		
+	// open
+	NSNumber * open = json[@"open"];
+	
+	if (!QJ_IS_NUM_NIL(open))
+		self.open = open;
+		
+	// position
+	NSString * position = json[@"position"];
+	
+	if (!QJ_IS_STR_NIL(position))
+		self.position = position;
+		
+	// rank
+	NSNumber * rank = json[@"rank"];
+	
+	if (!QJ_IS_NUM_NIL(rank))
+		self.rank = rank;
+		
+	// size
+	NSNumber * size = json[@"size"];
+	
+	if (!QJ_IS_NUM_NIL(size))
+		self.size = size;
 }
 
 @end

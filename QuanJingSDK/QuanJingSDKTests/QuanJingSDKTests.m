@@ -233,6 +233,15 @@
 				if (error)
 					XCTFail(@"testImageSearchExample error: %@", error);
 			}];
+			
+			[[QJInterfaceManager sharedManager] requestImageSearchKey:@"家"
+			pageNum:2
+			pageSize:20
+			currentImageId:nil
+			finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
+				if (error)
+					XCTFail(@"testImageSearchExample error: %@", error);
+			}];
 			[expectation fulfill];
 		});
 		[self waitForExpectationsWithTimeout:300.0 handler:^(NSError * error) {
@@ -385,8 +394,8 @@
 	[self measureBlock:^{
 		XCTestExpectation * expectation = [self expectationWithDescription:@"testImageExample"];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            NSNumber * imageId = [NSNumber numberWithLongLong:900006405];
-            NSNumber * imageId = [NSNumber numberWithLongLong:683536917955692];
+			//            NSNumber * imageId = [NSNumber numberWithLongLong:900006405];
+			NSNumber * imageId = [NSNumber numberWithLongLong:683536917955692];
 			NSNumber * imageType = [NSNumber numberWithLongLong:2];
 			
 			[[QJInterfaceManager sharedManager] requestImageDetail:imageId
@@ -470,7 +479,7 @@
 			pageNum:1
 			pageSize:20
 			currentImageId:nil
-			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+			finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testUserImageListExample error: %@", error);
 			}];

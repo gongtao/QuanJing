@@ -16,11 +16,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSNumber * imageId;
 
+@property (nonatomic, strong, nullable) NSNumber * albumId;
+
 @property (nonatomic, strong, nullable) NSNumber * width;
 
 @property (nonatomic, strong, nullable) NSNumber * height;
 
 @property (nonatomic, strong, nullable) NSString * tag;
+
+@property (nonatomic, strong, nullable) NSString * title;
 
 @property (nonatomic, strong) NSString * url;
 
@@ -65,6 +69,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSDate * shootingDate;
 
 @property (nonatomic, strong, nullable) NSString * source;
+
+@property (nonatomic, strong, nullable) NSNumber * open;
+
+@property (nonatomic, strong, nullable) NSString * position;
+
+@property (nonatomic, strong, nullable) NSNumber * rank;
+
+@property (nonatomic, strong, nullable) NSNumber * size;
 
 - (instancetype)initWithJson:(nullable NSDictionary *)json;
 

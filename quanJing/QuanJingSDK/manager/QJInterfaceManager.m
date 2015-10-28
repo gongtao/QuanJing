@@ -997,7 +997,7 @@
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
 	currentImageId:(nullable NSNumber *)imageId
-	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished
+	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished
 {
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
 	
@@ -1038,18 +1038,16 @@
 		i--;
 	} while (error && i >= 0);
 	
-	BOOL isLastPage = NO;
-	
 	if (!error) {
 		NSLog(@"%@", responseObject);
-		NSDictionary * dataDic = responseObject[@"data"];
 		
-		NSNumber * lastPageNum = dataDic[@"isLastPage"];
+		NSArray * dataArray = responseObject[@"data"];
 		
-		if (!QJ_IS_NUM_NIL(lastPageNum))
-			isLastPage = lastPageNum.boolValue;
-			
-		NSArray * dataArray = dataDic[@"list"];
+		if (!QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
@@ -1062,12 +1060,12 @@
 		}];
 		
 		if (finished)
-			finished(resultArray, isLastPage, dataArray, error);
+			finished(resultArray, dataArray, error);
 		return;
 	}
 	
 	if (finished)
-		finished(nil, isLastPage, nil, error);
+		finished(nil, nil, error);
 }
 
 - (void)requestUserCollectImageList:(NSUInteger)pageNum
