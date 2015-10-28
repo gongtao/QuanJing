@@ -90,9 +90,16 @@
 	// user
 	NSDictionary * user = json[@"user"];
 	
-	if (!QJ_IS_DICT_NIL(user))
+	if (!QJ_IS_DICT_NIL(user)) {
 		self.user = [[QJUser alloc] initWithJson:user];
 		
+		// hasFollowUser
+		NSNumber * hasFollowUser = json[@"hasFollowUser"];
+		
+		if (!QJ_IS_NUM_NIL(hasFollowUser))
+			self.user.hasFollowUser = hasFollowUser;
+	}
+	
 	// userId
 	NSNumber * userId = json[@"userId"];
 	

@@ -60,13 +60,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSNumber * stayArea;
 
-@property (nonatomic, strong, nullable) NSString * stayAreaAddress;
+@property (nonatomic, strong, nullable) NSNumber * stayAreaAddress;
 
 @property (nonatomic, strong, nullable) NSNumber * uploadAmount;
 
 @property (nonatomic, strong, nullable) NSString * userName;
 
 @property (nonatomic, strong, nullable) NSString * website;
+
+@property (nonatomic, strong, nullable) NSNumber * hasFollowUser;
 
 - (instancetype)initWithJson:(nullable NSDictionary *)json;
 

@@ -68,6 +68,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSString * website;
 
+@property (nonatomic, strong, nullable) NSNumber * hasFollowUser;
+
 - (instancetype)initWithJson:(nullable NSDictionary *)json;
 
 - (void)setPropertiesFromJson:(NSDictionary *)json;
