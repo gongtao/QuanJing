@@ -639,7 +639,7 @@
         QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
         dispatch_semaphore_t sem=dispatch_semaphore_create(0);
         __weak QJDatabaseManager *wmanager=manager;
-        [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
+        [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * concurrencyContext) {
             NSArray *arr1=[wmanager getAllAdviseCaptions:concurrencyContext];
             NSMutableArray *arr2=[[NSMutableArray alloc]initWithArray:arr1];
             if (arr2.count>10) {
@@ -653,7 +653,7 @@
                 [_captionsResouce addObjectsFromArray:arr1];
             }
             
-        } finished:^(NSManagedObjectContext * _Nonnull mainContext) {
+        } finished:^(NSManagedObjectContext * mainContext) {
             dispatch_semaphore_signal(sem);
         }];
         dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
@@ -960,7 +960,7 @@
         QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
         dispatch_semaphore_t sem=dispatch_semaphore_create(0);
         __weak QJDatabaseManager *wmanager=manager;
-    [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
+    [manager performDatabaseUpdateBlock:^(NSManagedObjectContext *  concurrencyContext) {
         BOOL ret=NO;
         for (NSString *str in someCaptions) {
             if (![str isEqualToString:@""]) {
@@ -1053,7 +1053,7 @@
                 [_maintableview reloadData];
             }
         });
-    } finished:^(NSManagedObjectContext * _Nonnull mainContext) {
+    } finished:^(NSManagedObjectContext *  mainContext) {
         dispatch_semaphore_signal(sem);
     }];
                 dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);

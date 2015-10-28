@@ -41,7 +41,6 @@
     NSString *_city;
     NSString *_homeCity;
     BOOL _updatedAvatarAcion;
-    dispatch_group_t _dispathGroup;
 
 }
 
@@ -262,40 +261,10 @@
         }
         params[@"PhoneType"]=@"iphone";
         
-        if (_updatedAvatarAcion) {
-            _dispathGroup = dispatch_group_create();
-            dispatch_group_enter(_dispathGroup);
-        }
         params[@"id"] = [[QJPassport sharedPassport]currentUser].uid ;
         QJUser *user = [[QJUser alloc]initWithJson:params];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [[QJPassport sharedPassport] requestModifyUserInfo:user finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (error == nil) {
-                        NSLog(@"修改成功,修改全局user");
-                        [SVProgressHUD dismiss];
-                        QJUser *updataUser = [[QJPassport sharedPassport] currentUser];
-                        updataUser = user;
-                        if (_updatedAvatarAcion) {
-                            dispatch_group_leave(_dispathGroup);
-                        }else{
-                            [self.navigationController popViewControllerAnimated:YES];
-                        }
-                        if (_doneFunc != nil){
-                            _doneFunc();
-                        }
-                    }else{
-                        [SVProgressHUD showError:error];
-                    }
-                });
-            }];
-            
-        });
         
-        //如果头像被改动
-        if (_updatedAvatarAcion) {
-            dispatch_group_enter(_dispathGroup);
-        }
+        //若头像改动，先上传头像
         if(_updatedAvatarAcion && _updatedAvatar != nil){
             QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -303,10 +272,11 @@
                 [fm requestUserAvatarTempData:imageData  extension:@"jpg" finished:^(NSString * imageUrl, NSDictionary * imageDic, NSError * error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if (error == nil) {
-                            [self updateAvatarByURL:imageUrl];
+                            user.avatar = imageUrl;
+                            [self updateAvatarByURL:user];
                             _updatedAvatarAcion = false;
                             NSLog(@"头像上传成功");
-
+                            
                         }else{
                             [SVProgressHUD showErrorWithStatus:@"头像上传失败"];
                             NSLog(@"头像上传失败");
@@ -314,27 +284,17 @@
                     });
                 }];
             });
-        }
-        if (_updatedAvatarAcion) {
-            //等待同步完成
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                dispatch_group_wait(_dispathGroup, DISPATCH_TIME_FOREVER);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.navigationController popViewControllerAnimated:YES];
-                    
-                });
-            });
+        }else{
+            [self updateAvatarByURL:user];
+            
         }
 
   }];
 }
 
 
--(void)updateAvatarByURL:(NSString*)url
+-(void)updateAvatarByURL:(QJUser*)user
 {
-    QJUser *user = [[QJUser alloc]init];
-    user.avatar = url;
-    user.uid = [[QJPassport sharedPassport] currentUser].uid;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[QJPassport sharedPassport] requestModifyUserInfo:user finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -343,11 +303,7 @@
                     [SVProgressHUD dismiss];
                     QJUser *updataUser = [[QJPassport sharedPassport] currentUser];
                     updataUser = user;
-                    if (_updatedAvatarAcion) {
-                        dispatch_group_leave(_dispathGroup);
-                    }else{
-                        [self.navigationController popViewControllerAnimated:YES];
-                    }
+                    [self.navigationController popViewControllerAnimated:YES];
                     if (_doneFunc != nil){
                         _doneFunc();
                     }
