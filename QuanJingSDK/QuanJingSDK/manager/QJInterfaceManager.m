@@ -135,6 +135,12 @@
 		NSLog(@"%@", operation.responseObject);
 		NSArray * dataArray = operation.responseObject[@"data"];
 		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
+		
 		if (finished)
 			finished([self resultDicFromHomeIndexResponseData:dataArray], dataArray, error);
 		return;
@@ -191,6 +197,12 @@
 		NSLog(@"%@", operation.responseObject);
 		NSArray * dataArray = operation.responseObject[@"data"];
 		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
+		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 			QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
@@ -242,6 +254,12 @@
 		NSLog(@"%@", operation.responseObject);
 		NSArray * dataArray = operation.responseObject[@"data"];
 		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
+		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 			[resultArray addObject:[[QJImageCategory alloc] initWithJson:obj]];
@@ -286,6 +304,12 @@
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
 		NSArray * dataArray = operation.responseObject[@"data"];
+		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
@@ -346,6 +370,12 @@
 		NSLog(@"%@", operation.responseObject);
 		NSDictionary * dataDic = operation.responseObject[@"data"];
 		NSArray * dataArray = dataDic[@"page"];
+		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, cursorIndex, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
 		
 		__block NSNumber * nextCursorIndex = nil;
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
@@ -434,6 +464,12 @@
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
 		NSArray * dataArray = operation.responseObject[@"data"];
+		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, nil, cursorIndex, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
 		
 		[self resultArrayFromActionListResponseData:dataArray
 		finished:^(NSArray * actionArray, NSNumber * nextCursorIndex) {
@@ -967,11 +1003,12 @@
 		NSLog(@"%@", operation.responseObject);
 		
 		NSArray * dataArray = operation.responseObject[@"data"];
-        if (!QJ_IS_ARRAY_NIL(dataArray)) {
-            if (finished)
-                finished(nil, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
-            return;
-        }
+		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
@@ -1041,6 +1078,12 @@
 			
 		NSArray * dataArray = dataDic[@"list"];
 		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, NO, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
+		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 			[resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
@@ -1103,6 +1146,12 @@
 			isLastPage = lastPageNum.boolValue;
 			
 		NSArray * dataArray = dataDic[@"list"];
+		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, NO, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
@@ -1170,6 +1219,12 @@
 			isLastPage = lastPageNum.boolValue;
 			
 		NSArray * dataArray = dataDic[@"list"];
+		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, NO, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
@@ -1241,6 +1296,12 @@
 			
 		NSArray * dataArray = dataDic[@"list"];
 		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, NO, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
+		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 			[resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
@@ -1305,6 +1366,12 @@
 			isLastPage = lastPageNum.boolValue;
 			
 		NSArray * dataArray = dataDic[@"list"];
+		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, NO, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
@@ -1374,6 +1441,12 @@
 			isLastPage = lastPageNum.boolValue;
 			
 		NSArray * dataArray = dataDic[@"list"];
+		
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			if (finished)
+				finished(nil, NO, nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil]);
+			return;
+		}
 		
 		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {

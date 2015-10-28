@@ -9,19 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "XHRefreshControl.h"
 #import "QuanJingSDK.h"
-@interface OWTUserViewCon : UIViewController<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, XHRefreshControlDelegate>
+@interface OWTUserViewCon : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, XHRefreshControlDelegate>
 
-@property (nonatomic, strong) OWTUser* user;
-@property(nonatomic,strong)QJUser *quser;
+@property (nonatomic, strong) OWTUser * user;
+@property(nonatomic, strong) QJUser * quser;
 @property (nonatomic, strong) int (^numberOfAssetsFunc)();
-@property (nonatomic, strong) OWTAsset* (^assetAtIndexFunc)(NSInteger index);
-@property (nonatomic, strong) void (^onAssetSelectedFunc)(OWTAsset* asset);
-@property (nonatomic, strong) void (^refreshDataFunc)(void (^refreshDoneFunc)());
-@property (nonatomic, strong) void (^loadMoreDataFunc)(void (^loadDoneFunc)());
-@property (nonatomic, strong) NSNumber* totalAssetNum;
+@property (nonatomic, strong) OWTAsset *(^assetAtIndexFunc)(NSInteger index);
+@property (nonatomic, strong) void (^onAssetSelectedFunc)(OWTAsset * asset);
+@property (nonatomic, strong) void (^refreshDataFunc)(void (^ refreshDoneFunc)());
+@property (nonatomic, strong) void (^loadMoreDataFunc)(void (^ loadDoneFunc)());
+@property (nonatomic, strong) NSNumber * totalAssetNum;
 @property (nonatomic, assign) BOOL rightTriggle;
 @property (nonatomic, assign) BOOL ifFirstEnter;
 
-
--(void)adealloc;
+- (void)adealloc;
 @end

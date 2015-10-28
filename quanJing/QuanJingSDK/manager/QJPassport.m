@@ -469,19 +469,15 @@
 	if (!error) {
 		NSLog(@"%@", responseObject);
 		NSDictionary * dataDic = responseObject[@"data"];
+		QJUser * user = [[QJUser alloc] initWithJson:dataDic];
 		
-		if (self.currentUser)
-			[self.currentUser setPropertiesFromJson:dataDic];
-		else
-			self.currentUser = [[QJUser alloc] initWithJson:dataDic];
-			
 		if (finished)
-			finished(self.currentUser, dataDic, error);
+			finished(user, dataDic, error);
 		return;
 	}
 	
 	if (finished)
-		finished(self.currentUser, nil, error);
+		finished(nil, nil, error);
 }
 
 - (void)requestModifyUserInfo:(QJUser *)user
@@ -547,15 +543,15 @@
 		
 	// stayArea
 	if (!QJ_IS_NUM_NIL(user.stayArea))
-        params[@"stayArea"] = user.stayArea;
-    
-    // stayArea
-    if (!QJ_IS_NUM_NIL(user.stayAreaAddress))
-        params[@"stayAreaAddress"] = user.stayAreaAddress;
-    
-    // introduce
-    if (!QJ_IS_STR_NIL(user.introduce))
-        params[@"introduce"] = user.introduce;
+		params[@"stayArea"] = user.stayArea;
+		
+	// stayArea
+	if (!QJ_IS_NUM_NIL(user.stayAreaAddress))
+		params[@"stayAreaAddress"] = user.stayAreaAddress;
+		
+	// introduce
+	if (!QJ_IS_STR_NIL(user.introduce))
+		params[@"introduce"] = user.introduce;
 		
 	// When request fails, if it could, retry it 3 times at most.
 	int i = 3;
@@ -661,14 +657,16 @@
 			
 		NSArray * dataArray = dataDic[@"list"];
 		
-		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
-		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-			[resultArray addObject:[[QJUser alloc] initWithJson:obj]];
-		}];
-		
-		if (finished)
-			finished(resultArray, isLastPage, dataArray, error);
-		return;
+		if (!QJ_IS_ARRAY_NIL(dataArray)) {
+			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+				[resultArray addObject:[[QJUser alloc] initWithJson:obj]];
+			}];
+			
+			if (finished)
+				finished(resultArray, isLastPage, dataArray, error);
+			return;
+		}
 	}
 	
 	if (finished)
@@ -732,14 +730,16 @@
 			
 		NSArray * dataArray = dataDic[@"list"];
 		
-		__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
-		[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-			[resultArray addObject:[[QJUser alloc] initWithJson:obj]];
-		}];
-		
-		if (finished)
-			finished(resultArray, isLastPage, dataArray, error);
-		return;
+		if (QJ_IS_ARRAY_NIL(dataArray)) {
+			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+				[resultArray addObject:[[QJUser alloc] initWithJson:obj]];
+			}];
+			
+			if (finished)
+				finished(resultArray, isLastPage, dataArray, error);
+			return;
+		}
 	}
 	
 	if (finished)
