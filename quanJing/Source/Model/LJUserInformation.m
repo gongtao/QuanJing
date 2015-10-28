@@ -14,6 +14,59 @@
     
 }
 
+-(NSString*)cityCode2CityName:(NSNumber*)cityCode
+{
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/cityDode2Name.archiver"];//添加储存的文件名
+    NSArray *array =  [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSString *result = nil;
+    if (array == nil) {
+        return nil;
+    }else{
+        for (NSDictionary *dic in array) {
+            if ([dic[@"DictId"] isEqualToString:[cityCode stringValue]]) {
+                NSString *city = dic[@"DictName"];
+                NSString* provinceID = dic[@"ParentID"];
+                NSString *province = @"";
+                for (NSDictionary *dic in array) {
+                    if (dic[@"DictId"] == provinceID) {
+                        province = dic[@"DictName"];
+                    }
+                }
+                result = [NSString stringWithFormat:@"%@ - %@",province,city];
+                
+            }
+        }
+    }
+    
+    return result;
+}
+
+-(NSNumber*)cityName2CityCode:(NSString*)cityName
+{
+    NSArray *arraytmp = [cityName componentsSeparatedByString:@"-"];
+    NSString *tmp  = [arraytmp lastObject];
+    cityName =  [tmp substringFromIndex:1];//截取
+
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/cityDode2Name.archiver"];//添加储存的文件名
+    NSArray *array =  [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSNumber *result = nil;
+    if (array == nil) {
+        return nil;
+    }else{
+        for (NSDictionary *dic in array) {
+            if ([dic[@"DictName"] isEqualToString:cityName]) {
+                NSString *cityCode = dic[@"DictId"];
+                result = [NSNumber numberWithInteger:[cityCode integerValue]];
+                
+            }
+        }
+    }
+    
+    return result;
+}
+
 -(void)userAdaptInformation:(QJUser*)user
 {
     if (user.uid != nil) {
@@ -62,7 +115,7 @@
 
     }
     
-    if (user.stayAreaAddress != nil && ![user.stayAreaAddress isEqualToString:@""]) {
+    if (user.stayAreaAddress != nil) {
         _HomeCity = user.stayAreaAddress;
     }else{
         _HomeCity = @"保密";

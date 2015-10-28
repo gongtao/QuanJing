@@ -25,7 +25,7 @@
 
 -(void)userAdaptInformation:(QJUser*)user;
 
--(NSNumber*)cityCode2CityName:(NSInteger)cityCode ;
+-(NSString*)cityCode2CityName:(NSNumber*)cityCode ;
 
--(NSString*)cityName2CityCode:(NSString*)cityName;
+-(NSNumber*)cityName2CityCode:(NSString*)cityName;
 @end

@@ -41,6 +41,8 @@
     NSString *_city;
     NSString *_homeCity;
     BOOL _updatedAvatarAcion;
+    dispatch_group_t _dispathGroup;
+
 }
 
 @property (nonatomic, strong) JMStaticContentTableViewController* tableViewCon;
@@ -74,9 +76,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[QJPassport sharedPassport] requestUserInfo :^(QJUser * user, NSDictionary * userDic, NSError * error){
             if (error == nil) {
-                QJUser *tmp = [[QJPassport sharedPassport] currentUser];
                 //适配数据到model LJUserInformation
-                [_ljuser userAdaptInformation:tmp];
+                [_ljuser userAdaptInformation:user];
                 [_tableViewCon.tableView reloadData];
             }
             else{
@@ -130,6 +131,11 @@
         _dictOccupation=[[NSArray alloc]initWithArray:dict[@"DictOccupation"]];
         _dictConstellation=[[NSArray alloc]initWithArray:dict[@"DictConstellation"]];
         _dictMarriage=[[NSArray alloc]initWithArray:dict[@"DictMarriage"]];
+        
+        NSString *homeDictionary = NSHomeDirectory();//获取根目录
+        NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/cityDode2Name.archiver"];//添加储存的文件名
+        [NSKeyedArchiver archiveRootObject:_dictArea toFile:homePath];
+        
         NSArray *arr=dict[@"DictArea"];
         for (NSDictionary *dict1 in arr) {
             if ([dict1[@"ParentID"]isEqualToString:@"0"]) {
@@ -207,46 +213,26 @@
         }
         //出生地
         if ([self BirthLocation]==nil||[[self BirthLocation]isEqualToString:@"保密"]) {
-            params[@"bornArea"]= [NSNumber numberWithInt:27 ];;
+            params[@"bornArea"] =  nil;
         }else {
-            NSMutableString *str=(NSMutableString *)[self BirthLocation];
-            NSArray *arr=[str componentsSeparatedByString:@" - "];
-            NSString *str1=arr[1];
-            for (NSDictionary *dict in _dictArea) {
-                if ([dict[@"DictName"]isEqualToString:str1]) {
-                    params[@"bornArea"]=dict[@"DictId"];
-                    break;
-                }
-            }
+            params[@"bornArea"] = [_ljuser cityName2CityCode: [self BirthLocation]];
         }
         
         //居住城市
-        if ([self City]==nil||[[self City]isEqualToString:@"保密"]) {
-            params[@"stayArea"]= [NSNumber numberWithInt:27 ];
+        if ([self HomeCity]==nil||[[self HomeCity]isEqualToString:@"保密"]) {
+            params[@"stayArea"] = nil;
         }else
         {
-            NSMutableString *str=(NSMutableString *)[self City];
-            NSArray *arr=[str componentsSeparatedByString:@" - "];
-            NSString *str1=arr[1];
-            for (NSDictionary *dict in _dictArea) {
-                if ([dict[@"DictName"]isEqualToString:str1]) {
-                    params[@"stayArea"]=dict[@"DictId"];
-                    break;
-                }
-            }}
+            params[@"stayArea"] = [_ljuser cityName2CityCode: [self HomeCity]];
+
+        }
         //出没地
-        if ([self HomeCity]==nil||[[self HomeCity]isEqualToString:@"保密"]) {
-            params[@"stayAreaAddress"] = [NSNumber numberWithInt:27 ];
+        if ([self City]==nil||[[self City]isEqualToString:@"保密"]) {
+            params[@"stayAreaAddress"] = nil;
         }else{
-            NSMutableString *str=(NSMutableString *)[self HomeCity];
-            NSArray *arr=[str componentsSeparatedByString:@" - "];
-            NSString *str1=arr[1];
-            for (NSDictionary *dict in _dictArea) {
-                if ([dict[@"DictName"]isEqualToString:str1]) {
-                    params[@"stayAreaAddress"]=dict[@"DictId"];
-                    break;
-                }
-            }}
+            params[@"stayAreaAddress"] = [_ljuser cityName2CityCode: [self City]];
+
+            }
         
         //职业
         if ([self Occupation]==nil) {
@@ -275,6 +261,11 @@
             params[@"introduce"]=[self userinfo];
         }
         params[@"PhoneType"]=@"iphone";
+        
+        if (_updatedAvatarAcion) {
+            _dispathGroup = dispatch_group_create();
+            dispatch_group_enter(_dispathGroup);
+        }
         params[@"id"] = [[QJPassport sharedPassport]currentUser].uid ;
         QJUser *user = [[QJUser alloc]initWithJson:params];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -285,7 +276,11 @@
                         [SVProgressHUD dismiss];
                         QJUser *updataUser = [[QJPassport sharedPassport] currentUser];
                         updataUser = user;
-                        [self.navigationController popViewControllerAnimated:YES];
+                        if (_updatedAvatarAcion) {
+                            dispatch_group_leave(_dispathGroup);
+                        }else{
+                            [self.navigationController popViewControllerAnimated:YES];
+                        }
                         if (_doneFunc != nil){
                             _doneFunc();
                         }
@@ -296,24 +291,41 @@
             }];
             
         });
-        //如果头像被改动
-        if(_updatedAvatarAcion && _updatedAvatar != nil){
-            _updatedAvatarAcion = false;
-            QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
-            NSData *imageData = UIImageJPEGRepresentation(_updatedAvatar,0.5);
-            [fm requestUserAvatarTempData:imageData  extension:@"jpg" finished:^(NSString * imageUrl, NSDictionary * imageDic, NSError * error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (error == nil) {
-                        [self updateAvatarByURL:imageUrl];
-                        NSLog(@"头像上传成功");
-                    }else{
-                        [SVProgressHUD showErrorWithStatus:@"头像上传失败"];
-                        NSLog(@"头像上传失败");
-                    }
-                });
-         }];
-        }
         
+        //如果头像被改动
+        if (_updatedAvatarAcion) {
+            dispatch_group_enter(_dispathGroup);
+        }
+        if(_updatedAvatarAcion && _updatedAvatar != nil){
+            QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSData *imageData = UIImageJPEGRepresentation(_updatedAvatar,0.5);
+                [fm requestUserAvatarTempData:imageData  extension:@"jpg" finished:^(NSString * imageUrl, NSDictionary * imageDic, NSError * error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (error == nil) {
+                            [self updateAvatarByURL:imageUrl];
+                            _updatedAvatarAcion = false;
+                            NSLog(@"头像上传成功");
+
+                        }else{
+                            [SVProgressHUD showErrorWithStatus:@"头像上传失败"];
+                            NSLog(@"头像上传失败");
+                        }
+                    });
+                }];
+            });
+        }
+        if (_updatedAvatarAcion) {
+            //等待同步完成
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                dispatch_group_wait(_dispathGroup, DISPATCH_TIME_FOREVER);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.navigationController popViewControllerAnimated:YES];
+                    
+                });
+            });
+        }
+
   }];
 }
 
@@ -322,7 +334,7 @@
 {
     QJUser *user = [[QJUser alloc]init];
     user.avatar = url;
-
+    user.uid = [[QJPassport sharedPassport] currentUser].uid;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[QJPassport sharedPassport] requestModifyUserInfo:user finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -331,7 +343,11 @@
                     [SVProgressHUD dismiss];
                     QJUser *updataUser = [[QJPassport sharedPassport] currentUser];
                     updataUser = user;
-                    [self.navigationController popViewControllerAnimated:YES];
+                    if (_updatedAvatarAcion) {
+                        dispatch_group_leave(_dispathGroup);
+                    }else{
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }
                     if (_doneFunc != nil){
                         _doneFunc();
                     }
@@ -351,7 +367,11 @@
     _areaData=[[NSMutableData alloc]init];
     _citys=[[NSMutableArray alloc]init];
     _province=[[NSMutableArray alloc]init];
-    [self getResouceData];
+    _user1 = [[QJPassport sharedPassport] currentUser];
+    [_ljuser userAdaptInformation:_user1];
+    [self getcitybyCode];
+    [_tableViewCon.tableView reloadData ];
+   // [self getResouceData];
     [self getAreaData];
     [_textEditViewCon loadView];
     [_ljPickerView loadView];
@@ -363,6 +383,19 @@
     [self setupSection1];
     [self setupSection2];
     [self setupSection3];
+}
+
+-(void)getcitybyCode
+{
+    if (_user1 != nil) {
+        //解析出生城市
+        _ljuser.BirthLocation = [_ljuser cityCode2CityName: _user1.bornArea];
+        //解析居住城市
+        _ljuser.HomeCity = [_ljuser cityCode2CityName: _user1.stayArea];
+        //解析出没地城市
+        _ljuser.City = [_ljuser cityCode2CityName: _user1.stayAreaAddress];
+    }
+
 }
 
 //设定头像
@@ -636,10 +669,6 @@
 //
 
 
-
-
-
-
 - (void)setupNicknameSignatureSection
 {
     __weak OWTUserInfoEditViewCon* wself = self;
@@ -845,7 +874,7 @@
             {
                 cell.textLabel.text = @"出生地";
                 //cell.accessoryType = UITableViewCellAccessoryNone;
-                cell.detailTextLabel.text =[wself BirthLocation];
+                cell.detailTextLabel.text = [wself BirthLocation];
             } } whenSelected:^(NSIndexPath *indexPath){
                 __weak LJPickerViewController *ljpicker=wself.ljPickerView;
                 NSArray *arr1=@[wprovice,wcitys];

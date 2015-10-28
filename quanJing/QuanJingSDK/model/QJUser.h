@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSNumber * stayArea;
 
-@property (nonatomic, strong, nullable) NSString * stayAreaAddress;
+@property (nonatomic, strong, nullable) NSNumber * stayAreaAddress;
 
 @property (nonatomic, strong, nullable) NSNumber * uploadAmount;
 

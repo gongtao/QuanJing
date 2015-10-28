@@ -231,9 +231,9 @@
 		self.stayArea = nil;
 		
 	// stayAreaAddress
-	NSString * stayAreaAddress = json[@"stayAreaAddress"];
+	NSNumber * stayAreaAddress = json[@"stayAreaAddress"];
 	
-	if (!QJ_IS_STR_NIL(stayAreaAddress))
+	if (!QJ_IS_NUM_NIL(stayAreaAddress))
 		self.stayAreaAddress = stayAreaAddress;
 	else
 		self.stayAreaAddress = nil;
