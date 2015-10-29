@@ -237,9 +237,6 @@
 		A31CCF011A72369B00C2B4EA /* OWTShowCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A31CCEFF1A72369B00C2B4EA /* OWTShowCell.xib */; };
 		A32412CE1BD9D25E002DE597 /* 验证码.png in Resources */ = {isa = PBXBuildFile; fileRef = A32412CD1BD9D25E002DE597 /* 验证码.png */; settings = {ASSET_TAGS = (); }; };
 		A32412D01BD9D335002DE597 /* kuang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A32412CF1BD9D335002DE597 /* kuang@2x.png */; settings = {ASSET_TAGS = (); }; };
-		A33C2A991B4B791100779337 /* LJCoreData2.m in Sources */ = {isa = PBXBuildFile; fileRef = A33C2A981B4B791100779337 /* LJCoreData2.m */; };
-		A33C2A9C1B4B793A00779337 /* LJCaptionss.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A33C2A9A1B4B793A00779337 /* LJCaptionss.xcdatamodeld */; };
-		A33C2A9F1B4B796E00779337 /* LJCaptions.m in Sources */ = {isa = PBXBuildFile; fileRef = A33C2A9E1B4B796E00779337 /* LJCaptions.m */; };
 		A34A29F61B95496A0061614A /* LJExploreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A34A29F51B95496A0061614A /* LJExploreViewController.m */; };
 		A34A29F91B954D8F0061614A /* LJGameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A34A29F81B954D8F0061614A /* LJGameModel.m */; };
 		A34A29FC1B9574D40061614A /* LJExploreSquareController.m in Sources */ = {isa = PBXBuildFile; fileRef = A34A29FB1B9574D40061614A /* LJExploreSquareController.m */; };
@@ -270,9 +267,6 @@
 		A3604FC51B27DEF000A68FDA /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A3604FBC1B27DEF000A68FDA /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A3604FC71B27DF5700A68FDA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3604FC61B27DF5700A68FDA /* SystemConfiguration.framework */; };
 		A3604FC91B27DFF400A68FDA /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A3604FC81B27DFF400A68FDA /* libz.1.1.3.dylib */; };
-		A3604FCC1B28195D00A68FDA /* LJCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = A3604FCB1B28195D00A68FDA /* LJCoreData.m */; };
-		A3604FCF1B2819FB00A68FDA /* LJCaption.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A3604FCD1B2819FB00A68FDA /* LJCaption.xcdatamodeld */; };
-		A3604FD21B281A4400A68FDA /* LJCaptionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3604FD11B281A4400A68FDA /* LJCaptionModel.m */; };
 		A365952F1BDF0896005A714F /* 5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A365952E1BDF0896005A714F /* 5@2x.png */; settings = {ASSET_TAGS = (); }; };
 		A36A0CB31B68B6DB00F720C1 /* UMSocialLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A36A0C991B68B6DB00F720C1 /* UMSocialLocalizable.strings */; };
 		A36A0CB41B68B6DB00F720C1 /* libUMSocial_Sdk_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A36A0CA71B68B6DB00F720C1 /* libUMSocial_Sdk_4.2.3.a */; };
@@ -404,9 +398,6 @@
 		A3B729851BB28BE8001D1C7D /* 评论图片@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3B729841BB28BE8001D1C7D /* 评论图片@2x.png */; };
 		A3B729871BB28D3D001D1C7D /* 返回@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3B729861BB28D3D001D1C7D /* 返回@2x.png */; };
 		A3B729891BB28FDF001D1C7D /* _0004_圆角矩形-5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3B729881BB28FDF001D1C7D /* _0004_圆角矩形-5@2x.png */; };
-		A3BBA8BA1B71B29F00DB319D /* LJCoreData3.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A3BBA8B81B71B29F00DB319D /* LJCoreData3.xcdatamodeld */; };
-		A3BBA8BD1B71B2C400DB319D /* LJCoreData3.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BBA8BC1B71B2C400DB319D /* LJCoreData3.m */; };
-		A3BBA8C01B71B30000DB319D /* LJCaptionSimilar.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BBA8BF1B71B30000DB319D /* LJCaptionSimilar.m */; };
 		A3C32B0E1BA13485000FB7D7 /* 搜索1_03.png in Resources */ = {isa = PBXBuildFile; fileRef = A3C32B0B1BA13485000FB7D7 /* 搜索1_03.png */; };
 		A3C32B0F1BA13485000FB7D7 /* 搜索1_06.png in Resources */ = {isa = PBXBuildFile; fileRef = A3C32B0C1BA13485000FB7D7 /* 搜索1_06.png */; };
 		A3C32B101BA13485000FB7D7 /* 搜索2_03.png in Resources */ = {isa = PBXBuildFile; fileRef = A3C32B0D1BA13485000FB7D7 /* 搜索2_03.png */; };
@@ -1294,11 +1285,6 @@
 		A31CCEFF1A72369B00C2B4EA /* OWTShowCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OWTShowCell.xib; sourceTree = "<group>"; };
 		A32412CD1BD9D25E002DE597 /* 验证码.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "验证码.png"; sourceTree = "<group>"; };
 		A32412CF1BD9D335002DE597 /* kuang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kuang@2x.png"; sourceTree = "<group>"; };
-		A33C2A971B4B791100779337 /* LJCoreData2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJCoreData2.h; sourceTree = "<group>"; };
-		A33C2A981B4B791100779337 /* LJCoreData2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJCoreData2.m; sourceTree = "<group>"; };
-		A33C2A9B1B4B793A00779337 /* LJCaptionss.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LJCaptionss.xcdatamodel; sourceTree = "<group>"; };
-		A33C2A9D1B4B796E00779337 /* LJCaptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJCaptions.h; sourceTree = "<group>"; };
-		A33C2A9E1B4B796E00779337 /* LJCaptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJCaptions.m; sourceTree = "<group>"; };
 		A34A29F41B95496A0061614A /* LJExploreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJExploreViewController.h; sourceTree = "<group>"; };
 		A34A29F51B95496A0061614A /* LJExploreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJExploreViewController.m; sourceTree = "<group>"; };
 		A34A29F71B954D8F0061614A /* LJGameModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJGameModel.h; sourceTree = "<group>"; };
@@ -1356,11 +1342,6 @@
 		A3604FBC1B27DEF000A68FDA /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		A3604FC61B27DF5700A68FDA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		A3604FC81B27DFF400A68FDA /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
-		A3604FCA1B28195D00A68FDA /* LJCoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJCoreData.h; sourceTree = "<group>"; };
-		A3604FCB1B28195D00A68FDA /* LJCoreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJCoreData.m; sourceTree = "<group>"; };
-		A3604FCE1B2819FB00A68FDA /* LJCaption.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LJCaption.xcdatamodel; sourceTree = "<group>"; };
-		A3604FD01B281A4400A68FDA /* LJCaptionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJCaptionModel.h; sourceTree = "<group>"; };
-		A3604FD11B281A4400A68FDA /* LJCaptionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJCaptionModel.m; sourceTree = "<group>"; };
 		A365952E1BDF0896005A714F /* 5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "5@2x.png"; sourceTree = "<group>"; };
 		A36A0C9A1B68B6DB00F720C1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/UMSocialLocalizable.strings; sourceTree = "<group>"; };
 		A36A0C9C1B68B6DB00F720C1 /* UMSocial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSocial.h; sourceTree = "<group>"; };
@@ -1560,11 +1541,6 @@
 		A3B729841BB28BE8001D1C7D /* 评论图片@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "评论图片@2x.png"; sourceTree = "<group>"; };
 		A3B729861BB28D3D001D1C7D /* 返回@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "返回@2x.png"; sourceTree = "<group>"; };
 		A3B729881BB28FDF001D1C7D /* _0004_圆角矩形-5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "_0004_圆角矩形-5@2x.png"; sourceTree = "<group>"; };
-		A3BBA8B91B71B29F00DB319D /* LJCoreData3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LJCoreData3.xcdatamodel; sourceTree = "<group>"; };
-		A3BBA8BB1B71B2C400DB319D /* LJCoreData3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJCoreData3.h; sourceTree = "<group>"; };
-		A3BBA8BC1B71B2C400DB319D /* LJCoreData3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJCoreData3.m; sourceTree = "<group>"; };
-		A3BBA8BE1B71B30000DB319D /* LJCaptionSimilar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJCaptionSimilar.h; sourceTree = "<group>"; };
-		A3BBA8BF1B71B30000DB319D /* LJCaptionSimilar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJCaptionSimilar.m; sourceTree = "<group>"; };
 		A3C32B0B1BA13485000FB7D7 /* 搜索1_03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "搜索1_03.png"; sourceTree = "<group>"; };
 		A3C32B0C1BA13485000FB7D7 /* 搜索1_06.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "搜索1_06.png"; sourceTree = "<group>"; };
 		A3C32B0D1BA13485000FB7D7 /* 搜索2_03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "搜索2_03.png"; sourceTree = "<group>"; };
@@ -3362,21 +3338,6 @@
 				31F887D11BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.m */,
 				31F887D21BDE16F7007E94C8 /* QJImageCaption.h */,
 				31F887D31BDE16F7007E94C8 /* QJImageCaption.m */,
-				A3604FCA1B28195D00A68FDA /* LJCoreData.h */,
-				A3604FCB1B28195D00A68FDA /* LJCoreData.m */,
-				A3604FCD1B2819FB00A68FDA /* LJCaption.xcdatamodeld */,
-				A3604FD01B281A4400A68FDA /* LJCaptionModel.h */,
-				A3604FD11B281A4400A68FDA /* LJCaptionModel.m */,
-				A33C2A971B4B791100779337 /* LJCoreData2.h */,
-				A33C2A981B4B791100779337 /* LJCoreData2.m */,
-				A33C2A9A1B4B793A00779337 /* LJCaptionss.xcdatamodeld */,
-				A33C2A9D1B4B796E00779337 /* LJCaptions.h */,
-				A33C2A9E1B4B796E00779337 /* LJCaptions.m */,
-				A3BBA8BB1B71B2C400DB319D /* LJCoreData3.h */,
-				A3BBA8BC1B71B2C400DB319D /* LJCoreData3.m */,
-				A3BBA8B81B71B29F00DB319D /* LJCoreData3.xcdatamodeld */,
-				A3BBA8BE1B71B30000DB319D /* LJCaptionSimilar.h */,
-				A3BBA8BF1B71B30000DB319D /* LJCaptionSimilar.m */,
 			);
 			name = coreData;
 			sourceTree = "<group>";
@@ -5477,7 +5438,6 @@
 				A34A29F61B95496A0061614A /* LJExploreViewController.m in Sources */,
 				E0B95D181B60A5240003059B /* OWTCategoryManagerlife.m in Sources */,
 				A3EFF8521B8468F000DC6255 /* LJClassTableViewCell.m in Sources */,
-				A33C2A991B4B791100779337 /* LJCoreData2.m in Sources */,
 				E0DA777C1BBA6DA700E88D4B /* OQJSearchPageVC.m in Sources */,
 				A38BEB1F1B7DCC6B0047E6D5 /* LJHomeVIewCellTableViewCell.m in Sources */,
 				A3EFF8571B84691F00DC6255 /* LJImageAndProfileCell.m in Sources */,
@@ -5486,7 +5446,6 @@
 				E0B99B5B1B05966000ED7831 /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
 				90BF4A8F193A02D300A1E6C9 /* OThumbnailListViewCon.m in Sources */,
 				E0B99BD71B05978A00ED7831 /* MessageModel.m in Sources */,
-				A3604FD21B281A4400A68FDA /* LJCaptionModel.m in Sources */,
 				31C920341BD65D7D00DFC3C0 /* QJHTTPManager.m in Sources */,
 				E0B99B5C1B05966000ED7831 /* PSTCollectionView.m in Sources */,
 				311BF04819B2E9250046C11D /* OQJCategoryCell.m in Sources */,
@@ -5512,7 +5471,6 @@
 				31C9203D1BD65D7D00DFC3C0 /* QJUtils.m in Sources */,
 				E0B99B351B05959F00ED7831 /* NSDate+Category.m in Sources */,
 				9099854D1904EF7F00A0DD78 /* OWTExploreViewCon.m in Sources */,
-				A3BBA8BA1B71B29F00DB319D /* LJCoreData3.xcdatamodeld in Sources */,
 				31F887D71BDE16F7007E94C8 /* QJSearchWord.m in Sources */,
 				66D799581AD3D90B0030AE48 /* FSPhotoView.m in Sources */,
 				90E241FC195D4C25001F3EF7 /* OWTUserPrivateInfo.m in Sources */,
@@ -5558,7 +5516,6 @@
 				E0B99BC31B05976000ED7831 /* MessageReadManager.m in Sources */,
 				E0B99BB01B0596D400ED7831 /* UIImage+EMWebP.m in Sources */,
 				90BF4A9D193A10F600A1E6C9 /* UIImage+Scaling.m in Sources */,
-				A3604FCC1B28195D00A68FDA /* LJCoreData.m in Sources */,
 				A3D4CBB71A834C680097B48E /* OWTSMSAuthCodeRequestViewCon.m in Sources */,
 				E0B99BDF1B0597A300ED7831 /* EMChatTextBubbleView.m in Sources */,
 				90B3618F18E3D8A000D6205C /* WTDebug.m in Sources */,
@@ -5568,7 +5525,6 @@
 				31CB73C319B6CDD20081B05E /* OWTInputView.m in Sources */,
 				66A310A41ACE8E8200D31259 /* WLJArticleTableViewCell.m in Sources */,
 				90D35B94192D2E0700E95298 /* OWTUsageViewCon.m in Sources */,
-				A3BBA8C01B71B30000DB319D /* LJCaptionSimilar.m in Sources */,
 				66A310A71ACE8E8200D31259 /* WLJArticle.m in Sources */,
 				E0B99B7F1B05968B00ED7831 /* MWPhotoBrowser.m in Sources */,
 				901A3FA119AED1FC003C597C /* OWTAssetPagingViewCon.m in Sources */,
@@ -5625,7 +5581,6 @@
 				90D4667C194E54B200A53E3E /* OWTFollowingUsersViewCon.m in Sources */,
 				E02FF7071B4657D5000D437B /* NetStatusMonitor.m in Sources */,
 				A3D4CBB31A834C680097B48E /* OWTLoginRegisterSelectionViewCon.m in Sources */,
-				A33C2A9F1B4B796E00779337 /* LJCaptions.m in Sources */,
 				90BF4AA0193A132D00A1E6C9 /* OThumbnailCell.m in Sources */,
 				E0B99BD31B05978A00ED7831 /* EMChatAudioBubbleView.m in Sources */,
 				90E24205195D4C43001F3EF7 /* OWTUserSubscriptionInfo.m in Sources */,
@@ -5702,7 +5657,6 @@
 				E0B99BC71B05976000ED7831 /* DXFaceView.m in Sources */,
 				E0B99BAC1B0596D400ED7831 /* NSData+EMImageContentType.m in Sources */,
 				E013904A1B0B5C2200051B78 /* HXChatInitModel.m in Sources */,
-				A3BBA8BD1B71B2C400DB319D /* LJCoreData3.m in Sources */,
 				90E43DA218F5E8BA00796797 /* ORefreshControl.m in Sources */,
 				90F262D419621A3D009D57BC /* OStringArray.m in Sources */,
 				A34A29F91B954D8F0061614A /* LJGameModel.m in Sources */,
@@ -5772,7 +5726,6 @@
 				31F887D91BDE16F7007E94C8 /* QJImageCaption.m in Sources */,
 				31CB73C519B6CDD20081B05E /* OWTAssetCollectViewCon.m in Sources */,
 				A35B027C1A67FFCF00C677F4 /* OWTPhotoUploadInfoViewCon.m in Sources */,
-				A33C2A9C1B4B793A00779337 /* LJCaptionss.xcdatamodeld in Sources */,
 				E0BC01E51B0E1432009D1D20 /* ContactSelectionViewController.m in Sources */,
 				90A7BC11195D354200FE2602 /* OWTUserPrivateInfoData.m in Sources */,
 				90B65583197EF34F0093524D /* OWTMergedActivity.m in Sources */,
@@ -5808,7 +5761,6 @@
 				E07679E01B14103D00007F48 /* HxNickNameImageModel.m in Sources */,
 				90D9EA0D18E3088E007C99A8 /* OWTDataManager.m in Sources */,
 				A396AEDD1A661CDD007A1464 /* OWTAssetFlowViewCon.m in Sources */,
-				A3604FCF1B2819FB00A68FDA /* LJCaption.xcdatamodeld in Sources */,
 				3131894E19C79D8400C42120 /* OWTAssetInfoViewa.m in Sources */,
 				90D4667F194E596F00A53E3E /* OWTFollowerUsersViewCon.m in Sources */,
 				31F887D61BDE16F7007E94C8 /* QJSearchWord+CoreDataProperties.m in Sources */,
@@ -6311,36 +6263,6 @@
 			);
 			currentVersion = 9027964A195C86B600142201 /* WTDataModel.xcdatamodel */;
 			path = WTDataModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		A33C2A9A1B4B793A00779337 /* LJCaptionss.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				A33C2A9B1B4B793A00779337 /* LJCaptionss.xcdatamodel */,
-			);
-			currentVersion = A33C2A9B1B4B793A00779337 /* LJCaptionss.xcdatamodel */;
-			path = LJCaptionss.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		A3604FCD1B2819FB00A68FDA /* LJCaption.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				A3604FCE1B2819FB00A68FDA /* LJCaption.xcdatamodel */,
-			);
-			currentVersion = A3604FCE1B2819FB00A68FDA /* LJCaption.xcdatamodel */;
-			path = LJCaption.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		A3BBA8B81B71B29F00DB319D /* LJCoreData3.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				A3BBA8B91B71B29F00DB319D /* LJCoreData3.xcdatamodel */,
-			);
-			currentVersion = A3BBA8B91B71B29F00DB319D /* LJCoreData3.xcdatamodel */;
-			path = LJCoreData3.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

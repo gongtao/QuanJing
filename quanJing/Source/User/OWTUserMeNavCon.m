@@ -16,7 +16,7 @@
 #import <KHFlatButton/KHFlatButton.h>
 #import <UIActionSheet-Blocks/UIActionSheet+Blocks.h>
 #import <NBUImagePicker/NBUImagePicker.h>
-#import "LJCoreData.h"
+
 
 #import "OWTPhotoUploadInfoViewCon.h"
 
@@ -30,11 +30,9 @@
 #import "AlbumPhotosListView.h"
 #import "AlbumCell.h"
 #import "AlbumPhotosListView1.h"
-#import "LJCoreData.h"
-#import "LJCaptionModel.h"
-#import "LJCoreData2.h"
+
 #import "PostFormData.h"
-#import "LJCoreData3.h"
+
 #import "QJDatabaseManager.h"
 @interface OWTUserMeNavCon ()<NSURLConnectionDelegate,NSURLConnectionDataDelegate>
 {

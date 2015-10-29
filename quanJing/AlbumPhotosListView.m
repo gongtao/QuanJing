@@ -75,8 +75,7 @@
 #import "FSImageViewerViewController.h"
 #import "FSBasicImage.h"
 #import "NetStatusMonitor.h"
-#import "LJCaptions.h"
-#import "LJCaptionModel.h"
+
 #import "captionCell.h"
 #import "OWTTabBarHider.h"
 #import "MJRefresh.h"

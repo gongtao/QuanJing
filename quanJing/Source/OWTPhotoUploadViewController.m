@@ -17,7 +17,6 @@
 #import "OWTAssetManager.h"
 #import "OWTImageInfo.h"
 #import "OWTUserManager.h"
-#import "LJCoreData.h"
 
 #import "AGImagePickerController.h"
 
@@ -36,6 +35,7 @@
 #import "FSImageViewerViewController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "OWTDefalutTagsViewController.h"
+#import "QJDatabaseManager.h"
 #define kPhotoUploadNavBarColor                 [UIColor colorWithHexString:@"#2b2b2b"]
 #define kPhotoUploadNavButtonHighlightedColor   [UIColor colorWithHexString:@"#fb0c09"]
 #define kPhotoUploadVCBackgroundColor           [UIColor colorWithHexString:@"#f2f4f5"]
@@ -158,8 +158,7 @@
         
         if (_imageInfos && _imageInfos.count > 0 && !self.isCameraImages) {
             OWTImageInfo *imageInfo = _imageInfos[0];
-            LJCaptionModel *model =[[LJCoreData shareIntance]check:imageInfo.url];
-            _caption = model.caption;
+            _caption = [self checkTheCaption:imageInfo.url];
             if (!_uploadTagView) {
                 _uploadTagView = [[OWTPhotoUploadTagView alloc] initWithFrame:CGRectZero];
                 _uploadTagView.tagStr = _caption;
@@ -202,6 +201,51 @@
 {
     [self selcetedComplete:nil];
 }
+#pragma mark -coredata
+-(void)updataCaption:(NSString *)caption withImage:(NSString *)imageurl
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
+        __weak QJDatabaseManager *wmanager=manager;
+        dispatch_semaphore_t sem=dispatch_semaphore_create(0);
+        [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
+            QJImageCaption *model= [wmanager getImageCaptionByUrl:imageurl context:concurrencyContext];
+            model.caption=caption;
+        } finished:^(NSManagedObjectContext * _Nonnull mainContext) {
+            dispatch_semaphore_signal(sem);
+        }];
+        
+        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+        
+    });
+    
+}
+-(NSString *)checkTheCaption:(NSString *)imageurl
+{
+    
+    
+    QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
+    QJImageCaption *model=[manager getImageCaptionByUrl:imageurl context:manager.managedObjectContext];
+    return model.caption;
+}
+-(void)insertCaptionToCoredata:(NSString*)imageurl caption:(NSString *)caption isself:(NSString *)isself
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
+        __weak QJDatabaseManager *wmanager=manager;
+        dispatch_semaphore_t sem=dispatch_semaphore_create(0);
+        [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
+            [wmanager setImageCaptionByImageUrl:imageurl caption:caption isSelfInsert:isself.boolValue context:concurrencyContext];
+        } finished:^(NSManagedObjectContext * _Nonnull mainContext) {
+            dispatch_semaphore_signal(sem);
+        }];
+        
+        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+        
+    });
+    
+}
+
 #pragma mark - Info
 
 - (void)mapSearch {
@@ -893,7 +937,7 @@
     _caption = tag;
     if (_imageInfos && _imageInfos.count > 0 && !self.isCameraImages) {
         OWTImageInfo *imageInfo = _imageInfos[0];
-        [[LJCoreData shareIntance] update:imageInfo.url with:_caption];
+        [self updataCaption:_caption withImage:imageInfo.url];
     }
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]]
                           withRowAnimation:UITableViewRowAnimationNone];

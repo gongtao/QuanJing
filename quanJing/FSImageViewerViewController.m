@@ -28,11 +28,10 @@
 #import "OWTImageInfo.h"
 #import "UIViewController+WTExt.h"
 #import "OWTAssetViewCon.h"
-#import "LJCoreData.h"
+
 #import "OWTPhotoUploadInfoViewCon.h"
 #import "AGIPCGridItem.h"
 #import "MBProgressHUD.h"
-#import "LJCaptionModel.h"
 #import "FSBasicImage.h"
 #import "UMSocial.h"
 #import "OWTTabBarHider.h"
@@ -252,6 +251,7 @@
 	[_imageView addSubview:_textField];
 	_sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	[_sendButton setTitle:@"添加标签" forState:UIControlStateNormal];
+    [_sendButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 	[_sendButton setFrame:CGRectMake(SCREENWIT - 80, 2, 80, 40)];
 	[_sendButton addTarget:self action:@selector(onSendBtn:) forControlEvents:UIControlEventTouchUpInside];
 	[_imageView addSubview:_sendButton];
@@ -287,8 +287,8 @@
 		OWTImageInfo * dd = dict[@"imageInfo"];
 		imageurl = dd.url;
 	}
-    [self checkTheCaption:imageurl];
-    NSString * str = _dictData[@"caption"];
+    NSString * str =[self checkTheCaption:imageurl];
+
 	NSArray * arr2 = [str componentsSeparatedByString:@" "];
 	
 	if (arr1.count + arr2.count >= 20) {
@@ -684,14 +684,12 @@
 			//            AGIPCGridItem *gridItem=assertArray[page];
 			ALAsset * asset = basic.assert;
 			NSString * imageurl = [[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString];
-            [self checkTheCaption:imageurl];
-            str = _dictData[@"caption"];
+          str=[self checkTheCaption:imageurl];
 		}
 		else {
 			NSDictionary * dict = _assetData[page];
 			OWTImageInfo * dd = dict[@"imageInfo"];
-            [self checkTheCaption:dd.url];
-            str = _dictData[@"caption"];
+           str= [self checkTheCaption:dd.url];
         }
 		
 		for (UIView * view in imageView.subviews)
@@ -807,14 +805,12 @@
 		//            AGIPCGridItem *gridItem=assertArray[page];
 		ALAsset * asset = basic.assert;
 		imageurl = [[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString];
-        [self checkTheCaption:imageurl];
-        str = _dictData[@"caption"];
+     str=[self checkTheCaption:imageurl];
 	}
 	else {
 		NSDictionary * dict = _assetData[imageView.tag];
 		OWTImageInfo * dd = dict[@"imageInfo"];
-        [self checkTheCaption:dd.url];
-        str = _dictData[@"caption"];
+      str=[self checkTheCaption:dd.url];
 		imageurl = dd.url;
 	}
 	NSArray * arr = [str componentsSeparatedByString:@" "];
@@ -842,14 +838,12 @@
 		//            AGIPCGridItem *gridItem=assertArray[page];
 		ALAsset * asset = basic.assert;
 		NSString * imageurl = [[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString];
-        [self checkTheCaption:imageurl];
-        str = _dictData[@"caption"];
+      str=[self checkTheCaption:imageurl];
 	}
 	else {
 		NSDictionary * dict = _assetData[imageview.tag];
 		OWTImageInfo * dd = dict[@"imageInfo"];
-        [self checkTheCaption:dd.url];
-        str = _dictData[@"caption"];
+      str=[self checkTheCaption:dd.url];
 	}
 	
 	NSArray * arr = [str componentsSeparatedByString:@" "];
@@ -872,14 +866,13 @@
 		//            AGIPCGridItem *gridItem=assertArray[page];
 		ALAsset * asset = basic.assert;
 		NSString * imageurl = [[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString];
-        [self checkTheCaption:imageurl];
-        str = _dictData[@"caption"];
+       str= [self checkTheCaption:imageurl];
 	}
 	else {
 		NSDictionary * dict = _assetData[page];
 		OWTImageInfo * dd = dict[@"imageInfo"];
-        [self checkTheCaption:dd.url];
-        str = _dictData[@"caption"];
+       str= [self checkTheCaption:dd.url];
+
 	}
 	
 	for (UIView * view in imageView.subviews)
@@ -1068,27 +1061,13 @@
     });
 
 }
--(void)checkTheCaption:(NSString *)imageurl
+-(NSString *)checkTheCaption:(NSString *)imageurl
 {
     [_dictData removeAllObjects];
-dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
     QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
-    __weak QJDatabaseManager *wmanager=manager;
-    dispatch_semaphore_t sem=dispatch_semaphore_create(0);
-    [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
-       QJImageCaption *model= [wmanager getImageCaptionByUrl:imageurl context:concurrencyContext];
-        if (model) {
-            NSDictionary *  dict=@{@"imageurl":model.imageUrl,@"caption":model.caption,@"isself":model.isSelfInsert.stringValue};
-            [_dictData addEntriesFromDictionary:dict];
-            dispatch_semaphore_signal(sem);
-        }
-         } finished:^(NSManagedObjectContext * _Nonnull mainContext) {
-        dispatch_semaphore_signal(sem);
-    }];
-    
-    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-    
-});
+  QJImageCaption *model=[manager getImageCaptionByUrl:imageurl context:manager.managedObjectContext];
+    return model.caption;
 }
 -(void)insertCaptionToCoredata:(NSString*)imageurl caption:(NSString *)caption isself:(NSString *)isself
 {

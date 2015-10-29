@@ -23,7 +23,7 @@
 #import "SVProgressHUD+WTError.h"
 #import "UIImage+Resize.h"
 #import "CoreLocationExt.h"
-#import "LJCoreData.h"
+
 
 #import "SvImageInfoEditUtils.h"
 
@@ -32,7 +32,7 @@
 
 
 
-#import "LJCaptionModel.h"
+
 #import "FSBasicImage.h"
 #import "FSBasicImageSource.h"
 
@@ -40,6 +40,7 @@
 #import "OWTImageView.h"
 #import <CoreLocation/CoreLocation.h>
 #import "LJPickerViewController.h"
+#import "QJDatabaseManager.h"
 @interface OWTPhotoUploadInfoViewCon ()
 {
     RETableViewManager* _tableViewManager;
@@ -560,8 +561,8 @@
     _pendingUploadImageInfos = pendingUploadImageInfos;
     
     OWTImageInfo *imageInfo=pendingUploadImageInfos[0];
-    LJCaptionModel *model =[[LJCoreData shareIntance]check:imageInfo.url];
-    _caption=model.caption;
+
+    _caption=[self checkTheCaption:imageInfo.url];
     _captionView1.text=_caption;
     NSLog(@"baaaaaaaaaaaaaaaaa%@",_pendingUploadImageInfos);
     if (_thumbnailListItem != nil)
@@ -972,5 +973,13 @@
     CGContextRelease(ctx);
     CGImageRelease(cgimg);
     return img;
+}
+#pragma mark coredata
+-(NSString *)checkTheCaption:(NSString *)imageurl
+{
+    
+    QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
+    QJImageCaption *model=[manager getImageCaptionByUrl:imageurl context:manager.managedObjectContext];
+    return model.caption;
 }
 @end

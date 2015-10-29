@@ -22,7 +22,6 @@
 #import "FSImageViewerViewController.h"
 #import "FSBasicImage.h"
 
-#import "LJCaptions.h"
 
 #import "captionCell.h"
 #import <UIColor-HexString/UIColor+HexString.h>
