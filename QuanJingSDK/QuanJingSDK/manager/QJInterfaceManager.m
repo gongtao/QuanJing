@@ -389,10 +389,10 @@
 		[resultArray addObject:actionObject];
 		
 		if (idx == data.count - 1) {
-			NSNumber * aid = actionObject.aid;
+			NSNumber * creatTime = obj[@"creatTime"];
 			
-			if (!QJ_IS_NUM_NIL(aid))
-				nextCursorIndex = aid;
+			if (!QJ_IS_NUM_NIL(creatTime))
+				nextCursorIndex = creatTime;
 		}
 	}];
 	
@@ -1429,6 +1429,13 @@
 	extension:(nullable NSString *)extension
 	finished:(nullable void (^)(NSString * imageUrl, NSDictionary * imageDic, NSError * error))finished
 {
+    [self requestUserTempData:imageData
+                          extension:extension
+                           finished:^(NSDictionary * imageDic, NSError * error) {
+                               
+                           }];
+    
+    
 	NSParameterAssert(imageData);
 	
 	// When request fails, if it could, retry it 3 times at most.
@@ -1475,6 +1482,58 @@
 	
 	if (finished)
 		finished(nil, nil, error);
+}
+
+- (void)requestImageTempData:(NSData *)imageData
+	extension:(nullable NSString *)extension
+	finished:(nullable void (^)(NSDictionary * imageDic, NSError * error))finished
+{
+	NSParameterAssert(imageData);
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	NSError * error = nil;
+	AFHTTPRequestOperation * operation = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		operation = [self.httpRequestManager POST:kQJUserPostTempAvatarPath
+			parameters:nil
+			constructingBodyWithBlock:^(id < AFMultipartFormData > formData) {
+			[formData appendPartWithFileData:imageData
+			name:@"f1"
+			fileName:[NSString stringWithFormat:@"upload1.%@", extension]
+			mimeType:@"application/octet-stream"];
+		}
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			dispatch_semaphore_signal(sem);
+		}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		error = [QJUtils errorFromOperation:operation];
+		i--;
+	} while (error && i >= 0);
+	
+	NSLog(@"%@", operation.request.URL);
+	
+	if (!error) {
+		NSLog(@"%@", operation.responseObject);
+		NSArray * dataArray = operation.responseObject[@"data"];
+		
+		if (!QJ_IS_ARRAY_NIL(dataArray)) {
+			NSDictionary * data = [dataArray firstObject];
+			
+			if (finished)
+				finished(data, error);
+			return;
+		}
+	}
+	
+	if (finished)
+		finished(nil, error);
 }
 
 @end

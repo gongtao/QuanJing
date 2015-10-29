@@ -407,10 +407,10 @@
 		[resultArray addObject:actionObject];
 		
 		if (idx == data.count - 1) {
-			NSNumber * aid = actionObject.aid;
+			NSNumber * creatTime = obj[@"creatTime"];
 			
-			if (!QJ_IS_NUM_NIL(aid))
-				nextCursorIndex = aid;
+			if (!QJ_IS_NUM_NIL(creatTime))
+				nextCursorIndex = creatTime;
 		}
 	}];
 	

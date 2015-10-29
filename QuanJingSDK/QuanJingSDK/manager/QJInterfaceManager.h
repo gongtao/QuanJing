@@ -141,6 +141,11 @@ NS_ASSUME_NONNULL_BEGIN
 	extension:(nullable NSString *)extension
 	finished:(nullable void (^)(NSString * imageUrl, NSDictionary * imageDic, NSError * error))finished;
 	
+// 用户上传临时图片
+- (void)requestImageTempData:(NSData *)imageData
+	extension:(nullable NSString *)extension
+	finished:(nullable void (^)(NSDictionary * imageDic, NSError * error))finished;
+	
 @end
 
 NS_ASSUME_NONNULL_END
