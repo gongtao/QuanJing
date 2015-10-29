@@ -57,6 +57,7 @@
 #import "DXChatBarMoreView.h"
 #import "TTGlobalUICommon.h"
 #import "RRConst.h"
+#import "MJRefresh.h"
 static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 #pragma mark -
@@ -74,9 +75,9 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	UIImagePickerController * _imagePicker;
 	UITapGestureRecognizer * _tap;
 	CGFloat _itemSize;
+	NSMutableArray * _dataResouce;
 }
 
-@property (nonatomic, strong) XHRefreshControl * refreshControl;
 @property (strong, nonatomic) DXMessageToolBar * chatToolBar;
 
 @end
@@ -107,9 +108,10 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	_chatToolBar.delegate = self;
 	_chatVC = nil;
 	_chatToolBar = nil;
+	_dataResouce = [[NSMutableArray alloc]init];
 	self.hidesBottomBarWhenPushed = YES;
 	[self setupCollectionView];
-	[self setupRefreshControl];
+	
 	self.view.backgroundColor = [UIColor whiteColor];
 	__weak OWTUserViewCon * wself = self;
 	wself.numberOfAssetsFunc = ^
@@ -229,21 +231,10 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	// 图片
 	
 	[_collectionView registerClass:OWTImageCell.class forCellWithReuseIdentifier:kWaterFlowCellID];
+	[_collectionView addHeaderWithTarget:self action:@selector(refresh)];
+	[_collectionView addFooterWithTarget:self action:@selector(loadMore)];
+	[_collectionView headerBeginRefreshing];
 }
-
-- (void)setupRefreshControl
-{
-	_refreshControl = [[XHRefreshControl alloc] initWithScrollView:_collectionView delegate:self];
-	
-	__weak OWTUserViewCon * wself = self;
-	[_collectionView addInfiniteScrollingWithActionHandler:^{[wself loadMoreData]; }];
-	
-	//    [_collectionView.infiniteScrollingView setState:SVInfiniteScrollingStateLoading];
-	
-	[_collectionView.infiniteScrollingView setState:SVInfiniteScrollingStateTriggered];
-}
-
-//
 
 - (void)refreshData
 {
@@ -251,7 +242,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 		return;
 		
 	_refreshDataFunc(^{
-		[_refreshControl endPullDownRefreshing];
 		[self reloadData];
 	});
 }
@@ -525,7 +515,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	_tabBarHider = nil;
 	
 	_imagePicker = nil;
-	_refreshControl = nil;
+	
 	_chatToolBar = nil;
 	_userInfoView1 = nil;
 }
@@ -545,16 +535,13 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	_tabBarHider = nil;
 	
 	_imagePicker = nil;
-	_refreshControl = nil;
 	_chatToolBar = nil;
 	_userInfoView1 = nil;
 }
 
 //
 - (void)manualRefresh
-{
-	[_refreshControl startPullDownRefreshing];
-}
+{}
 
 //
 
@@ -607,12 +594,17 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 - (void)refresh
 {
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		__block NSInteger i = 0;
 		[[QJPassport sharedPassport] requestOtherUserInfo:_quser.uid
 		finished:^(QJUser * user, NSDictionary * userDic, NSError * error) {
 			dispatch_async(dispatch_get_main_queue(), ^{
+				i++;
+				
 				if (error) {
-					[_refreshControl endPullDownRefreshing];
-					[_collectionView reloadData];
+					if (i == 2) {
+						[_collectionView headerEndRefreshing];
+						[_collectionView reloadData];
+					}
 					
 					if (![NetStatusMonitor isExistenceNetwork])
 						[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
@@ -623,29 +615,59 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 				
 				user.hasFollowUser = _quser.hasFollowUser;
 				_quser = user;
-				[_refreshControl endPullDownRefreshing];
-				[_collectionView reloadData];
+				
+				if (i == 2) {
+					[_collectionView headerEndRefreshing];
+					[_collectionView reloadData];
+				}
 			});
 		}];
+		[_dataResouce removeAllObjects];
+        [[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            i++;
+            
+            if (error) {
+                if (i == 2) {
+                    [_collectionView headerEndRefreshing];
+                    [_collectionView reloadData];
+                }
+                
+                if (![NetStatusMonitor isExistenceNetwork])
+                    [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+                else
+                    [SVProgressHUD showError:error];
+                return;
+            }
+            [_dataResouce addObjectsFromArray:imageObjectArray];
+            
+            if (i == 2) {
+                [_collectionView headerEndRefreshing];
+                [_collectionView reloadData];
+            }
+        }];
 	});
-	
-	//	OWTUserManager * um = GetUserManager();
-	//	[um refreshPublicInfoForUser:_user
-	//	success:^{
-	//		[_refreshControl endPullDownRefreshing];
-	//		//
-	//
-	//		[_collectionView reloadData];
-	//	}
-	//	failure:^(NSError * error) {
-	//		[_refreshControl endPullDownRefreshing];
-	//		[_collectionView reloadData];
-	//
-	//		if (![NetStatusMonitor isExistenceNetwork])
-	//			[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-	//		else
-	//			[SVProgressHUD showError:error];
-	//	}];
+}
+
+- (void)loadMore
+{
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            if (error) {
+                    [_collectionView headerEndRefreshing];
+                    [_collectionView reloadData];
+                
+                if (![NetStatusMonitor isExistenceNetwork])
+                    [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+                else
+                    [SVProgressHUD showError:error];
+                return;
+            }
+            [_dataResouce addObjectsFromArray:imageObjectArray];
+            
+                [_collectionView headerEndRefreshing];
+                [_collectionView reloadData];
+        }];
+	});
 }
 
 // 后面是UI
@@ -658,15 +680,12 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-	if (section == 0) {
+	if (section == 0)
 		return 0;
-	}
-	else if (section == 1) {
-		if (_numberOfAssetsFunc == nil)
-			return 0;
-			
-		return _numberOfAssetsFunc();
-	}
+	else if (section == 1)
+	
+		return _dataResouce.count;
+		
 	return 0;
 }
 
@@ -678,18 +697,14 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	if (indexPath.section == 1) {
 		OWTImageCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:kWaterFlowCellID forIndexPath:indexPath];
 		
-		OWTAsset * asset = [self assetAtIndex:indexPath.row];
+		QJImageObject * imageModel = _dataResouce[indexPath.row];
 		
-		if (asset != nil) {
-			OWTImageInfo * imageInfo = asset.imageInfo;
-			
-			if (imageInfo != nil) {
-				[cell.imageView setImageWithURL:[NSURL URLWithString:asset.imageInfo.smallURL] placeholderImage:[UIImage imageNamed:@""]];
-			}
-			else {
-				[cell setImageWithInfo:nil];
-				cell.backgroundColor = [UIColor lightGrayColor];
-			}
+		if (imageModel != nil) {
+			[cell.imageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:cell.imageView.bounds.size]] placeholderImage:[UIImage imageNamed:@""]];
+		}
+		else {
+			[cell setImageWithInfo:nil];
+			cell.backgroundColor = [UIColor lightGrayColor];
 		}
 		
 		return cell;

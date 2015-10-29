@@ -454,7 +454,7 @@
     QJUser *user=actionModel.user;
     [_headerImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_headerImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像"]];
     CGSize size = [user.nickName sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(300, 200)];
-    if (user.hasFollowUser.boolValue) {
+    if (!user.hasFollowUser.boolValue) {
         _careBtn.tag = 0;
         [_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
     }

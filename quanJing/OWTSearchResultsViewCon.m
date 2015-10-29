@@ -138,19 +138,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
             });
             }];
     });
-//    OWTSearchManager* sm = GetSearchManager();
-//    [sm searchAssetsWithKeyword:_keyword
-//                     startIndex:_assets.count
-//                          count:50
-//                        success:^(NSArray* assets) {
-//                            [_collectionView.infiniteScrollingView stopAnimating];
-//                            [self mergeAssets:assets];
-//                            [SVProgressHUD dismiss];
-//                        }
-//                        failure:^(NSError* error) {
-//                            [_collectionView.infiniteScrollingView stopAnimating];
-//                            [SVProgressHUD showError:error];
-//                        }];
 }
 
 #pragma mark - OWaterFlowLayoutDataSource

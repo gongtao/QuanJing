@@ -1172,6 +1172,8 @@
     NSMutableArray *array = [[NSMutableArray alloc] init] ;
     [_allAsserts removeAllObjects];
     [_assert removeAllObjects];
+    [dataSource removeAllObjects];
+    [_allPhotos removeAllObjects];
     if (ptotoGroup==nil) {
         return;
     }
