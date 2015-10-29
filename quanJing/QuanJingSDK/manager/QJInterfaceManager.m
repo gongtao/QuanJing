@@ -1009,7 +1009,7 @@
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
 	currentImageId:(nullable NSNumber *)imageId
-	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished
+	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished
 {
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
 	
@@ -1050,10 +1050,18 @@
 		i--;
 	} while (error && i >= 0);
 	
+	BOOL isLastPage = NO;
+	
 	if (!error) {
 		NSLog(@"%@", responseObject);
+		NSDictionary * dataDic = responseObject[@"data"];
 		
-		NSArray * dataArray = responseObject[@"data"];
+		NSNumber * lastPageNum = dataDic[@"isLastPage"];
+		
+		if (!QJ_IS_NUM_NIL(lastPageNum))
+			isLastPage = lastPageNum.boolValue;
+			
+		NSArray * dataArray = dataDic[@"list"];
 		
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
@@ -1067,13 +1075,13 @@
 			}];
 			
 			if (finished)
-				finished(resultArray, dataArray, error);
+				finished(resultArray, isLastPage, dataArray, error);
 			return;
 		}
 	}
 	
 	if (finished)
-		finished(nil, nil, error);
+		finished(nil, isLastPage, nil, error);
 }
 
 - (void)requestUserCollectImageList:(NSUInteger)pageNum

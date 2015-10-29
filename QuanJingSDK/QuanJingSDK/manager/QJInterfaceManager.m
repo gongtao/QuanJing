@@ -140,7 +140,6 @@
 				finished([self resultDicFromHomeIndexResponseData:dataArray], dataArray, error);
 			return;
 		}
-
 	}
 	
 	if (finished)
@@ -939,7 +938,7 @@
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
 	currentImageId:(nullable NSNumber *)imageId
-	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished
+	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished
 {
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
 	
@@ -976,16 +975,24 @@
 	
 	NSLog(@"%@", operation.request.URL);
 	
+	BOOL isLastPage = NO;
+	
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
+		NSDictionary * dataDic = operation.responseObject[@"data"];
 		
-		NSArray * dataArray = operation.responseObject[@"data"];
+		NSNumber * lastPageNum = dataDic[@"isLastPage"];
+		
+		if (!QJ_IS_NUM_NIL(lastPageNum))
+			isLastPage = lastPageNum.boolValue;
+			
+		NSArray * dataArray = dataDic[@"list"];
 		
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
-                
+				
 				if (!QJ_IS_NUM_NIL(imageId) && [imageObject.imageId isEqualToNumber:imageId])
 					return;
 					
@@ -993,13 +1000,13 @@
 			}];
 			
 			if (finished)
-				finished(resultArray, dataArray, error);
+				finished(resultArray, isLastPage, dataArray, error);
 			return;
 		}
 	}
 	
 	if (finished)
-		finished(nil, nil, error);
+		finished(nil, isLastPage, nil, error);
 }
 
 - (void)requestUserCollectImageList:(NSUInteger)pageNum

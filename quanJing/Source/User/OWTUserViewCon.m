@@ -143,7 +143,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			pageNum:1
 			pageSize:60
 			currentImageId:nil
-			finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
+			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					if (error) {
 						if (![NetStatusMonitor isExistenceNetwork])

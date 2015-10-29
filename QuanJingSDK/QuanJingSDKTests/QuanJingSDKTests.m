@@ -479,7 +479,7 @@
 			pageNum:1
 			pageSize:20
 			currentImageId:nil
-			finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
+			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testUserImageListExample error: %@", error);
 			}];

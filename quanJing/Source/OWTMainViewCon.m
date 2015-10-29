@@ -40,6 +40,7 @@
 #import "LJExploreViewController1.h"
 #import "QuanJingSDK.h"
 #import "QJDatabaseManager.h"
+#import "Reachability.h"
 static const CGFloat kDefaultPlaySoundInterval = 3.0;
 
 @interface OWTMainViewCon () <IChatManagerDelegate>
@@ -48,6 +49,8 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	NSArray * _array;
 	NSString * _caption;
 	ALAssetsLibrary * _assetsLibrary;
+    
+    BOOL _isWifi;
 }
 
 @property (nonatomic, weak) UIViewController * previousSelectedViewCon;
@@ -89,7 +92,12 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 - (void)setup
 {
 	self.navigationController.navigationBar.backgroundColor = [UIColor blackColor];
-	self.delegate = self;
+    self.delegate = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChangedNotification:)
+                                                 name:kReachabilityChangedNotification object:nil];
+    [self setupNetworkMonitor];
 	
 	GetThemer().homePageColor = HWColor(46, 46, 46);
 	// 首页入口
@@ -117,7 +125,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	
 	self.edgesForExtendedLayout = UIRectEdgeTop;
 	[self registerNotifications];
-	_assetsLibrary = [[ALAssetsLibrary alloc]init];
+    _assetsLibrary = [[ALAssetsLibrary alloc]init];
 }
 
 - (void)setUpDesignTabBar
@@ -300,6 +308,19 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	
 	OWTAppDelegate * delegate = (OWTAppDelegate *)[UIApplication sharedApplication].delegate;
 	delegate.hxChatNavCon = _hxChatNavCon;
+}
+
+#pragma mark - 检测网络
+
+- (void)setupNetworkMonitor
+{
+    Reachability *reachability = [Reachability reachabilityWithHostName:@"www.baidu.com"];
+    [reachability startNotifier];
+}
+
+- (void)reachabilityChangedNotification:(NSNotification *)notification
+{
+    NSLog(@"notification: %@", notification);
 }
 
 // 我
