@@ -492,7 +492,8 @@
 					XCTFail(@"testUserImageListExample error: %@", error);
 			}];
 			
-			[[QJInterfaceManager sharedManager] requestUserCollectImageList:1
+			[[QJInterfaceManager sharedManager] requestUserCollectImageList:nil
+			pageNum:1
 			pageSize:20
 			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
 				if (error)
@@ -616,7 +617,7 @@
 			if (error)
 				XCTFail(@"testUserImageListExample error: %@", error);
 				
-			[[QJPassport sharedPassport] requestUserFollowMeList:nil
+            [[QJPassport sharedPassport] requestUserFollowMeList:[NSNumber numberWithInteger:966487]
 			pageNum:1
 			pageSize:20
 			finished:^(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
@@ -698,30 +699,28 @@
 			returningResponse:nil
 			error:nil];
 			
-			dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-			AFHTTPRequestOperationManager * manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://mapp.tiankong.com"]];
-			[manager POST:@"/imageUser/save.user"
-			parameters:@{@"tag": @"赵丽颖",
-						 @"open": [NSNumber numberWithInt:1],
-						 @"albumId":[NSNumber numberWithLongLong:1178007],
-						 @"title":@"赵丽颖"}
-			constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
-				[formData appendPartWithFileData:imageData1
-				name:@"f1"
-				fileName:@"upload1.jpg"
-				mimeType:@"application/octet-stream"];
-				[formData appendPartWithFileData:imageData2
-				name:@"f2"
-				fileName:@"upload2.jpg"
-				mimeType:@"application/octet-stream"];
-			}
-			success:^(AFHTTPRequestOperation * operation, id responseObject) {
-				dispatch_semaphore_signal(sem);
-			}
-			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
-				dispatch_semaphore_signal(sem);
+			NSArray * imageDataArray = @[imageData1, imageData2];
+			NSMutableArray * imageInfoArray = [[NSMutableArray alloc] initWithCapacity:2];
+			[imageDataArray enumerateObjectsUsingBlock:^(NSData * obj, NSUInteger idx, BOOL * stop) {
+				[[QJInterfaceManager sharedManager] requestImageTempData:obj
+				extension:@"jpg"
+				finished:^(NSDictionary * imageDic, NSError * error) {
+					if (error)
+						XCTFail(@"testActionExample error: %@", error);
+					[imageInfoArray addObject:imageDic];
+				}];
 			}];
-			dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+			
+			[[QJInterfaceManager sharedManager] requestPostAction:imageInfoArray
+			albumId:[NSNumber numberWithLongLong:1178007]
+			title:@"赵丽颖"
+			tag:@"赵丽颖"
+			position:@"北京市朝阳区朝阳门"
+			open:YES
+			finished:^(NSDictionary * imageDic, NSError * error) {
+				if (error)
+					XCTFail(@"testActionExample error: %@", error);
+			}];
 			
 			[expectation fulfill];
 		});

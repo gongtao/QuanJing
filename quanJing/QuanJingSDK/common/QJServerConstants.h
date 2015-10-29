@@ -102,7 +102,7 @@ static NSString * const kQJImageCancelCollectPath = @"/userCollect/cancel.user";
 static NSString * const kQJImageAddDownloadPath = @"/imageUser/addDownload";
 
 // 用户图片收藏列表
-static NSString * const kQJUserCollectListPath = @"/userCollect/list.user";
+static NSString * const kQJUserCollectListPath = @"/userCollect/list";
 
 // 用户评论列表
 static NSString * const kQJUserCommentImageListPath = @"/imageComment/list.user";
@@ -134,7 +134,10 @@ static NSString * const kQJUserAlbumListPath = @"/album/list.user";
 // 用户相册图片列表
 static NSString * const kQJUserAlbumImageListPath = @"/album/show.user";
 
-// 用户上传头像临时文件
-static NSString * const kQJUserPostTempAvatarPath = @"/upload/pic";
+// 用户上传临时图片
+static NSString * const kQJUserPostTempImagePath = @"/upload/pic";
+
+// 用户发布圈子
+static NSString * const kQJUserPostActionPath = @"/imageUser/saveImage.user";
 
 #endif	/* QJServerConstants_h */

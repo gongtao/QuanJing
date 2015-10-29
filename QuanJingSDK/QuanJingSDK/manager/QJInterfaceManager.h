@@ -104,7 +104,8 @@ NS_ASSUME_NONNULL_BEGIN
 	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
 	
 // 用户收藏图片列表
-- (void)requestUserCollectImageList:(NSUInteger)pageNum
+- (void)requestUserCollectImageList:(nullable NSNumber *)userId
+	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
 	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
 	
@@ -144,6 +145,15 @@ NS_ASSUME_NONNULL_BEGIN
 // 用户上传临时图片
 - (void)requestImageTempData:(NSData *)imageData
 	extension:(nullable NSString *)extension
+	finished:(nullable void (^)(NSDictionary * imageDic, NSError * error))finished;
+	
+// 用户发布圈子
+- (void)requestPostAction:(NSArray *)imageInfoArray
+	albumId:(NSNumber *)albumId
+	title:(NSString *)title
+	tag:(NSString *)tag
+	position:(NSString *)position
+	open:(BOOL)open
 	finished:(nullable void (^)(NSDictionary * imageDic, NSError * error))finished;
 	
 @end

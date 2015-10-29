@@ -623,8 +623,15 @@
 		
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
-			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-				[resultArray addObject:[[QJUser alloc] initWithJson:obj]];
+            [dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+                QJUser * user = [[QJUser alloc] initWithJson:obj];
+                
+                NSNumber * followId = obj[@"followId"];
+                
+                if (!QJ_IS_NUM_NIL(followId))
+                    user.uid = followId;
+                
+                [resultArray addObject:user];
 			}];
 			
 			if (finished)
@@ -692,8 +699,21 @@
 		
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
-			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-				[resultArray addObject:[[QJUser alloc] initWithJson:obj]];
+            [dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+                QJUser * user = [[QJUser alloc] initWithJson:obj];
+                
+                NSNumber * followId = obj[@"followId"];
+                
+                if (!QJ_IS_NUM_NIL(followId))
+                    user.uid = followId;
+                
+                // meFollowed
+                NSNumber * meFollowed = obj[@"meFollowed"];
+                
+                if (!QJ_IS_NUM_NIL(meFollowed))
+                    user.hasFollowUser = meFollowed;
+                
+                [resultArray addObject:user];
 			}];
 			
 			if (finished)

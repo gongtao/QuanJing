@@ -1010,12 +1010,16 @@
 		finished(nil, isLastPage, nil, error);
 }
 
-- (void)requestUserCollectImageList:(NSUInteger)pageNum
+- (void)requestUserCollectImageList:(nullable NSNumber *)userId
+	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
 	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished
 {
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
 	
+	if (!QJ_IS_NUM_NIL(userId))
+		params[@"userId"] = userId;
+		
 	if (pageNum == 0)
 		pageNum = 1;
 	params[@"pageNum"] = [NSNumber numberWithUnsignedInteger:pageNum];
@@ -1429,59 +1433,12 @@
 	extension:(nullable NSString *)extension
 	finished:(nullable void (^)(NSString * imageUrl, NSDictionary * imageDic, NSError * error))finished
 {
-    [self requestUserTempData:imageData
-                          extension:extension
-                           finished:^(NSDictionary * imageDic, NSError * error) {
-                               
-                           }];
-    
-    
-	NSParameterAssert(imageData);
-	
-	// When request fails, if it could, retry it 3 times at most.
-	int i = 3;
-	NSError * error = nil;
-	AFHTTPRequestOperation * operation = nil;
-	
-	do {
-		error = nil;
-		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-		operation = [self.httpRequestManager POST:kQJUserPostTempAvatarPath
-			parameters:nil
-			constructingBodyWithBlock:^(id < AFMultipartFormData > formData) {
-			[formData appendPartWithFileData:imageData
-			name:@"f1"
-			fileName:[NSString stringWithFormat:@"upload1.%@", extension]
-			mimeType:@"application/octet-stream"];
-		}
-			success:^(AFHTTPRequestOperation * operation, id responseObject) {
-			dispatch_semaphore_signal(sem);
-		}
-			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
-			dispatch_semaphore_signal(sem);
-		}];
-		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
-		i--;
-	} while (error && i >= 0);
-	
-	NSLog(@"%@", operation.request.URL);
-	
-	if (!error) {
-		NSLog(@"%@", operation.responseObject);
-		NSArray * dataArray = operation.responseObject[@"data"];
-		
-		if (!QJ_IS_ARRAY_NIL(dataArray)) {
-			NSDictionary * data = [dataArray firstObject];
-			
-			if (finished)
-				finished(data[@"url"], data, error);
-			return;
-		}
-	}
-	
-	if (finished)
-		finished(nil, nil, error);
+	[self requestImageTempData:imageData
+	extension:extension
+	finished:^(NSDictionary * imageDic, NSError * error) {
+		if (finished)
+			finished(imageDic[@"url"], imageDic, error);
+	}];
 }
 
 - (void)requestImageTempData:(NSData *)imageData
@@ -1498,7 +1455,7 @@
 	do {
 		error = nil;
 		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-		operation = [self.httpRequestManager POST:kQJUserPostTempAvatarPath
+		operation = [self.httpRequestManager POST:kQJUserPostTempImagePath
 			parameters:nil
 			constructingBodyWithBlock:^(id < AFMultipartFormData > formData) {
 			[formData appendPartWithFileData:imageData
@@ -1532,6 +1489,70 @@
 		}
 	}
 	
+	if (finished)
+		finished(nil, error);
+}
+
+- (void)requestPostAction:(NSArray *)imageInfoArray
+	albumId:(NSNumber *)albumId
+	title:(NSString *)title
+	tag:(NSString *)tag
+	position:(NSString *)position
+	open:(BOOL)open
+	finished:(nullable void (^)(NSDictionary * imageDic, NSError * error))finished
+{
+	NSMutableDictionary * actionDic = [[NSMutableDictionary alloc] init];
+	
+	if (!QJ_IS_NUM_NIL(albumId))
+		actionDic[@"albumId"] = albumId;
+		
+	if (!QJ_IS_STR_NIL(title))
+		actionDic[@"title"] = title;
+		
+	if (!QJ_IS_STR_NIL(tag))
+		actionDic[@"tag"] = tag;
+		
+	if (!QJ_IS_STR_NIL(position))
+		actionDic[@"position"] = position;
+	actionDic[@"open"] = [NSNumber numberWithInteger:open];
+	
+	NSMutableArray * array = [[NSMutableArray alloc] initWithCapacity:imageInfoArray.count];
+	[imageInfoArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+		NSMutableDictionary * dic = [obj mutableCopy];
+		[dic addEntriesFromDictionary:actionDic];
+		[array addObject:dic];
+	}];
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	NSString * json = [QJUtils stringFromJSONObject:array error:nil];
+	params[@"json"] = json;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	NSError * error = nil;
+	AFHTTPRequestOperation * operation = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		operation = [self.httpRequestManager POST:kQJUserPostActionPath
+			parameters:params
+			success:^(AFHTTPRequestOperation * operation, id responseObject) {
+			dispatch_semaphore_signal(sem);
+		}
+			failure:^(AFHTTPRequestOperation * operation, NSError * error) {
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		error = [QJUtils errorFromOperation:operation];
+		i--;
+	} while (error && i >= 0);
+	
+	NSLog(@"%@", operation.request.URL);
+	
+	if (!error)
+		NSLog(@"%@", operation.responseObject);
+		
 	if (finished)
 		finished(nil, error);
 }
