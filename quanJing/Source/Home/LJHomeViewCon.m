@@ -57,6 +57,7 @@
 #import "OWTUserViewCon.h"
 #import "OQJSearchPageVC.h"
 #import "QuanJingSDK.h"
+#import <UIImageView+WebCache.h>
 #define IS_WIDESCREEN (fabs((double)[[UIScreen mainScreen] bounds].size.height - (double)568) < DBL_EPSILON)
 @interface LJHomeViewCon () <JCTopicDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) JCTopic * Topic;
@@ -285,23 +286,34 @@
 		
 		if (i < 3) {
 			imageView = [LJUIController createImageViewWithFrame:CGRectMake(10 + i % 3 * (imageWit + 5), 230, imageWit, imageWit - 2) imageName:nil];
-			[imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
 			label = [LJUIController createLabelWithFrame:CGRectMake(0, 0, 40, 20) Font:14 Text:(model.title == nil ? arr[i] : model.title)];
 			label.center = CGPointMake(10 + i % 3 * (imageWit + 5) + imageWit / 2, 260 + imageWit + 15 - 30 - 5 - 2);
 		}
 		else {
 			imageView = [LJUIController createImageViewWithFrame:CGRectMake(6 + i % 3 * (imageWit + 6), 230 + imageWit + 35 - 10 - 3 - 2, imageWit, imageWit - 2) imageName:nil];
-			[imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
 			label = [LJUIController createLabelWithFrame:CGRectMake(0, 0, 40, 20) Font:14 Text:(model.title == nil ? arr[i] : model.title)];
-			CGFloat x = 240 + imageWit * 2 + 30 + 12;
 			label.center = CGPointMake(10 + i % 3 * (imageWit + 5) + imageWit / 2, 260 + imageWit * 2 + 35 + 15 - 30 - 10 - 3 - 4 - 2);
 		}
 		imageView.tag = i + 100;
 		UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapImage:)];
 		[imageView addGestureRecognizer:tap];
 		[_view addSubview:imageView];
-		//        label.font=[UIFont fontWithName:@"冬青黑体" size:12];
 		[_view addSubview:label];
+		
+		imageView.alpha = 0.0;
+		__weak UIImageView * weakImageView = imageView;
+		[imageView setImageWithURL:[NSURL URLWithString:imageUrl]
+		placeholderImage:nil
+		completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+			if (cacheType == SDImageCacheTypeNone) {
+				[UIView animateWithDuration:0.3
+				animations:^{
+					weakImageView.alpha = 1.0;
+				}];
+				return;
+			}
+			weakImageView.alpha = 1.0;
+		}];
 	}
 	
 	UIImageView * grayImage = [LJUIController createImageViewWithFrame:CGRectMake(0, 260 + imageWit * 2 + 70 - 30 - 10 - 3 - 4 - 2, SCREENWIT, 10) imageName:nil];
@@ -323,7 +335,20 @@
 			if (view.tag == i + 100) {
 				UIImageView * imageView = (UIImageView *)view;
 				NSString * imageUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:model.imageUrl size:CGSizeMake((SCREENWIT - 30) / 3, (SCREENWIT - 30) / 3 - 2)];
-				[imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
+				imageView.alpha = 0.0;
+				__weak UIImageView * weakImageView = imageView;
+				[imageView setImageWithURL:[NSURL URLWithString:imageUrl]
+				placeholderImage:nil
+				completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+					if (cacheType == SDImageCacheTypeNone) {
+						[UIView animateWithDuration:0.3
+						animations:^{
+							weakImageView.alpha = 1.0;
+						}];
+						return;
+					}
+					weakImageView.alpha = 1.0;
+				}];
 			}
 		}
 }
@@ -492,7 +517,7 @@
 	searchResultsViewCon.view.tag = 8173;
 	[searchResultsViewCon setKeyword:_keyword];
 	searchResultsViewCon.hidesBottomBarWhenPushed = YES;
-//	[searchResultsViewCon substituteNavigationBarBackItem];
+	//	[searchResultsViewCon substituteNavigationBarBackItem];
 	[_tabBarHider hideTabBar];
 	[self.navigationController pushViewController:searchResultsViewCon animated:YES];
 	_searchBar.text = nil;
@@ -511,9 +536,9 @@
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		QJInterfaceManager * fm = [QJInterfaceManager sharedManager];
 		[fm requestHomeIndex:^(NSDictionary * _Nonnull homeIndexDic, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
-            if (error!=nil) {
-                return ;
-            }
+			if (error != nil)
+				return;
+				
 			NSString * homeDictionary = NSHomeDirectory();	// 获取根目录
 			NSString * homePath = [homeDictionary stringByAppendingString:@"/Documents/homeIndex.archiver"];
 			BOOL ret = [NSKeyedArchiver archiveRootObject:homeIndexDic toFile:homePath];
@@ -591,10 +616,10 @@
 	[_tabBarHider hideTabBar];
 	[self.view setHidden:YES];
 	NSInteger selectTag = sender.view.tag - 100;
-    if (!_categaryBeautiful || selectTag >= _categaryBeautiful.count) {
-        return;
-    }
 	
+	if (!_categaryBeautiful || (selectTag >= _categaryBeautiful.count))
+		return;
+		
 	QJHomeIndexObject * model = _categaryBeautiful[selectTag];
 	BOOL isSearch = [model.type isEqualToString:@"search"];
 	
@@ -714,7 +739,7 @@
 	evc.urlString = model.typeValue;
 	evc.assetUrl = model.imageUrl;
 	[self.navigationController pushViewController:evc animated:YES];
-//	[evc substituteNavigationBarBackItem];
+	//	[evc substituteNavigationBarBackItem];
 }
 
 #pragma mark tableViewDelegate

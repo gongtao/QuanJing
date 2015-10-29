@@ -10,5 +10,5 @@
 
 @interface LJHomeVIewCellTableViewCell : UITableViewCell
 
--(void)setImageWithUrl:(NSString *)url;
+- (void)setImageWithUrl:(NSString *)url;
 @end
