@@ -327,7 +327,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	if (![reachability isKindOfClass:[Reachability class]])
 		return;
 		
-		
 	NetworkStatus netStatus = [reachability currentReachabilityStatus];
 	_isWifi = (netStatus == kReachableViaWiFi);
 	NSLog(@"haha");
@@ -636,7 +635,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 			return NO;
 		}
 		else {
-			OWTUserManager * um = GetUserManager();
+			//			OWTUserManager * um = GetUserManager();
 			//            if (um.currentUser == nil)
 			//            {
 			//                [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
@@ -875,7 +874,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		notification.alertBody = NSLocalizedString(@"receiveMessage", @"you have a new message");
 	}
 	
-#warning 去掉注释会显示[本地]开头, 方便在开发中区分是否为本地推送
+    // 去掉注释会显示[本地]开头, 方便在开发中区分是否为本地推送
 	// notification.alertBody = [[NSString alloc] initWithFormat:@"[本地]%@", notification.alertBody];
 	
 	notification.alertAction = NSLocalizedString(@"open", @"Open");

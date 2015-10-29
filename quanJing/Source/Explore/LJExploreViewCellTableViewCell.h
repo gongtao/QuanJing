@@ -12,5 +12,5 @@
 
 @interface LJExploreViewCellTableViewCell : UITableViewCell
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
--(void)customTheView:(QJArticleObject*)model;
+- (void)customTheView:(QJArticleObject *)model;
 @end

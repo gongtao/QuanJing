@@ -10,8 +10,8 @@
 #import "XHRefreshControl.h"
 #import "OWTCategoryTableViewCell.h"
 #import "JCTopic.h"
-@interface LJExploreViewController1 : UIViewController<UIScrollViewDelegate,XHRefreshControlDelegate,JCTopicDelegate,UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
-@property (nonatomic, assign)NSInteger titleCount;
-@property (nonatomic, copy)NSArray *sortArr;
+@interface LJExploreViewController1 : UIViewController <UIScrollViewDelegate, XHRefreshControlDelegate, JCTopicDelegate, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
+@property (nonatomic, assign) NSInteger titleCount;
+@property (nonatomic, copy) NSArray * sortArr;
 
 @end
