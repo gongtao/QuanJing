@@ -140,6 +140,7 @@
 				finished([self resultDicFromHomeIndexResponseData:dataArray], dataArray, error);
 			return;
 		}
+
 	}
 	
 	if (finished)
@@ -984,7 +985,7 @@
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
-				
+                
 				if (!QJ_IS_NUM_NIL(imageId) && [imageObject.imageId isEqualToNumber:imageId])
 					return;
 					

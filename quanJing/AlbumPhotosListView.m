@@ -581,7 +581,7 @@
     [super viewDidLoad];
     _tabBarHider=[[OWTTabBarHider alloc]init];
     self.user =GetUserManager().currentUser;
-    
+
     self.view.backgroundColor=[UIColor colorWithHexString:@"#f6f6f6"];
     [self setup];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inputKeyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -1114,13 +1114,7 @@
 -(void) caculateSelectImage:(NSInteger) index andIndexPath:(NSIndexPath *)indexPath{
     
     //这里被压缩的原因是 我们上传的是owtimageimfo
-    
-    
     NSMutableDictionary *mdic=[dataSource[index] mutableCopy];
-    
-    
-    
-    
     NSLog(@"baaaaaaaaaaaaaaaaa%@",mdic[@"imageInfo"]);
     if(selectImages.count<MAXIMAGE){
         [mdic setValue:@"YES" forKey:@"selected"];
@@ -1130,8 +1124,6 @@
         UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"提示" message:[NSString stringWithFormat:@"最多只能选择%d张图片",MAXIMAGE] delegate:nil cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
         [alertView show];
     }
-    
-    
     
     OWTPhotoUploadInfoViewCon* photoUploadInfoViewCon = [[OWTPhotoUploadInfoViewCon alloc] initWithDefaultStyle];
     //
@@ -1146,9 +1138,6 @@
     };
     
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-    
-    
-    
     
 }
 
@@ -1423,7 +1412,7 @@
             userInfoView.selfNum=wself.dataSource.count;
             userInfoView.user = [QJPassport sharedPassport].currentUser;
             userInfoView.editUserInfoAction = ^{ [wself editUserInfo]; };
-            userInfoView.showLikedAssetsAction = ^{ [wself showLikedAssets]; };
+            userInfoView.showLikedAssetsAction = ^{ [wself showLikedAssets]; };//云相册
             userInfoView.showFollowingsAction = ^{ [wself showFollowings]; };
             userInfoView.showFollowersAction = ^{ [wself showFollowers]; };
             userInfoView.showAssetsAction = ^{ [wself showLocalAssets]; };//本地相册
@@ -1516,7 +1505,7 @@
 {
     //发布的照片
     OWTUserAssetsViewCon* likedAssetsViewCon = [[ OWTUserAssetsViewCon alloc] initWithNibName:nil bundle:nil];
-    likedAssetsViewCon.user = _user;
+    likedAssetsViewCon.user1 = [QJPassport sharedPassport].currentUser;
     [_tabBarHider hideTabBar];
     likedAssetsViewCon.hidesBottomBarWhenPushed=YES;
     [self.navigationController pushViewController:likedAssetsViewCon animated:YES];

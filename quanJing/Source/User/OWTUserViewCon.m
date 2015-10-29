@@ -217,6 +217,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	//    [_collectionView.infiniteScrollingView setState:SVInfiniteScrollingStateLoading];
 	
 	[_collectionView.infiniteScrollingView setState:SVInfiniteScrollingStateTriggered];
+
 }
 
 //
@@ -711,7 +712,8 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 {
 	OWTUserAssetsViewCon * assetsViewCon = [[OWTUserAssetsViewCon alloc] initWithNibName:nil bundle:nil];
 	
-	assetsViewCon.user = _user;
+	assetsViewCon.user1 = _user;
+
 	[self.navigationController pushViewController:assetsViewCon animated:YES];
 }
 

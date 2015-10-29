@@ -8,19 +8,20 @@
 
 #import "OWTUserAssetsViewCon.h"
 #import "OWTAssetFlowViewCon.h"
-#import "OWTUser.h"
 #import "OWTUserManager.h"
 #import "OWTAssetViewCon.h"
 #import "SVProgressHUD+WTError.h"
 #import "UIView+EasyAutoLayout.h"
 #import "UIViewController+WTExt.h"
-
-
+#import "QJInterfaceManager.h"
+#import "QJPassport.h"
+#import "QJAlbumObject.h"
 
 @interface OWTUserAssetsViewCon ()
 
-
 @property (nonatomic, copy) NSMutableOrderedSet* assets;
+@property (nonatomic, assign)NSInteger currentPage;
+@property (nonatomic, strong)QJAlbumObject *currentAlumbObject;
 
 @end
 
@@ -31,21 +32,20 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        [self setup];
     }
     return self;
 }
 
 - (NSMutableOrderedSet*)assets
 {
-    if (self.user != nil && self.user.assetsInfo != nil && self.user.assetsInfo.assets != nil)
-    {
-        return self.user.assetsInfo.assets;
-    }
-    else
-    {
+//    if (self.user1 != nil && self.user1.assetsInfo != nil && self.user.assetsInfo.assets != nil)
+//    {
+//        return self.user1.assetsInfo.assets;
+//    }
+//    else
+//    {
         return nil;
-    }
+ //   }
 }
 
 - (void)setup
@@ -54,7 +54,6 @@
     [self addChildViewController:_assetViewCon];
     
     __weak OWTUserAssetsViewCon* wself = self;
-    
     _assetViewCon.numberOfAssetsFunc = ^
     {
         NSMutableOrderedSet* assets = [wself assets];
@@ -90,7 +89,7 @@
     _assetViewCon.refreshDataFunc = ^(void (^refreshDoneFunc)())
     {
         OWTUserManager* um = GetUserManager();
-        [um refreshUserAssets:wself.user
+        [um refreshUserAssets:wself.user1
                       success:^{
                           if (refreshDoneFunc != nil)
                           {
@@ -108,7 +107,7 @@
     
     _assetViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)()) {
         OWTUserManager* um = GetUserManager();
-        [um loadMoreUserAssets:wself.user
+        [um loadMoreUserAssets:wself.user1
                          count:60
                        success:^{
                            if (loadMoreDoneFunc != nil)
@@ -126,9 +125,55 @@
     };
 }
 
+
+-(void)getAlbumID:(NSInteger)pageNum
+{
+    
+//    NSNumber *userID = ([_user1.uid integerValue] == [[[QJPassport sharedPassport]currentUser].uid integerValue])? _user1.uid :nil;
+    
+    //Quesion 一个相册ID会有多个？
+    QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [fm requestUserAlbumList:pageNum  pageSize:60  finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error == nil) {
+                   _currentAlumbObject = [albumObjectArray firstObject];
+                    [self albumID2Assest:_currentAlumbObject];
+                    NSLog(@"获取相册ID成功");
+                }else{
+                    [SVProgressHUD showErrorWithStatus:@"获取相册失败"];
+                    NSLog(@"获取相册ID失败");
+                }
+            });
+        }];
+
+    });
+}
+
+//通过相册ID获取图片
+-(void)albumID2Assest:(QJAlbumObject*)albumObject
+{
+    QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [fm requestUserAlbumImageList:albumObject.aid  pageNum:_currentPage pageSize:60  finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error == nil) {
+                    NSLog(@"获取相册成功end");
+                }else{
+                    [SVProgressHUD showErrorWithStatus:@"获取相册失败"];
+                    NSLog(@"获取相册失败");
+                }
+            });
+        }];
+        
+    });
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _currentPage = 1;
+    [self getAlbumID:_currentPage];
     [self.view addSubview:_assetViewCon.view];
     [_assetViewCon.view easyFillSuperview];
 }
@@ -148,12 +193,12 @@
 
 - (void)refreshUserAssetsIfNeeded
 {
-    if (_user == nil)
+    if (_user1 == nil)
     {
         return;
     }
     
-    if (_user.assetsInfo != nil && _user.assetsInfo.assets != nil)
+    if (_user1.uploadAmount != nil && _user1.uploadAmount != nil)
     {
         return;
     }
@@ -163,19 +208,16 @@
 
 #pragma mark -
 
-- (void)setUser:(OWTUser*)user
+- (void)setUser:(QJUser*)user
 {
-    _user = user;
+    _user1 = user;
     
-    if (_user != nil)
+    if (_user1 != nil)
     {
-        self.navigationItem.title = [NSString stringWithFormat:@"%@的照片", _user.displayName];
-        NSInteger photoNum = _user.assetsInfo.publicAssetNum;
-        if (_user.isCurrentUser)
-        {
-            photoNum += _user.assetsInfo.privateAssetNum;
-        }
-        NSNumber* totalAssetNum = [NSNumber numberWithInteger:photoNum];
+        
+        NSString *indentify = ([user.uid integerValue] == [[[QJPassport sharedPassport]currentUser].uid integerValue])? @"我":user.nickName;
+        self.navigationItem.title = [NSString stringWithFormat:@"%@的照片",indentify];
+        NSNumber* totalAssetNum = _user1.uploadAmount;
         _assetViewCon.totalAssetNum = totalAssetNum;
     }
     else

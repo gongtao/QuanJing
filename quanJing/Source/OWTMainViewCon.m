@@ -30,7 +30,6 @@
 #import "HuanXinManager.h"
 #import "HXChatInitModel.h"
 #import "NetStatusMonitor.h"
-#import "ExcPhotoRecThread.h"
 
 #import "PostFormData.h"
 

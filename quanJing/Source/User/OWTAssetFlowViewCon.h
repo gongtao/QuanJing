@@ -9,11 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "XHRefreshControl.h"
 
-
-
-
-
-
 @interface OWTAssetFlowViewCon : UIViewController<UICollectionViewDelegate,
                                                   UICollectionViewDataSource,
                                                   XHRefreshControlDelegate>

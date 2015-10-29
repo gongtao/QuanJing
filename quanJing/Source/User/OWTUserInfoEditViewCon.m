@@ -145,7 +145,7 @@
         for (NSInteger i=1; i<36; i++) {
             NSMutableArray *citys=[[NSMutableArray alloc]init];
             for (NSDictionary *dict2 in arr) {
-                if ([dict2[@"ParentID"]isEqualToString:[NSString stringWithFormat:@"%d",i]]) {
+                if ([dict2[@"ParentID"]isEqualToString:[NSString stringWithFormat:@"%ld",i]]) {
                     [citys addObject:dict2[@"DictName"]];
                 }
             }
@@ -201,9 +201,8 @@
         if ([self Constellation]==nil) {
             params[@"starSign"] = @"保密";
         }else {
-                params[@"starSign"] = [self Constellation];
+            params[@"starSign"] = [self Constellation];
         }
-        
         //情感状态
         if ([self Marrige]==nil) {
             params[@"maritalStatus"]=@"保密";
@@ -216,23 +215,18 @@
         }else {
             params[@"bornArea"] = [_ljuser cityName2CityCode: [self BirthLocation]];
         }
-        
         //居住城市
         if ([self HomeCity]==nil||[[self HomeCity]isEqualToString:@"保密"]) {
             params[@"stayArea"] = nil;
-        }else
-        {
+        }else{
             params[@"stayArea"] = [_ljuser cityName2CityCode: [self HomeCity]];
-
         }
         //出没地
         if ([self City]==nil||[[self City]isEqualToString:@"保密"]) {
             params[@"stayAreaAddress"] = nil;
         }else{
             params[@"stayAreaAddress"] = [_ljuser cityName2CityCode: [self City]];
-
-            }
-        
+        }
         //职业
         if ([self Occupation]==nil) {
             params[@"job"]=@"保密";
@@ -368,14 +362,15 @@
             if (cell != nil)
             {
                 cell.textLabel.text = @"头像";
-                cell.accessoryView = _img;
+                cell.accessoryView = wself.img;
                 if (wself.updatedAvatar != nil)
                 {
-                    [_img setImage:wself.updatedAvatar];
+                    [wself.img setImage:wself.updatedAvatar];
                 }
                 else
                 {
-                    [_img setImageWithURLString:_user1.avatar primaryColorHex:nil];
+                   wself.user1.avatar = [QJInterfaceManager thumbnailUrlFromImageUrl:wself.user1.avatar size:CGSizeMake(wself.img.bounds.size.width, wself.img.bounds.size.height)];
+                    [wself.img setImageWithURLString:wself.user1.avatar primaryColorHex:nil];
                     
                 }
             }
@@ -417,7 +412,7 @@
 #pragma UIActionSheet Delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"buttonIndex = [%d]",buttonIndex);
+    NSLog(@"buttonIndex = [%ld]",buttonIndex);
     switch (buttonIndex) {
             //        case 0://照相机
             //        {
