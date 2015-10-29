@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)databaseInitialize;
 
+- (NSManagedObjectContext *)managedObjectContext;
+
 - (BOOL)saveContext:(nullable NSManagedObjectContext *)context;
 
 - (BOOL)saveContext;
