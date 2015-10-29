@@ -19,6 +19,6 @@
 @property(nonatomic, assign) NSInteger imageNum;
 @property(nonatomic, readonly) OWTUser * user;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier withViewController:(UIViewController *)viewConctroller withComment:(void (^)(OWTActivityData *, NSInteger))cb;
--(void)customcell:(QJActionObject*)actionModel withImageNumber:(NSInteger)number;
--(NSArray *)getTheAllCellHeight:(NSArray *)actionList;
+- (void)customcell:(QJActionObject *)actionModel withImageNumber:(NSInteger)number;
+- (NSArray *)getTheAllCellHeight:(NSArray *)actionList;
 @end

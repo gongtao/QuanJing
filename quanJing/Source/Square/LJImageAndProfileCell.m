@@ -9,7 +9,6 @@
 #import "LJImageAndProfileCell.h"
 #import "LJUIController.h"
 #import "OWTAsset.h"
-#import "UIImageView+AFNetworking.h"
 #import "OWTUser.h"
 #import "OWTActivityData.h"
 #import "LJLike.h"
@@ -30,6 +29,7 @@
 #import "OWTAsset.h"
 #import "UMSocial.h"
 #import "LJExploreSquareController.h"
+#import <UIImageView+WebCache.h>
 #define COMMENTWIT 10
 @implementation LJImageAndProfileCell
 {
@@ -38,7 +38,7 @@
 	UILabel * _userName;
 	UILabel * _upTime;
 	OWTUser * _user;
-    QJUser * _qjuser;
+	QJUser * _qjuser;
 	NSMutableArray * _assets;
 	OWTActivityData * _activity;
 	NSMutableArray * _likes;
@@ -60,8 +60,8 @@
 	UIImageView * _commentBackView;
 	UIImageView * _commentView;
 	OWTUserData * _careUser;
-    UIButton *_jubaobtn;
-    UIView *_TapBackView;
+	UIButton * _jubaobtn;
+	UIView * _TapBackView;
 }
 
 - (void)awakeFromNib
@@ -76,7 +76,7 @@
 	if (self) {
 		commentcb = [cb copy];
 		_viewContoller = viewConctroller;
-        _qjuser=[QJPassport sharedPassport].currentUser;
+		_qjuser = [QJPassport sharedPassport].currentUser;
 		_careUser = [[OWTUserData alloc]init];
 		self.contentView.backgroundColor = GetThemer().themeColorBackground;
 		_imageNum = 0;
@@ -136,52 +136,57 @@
 	[self.contentView addSubview:_commentView];
 	[self.contentView addSubview:_heartView];
 	[self.contentView addSubview:_line1];
-    _jubaobtn=[LJUIController createButtonWithFrame:CGRectMake(0, 0, 57, 41) imageName:@"jubao" title:nil target:self action:@selector(jubao)];
-//    [_jubaobtn setBackgroundColor:[UIColor blackColor]];
-    _jubaobtn.hidden=YES;
-    [self.contentView addSubview:_jubaobtn];
-    _TapBackView=[[UIView alloc]initWithFrame:CGRectZero];
-    [self.contentView addSubview:_TapBackView];
-    [self.contentView sendSubviewToBack:_TapBackView];
-    UITapGestureRecognizer *tap1=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickBack:)];
-    [_TapBackView addGestureRecognizer:tap1];
-    _TapBackView.hidden=YES;
-    UILongPressGestureRecognizer * LongP = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(onLongAction:)];
+	_jubaobtn = [LJUIController createButtonWithFrame:CGRectMake(0, 0, 57, 41) imageName:@"jubao" title:nil target:self action:@selector(jubao)];
+	//    [_jubaobtn setBackgroundColor:[UIColor blackColor]];
+	_jubaobtn.hidden = YES;
+	[self.contentView addSubview:_jubaobtn];
+	_TapBackView = [[UIView alloc]initWithFrame:CGRectZero];
+	[self.contentView addSubview:_TapBackView];
+	[self.contentView sendSubviewToBack:_TapBackView];
+	UITapGestureRecognizer * tap1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickBack:)];
+	[_TapBackView addGestureRecognizer:tap1];
+	_TapBackView.hidden = YES;
+	UILongPressGestureRecognizer * LongP = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(onLongAction:)];
 	
 	[self.contentView addGestureRecognizer:LongP];
 }
 
 #pragma mark btnAndTap
--(void)onClickBack:(UIGestureRecognizer *)sender
+- (void)onClickBack:(UIGestureRecognizer *)sender
 {
-    _jubaobtn.hidden=YES;
-    _TapBackView.hidden=YES;
+	_jubaobtn.hidden = YES;
+	_TapBackView.hidden = YES;
 }
--(void)jubao
+
+- (void)jubao
 {
-    RKObjectManager *om=[RKObjectManager sharedManager];
-    OWTAsset * asset1 = _assets[_imageNum];
-    _jubaobtn.hidden=YES;
-    _TapBackView.hidden=YES;
-    NSDictionary *dict=@{@"url":asset1.webURL};
-[om postObject:nil path:@"report" parameters:dict success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-    NSLog(@"dd");
-    NSDictionary *dict=mappingResult.dictionary;
-    OWTServerError *error=dict[@"error"];
-    [SVProgressHUD showSuccessWithStatus:@"举报成功"];
-} failure:^(RKObjectRequestOperation *operation, NSError *error) {
-    NSLog(@"%@",error);
-}];
+	RKObjectManager * om = [RKObjectManager sharedManager];
+	OWTAsset * asset1 = _assets[_imageNum];
+	
+	_jubaobtn.hidden = YES;
+	_TapBackView.hidden = YES;
+	NSDictionary * dict = @{@"url":asset1.webURL};
+	[om postObject:nil path:@"report" parameters:dict success:^(RKObjectRequestOperation * operation, RKMappingResult * mappingResult) {
+		NSLog(@"dd");
+		NSDictionary * dict = mappingResult.dictionary;
+		OWTServerError * error = dict[@"error"];
+		[SVProgressHUD showSuccessWithStatus:@"举报成功"];
+	} failure:^(RKObjectRequestOperation * operation, NSError * error) {
+		NSLog(@"%@", error);
+	}];
 }
--(void)onLongAction:(UIGestureRecognizer *)sender
+
+- (void)onLongAction:(UIGestureRecognizer *)sender
 {
-    CGPoint point=[sender locationInView:self.contentView];
-    _jubaobtn.hidden=NO;
-    _jubaobtn.center=CGPointMake(point.x, point.y-21);
-    _TapBackView.hidden=NO;
-    [self.contentView bringSubviewToFront:_TapBackView];
-    [self.contentView bringSubviewToFront:_jubaobtn];
+	CGPoint point = [sender locationInView:self.contentView];
+	
+	_jubaobtn.hidden = NO;
+	_jubaobtn.center = CGPointMake(point.x, point.y - 21);
+	_TapBackView.hidden = NO;
+	[self.contentView bringSubviewToFront:_TapBackView];
+	[self.contentView bringSubviewToFront:_jubaobtn];
 }
+
 - (void)commentBtnClick
 {
 	_viewContoller.replyid = nil;
@@ -204,62 +209,64 @@
 - (void)careBtnClick:(UIButton *)sender
 {
 	[SVProgressHUD show];
-    QJPassport *pt=[QJPassport sharedPassport];
-    QJActionObject *actionModel=_viewContoller.activeList[_number];
-    if (sender.tag == 0) {
+	QJPassport * pt = [QJPassport sharedPassport];
+	QJActionObject * actionModel = _viewContoller.activeList[_number];
+	
+	if (sender.tag == 0)
+	
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			NSError * error = [pt requestUserFollowUser:actionModel.user.uid];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if (!error) {
+					_careBtn.tag = 1;
+					actionModel.user.hasFollowUser = [NSNumber numberWithBool:YES];
+					[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
+					[SVProgressHUD dismiss];
+					[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
+				}
+				else {
+					[SVProgressHUD showError:error];
+				}
+			});
+		});
 		
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSError *error=[pt requestUserFollowUser:actionModel.user.uid];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (!error) {
-                    _careBtn.tag = 1;
-                    actionModel.user.hasFollowUser=[NSNumber numberWithBool:YES];
-                    [_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
-                    [SVProgressHUD dismiss];
-                    [_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
-                }else {
-                    [SVProgressHUD showError:error];
-                }
-            });
-            });
-       
-	}
-	else {
-
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSError *error=[pt requestUserCancelFollowUser:actionModel.user.uid];
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-            if (!error) {
-                _careBtn.tag = 0;
-                actionModel.user.hasFollowUser=[NSNumber numberWithBool:NO];
-                [_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
-                [SVProgressHUD dismiss];
-                [_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
-            }else {
-                [SVProgressHUD showError:error];
-            }
-        });
-        });
-	}
+	else
+	
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			NSError * error = [pt requestUserCancelFollowUser:actionModel.user.uid];
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if (!error) {
+					_careBtn.tag = 0;
+					actionModel.user.hasFollowUser = [NSNumber numberWithBool:NO];
+					[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
+					[SVProgressHUD dismiss];
+					[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
+				}
+				else {
+					[SVProgressHUD showError:error];
+				}
+			});
+		});
 }
 
 - (void)likeBtnClick:(UIButton *)sender
 {
-    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
-    CGFloat imageHeight = 20;
+	QJInterfaceManager * fm = [QJInterfaceManager sharedManager];
+	CGFloat imageHeight = 20;
+	
 	if (sender.selected == NO) {
 		_likeBtn.selected = YES;
 		[_likeBtn setBackgroundImage:[UIImage imageNamed:@"发现10_24.png"] forState:UIControlStateNormal];
-        QJActionObject *actionModel=_viewContoller.activeList[_number];
-        NSMutableArray *arr;
-        if (actionModel.likes) {
-            arr=(NSMutableArray *)actionModel.likes;
-        }else
-        {
-            arr=[[NSMutableArray alloc]init];
-        }
-        NSMutableArray * arr1 = (NSMutableArray *)actionModel.comments;
+		QJActionObject * actionModel = _viewContoller.activeList[_number];
+		NSMutableArray * arr;
+		
+		if (actionModel.likes)
+			arr = (NSMutableArray *)actionModel.likes;
+		else
+			arr = [[NSMutableArray alloc]init];
+		NSMutableArray * arr1 = (NSMutableArray *)actionModel.comments;
+		
 		if (arr1.count > 0)
 			imageHeight += 20;
 		else
@@ -268,6 +275,7 @@
 		if (arr.count % 10 == 0) {
 			NSString * height = _viewContoller.heights[_number];
 			NSString * str;
+			
 			if (arr.count / 10 != 0)
 				str = [NSString stringWithFormat:@"%f", height.floatValue + imageHeight + 5];
 			else
@@ -275,19 +283,20 @@
 			[_viewContoller.heights replaceObjectAtIndex:_number withObject:str];
 		}
 		[arr addObject:_qjuser];
-        actionModel.likes=arr;
-        [_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
+		actionModel.likes = arr;
+		[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
 		[_viewContoller reloadData:_number];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [fm requestLikeAction:actionModel.aid];
-        });
-    }
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			[fm requestLikeAction:actionModel.aid];
+		});
+	}
 	else {
 		_likeBtn.selected = NO;
 		[_likeBtn setBackgroundImage:[UIImage imageNamed:@"发现10_25.png"] forState:UIControlStateNormal];
-        QJActionObject *actionModel=_viewContoller.activeList[_number];
-        NSMutableArray *arr=(NSMutableArray *)actionModel.likes;
-        NSMutableArray * arr1 = (NSMutableArray *)actionModel.comments;
+		QJActionObject * actionModel = _viewContoller.activeList[_number];
+		NSMutableArray * arr = (NSMutableArray *)actionModel.likes;
+		NSMutableArray * arr1 = (NSMutableArray *)actionModel.comments;
+		
 		if (arr1.count > 0)
 			imageHeight += 20;
 		else
@@ -311,26 +320,25 @@
 				break;
 			}
 			
-        actionModel.likes=arr;
-        [_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
+		actionModel.likes = arr;
+		[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
 		[_viewContoller reloadData:_number];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [fm requestCancelLikeAction:actionModel.aid];
-        });
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			[fm requestCancelLikeAction:actionModel.aid];
+		});
 	}
 }
 
 - (void)downLoadBtnClick
 {
-	QJImageObject *imageModel = _assets[_imageNum];
-    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+	QJImageObject * imageModel = _assets[_imageNum];
+	QJInterfaceManager * fm = [QJInterfaceManager sharedManager];
+	
 	[SVProgressHUD showWithStatus:@"保存图片中..." maskType:SVProgressHUDMaskTypeBlack];
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-     NSError *error= [fm requestImageAddDownload:imageModel.imageId imageType:imageModel.imageType];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-        });
-    });
+		NSError * error = [fm requestImageAddDownload:imageModel.imageId imageType:imageModel.imageType];
+		dispatch_async(dispatch_get_main_queue(), ^{});
+	});
 	SDWebImageManager * manager = [SDWebImageManager sharedManager];
 	NSURL * url = [NSURL URLWithString:imageModel.url];
 	[manager downloadWithURL:url
@@ -354,17 +362,16 @@
 	}];
 }
 
-
 - (void)shareBtnClick
 {
-	QJImageObject *imageModel = _assets[_imageNum];
+	QJImageObject * imageModel = _assets[_imageNum];
 	
 	[SVProgressHUD showWithStatus:@"准备图片中..." maskType:SVProgressHUDMaskTypeBlack];
 	
 	SDWebImageManager * manager = [SDWebImageManager sharedManager];
 	NSURL * url = [NSURL URLWithString:imageModel.url];
 	
-    [manager downloadWithURL:url
+	[manager downloadWithURL:url
 	options:SDWebImageHighPriority
 	progress:nil
 	completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType, BOOL finished) {
@@ -404,8 +411,8 @@
 
 - (void)onReplyTap:(UITapGestureRecognizer *)sender
 {
-    _viewContoller.replyid = nil;
-    commentcb(_activity, _number);
+	_viewContoller.replyid = nil;
+	commentcb(_activity, _number);
 }
 
 - (void)onTap3
@@ -415,8 +422,9 @@
 
 - (void)onTapBigImage:(UIGestureRecognizer *)sender
 {
-    QJImageObject *imageModel=_assets[sender.view.tag-400];
-    OWTAssetViewCon *assetViewCon=[[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:imageModel.imageType];
+	QJImageObject * imageModel = _assets[sender.view.tag - 400];
+	OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:imageModel.imageType];
+	
 	assetViewCon.isSquare = YES;
 	assetViewCon.hidesBottomBarWhenPushed = YES;
 	[_viewContoller.navigationController pushViewController:assetViewCon animated:NO];
@@ -442,405 +450,454 @@
 }
 
 #pragma mark setUpCell
--(void)customcell:(QJActionObject*)actionModel withImageNumber:(NSInteger)number
+- (void)customcell:(QJActionObject *)actionModel withImageNumber:(NSInteger)number
 {
-    _imageNum=number;
-    _viewContoller.height=0;
-    _assets=[[NSMutableArray alloc]initWithArray:actionModel.images];
-    _likes=[[NSMutableArray alloc]initWithArray:actionModel.likes];
-    _comments=[[NSMutableArray alloc]initWithArray:actionModel.comments];
-    CGFloat cellHeight = 0;
-//头像部分
-    QJUser *user=actionModel.user;
-    [_headerImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_headerImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像"]];
-    CGSize size = [user.nickName sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(300, 200)];
-    if (!user.hasFollowUser.boolValue) {
-        _careBtn.tag = 0;
-        [_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
-    }
-    else {
-        _careBtn.tag = 1;
-        [_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
-    }
-    _userName.frame = CGRectMake(65, 13, size.width, size.height);
-    _userName.text = user.nickName;
-    _upTime.frame = CGRectMake(65, 35, 100, 15);
-    _upTime.text = [self getTheTime:actionModel.creatTime];
-    cellHeight += 65;
-//图片部分
-    //是否喜欢
-    if ([self isLike:_likes]) {
-        _likeBtn.selected = YES;
-        [_likeBtn setBackgroundImage:[UIImage imageNamed:@"赞01"] forState:UIControlStateNormal];
-    }
-    else {
-        _likeBtn.selected = NO;
-        [_likeBtn setBackgroundImage:[UIImage imageNamed:@"赞00"] forState:UIControlStateNormal];
-    }
+	_imageNum = number;
+	_viewContoller.height = 0;
+	_assets = [[NSMutableArray alloc]initWithArray:actionModel.images];
+	_likes = [[NSMutableArray alloc]initWithArray:actionModel.likes];
+	_comments = [[NSMutableArray alloc]initWithArray:actionModel.comments];
+	CGFloat cellHeight = 0;
+	// 头像部分
+	QJUser * user = actionModel.user;
+	[_headerImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_headerImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像"]];
+	CGSize size = [user.nickName sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(300, 200)];
+	
+	if (!user.hasFollowUser.boolValue) {
+		_careBtn.tag = 0;
+		[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
+	}
+	else {
+		_careBtn.tag = 1;
+		[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
+	}
+	_userName.frame = CGRectMake(65, 13, size.width, size.height);
+	_userName.text = user.nickName;
+	_upTime.frame = CGRectMake(65, 35, 100, 15);
+	_upTime.text = [self getTheTime:actionModel.creatTime];
+	cellHeight += 65;
+	
+	// 图片部分
+	// 是否喜欢
+	if ([self isLike:_likes]) {
+		_likeBtn.selected = YES;
+		[_likeBtn setBackgroundImage:[UIImage imageNamed:@"赞01"] forState:UIControlStateNormal];
+	}
+	else {
+		_likeBtn.selected = NO;
+		[_likeBtn setBackgroundImage:[UIImage imageNamed:@"赞00"] forState:UIControlStateNormal];
+	}
+	
+	CGFloat x = SCREENWIT - 10;
+	CGFloat height;
+	CGFloat width;
+	UIImageView * ImageView;
+	
+	if (_assets.count == 1) {
+		_bigImageScrollView.frame = CGRectZero;
+		_bigImageScrollView.hidden = YES;
+		ImageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+		//        ImageView.contentMode=UIViewContentModeScaleAspectFit;
+		QJImageObject * imageModel = _assets[0];
+		
+		if (imageModel.width && imageModel.height) {
+			float imageWidth = imageModel.width.floatValue;
+			float imageHeight = imageModel.height.floatValue;
+			
+			if (imageWidth > imageHeight) {
+				height = x / imageWidth * imageHeight;
+				ImageView.frame = CGRectMake(5, cellHeight, x, height);
+				cellHeight += (10 + height);
+			}
+			else {
+				ImageView.contentMode = UIViewContentModeScaleAspectFill;
+				
+				ImageView.clipsToBounds = YES;
+				height = x / imageWidth * imageHeight;
+				
+				if (height > 380) {
+					ImageView.frame = CGRectMake(5, cellHeight, x, 380);
+					cellHeight += (380 + 10);
+				}
+				else {
+					ImageView.frame = CGRectMake(5, cellHeight, x, height);
+					cellHeight += (10 + height);
+				}
+			}
+		}
+		else {
+			ImageView.contentMode = UIViewContentModeScaleAspectFill;
+			ImageView.clipsToBounds = YES;
+			ImageView.frame = CGRectMake(5, cellHeight, x, 320);
+			cellHeight += 330;
+		}
+		[ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]];
+		ImageView.tag = 400 + number;
+		ImageView.userInteractionEnabled = YES;
+		[self.contentView addSubview:ImageView];
+		UITapGestureRecognizer * bigImageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapBigImage:)];
+		[ImageView addGestureRecognizer:bigImageTap];
+	}
+	else {
+		NSInteger assetNum = 0;
+		
+		for (QJImageObject * imageModel in _assets) {
+			if (imageModel.width.floatValue > imageModel.height.floatValue)
+				break;
+			assetNum++;
+		}
+		
+		float imageH;
+		
+		if (assetNum == _assets.count)
+			imageH = 320;
+		else
+			imageH = 240;
+		_bigImageScrollView.frame = CGRectMake(5, cellHeight, x, imageH);
+		_bigImageScrollView.hidden = NO;
+		NSInteger pa = 0;
+		
+		for (QJImageObject * imageModel in _assets) {
+			ImageView = [[UIImageView alloc]initWithFrame:CGRectMake(pa * x, 0, x, imageH)];
+			ImageView.clipsToBounds = YES;
+			ImageView.contentMode = UIViewContentModeScaleAspectFill;
+			ImageView.tag = 400 + pa;
+			ImageView.userInteractionEnabled = YES;
+			ImageView.alpha = 0.0;
+			__weak UIImageView * weakImageView = ImageView;
+			[ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]
+			placeholderImage:nil
+			completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+				if (cacheType == SDImageCacheTypeNone) {
+					[UIView animateWithDuration:0.3
+					animations:^{
+						weakImageView.alpha = 1.0;
+					}];
+					return;
+				}
+				weakImageView.alpha = 1.0;
+			}];
+			[_bigImageScrollView addSubview:ImageView];
+			UITapGestureRecognizer * bigImageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapBigImage:)];
+			[ImageView addGestureRecognizer:bigImageTap];
+			pa++;
+		}
+		
+		cellHeight += (10 + imageH);
+		_bigImageScrollView.pagingEnabled = YES;
+		_bigImageScrollView.contentSize = CGSizeMake(x * pa, imageH);
+	}
+	
+	if (actionModel.descript.length > 0) {
+		CGSize size = [actionModel.descript sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(x, 100)];
+		_caption.frame = CGRectMake(10, cellHeight - 5, size.width, size.height);
+		_caption.text = actionModel.descript;
+		cellHeight += size.height;
+	}
+	else {
+		_caption.text = nil;
+		_caption.frame = CGRectZero;
+	}
+	float c = (x - 27.5) / 4;
+	_scrollView.frame = CGRectMake(5, cellHeight, x, c + 2);
+	// 小图部分
+	int i = 0;
+	
+	if (_assets.count > 1) {
+		for (QJImageObject * imageModel in _assets) {
+			UIImageView * imageView1 = [[UIImageView alloc]initWithFrame:CGRectMake((c + 7.5) * i, 0, c + 2, c + 2)];
+			
+			if (i == number)
+				imageView1.backgroundColor = [UIColor colorWithHexString:@"#4c5c8d"];
+			imageView1.tag = 600 + i;
+			[_scrollView addSubview:imageView1];
+			UIImageView * imageView = [[UIImageView alloc]initWithFrame:CGRectMake((c + 7.5) * i + 1, 1, c, c)];
+			imageView.clipsToBounds = YES;
+			imageView.contentMode = UIViewContentModeScaleAspectFill;
+			imageView.userInteractionEnabled = YES;
+			imageView.tag = 400 + i;
+			imageView.backgroundColor = [UIColor whiteColor];
+			imageView.alpha = 0.0;
+			__weak UIImageView * weakImageView = imageView;
+			[imageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]
+			placeholderImage:nil
+			completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+				if (cacheType == SDImageCacheTypeNone) {
+					[UIView animateWithDuration:0.3
+					animations:^{
+						weakImageView.alpha = 1.0;
+					}];
+					return;
+				}
+				weakImageView.alpha = 1.0;
+			}];
+			[_scrollView addSubview:imageView];
+			UITapGestureRecognizer * smallImageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapSmallImage:)];
+			[imageView addGestureRecognizer:smallImageTap];
+			i++;
+		}
+		
+		_scrollView.contentSize = CGSizeMake((c + 5) * i - 5, c);
+		cellHeight += (c + 5);
+	}
+	_likeBtn.frame = CGRectMake(SCREENWIT - 170, cellHeight + 5, 45, 17.5);
+	_shareBtn.frame = CGRectMake(SCREENWIT - 115, cellHeight + 5, 45, 17.5);
+	_commentBtn.frame = CGRectMake(SCREENWIT - 60, cellHeight + 5, 45, 17.5);
+	cellHeight += 37.5;
+	CGFloat likeHeight = 0;
+	CGFloat imageHeight = 20;
+	_heartView.hidden = YES;
+	
+	if (_likes.count != 0) {
+		_heartView.hidden = NO;
+		_heartView.frame = CGRectMake(25, cellHeight + 4, 13, 12);
+		CGFloat likeWidth = 45;
+		
+		for (NSInteger i = 0; i < _likes.count; i++) {
+			QJUser * user = _likes[i];
+			
+			if (likeWidth + imageHeight + 5 > SCREENWIT - 25) {
+				likeWidth = 45;
+				likeHeight += (imageHeight + 5);
+			}
+			UIImageView * likebody = [LJUIController createCircularImageViewWithFrame:CGRectMake(likeWidth, cellHeight + likeHeight, imageHeight, imageHeight) imageName:@"头像"];
+			//            likebody.clipsToBounds=YES;
+			//            likebody.contentMode=UIViewContentModeCenter;
+			[likebody setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:likebody.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像.png"]];
+			UITapGestureRecognizer * liketap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onLikeTap:)];
+			likebody.userInteractionEnabled = YES;
+			likebody.tag = 700 + i;
+			[likebody addGestureRecognizer:liketap];
+			[self.contentView addSubview:likebody];
+			likeWidth = likeWidth + imageHeight + 5;
+		}
+		
+		likeHeight += imageHeight;
+	}
+	cellHeight += likeHeight;
+	
+	// 评论部分
+	CGFloat commentHeight = 0;
+	_line1.hidden = YES;
+	_commentView.hidden = YES;
+	
+	if (_comments.count != 0) {
+		if (likeHeight != 0) {
+			cellHeight += 20;
+			_line1.hidden = NO;
+			_line1.frame = CGRectMake(25, cellHeight - 10, SCREENWIT - 40, 0.2);
+		}
+		_commentView.hidden = NO;
+		_commentView.frame = CGRectMake(25, cellHeight + 4, 13, 12);
+		
+		for (NSInteger i = 0; i < _comments.count; i++) {
+			QJCommentObject * commentModel = _comments[i];
+			QJUser * user = commentModel.user;
+			UIImageView * commentImage = [LJUIController createCircularImageViewWithFrame:CGRectMake(45, cellHeight + commentHeight, imageHeight, imageHeight) imageName:nil];
+			commentImage.tag = 500 + i;
+			UITapGestureRecognizer * commentTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onCommentTap:)];
+			commentImage.userInteractionEnabled = YES;
+			[commentImage setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:commentImage.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像"]];
+			[commentImage addGestureRecognizer:commentTap];
+			[self.contentView addSubview:commentImage];
+			
+			if (1) {
+				NSString * name = user.nickName;
+				
+				if (user.nickName.length == 0)
+					name = user.uid.stringValue;
+				NSString * commentContent = [NSString stringWithFormat:@"%@", commentModel.comment];
+				NSString * commentText = [NSString stringWithFormat:@"%@:%@", name, commentContent];
+				NSMutableAttributedString * attString = [[NSMutableAttributedString alloc]initWithString:commentText];
+				NSRange range1 = [commentText rangeOfString:name];
+				[attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"4c5c8d"] range:range1];
+				CGSize size2 = [commentText sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT - 75 - imageHeight, 500)];
+				UILabel * commentLabel = [LJUIController createLabelWithFrame:CGRectMake(50 + imageHeight, cellHeight + commentHeight + 3, size2.width, size2.height) Font:12 Text:nil];
+				commentLabel.attributedText = attString;
+				commentLabel.lineBreakMode = NSLineBreakByClipping;
+				commentLabel.lineBreakMode = UILineBreakModeClip;
+				commentLabel.tag = 600 + i;
+				commentLabel.userInteractionEnabled = YES;
+				UITapGestureRecognizer * replyTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onReplyTap:)];
+				[commentLabel addGestureRecognizer:replyTap];
+				[self.contentView addSubview:commentLabel];
+				
+				if (size2.height > imageHeight)
+					commentHeight = commentHeight + size2.height + 5;
+				else
+					commentHeight = commentHeight + imageHeight + 5;
+			}
+			else {
+				NSString * name1 = user.nickName;
+				NSString * name2 = nil;
+				NSString * commentContent = [NSString stringWithFormat:@"%@", commentModel.comment];
+				NSString * commentText = [NSString stringWithFormat:@"%@回复%@:%@", name1, name2, commentContent];
+				NSMutableAttributedString * attString = [[NSMutableAttributedString alloc]initWithString:commentText];
+				NSRange range1 = [commentText rangeOfString:name1];
+				NSRange range2 = [commentText rangeOfString:name2];
+				[attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"4c5c8d"] range:range1];
+				[attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"4c5c8d"] range:range2];
+				CGSize size2 = [commentText sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT - 75 - imageHeight, 500)];
+				UILabel * commentLabel = [LJUIController createLabelWithFrame:CGRectMake(50 + imageHeight, cellHeight + commentHeight + 3, size2.width, size2.height) Font:12 Text:nil];
+				commentLabel.attributedText = attString;
+				commentLabel.lineBreakMode = NSLineBreakByClipping;
+				commentLabel.tag = 600 + i;
+				commentLabel.userInteractionEnabled = YES;
+				UITapGestureRecognizer * replyTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onReplyTap:)];
+				[commentLabel addGestureRecognizer:replyTap];
+				[self.contentView addSubview:commentLabel];
+				
+				if (size2.height > imageHeight)
+					commentHeight = commentHeight + size2.height + 5;
+				else
+					commentHeight = commentHeight + imageHeight + 5;
+			}
+		}
+	}
+	else if (likeHeight != 0) {
+		cellHeight += 10;
+	}
+	_commentBackView.hidden = YES;
+	cellHeight += commentHeight;
+	
+	if ((likeHeight != 0) && (commentHeight != 0)) {
+		_commentBackView.hidden = NO;
+		_commentBackView.frame = CGRectMake(15, cellHeight - likeHeight - commentHeight - 20 - 15, SCREENWIT - 28, likeHeight + commentHeight + 15 + 20);
+	}
+	else if ((likeHeight != 0) && (commentHeight == 0)) {
+		_commentBackView.hidden = NO;
+		_commentBackView.frame = CGRectMake(15, cellHeight - likeHeight - commentHeight - 10 - 5 - 10, SCREENWIT - 28, likeHeight + commentHeight + 10 + 10);
+	}
+	else if ((likeHeight == 0) && (commentHeight != 0)) {
+		_commentBackView.hidden = NO;
+		_commentBackView.frame = CGRectMake(15, cellHeight - likeHeight - commentHeight - 5 - 10, SCREENWIT - 28, likeHeight + commentHeight + 5 + 10);
+	}
+	_backView.frame = CGRectMake(5, 5, SCREENWIT - 10, cellHeight);
+	_TapBackView.frame = CGRectMake(5, 5, SCREENWIT - 10, cellHeight);
+}
 
-    CGFloat x = SCREENWIT - 10;
-    CGFloat height;
-    CGFloat width;
-    UIImageView * ImageView;
-    
-    if (_assets.count == 1) {
-        _bigImageScrollView.frame = CGRectZero;
-        _bigImageScrollView.hidden = YES;
-        ImageView = [[UIImageView alloc]initWithFrame:CGRectZero];
-        //        ImageView.contentMode=UIViewContentModeScaleAspectFit;
-        QJImageObject *imageModel=_assets[0];
-        if (imageModel.width&&imageModel.height) {
-        float imageWidth=imageModel.width.floatValue;
-        float imageHeight=imageModel.height.floatValue;
-        if (imageWidth > imageHeight) {
-            height = x / imageWidth * imageHeight;
-            ImageView.frame = CGRectMake(5, cellHeight, x, height);
-            cellHeight += (10 + height);
-        }
-        else {
-            ImageView.contentMode = UIViewContentModeScaleAspectFill;
-            
-            ImageView.clipsToBounds = YES;
-            height = x / imageWidth* imageHeight;
-            
-            if (height > 380) {
-                ImageView.frame = CGRectMake(5, cellHeight, x, 380);
-                cellHeight += (380 + 10);
-            }
-            else {
-                ImageView.frame = CGRectMake(5, cellHeight, x, height);
-                cellHeight += (10 + height);
-            }
-        }
-        }else {
-            ImageView.contentMode = UIViewContentModeScaleAspectFill;
-            ImageView.clipsToBounds = YES;
-            ImageView.frame=CGRectMake(5, cellHeight, x, 320);
-            cellHeight +=330;
-        }
-        [ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]];
-        ImageView.tag = 400 + number;
-        ImageView.userInteractionEnabled = YES;
-        [self.contentView addSubview:ImageView];
-        UITapGestureRecognizer * bigImageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapBigImage:)];
-        [ImageView addGestureRecognizer:bigImageTap];
-    }	else {
-        NSInteger assetNum = 0;
-        
-        for (QJImageObject *imageModel in _assets) {
-            if (imageModel.width.floatValue > imageModel.height.floatValue)
-                break;
-            assetNum++;
-        }
-        
-        float imageH;
-        
-        if (assetNum == _assets.count)
-            imageH = 320;
-        else
-            imageH = 240;
-        _bigImageScrollView.frame = CGRectMake(5, cellHeight, x, imageH);
-        _bigImageScrollView.hidden = NO;
-        NSInteger pa = 0;
-        
-        for (QJImageObject *imageModel in _assets) {
-            ImageView = [[UIImageView alloc]initWithFrame:CGRectMake(pa * x, 0, x, imageH)];
-            ImageView.clipsToBounds = YES;
-            ImageView.contentMode = UIViewContentModeScaleAspectFill;
-            ImageView.tag = 400 + pa;
-            ImageView.userInteractionEnabled = YES;
-            [ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]];
-            [_bigImageScrollView addSubview:ImageView];
-            UITapGestureRecognizer * bigImageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapBigImage:)];
-            [ImageView addGestureRecognizer:bigImageTap];
-            pa++;
-        }
-        
-        cellHeight += (10 + imageH);
-        _bigImageScrollView.pagingEnabled = YES;
-        _bigImageScrollView.contentSize = CGSizeMake(x * pa, imageH);
-    }
-    if (actionModel.descript.length> 0) {
-        CGSize size = [ actionModel.descript sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(x, 100)];
-        _caption.frame = CGRectMake(10, cellHeight - 5, size.width, size.height);
-        _caption.text = actionModel.descript;
-        cellHeight += size.height;
-    }
-    else {
-        _caption.text = nil;
-        _caption.frame = CGRectZero;
-    }
-    float c = (x - 27.5) / 4;
-    _scrollView.frame = CGRectMake(5, cellHeight, x, c + 2);
-//小图部分
-    int i = 0;
-    if (_assets.count > 1) {
-        for (QJImageObject *imageModel in _assets) {
-            UIImageView * imageView1 = [[UIImageView alloc]initWithFrame:CGRectMake((c + 7.5) * i, 0, c + 2, c + 2)];
-            
-            if (i == number)
-                imageView1.backgroundColor = [UIColor colorWithHexString:@"#4c5c8d"];
-            imageView1.tag = 600 + i;
-            [_scrollView addSubview:imageView1];
-            UIImageView * imageView = [[UIImageView alloc]initWithFrame:CGRectMake((c + 7.5) * i + 1, 1, c, c)];
-            imageView.clipsToBounds = YES;
-            imageView.contentMode = UIViewContentModeScaleAspectFill;
-            imageView.userInteractionEnabled = YES;
-            imageView.tag = 400 + i;
-            imageView.backgroundColor = [UIColor whiteColor];
-            [imageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]];
-            [_scrollView addSubview:imageView];
-            UITapGestureRecognizer * smallImageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapSmallImage:)];
-            [imageView addGestureRecognizer:smallImageTap];
-            i++;
-        }
-        
-        _scrollView.contentSize = CGSizeMake((c + 5) * i - 5, c);
-        cellHeight += (c + 5);
-    }
-    _likeBtn.frame = CGRectMake(SCREENWIT - 170, cellHeight + 5, 45, 17.5);
-    _shareBtn.frame = CGRectMake(SCREENWIT - 115, cellHeight + 5, 45, 17.5);
-    _commentBtn.frame = CGRectMake(SCREENWIT - 60, cellHeight + 5, 45, 17.5);
-    cellHeight += 37.5;
-    CGFloat likeHeight = 0;
-    CGFloat imageHeight = 20;
-    _heartView.hidden = YES;
-    if (_likes.count != 0) {
-        _heartView.hidden = NO;
-        _heartView.frame = CGRectMake(25, cellHeight + 4, 13, 12);
-        CGFloat likeWidth = 45;
-        
-        for (NSInteger i = 0; i < _likes.count; i++) {
-            QJUser *user=_likes[i];
-            if (likeWidth + imageHeight + 5 > SCREENWIT - 25) {
-                likeWidth = 45;
-                likeHeight += (imageHeight + 5);
-            }
-            UIImageView * likebody = [LJUIController createCircularImageViewWithFrame:CGRectMake(likeWidth, cellHeight + likeHeight, imageHeight, imageHeight) imageName:@"头像"];
-            //            likebody.clipsToBounds=YES;
-            //            likebody.contentMode=UIViewContentModeCenter;
-            [likebody setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:likebody.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像.png"]];
-            UITapGestureRecognizer * liketap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onLikeTap:)];
-            likebody.userInteractionEnabled = YES;
-            likebody.tag = 700 + i;
-            [likebody addGestureRecognizer:liketap];
-            [self.contentView addSubview:likebody];
-            likeWidth = likeWidth + imageHeight + 5;
-        }
-        
-        likeHeight += imageHeight;
-    }
-    cellHeight += likeHeight;
-    
- //评论部分
-    CGFloat commentHeight = 0;
-    _line1.hidden = YES;
-    _commentView.hidden = YES;
-    
-    if (_comments.count != 0) {
-        if (likeHeight != 0) {
-            cellHeight += 20;
-            _line1.hidden = NO;
-            _line1.frame = CGRectMake(25, cellHeight - 10, SCREENWIT - 40, 0.2);
-        }
-        _commentView.hidden = NO;
-        _commentView.frame = CGRectMake(25, cellHeight + 4, 13, 12);
-        
-        for (NSInteger i = 0; i < _comments.count; i++) {
-            QJCommentObject *commentModel=_comments[i];
-            QJUser *user=commentModel.user;
-            UIImageView * commentImage = [LJUIController createCircularImageViewWithFrame:CGRectMake(45, cellHeight + commentHeight, imageHeight, imageHeight) imageName:nil];
-            commentImage.tag = 500 + i;
-            UITapGestureRecognizer * commentTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onCommentTap:)];
-            commentImage.userInteractionEnabled = YES;
-            [commentImage setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:commentImage.bounds.size]]placeholderImage:[UIImage imageNamed:@"头像"]];
-            [commentImage addGestureRecognizer:commentTap];
-            [self.contentView addSubview:commentImage];
-            
-            if (1) {
-                NSString * name = user.nickName;
-                if (user.nickName.length==0) {
-                    name=user.uid.stringValue;
-                }
-                NSString * commentContent = [NSString stringWithFormat:@"%@", commentModel.comment];
-                NSString * commentText = [NSString stringWithFormat:@"%@:%@", name, commentContent];
-                NSMutableAttributedString * attString = [[NSMutableAttributedString alloc]initWithString:commentText];
-                NSRange range1 = [commentText rangeOfString:name];
-                [attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"4c5c8d"] range:range1];
-                CGSize size2 = [commentText sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT - 75 - imageHeight, 500)];
-                UILabel * commentLabel = [LJUIController createLabelWithFrame:CGRectMake(50 + imageHeight, cellHeight + commentHeight + 3, size2.width, size2.height) Font:12 Text:nil];
-                commentLabel.attributedText = attString;
-                commentLabel.lineBreakMode = NSLineBreakByClipping;
-                commentLabel.lineBreakMode = UILineBreakModeClip;
-                commentLabel.tag = 600 + i;
-                commentLabel.userInteractionEnabled = YES;
-                UITapGestureRecognizer * replyTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onReplyTap:)];
-                [commentLabel addGestureRecognizer:replyTap];
-                [self.contentView addSubview:commentLabel];
-                
-                if (size2.height > imageHeight)
-                    commentHeight = commentHeight + size2.height + 5;
-                else
-                    commentHeight = commentHeight + imageHeight + 5;
-            }
-            else {
-                NSString * name1 = user.nickName;
-                NSString * name2 = nil;
-                NSString * commentContent = [NSString stringWithFormat:@"%@", commentModel.comment];
-                NSString * commentText = [NSString stringWithFormat:@"%@回复%@:%@", name1, name2, commentContent];
-                NSMutableAttributedString * attString = [[NSMutableAttributedString alloc]initWithString:commentText];
-                NSRange range1 = [commentText rangeOfString:name1];
-                NSRange range2 = [commentText rangeOfString:name2];
-                [attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"4c5c8d"] range:range1];
-                [attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"4c5c8d"] range:range2];
-                CGSize size2 = [commentText sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT - 75 - imageHeight, 500)];
-                UILabel * commentLabel = [LJUIController createLabelWithFrame:CGRectMake(50 + imageHeight, cellHeight + commentHeight + 3, size2.width, size2.height) Font:12 Text:nil];
-                commentLabel.attributedText = attString;
-                commentLabel.lineBreakMode = NSLineBreakByClipping;
-                commentLabel.tag = 600 + i;
-                commentLabel.userInteractionEnabled = YES;
-                UITapGestureRecognizer * replyTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onReplyTap:)];
-                [commentLabel addGestureRecognizer:replyTap];
-                [self.contentView addSubview:commentLabel];
-                
-                if (size2.height > imageHeight)
-                    commentHeight = commentHeight + size2.height + 5;
-                else
-                    commentHeight = commentHeight + imageHeight + 5;
-            }
-        }
-    }
-    else if (likeHeight != 0) {
-        cellHeight += 10;
-    }
-    _commentBackView.hidden = YES;
-    cellHeight += commentHeight;
-    
-    if ((likeHeight != 0) && (commentHeight != 0)) {
-        _commentBackView.hidden = NO;
-        _commentBackView.frame = CGRectMake(15, cellHeight - likeHeight - commentHeight - 20 - 15, SCREENWIT - 28, likeHeight + commentHeight + 15 + 20);
-    }
-    else if ((likeHeight != 0) && (commentHeight == 0)) {
-        _commentBackView.hidden = NO;
-        _commentBackView.frame = CGRectMake(15, cellHeight - likeHeight - commentHeight - 10 - 5 - 10, SCREENWIT - 28, likeHeight + commentHeight + 10 + 10);
-    }
-    else if ((likeHeight == 0) && (commentHeight != 0)) {
-        _commentBackView.hidden = NO;
-        _commentBackView.frame = CGRectMake(15, cellHeight - likeHeight - commentHeight - 5 - 10, SCREENWIT - 28, likeHeight + commentHeight + 5 + 10);
-    }
-    _backView.frame = CGRectMake(5, 5, SCREENWIT - 10, cellHeight);
-    _TapBackView.frame=CGRectMake(5, 5, SCREENWIT-10, cellHeight);
-}
--(NSArray *)getTheAllCellHeight:(NSArray *)actionList
+- (NSArray *)getTheAllCellHeight:(NSArray *)actionList
 {
-    NSMutableArray * arr = [[NSMutableArray alloc]init];
-    for (QJActionObject *actionModel in actionList) {
-        NSArray *assets=actionModel.images;
-        NSArray *like=actionModel.likes;
-        NSArray *comment=actionModel.comments;
-        float cellHeight=0;
-        cellHeight += 65;
-        CGFloat x = SCREENWIT - 10;
-        CGFloat height;
-        CGFloat width;
-        if (assets.count == 1) {
-            QJImageObject *imageModel=assets[0];
-            float imageWidth=imageModel.width.floatValue;
-            float imageHeight=imageModel.height.floatValue;
-            if (imageWidth > imageHeight) {
-                height = x / imageWidth * imageHeight;
-                cellHeight += (10 + height);
-            }
-            else {
-                height = x / imageWidth* imageHeight;
-                if (height > 380) {
-                    cellHeight += (380 + 10);
-                }
-                else {
-                    cellHeight += (10 + height);
-                }
-            }
-        }	else {
-            NSInteger assetNum = 0;
-            
-            for (QJImageObject *imageModel in assets) {
-                if (imageModel.width.floatValue > imageModel.height.floatValue)
-                    break;
-                assetNum++;
-            }
-            
-            float imageH;
-            
-            if (assetNum == assets.count)
-                imageH = 320;
-            else
-                imageH = 240;
-            cellHeight += (10 + imageH);
-        }
-        if (actionModel.descript.length> 0) {
-            CGSize size = [ actionModel.descript sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(x, 100)];
-            cellHeight += size.height;
-        }
-        float c = (x - 27.5) / 4;
-        if (assets.count > 1) {
-            cellHeight += (c + 5);
-        }
-        cellHeight += 37.5;
-        CGFloat likeHeight = 0;
-        CGFloat imageHeight = 20;
-        if (like.count != 0) {
-            CGFloat likeWidth = 45;
-            for (NSInteger i = 0; i < like.count; i++) {
-                if (likeWidth + imageHeight + 5 > SCREENWIT - 25) {
-                    likeWidth = 45;
-                    likeHeight += (imageHeight + 5);
-                }
-                likeWidth = likeWidth + imageHeight + 5;
-            }
-            
-            likeHeight += imageHeight;
-        }
-        cellHeight += likeHeight;
-        CGFloat commentHeight = 0;
-        if (comment.count != 0) {
-            if (likeHeight != 0) {
-                cellHeight += 20;
-                            }
-            for (NSInteger i = 0; i < comment.count; i++) {
-                QJCommentObject *commentModel=comment[i];
-                QJUser *user=commentModel.user;
-                if (1) {
-                    NSString * name = user.nickName;
-                    NSString * commentContent = [NSString stringWithFormat:@"%@", commentModel.comment];
-                    NSString * commentText = [NSString stringWithFormat:@"%@:%@", name, commentContent];
-                    CGSize size2 = [commentText sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT - 75 - imageHeight, 500)];
-                                       if (size2.height > imageHeight)
-                        commentHeight = commentHeight + size2.height + 5;
-                    else
-                        commentHeight = commentHeight + imageHeight + 5;
-                }
-                else {
-                    NSString * name1 = user.nickName;
-                    NSString * name2 = nil;
-                    NSString * commentContent = [NSString stringWithFormat:@"%@", commentModel.comment];
-                    NSString * commentText = [NSString stringWithFormat:@"%@回复%@:%@", name1, name2, commentContent];
-                    CGSize size2 = [commentText sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT - 75 - imageHeight, 500)];
-                                        if (size2.height > imageHeight)
-                        commentHeight = commentHeight + size2.height + 5;
-                    else
-                        commentHeight = commentHeight + imageHeight + 5;
-                }
-            }
-        }
-        else if (likeHeight != 0) {
-            cellHeight += 10;
-        }
-        cellHeight += (commentHeight + 5);
-        NSString * str = [NSString stringWithFormat:@"%f", cellHeight];
-        [arr addObject:str];
-    }
-    return arr;
+	NSMutableArray * arr = [[NSMutableArray alloc]init];
+	
+	for (QJActionObject * actionModel in actionList) {
+		NSArray * assets = actionModel.images;
+		NSArray * like = actionModel.likes;
+		NSArray * comment = actionModel.comments;
+		float cellHeight = 0;
+		cellHeight += 65;
+		CGFloat x = SCREENWIT - 10;
+		CGFloat height;
+		CGFloat width;
+		
+		if (assets.count == 1) {
+			QJImageObject * imageModel = assets[0];
+			float imageWidth = imageModel.width.floatValue;
+			float imageHeight = imageModel.height.floatValue;
+			
+			if (imageWidth > imageHeight) {
+				height = x / imageWidth * imageHeight;
+				cellHeight += (10 + height);
+			}
+			else {
+				height = x / imageWidth * imageHeight;
+				
+				if (height > 380)
+					cellHeight += (380 + 10);
+				else
+					cellHeight += (10 + height);
+			}
+		}
+		else {
+			NSInteger assetNum = 0;
+			
+			for (QJImageObject * imageModel in assets) {
+				if (imageModel.width.floatValue > imageModel.height.floatValue)
+					break;
+				assetNum++;
+			}
+			
+			float imageH;
+			
+			if (assetNum == assets.count)
+				imageH = 320;
+			else
+				imageH = 240;
+			cellHeight += (10 + imageH);
+		}
+		
+		if (actionModel.descript.length > 0) {
+			CGSize size = [actionModel.descript sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(x, 100)];
+			cellHeight += size.height;
+		}
+		float c = (x - 27.5) / 4;
+		
+		if (assets.count > 1)
+			cellHeight += (c + 5);
+		cellHeight += 37.5;
+		CGFloat likeHeight = 0;
+		CGFloat imageHeight = 20;
+		
+		if (like.count != 0) {
+			CGFloat likeWidth = 45;
+			
+			for (NSInteger i = 0; i < like.count; i++) {
+				if (likeWidth + imageHeight + 5 > SCREENWIT - 25) {
+					likeWidth = 45;
+					likeHeight += (imageHeight + 5);
+				}
+				likeWidth = likeWidth + imageHeight + 5;
+			}
+			
+			likeHeight += imageHeight;
+		}
+		cellHeight += likeHeight;
+		CGFloat commentHeight = 0;
+		
+		if (comment.count != 0) {
+			if (likeHeight != 0)
+				cellHeight += 20;
+				
+			for (NSInteger i = 0; i < comment.count; i++) {
+				QJCommentObject * commentModel = comment[i];
+				QJUser * user = commentModel.user;
+				
+				if (1) {
+					NSString * name = user.nickName;
+					NSString * commentContent = [NSString stringWithFormat:@"%@", commentModel.comment];
+					NSString * commentText = [NSString stringWithFormat:@"%@:%@", name, commentContent];
+					CGSize size2 = [commentText sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT - 75 - imageHeight, 500)];
+					
+					if (size2.height > imageHeight)
+						commentHeight = commentHeight + size2.height + 5;
+					else
+						commentHeight = commentHeight + imageHeight + 5;
+				}
+				else {
+					NSString * name1 = user.nickName;
+					NSString * name2 = nil;
+					NSString * commentContent = [NSString stringWithFormat:@"%@", commentModel.comment];
+					NSString * commentText = [NSString stringWithFormat:@"%@回复%@:%@", name1, name2, commentContent];
+					CGSize size2 = [commentText sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREENWIT - 75 - imageHeight, 500)];
+					
+					if (size2.height > imageHeight)
+						commentHeight = commentHeight + size2.height + 5;
+					else
+						commentHeight = commentHeight + imageHeight + 5;
+				}
+			}
+		}
+		else if (likeHeight != 0) {
+			cellHeight += 10;
+		}
+		cellHeight += (commentHeight + 5);
+		NSString * str = [NSString stringWithFormat:@"%f", cellHeight];
+		[arr addObject:str];
+	}
+	
+	return arr;
 }
+
 #pragma mark   scrollViewDelegate
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
 {
@@ -915,7 +972,6 @@
 
 - (NSString *)getTheTime:(NSDate *)date
 {
-	
 	NSDate * now = [NSDate date];
 	NSTimeInterval apartTime = [now timeIntervalSinceDate:date];
 	int a = (int)apartTime;

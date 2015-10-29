@@ -1071,6 +1071,7 @@
 				if (!QJ_IS_NUM_NIL(imageId) && [imageObject.imageId isEqualToNumber:imageId])
 					return;
 					
+				imageObject.imageType = [NSNumber numberWithInt:2];
 				[resultArray addObject:imageObject];
 			}];
 			
@@ -1282,7 +1283,9 @@
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-				[resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
+				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+				imageObject.imageType = [NSNumber numberWithInt:2];
+				[resultArray addObject:imageObject];
 			}];
 			
 			if (finished)
@@ -1428,7 +1431,9 @@
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-				[resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
+				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+				imageObject.imageType = [NSNumber numberWithInt:2];
+				[resultArray addObject:imageObject];
 			}];
 			
 			if (finished)
