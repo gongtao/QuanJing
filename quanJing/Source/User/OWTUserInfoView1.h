@@ -17,12 +17,11 @@
 
 @end
 
-@interface OWTUserInfoView1 : UICollectionReusableView<AGIPCPreviewControllerDelegate>
+@interface OWTUserInfoView1 : UICollectionReusableView <AGIPCPreviewControllerDelegate>
 
-@property (nonatomic, strong) OWTUser* user;
-@property(nonatomic,strong)QJUser *quser;
+@property(nonatomic, strong) QJUser * user;
 @property (nonatomic, assign) NSInteger selfNum;
-@property (nonatomic,strong)OWTUserViewCon *owtUserViewVC;
+@property (nonatomic, strong) OWTUserViewCon * owtUserViewVC;
 @property (nonatomic, strong) void (^editUserInfoAction)();
 
 @property (nonatomic, strong) void (^showAssetsAction)();
@@ -32,12 +31,12 @@
 @property (nonatomic, strong) void (^showFollowingsAction)();
 @property (nonatomic, strong) void (^showFollowersAction)();
 
-@property (nonatomic, strong) NSMutableSet* followingUsers;
-@property (nonatomic, strong) OWTRoundImageView* mAvatarView;
+@property (nonatomic, strong) NSMutableSet * followingUsers;
+@property (nonatomic, strong) OWTRoundImageView * mAvatarView;
 @property (nonatomic, assign) BOOL ifCurrenUserEnter;
 @property (nonatomic, assign) BOOL isCared;
 
-@property (nonatomic, weak) id<OWTUserInfoViewCareDelegate> careDelegate;
+@property (nonatomic, weak) id <OWTUserInfoViewCareDelegate> careDelegate;
 
 - (void)careButtonPressed;
 

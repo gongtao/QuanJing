@@ -138,21 +138,45 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	};
 	wself.refreshDataFunc = ^(void (^ refreshDoneFunc)())
 	{
-		OWTUserManager * um = GetUserManager();
-		[um refreshUserAssets:wself.user
-		success:^{
-			if (refreshDoneFunc != nil)
-				refreshDoneFunc();
-		}
-		failure:^(NSError * error) {
-			if (![NetStatusMonitor isExistenceNetwork])
-				[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-			else
-				[SVProgressHUD showError:error];
-				
-			if (refreshDoneFunc != nil)
-				refreshDoneFunc();
-		}];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			[[QJInterfaceManager sharedManager] requestUserImageList:_quser.uid
+			pageNum:1
+			pageSize:60
+			currentImageId:nil
+			finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
+				dispatch_async(dispatch_get_main_queue(), ^{
+					if (error) {
+						if (![NetStatusMonitor isExistenceNetwork])
+							[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+						else
+							[SVProgressHUD showError:error];
+							
+						if (refreshDoneFunc != nil)
+							refreshDoneFunc();
+						return;
+					}
+					
+					if (refreshDoneFunc != nil)
+						refreshDoneFunc();
+				});
+			}];
+		});
+		
+		//		OWTUserManager * um = GetUserManager();
+		//		[um refreshUserAssets:wself.user
+		//		success:^{
+		//			if (refreshDoneFunc != nil)
+		//				refreshDoneFunc();
+		//		}
+		//		failure:^(NSError * error) {
+		//			if (![NetStatusMonitor isExistenceNetwork])
+		//				[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+		//			else
+		//				[SVProgressHUD showError:error];
+		//
+		//			if (refreshDoneFunc != nil)
+		//				refreshDoneFunc();
+		//		}];
 	};
 	
 	wself.loadMoreDataFunc = ^(void (^ loadMoreDoneFunc)()) {
@@ -217,7 +241,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	//    [_collectionView.infiniteScrollingView setState:SVInfiniteScrollingStateLoading];
 	
 	[_collectionView.infiniteScrollingView setState:SVInfiniteScrollingStateTriggered];
-
 }
 
 //
@@ -226,7 +249,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 {
 	if (_refreshDataFunc == nil)
 		return;
-		
 		
 	_refreshDataFunc(^{
 		[_refreshControl endPullDownRefreshing];
@@ -260,7 +282,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	if (_assetAtIndexFunc == nil)
 		return nil;
 		
-		
 	return _assetAtIndexFunc(index);
 }
 
@@ -291,7 +312,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 		
 	if (!_userInfoView1.isCared && _rightTriggle)
 		_chatToolBar.inputTextView.placeHolder = NSLocalizedString(@"发个消息认识Ta.....", @"input a new message");
-		
 }
 
 //
@@ -589,43 +609,43 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		[[QJPassport sharedPassport] requestOtherUserInfo:_quser.uid
 		finished:^(QJUser * user, NSDictionary * userDic, NSError * error) {
-            if (error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [_refreshControl endPullDownRefreshing];
-                    [_collectionView reloadData];
-                    
-                    if (![NetStatusMonitor isExistenceNetwork])
-                        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-                    else
-                        [SVProgressHUD showError:error];
-                });
-                return;
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_refreshControl endPullDownRefreshing];
-                [_collectionView reloadData];
-            });
-        }];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if (error) {
+					[_refreshControl endPullDownRefreshing];
+					[_collectionView reloadData];
+					
+					if (![NetStatusMonitor isExistenceNetwork])
+						[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+					else
+						[SVProgressHUD showError:error];
+					return;
+				}
+				
+				user.hasFollowUser = _quser.hasFollowUser;
+				_quser = user;
+				[_refreshControl endPullDownRefreshing];
+				[_collectionView reloadData];
+			});
+		}];
 	});
 	
-//	OWTUserManager * um = GetUserManager();
-//	[um refreshPublicInfoForUser:_user
-//	success:^{
-//		[_refreshControl endPullDownRefreshing];
-//		//
-//		
-//		[_collectionView reloadData];
-//	}
-//	failure:^(NSError * error) {
-//		[_refreshControl endPullDownRefreshing];
-//		[_collectionView reloadData];
-//		
-//		if (![NetStatusMonitor isExistenceNetwork])
-//			[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-//		else
-//			[SVProgressHUD showError:error];
-//	}];
+	//	OWTUserManager * um = GetUserManager();
+	//	[um refreshPublicInfoForUser:_user
+	//	success:^{
+	//		[_refreshControl endPullDownRefreshing];
+	//		//
+	//
+	//		[_collectionView reloadData];
+	//	}
+	//	failure:^(NSError * error) {
+	//		[_refreshControl endPullDownRefreshing];
+	//		[_collectionView reloadData];
+	//
+	//		if (![NetStatusMonitor isExistenceNetwork])
+	//			[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+	//		else
+	//			[SVProgressHUD showError:error];
+	//	}];
 }
 
 // 后面是UI
@@ -644,7 +664,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	else if (section == 1) {
 		if (_numberOfAssetsFunc == nil)
 			return 0;
-			
 			
 		return _numberOfAssetsFunc();
 	}
@@ -688,7 +707,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 				withReuseIdentifier:@"UserInfoView1"
 				forIndexPath:indexPath];
 				
-			_userInfoView1.user = _user;
+			_userInfoView1.user = _quser;
 			_userInfoView1.careDelegate = self;
 			
 			__weak OWTUserViewCon * wself = self;
@@ -712,8 +731,8 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 {
 	OWTUserAssetsViewCon * assetsViewCon = [[OWTUserAssetsViewCon alloc] initWithNibName:nil bundle:nil];
 	
-	assetsViewCon.user1 = _user;
-
+	assetsViewCon.user1 = _quser;
+	
 	[self.navigationController pushViewController:assetsViewCon animated:YES];
 }
 
@@ -759,7 +778,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 {
 	if (section == 0)
 		return CGSizeMake(320, 212);
-		
 		
 	return CGSizeZero;
 }
