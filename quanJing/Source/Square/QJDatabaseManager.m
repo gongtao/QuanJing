@@ -266,6 +266,69 @@
 		
 	return nil;
 }
+- (NSArray *)getImageCaptions:(NSManagedObjectContext *)context captions:(NSArray *)captions
+{
+    if (!context)
+        context=self.managedObjectContext;
+    NSFetchRequest *reuest=[[NSFetchRequest alloc]init];
+    NSEntityDescription *entity=[NSEntityDescription entityForName:ImageCaption_Entity inManagedObjectContext:context];
+    [reuest setEntity:entity];
+    NSMutableArray *precap=[[NSMutableArray alloc]init];
+    for (NSString *caption in captions) {
+        if (caption.length!=0) {
+            NSMutableArray *preArr=[[NSMutableArray alloc]init];
+            QJSearchWord *model=[self getSearchWordByWord:caption context:context];
+            if (model) {
+                NSMutableString *words=[[NSMutableString alloc]initWithString:model.detailed];
+                NSMutableArray *similarArr=(NSMutableArray *)[words componentsSeparatedByString:@"、"];
+                [similarArr removeObjectAtIndex:0];
+                [similarArr removeLastObject];
+                for (NSString *str1 in similarArr) {
+                    NSString *str2=[NSString stringWithFormat:@" %@ ",str1];
+                    [preArr addObject:str2];
+                }
+            }else{
+                [preArr addObject:caption];
+            }
+                        [precap addObject:preArr];
+        }
+    }
+    NSString *sqlite=[self getTheSQLITE:precap];
+    NSPredicate *predicate=[NSPredicate predicateWithFormat:sqlite];
+    
+    [reuest setPredicate:predicate];
+    NSError *error;
+    NSArray *results=[context executeFetchRequest:reuest error:&error];
+    if (!error && (results.count > 0))
+        return results;
+    
+    return nil;
+}
+-(NSString *)getTheSQLITE:(NSArray *)captions
+{
+    NSMutableArray *sqStr1=[[NSMutableArray alloc]init];
+    NSMutableArray *sqStr2=[[NSMutableArray alloc]init];
+    for (NSArray *arr in captions) {
+        [sqStr1 removeAllObjects];
+        for (NSString *str in arr) {
+            NSString *str1=[NSString stringWithFormat:@"caption CONTAINS '%@'",str];
+            [sqStr1 addObject:str1];
+        }
+        NSString *str2=[sqStr1 componentsJoinedByString:@" OR "];
+        [sqStr2 addObject:str2];
+    }
+    if (sqStr2.count>1) {
+        NSMutableArray *sqStr3=[[NSMutableArray alloc]init];
+        for (NSString *str3 in sqStr2) {
+            NSString *str4=[NSString stringWithFormat:@"(%@)",str3];
+            [sqStr3 addObject:str4];
+        }
+        [sqStr2 removeAllObjects];
+        [sqStr2 addObjectsFromArray:sqStr3];
+    }
+    NSString *str5=[sqStr2 componentsJoinedByString:@" AND "];
+    return str5;
+}
 
 #pragma mark - QJAdviseCaption
 

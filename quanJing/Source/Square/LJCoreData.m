@@ -101,18 +101,7 @@
     
     return result;
 }
--(void)checkAllAndUpdate
-{
-    NSFetchRequest *fetchRequest=[NSFetchRequest fetchRequestWithEntityName:@"LJCaptionModel"];
-    NSArray *result=[_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-    [_resource addObjectsFromArray:result];
-    if (_resource.count>0) {
-        for (LJCaptionModel *model in _resource) {
-            model.caption=[NSString stringWithFormat:@" %@ ",model.caption];
-        }
-        [_managedObjectContext save:nil];
-    }
-}
+
 -(void)deleteImage:(NSString *)imageUrl
 {
     [self check:imageUrl];
@@ -153,29 +142,7 @@
     }
    NSString *sqlite=[self getTheSQLITE:precap];
     NSPredicate *predicate=[NSPredicate predicateWithFormat:sqlite];
-//    switch (preArr.count) {
-//        case 1:
-//           predicate=[NSPredicate predicateWithFormat:@"caption CONTAINS %@",preArr[0]];
-//            break;
-//        case 2:
-//            predicate=[NSPredicate predicateWithFormat:@"caption CONTAINS  %@  AND caption CONTAINS  %@ ",preArr[0],preArr[1]];
-//            break;
-//        case 3:
-//            predicate=[NSPredicate predicateWithFormat:@"(caption CONTAINS  %@  OR caption CONTAINS  %@ ) AND caption CONTAINS  %@ ",preArr[0],preArr[1],preArr[2]];
-//            break;
-//        case 4:
-//            predicate=[NSPredicate predicateWithFormat:@"caption CONTAINS  %@  AND caption CONTAINS  %@  AND caption CONTAINS  %@  AND caption CONTAINS  %@ ",preArr[0],preArr[1],preArr[2],preArr[3]];
-//            break;
-//        case 5:
-//            predicate=[NSPredicate predicateWithFormat:@"caption CONTAINS  %@  AND caption CONTAINS  %@  AND caption CONTAINS  %@  AND caption CONTAINS  %@  AND caption CONTAINS  %@ ",preArr[0],preArr[1],preArr[2],preArr[3],preArr[4]];
-//            break;
-//        case 6:
-//            predicate=[NSPredicate predicateWithFormat:@"caption CONTAINS  %@  AND caption CONTAINS  %@  AND caption CONTAINS  %@  AND caption CONTAINS  %@  AND caption CONTAINS  %@  AND caption CONTAINS  %@ ",preArr[0],preArr[1],preArr[2],preArr[3],preArr[4],preArr[5]];
-//            break;
-//        default:
-//            break;
-//    }
-//    NSLog(@"%@",predicate);
+
     [fetchRequest setPredicate:predicate];
     return [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
 }

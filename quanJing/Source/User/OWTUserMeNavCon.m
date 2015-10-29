@@ -35,6 +35,7 @@
 #import "LJCoreData2.h"
 #import "PostFormData.h"
 #import "LJCoreData3.h"
+#import "QJDatabaseManager.h"
 @interface OWTUserMeNavCon ()<NSURLConnectionDelegate,NSURLConnectionDataDelegate>
 {
     WYPopoverController* _popoverViewCon;
@@ -159,95 +160,35 @@
             }
         }
     }];
-    NSUserDefaults *user=[NSUserDefaults standardUserDefaults];
-    NSString *str=[user objectForKey:@"version1"];
-    NSString *str1= [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
-    if (![str isEqualToString:str1]) {
-        [[LJCoreData3 shareIntance]deleteAll];
-        [self getSimilarCaption];
-    
-    }
-    if (![user objectForKey:@"firstCaption"]) {
-        [self getUpCaptions];
-        [user setObject:@"dd" forKey:@"firstCaption"];
-    }
-    NSDictionary *dict=_array[0];
-    NSDictionary *dict1=_array.lastObject;
-    LJCaptionModel *model=[[LJCoreData shareIntance]check:dict[@"imageurl"]];
-    LJCaptionModel *model1=[[LJCoreData shareIntance]check:dict1[@"imageurl"]];
-    NSArray *ARR=[[LJCoreData2 shareIntance]checkAll2];
-    if ((model!=nil||model1!=nil)&&ARR==nil) {
-        [[LJCoreData shareIntance]checkAllAndUpdate];
-    }
-
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
+            __weak QJDatabaseManager *wmanager=manager;
+        dispatch_semaphore_t sem=dispatch_semaphore_create(0);
+            [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
+             NSArray *words=[manager getAllSearchWords:concurrencyContext];
+                if (words==nil) {
+                    NSString *str=@"http://api.tiankong.com/qjapi/cdn1/phoneSearch";
+                    NSURL *url=[NSURL URLWithString:str];
+                    NSURLRequest *request=[NSURLRequest requestWithURL:url];
+                    NSData *recievie=[NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+                    NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:recievie options:NSJSONReadingMutableContainers error:nil];
+                    NSArray *arr=dict[@"Words"];
+                    for (NSDictionary *dict1 in arr) {
+                        NSString *detailStr=[NSString stringWithFormat:@"、%@、%@、",dict1[@"word"],dict1[@"detailed"]];
+                        [manager setSearchWordByWord:dict1[@"word"] detailed:detailStr context:concurrencyContext];
+                    }
+                }
+            } finished:^(NSManagedObjectContext * _Nonnull mainContext) {
+                dispatch_semaphore_signal(sem);
+            }];
+        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+        
+            
+        
+    });
     //通过通知中心发送通知
     [[NSNotificationCenter defaultCenter] postNotificationName:@"recogNizePhoto" object:nil userInfo:(NSDictionary*)_array];
 }
-
--(void)getSimilarCaption
-{
-    NSString *str=@"http://api.tiankong.com/qjapi/cdn1/phoneSearch";
-    NSURL *url=[NSURL URLWithString:str];
-    NSURLRequest *request=[NSURLRequest requestWithURL:url];
-    _connection=[[NSURLConnection alloc]initWithRequest:request delegate:self];
-
-}
--(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    [_data setLength:0];
-}
--(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    [_data appendData:data];
-}
--(void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    if (_connection==connection) {
-        NSUserDefaults *user=[NSUserDefaults standardUserDefaults];
-        NSString *str1= [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
-
-        [user setObject:str1 forKey:@"version1"];
-
-    }
-    NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingMutableContainers error:nil];
- 
-    NSArray *arr=dict[@"Words"];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        for (NSDictionary *dict1 in arr) {
-            
-            [[LJCoreData3 shareIntance]insertCaptionSimilar:dict1[@"word"] withDetail:dict1[@"detailed"]];
-        }
-    });
-}
-
--(void)getUpCaptions
-{
-    NSInteger count = _array.count;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        if (count>0) {
-            for (NSInteger i=count-1;i>=0;i--) {
-                NSDictionary *dict=_array[i];
-                LJCaptionModel *model=[[LJCoreData shareIntance]check:dict[@"imageurl"]];
-                UIImage *image=dict[@"image"];
-                NSString *imageurl=dict[@"imageurl"];
-                NSData *data=UIImageJPEGRepresentation(image, 1.0f);
-                NSArray *arr=[model.caption componentsSeparatedByString:@" "];
-                for (NSString *caption in arr) {
-                    BOOL ret=[[LJCoreData2 shareIntance]check2:caption];
-                    if (ret==NO) {
-                        [[LJCoreData2 shareIntance]insert2:imageurl withCaption:caption with:@"1" withData:data];
-                    }else
-                    {
-                        [[LJCoreData2 shareIntance]update2:data with:caption];
-                    }
-                }
-            }
-        }
-
-    });
-}
-
 
 
 @end

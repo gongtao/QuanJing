@@ -16,7 +16,7 @@
 #import "AGImagePickerController.h"
 #import "AGIPCGridItem.h"
 
-@interface AGIPCAssetsController : UITableViewController<UITableViewDataSource, UITableViewDelegate, AGIPCGridItemDelegate>
+@interface AGIPCAssetsController : UIViewController<UITableViewDataSource, UITableViewDelegate, AGIPCGridItemDelegate>
 
 @property (strong) ALAssetsGroup *assetsGroup;
 @property (ag_weak, readonly) NSArray *selectedAssets;
@@ -24,7 +24,7 @@
 @property (ag_weak) AGImagePickerController *imagePickerController;
 
 @property (nonatomic, strong)void (^blockPopRootView)();
-
+@property(nonatomic,strong)UITableView *tableView;
 - (id)initWithImagePickerController:(AGImagePickerController *)imagePickerController andAssetsGroup:(ALAssetsGroup *)assetsGroup;
 
 @end

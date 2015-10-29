@@ -48,7 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 	
 - (NSArray *)getAllImageCaptions:(nullable NSManagedObjectContext *)context;
 
-// QJImageCaption
+- (NSArray *)getImageCaptions:(NSManagedObjectContext *)context captions:(NSArray *)captions;
+// QJAdviseCaption
 - (QJAdviseCaption *)setAdviseCaptionByImageUrl:(NSString *)imageUrl
 	caption:(nullable NSString *)caption
 	number:(nullable NSNumber *)number

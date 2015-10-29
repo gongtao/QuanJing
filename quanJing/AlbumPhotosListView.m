@@ -75,15 +75,14 @@
 #import "FSImageViewerViewController.h"
 #import "FSBasicImage.h"
 #import "NetStatusMonitor.h"
-#import "LJCoreData2.h"
 #import "LJCaptions.h"
-#import "LJCoreData.h"
 #import "LJCaptionModel.h"
 #import "captionCell.h"
 #import "OWTTabBarHider.h"
 #import "MJRefresh.h"
 #import "QJPassport.h"
 #import "QJDatabaseManager.h"
+#import "QJAdviseCaption.h"
 @interface OWTUserInfoAlbumSectionHeaderView : UICollectionReusableView
 {
     KHFlatButton* _uploadButton;
@@ -608,6 +607,7 @@
     _assert = [[NSMutableArray alloc]init];
     _allAsserts=[[NSMutableArray alloc]init];
     dataSource=[NSMutableArray array];
+    _allPhotos=[[NSMutableArray alloc]init];
     [self setUpTableView];
         }
 -(void)setUpTableView
@@ -645,12 +645,17 @@
             if (arr2.count>10) {
                 for (NSInteger i=0;i<10;i++) {
                     NSInteger y=arc4random()%arr2.count;
-                    [_captionsResouce addObject:arr2[y]];
+                    QJAdviseCaption *model=arr2[y];
+                    NSDictionary *dict=@{@"imageurl":model.imageUrl,@"caption":model.caption};
+                    [_captionsResouce addObject:dict];
                     [arr2 removeObjectAtIndex:y];
                 }
             }else
             {
-                [_captionsResouce addObjectsFromArray:arr1];
+                for (QJAdviseCaption *model in arr2) {
+                    NSDictionary *dict=@{@"imageurl":model.imageUrl,@"caption":model.caption};
+                    [_captionsResouce addObject:dict];
+                }
             }
             
         } finished:^(NSManagedObjectContext * mainContext) {
@@ -658,7 +663,7 @@
         }];
         dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
     });
-
+    
 }
 -(void)changeSearchBarBackcolor:(UISearchBar *)mySearchBar
 {
@@ -747,7 +752,7 @@
     }else{
         _captions=[NSString stringWithFormat:@"%@ ",searchBar.text];}
     NSArray *someCaptions=[searchBar.text componentsSeparatedByString:@" "];
-    [self getUpCaption:someCaptions with:nil];
+    [self getUpCaption:someCaptions ];
     [self.view endEditing:YES];
 }
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
@@ -912,43 +917,37 @@
             [cell.number setBackgroundImage:nil forState:UIControlStateNormal];
             return cell;
         }
-        LJCaptions *model=_captionsResouce[indexPath.row];
-        cell.label.text=model.caption;
-        UIImage *image=[UIImage imageWithData:model.imageData];
-        cell.image.image=image;
+        NSDictionary *dict=_captionsResouce[indexPath.row];
+        cell.label.text=dict[@"caption"];
+        cell.image.tag=indexPath.row;
+        __block NSInteger number=indexPath.row;
+        ALAssetsLibrary *assetLibrary=[[ALAssetsLibrary alloc]init];
+[assetLibrary assetForURL:[NSURL URLWithString:dict[@"imageurl"]]resultBlock:^(ALAsset *asset) {
+    if (number==cell.image.tag) {
+        cell.image.image=[UIImage imageWithCGImage:asset.thumbnail];
+    }
+} failureBlock:^(NSError *error) {
+    
+}];
         UIImage *image1=[UIImage imageNamed:@"未标题-2.png"];
         image1=[image1 stretchableImageWithLeftCapWidth:16 topCapHeight:0];
-        if (model.number.length==1) {
-            [cell.number setFrame:CGRectMake(SCREENWIT-70, 15, 35, 32)];
-        }else if (model.number.length==2)
-        {
-            cell.number.frame=CGRectMake(SCREENWIT-72.5, 15, 40, 32);
-        }else if (model.number.length==3)
-        {
-            cell.number.frame=CGRectMake(SCREENWIT-75, 15, 45, 32);
-        }
-        else {
-            cell.number.frame=CGRectMake(SCREENWIT-78, 15, 51, 32);
-        }
-        [cell.number setTitle:model.number forState:UIControlStateNormal];
-        [cell.number setBackgroundImage:image1 forState:UIControlStateNormal];
         return cell;
     }
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (isSearching==YES&&indexPath.row<_captionsResouce.count) {
-        LJCaptions *model=_captionsResouce[indexPath.row];
+        NSDictionary *dict=_captionsResouce[indexPath.row];
         if ([_searchBar.text hasSuffix:@" " ]||_searchBar.text==nil) {
-            _captions=[NSString stringWithFormat:@"%@%@ ",_searchBar.text,model.caption];
+            _captions=[NSString stringWithFormat:@"%@%@ ",_searchBar.text,dict[@"caption"]];
         }else{
-            _captions=[NSString stringWithFormat:@"%@ %@ ",_searchBar.text,model.caption];}
+            _captions=[NSString stringWithFormat:@"%@ %@ ",_searchBar.text,dict[@"caption"]];}
         NSArray *someCaptions=[_captions componentsSeparatedByString:@" "];
         [_searchBar resignFirstResponder];
-        [self getUpCaption:someCaptions with:model];
+        [self getUpCaption:someCaptions ];
     }
 }
--(void)getUpCaption:(NSArray *)someCaptions with:(LJCaptions*)model
+-(void)getUpCaption:(NSArray *)someCaptions
 {
     _assetsLibrary=[[ALAssetsLibrary alloc] init];
     [_assert removeAllObjects];
@@ -969,23 +968,12 @@
         }
         NSArray *someCaptionModel;
         if (ret==YES) {
-            someCaptionModel=[[LJCoreData shareIntance]checkSomeImageUrl:someCaptions];
+            someCaptionModel=[wmanager getImageCaptions:concurrencyContext captions:someCaptions];
         }
         
-        for (LJCaptionModel *model in someCaptionModel) {
+        for (QJImageCaption *model in someCaptionModel) {
             [imageUrls addObject:model.imageUrl];
         }
-        NSString *countStr=[NSString stringWithFormat:@"%ld",imageUrls.count];
-        if (someCaptions.count==3&&[someCaptions[2] isEqualToString:@""]&&model!=nil){
-            if (imageUrls.count==0) {
-                [[LJCoreData2 shareIntance]deleteImage2:model.caption];
-                [_captionsResouce removeAllObjects];
-                [self getCaptionsResouce];
-            }else if (![countStr isEqualToString:model.number]){
-                [[LJCoreData2 shareIntance]updateNum:countStr with:model.caption];
-                [_captionsResouce removeAllObjects];
-                [self getCaptionsResouce];
-            }}
         __block NSUInteger number=imageUrls.count;
         for (NSString *imageurl in imageUrls) {
             [_assetsLibrary assetForURL:[NSURL URLWithString:imageurl] resultBlock:^(ALAsset *asset) {
@@ -1023,7 +1011,6 @@
             _searchBar=[[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 44.0)];
             _searchBar.delegate=self;
             _searchBar.placeholder=@"搜索";
-            isSearching=NO;
             _searchBar.translucent=YES;
             [self changeSearchBarBackcolor:_searchBar];
             [_maintableview setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -1066,7 +1053,7 @@
     NSArray *arr=[_captions componentsSeparatedByString:@" "];
     NSMutableArray *arr1=[[NSMutableArray alloc]initWithArray:arr];
     [arr1 removeObjectAtIndex:sender.tag-1000];
-    [self getUpCaption:arr1 with:nil];
+    [self getUpCaption:arr1 ];
     
     [arr1 removeObject:@""];
     _captions=[arr1 componentsJoinedByString:@" "];
@@ -1222,9 +1209,9 @@
     
     singleton *oneS = [singleton shareData];
     oneS.value = array.count;
-    dataSource = array ;
+    [dataSource addObjectsFromArray:array];
     _allAsserts= _assert ;
-    _allPhotos= array ;
+    [_allPhotos addObjectsFromArray:array];
     [self.maintableview reloadData];
     [_collectionView reloadData];
 }
@@ -1596,18 +1583,7 @@
 - (void)beginPullDownRefreshing
 {
     [self refresh];
-    NSArray *arr1=[[LJCoreData2 shareIntance]checkAll2];
-    [_captionsResouce removeAllObjects];
-    if (arr1.count>10) {
-        for (NSInteger i=0;i<10;i++) {
-            NSInteger y=arc4random()%arr1.count;
-            [_captionsResouce addObject:arr1[y]];
-        }
-    }else
-    {
-        [_captionsResouce addObjectsFromArray:arr1];
-    }
-    
+    [self getCaptionsResouce];
 }
 
 - (BOOL)keepiOS7NewApiCharacter

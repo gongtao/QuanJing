@@ -637,7 +637,6 @@
 		E01391A91B0C3EA500051B78 /* chatcellbkg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E013911A1B0C3EA500051B78 /* chatcellbkg@2x.png */; };
 		E0188EEC1B15989000DCD510 /* FentchListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E0188EEB1B15989000DCD510 /* FentchListViewController.m */; };
 		E01A92F01B66257400A454E7 /* DSNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E01A92EF1B66257400A454E7 /* DSNavigationBar.m */; };
-		E027FA801B5925860090F04D /* ExcPhotoRecThread.m in Sources */ = {isa = PBXBuildFile; fileRef = E027FA7F1B5925860090F04D /* ExcPhotoRecThread.m */; };
 		E02EE6701B207ED0000D76AF /* hxSender.png in Resources */ = {isa = PBXBuildFile; fileRef = E02EE66F1B207ED0000D76AF /* hxSender.png */; };
 		E02EE6721B207EE5000D76AF /* middleSplitLine.png in Resources */ = {isa = PBXBuildFile; fileRef = E02EE6711B207EE5000D76AF /* middleSplitLine.png */; };
 		E02EE6741B207EEB000D76AF /* startTalk.png in Resources */ = {isa = PBXBuildFile; fileRef = E02EE6731B207EEB000D76AF /* startTalk.png */; };
@@ -1840,8 +1839,6 @@
 		E0188EEB1B15989000DCD510 /* FentchListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FentchListViewController.m; sourceTree = "<group>"; };
 		E01A92EE1B66257400A454E7 /* DSNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DSNavigationBar.h; sourceTree = "<group>"; };
 		E01A92EF1B66257400A454E7 /* DSNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DSNavigationBar.m; sourceTree = "<group>"; };
-		E027FA7E1B5925860090F04D /* ExcPhotoRecThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExcPhotoRecThread.h; sourceTree = "<group>"; };
-		E027FA7F1B5925860090F04D /* ExcPhotoRecThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExcPhotoRecThread.m; sourceTree = "<group>"; };
 		E02EE66F1B207ED0000D76AF /* hxSender.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hxSender.png; sourceTree = "<group>"; };
 		E02EE6711B207EE5000D76AF /* middleSplitLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = middleSplitLine.png; sourceTree = "<group>"; };
 		E02EE6731B207EEB000D76AF /* startTalk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startTalk.png; sourceTree = "<group>"; };
@@ -2843,8 +2840,6 @@
 				66A5757C1AB2663F003F964B /* StandardPaths.h */,
 				90AA4D9018E3C8460019F1D7 /* WTConstants.m */,
 				66A5757D1AB2663F003F964B /* StandardPaths.m */,
-				E027FA7E1B5925860090F04D /* ExcPhotoRecThread.h */,
-				E027FA7F1B5925860090F04D /* ExcPhotoRecThread.m */,
 				9044E3FC18CAE5FB00784D38 /* OWTMainViewCon.h */,
 				9044E3FD18CAE5FB00784D38 /* OWTMainViewCon.m */,
 				9044E3FE18CAE5FB00784D38 /* OWTMainViewCon.xib */,
@@ -5494,7 +5489,6 @@
 				A3604FD21B281A4400A68FDA /* LJCaptionModel.m in Sources */,
 				31C920341BD65D7D00DFC3C0 /* QJHTTPManager.m in Sources */,
 				E0B99B5C1B05966000ED7831 /* PSTCollectionView.m in Sources */,
-				E027FA801B5925860090F04D /* ExcPhotoRecThread.m in Sources */,
 				311BF04819B2E9250046C11D /* OQJCategoryCell.m in Sources */,
 				E0B99B821B05968B00ED7831 /* MWZoomingScrollView.m in Sources */,
 				31F887D81BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.m in Sources */,

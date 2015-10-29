@@ -204,31 +204,43 @@
 - (void)careBtnClick:(UIButton *)sender
 {
 	[SVProgressHUD show];
-	OWTUserManager * um = GetUserManager();
-	OWTUser * user = [[OWTUser alloc]init];
-	[user mergeWithData:_careUser];
-	
-	if (sender.tag == 0) {
-		_careBtn.tag = 1;
-		[um followUser:user
-		success:^{
-			[SVProgressHUD dismiss];
-			[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
-		}
-		failure:^(NSError * error) {
-			[SVProgressHUD showError:error];
-		}];
+    QJPassport *pt=[QJPassport sharedPassport];
+    QJActionObject *actionModel=_viewContoller.activeList[_number];
+    if (sender.tag == 0) {
+		
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError *error=[pt requestUserFollowUser:actionModel.user.uid];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!error) {
+                    _careBtn.tag = 1;
+                    actionModel.user.hasFollowUser=[NSNumber numberWithBool:YES];
+                    [_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
+                    [SVProgressHUD dismiss];
+                    [_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
+                }else {
+                    [SVProgressHUD showError:error];
+                }
+            });
+            });
+       
 	}
 	else {
-		_careBtn.tag = 0;
-		[um unfollowUser:user
-		success:^{
-			[SVProgressHUD dismiss];
-			[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
-		}
-		failure:^(NSError * error) {
-			[SVProgressHUD showError:error];
-		}];
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError *error=[pt requestUserCancelFollowUser:actionModel.user.uid];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+            if (!error) {
+                _careBtn.tag = 0;
+                actionModel.user.hasFollowUser=[NSNumber numberWithBool:NO];
+                [_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
+                [SVProgressHUD dismiss];
+                [_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
+            }else {
+                [SVProgressHUD showError:error];
+            }
+        });
+        });
 	}
 }
 
@@ -442,7 +454,7 @@
     QJUser *user=actionModel.user;
     [_headerImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_headerImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像"]];
     CGSize size = [user.nickName sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(300, 200)];
-    if (0) {
+    if (user.hasFollowUser.boolValue) {
         _careBtn.tag = 0;
         [_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
     }
