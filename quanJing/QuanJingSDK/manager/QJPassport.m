@@ -730,7 +730,7 @@
 			
 		NSArray * dataArray = dataDic[@"list"];
 		
-		if (QJ_IS_ARRAY_NIL(dataArray)) {
+		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 				[resultArray addObject:[[QJUser alloc] initWithJson:obj]];
