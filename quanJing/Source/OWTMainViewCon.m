@@ -49,8 +49,9 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	NSArray * _array;
 	NSString * _caption;
 	ALAssetsLibrary * _assetsLibrary;
-    
-    BOOL _isWifi;
+	
+	Reachability * _reachability;
+	BOOL _isWifi;
 }
 
 @property (nonatomic, weak) UIViewController * previousSelectedViewCon;
@@ -92,12 +93,12 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 - (void)setup
 {
 	self.navigationController.navigationBar.backgroundColor = [UIColor blackColor];
-    self.delegate = self;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(reachabilityChangedNotification:)
-                                                 name:kReachabilityChangedNotification object:nil];
-    [self setupNetworkMonitor];
+	self.delegate = self;
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+	selector:@selector(reachabilityChangedNotification:)
+	name:kReachabilityChangedNotification object:nil];
+	[self setupNetworkMonitor];
 	
 	GetThemer().homePageColor = HWColor(46, 46, 46);
 	// 首页入口
@@ -125,7 +126,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	
 	self.edgesForExtendedLayout = UIRectEdgeTop;
 	[self registerNotifications];
-    _assetsLibrary = [[ALAssetsLibrary alloc]init];
+	_assetsLibrary = [[ALAssetsLibrary alloc]init];
 }
 
 - (void)setUpDesignTabBar
@@ -314,13 +315,22 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 
 - (void)setupNetworkMonitor
 {
-    Reachability *reachability = [Reachability reachabilityWithHostName:@"www.baidu.com"];
-    [reachability startNotifier];
+	_reachability = [Reachability reachabilityWithHostName:@"www.baidu.com"];
+	_isWifi = _reachability.isReachableViaWiFi;
+	[_reachability startNotifier];
 }
 
 - (void)reachabilityChangedNotification:(NSNotification *)notification
 {
-    NSLog(@"notification: %@", notification);
+	Reachability * reachability = [notification object];
+	
+	if (![reachability isKindOfClass:[Reachability class]])
+		return;
+		
+		
+	NetworkStatus netStatus = [reachability currentReachabilityStatus];
+	_isWifi = (netStatus == kReachableViaWiFi);
+	NSLog(@"haha");
 }
 
 // 我
@@ -354,6 +364,9 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 			QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
 			
 			for (NSInteger i = _array.count - 1; i >= 0; i--) {
+				while (!_isWifi)
+					[NSThread sleepForTimeInterval:2.0];
+					
 				NSDictionary * dict = _array[i];
 				__weak QJDatabaseManager * weakManager = manager;
 				[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * concurrencyContext) {
@@ -445,7 +458,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 			else
 				[adviseCaptionArray enumerateObjectsUsingBlock:^(QJAdviseCaption * obj, NSUInteger idx, BOOL * stop) {
 					NSInteger num = obj.number.integerValue;
-					obj.number = [NSNumber numberWithInteger:num+1];
+					obj.number = [NSNumber numberWithInteger:num + 1];
 				}];
 		}
 		
