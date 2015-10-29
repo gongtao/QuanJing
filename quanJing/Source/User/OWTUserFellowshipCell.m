@@ -26,7 +26,7 @@
 
 }
 
-@property (nonatomic, strong) OWTUser* user;
+@property (nonatomic, strong) QJUser* user;
 @property (nonatomic, assign) BOOL isFollowerUser;
 
 @end
@@ -49,21 +49,23 @@
     _avatarImageView.clipsToBounds = YES;
 }
 
-- (void)setUser:(OWTUser*)user isFollowerUser:(BOOL)isFollowerUser;
+- (void)setUser:(QJUser*)user isFollowerUser:(BOOL)isFollowerUser;
 {
     _user = user;
     _isFollowerUser = isFollowerUser;
     
     if (_user != nil)
     {
-        _usernameLabel.text = user.nickname;
-        [_avatarImageView setImageWithInfoAsThumbnail:user.avatarImageInfo];
-        
-        OWTUser* currentUser = GetUserManager().currentUser;
-        if (currentUser != nil)
+        _usernameLabel.text = user.nickName;
+        [_avatarImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_avatarImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"5"]];
+        if (_isFollowerUser) {
+            _actionButton.hidden=NO;
+            [_actionButton setTitle:@"已关注" forState:UIControlStateNormal];
+        }else{
+        if (_user)
         {
             _actionButton.hidden = NO;
-            if ([currentUser isFollowingUser:user])
+            if (_user.hasFollowUser.boolValue)
             {
                 [_actionButton setTitle:@"已关注" forState:UIControlStateNormal];
             }
@@ -76,7 +78,7 @@
         {
             _actionButton.hidden = YES;
         }
-
+        }
         [self setNeedsLayout];
     }
     else

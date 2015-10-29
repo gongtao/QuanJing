@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "QuanJingSDK.h"
 @interface OWTUserFellowshipCell : UICollectionViewCell
 
-- (void)setUser:(OWTUser*)user isFollowerUser:(BOOL)isFollowerUser;
+- (void)setUser:(QJUser*)user isFollowerUser:(BOOL)isFollowerUser;
 
 @end

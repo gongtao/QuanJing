@@ -38,18 +38,6 @@
     return self;
 }
 
-- (NSOrderedSet*)followingUsers
-{
-    if (self.user != nil && self.user.fellowshipInfo != nil && self.user.fellowshipInfo.followingUsers != nil)
-    {
-        return self.user.fellowshipInfo.followingUsers;
-    }
-    else
-    {
-        return nil;
-    }
-}
-
 - (void)setup
 {
     _userFlowViewCon = [[OWTUserFlowViewCon alloc] initWithNibName:nil bundle:nil];
@@ -60,15 +48,7 @@
     //将block对外部抖出一个口,外部在合适的时候掉用
     _userFlowViewCon.numberOfUsersFunc = ^
     {
-        NSOrderedSet* followingUsers = [wself followingUsers];
-        if (followingUsers != nil)
-        {
-            return (int)followingUsers.count;
-        }
-        else
-        {
-            return 0;
-        }
+        return wself.user.followAmount.intValue;
     };
     
     _userFlowViewCon.userAtIndexFunc = ^(NSUInteger index)
@@ -86,67 +66,57 @@
 
     _userFlowViewCon.onUserSelectedFunc = ^(OWTUser* ownerUser)
     {
-        
-        
         if (ownerUser != nil)
         {
-            
-//            if ([ownerUser.userID isEqualToString:GetUserManager().currentUser.userID ]) {
-//                AlbumPhotosListView1 * userViewCon = [[AlbumPhotosListView1 alloc] initWithNibName:nil bundle:nil];
-//                [self.navigationController pushViewController:userViewCon animated:YES];
-//                
-//            }
-//            //        userViewCon.user = ownerUser;
-//            else
-//            {
                 OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
                 userViewCon1.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:userViewCon1 animated:YES];
                 userViewCon1.user =ownerUser;
-            
-                
-//            }
-            
         }
-
     };
-    
     //请求喜欢当前用户 人的数据
     _userFlowViewCon.refreshDataFunc = ^(void (^refreshDoneFunc)())
     {
-        OWTUserManager* um = GetUserManager();
-        [um refreshUserFollowingUsers:wself.user
-                              success:^{
-                                  if (refreshDoneFunc != nil)
-                                  {
-                                      refreshDoneFunc();
-                                  }
-                              }
-                              failure:^(NSError* error) {
-                                  [SVProgressHUD showError:error];
-                                  if (refreshDoneFunc != nil)
-                                  {
-                                      refreshDoneFunc();
-                                  }
-                              }];
+        [wself.userFlowViewCon.dataResouce removeAllObjects];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [[QJPassport sharedPassport]requestUserFollowList:wself.user.uid pageNum:1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                        [SVProgressHUD showError:error];
+                    if (refreshDoneFunc!=nil) {
+                        refreshDoneFunc();
+                    }
+                }else {
+                    [wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
+                    if (refreshDoneFunc!=nil) {
+                        refreshDoneFunc();
+                    }
+                }
+                });
+            }];
+        });
+        
     };
     
     _userFlowViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)()){
-        OWTUserManager* um = GetUserManager();
-        [um loadMoreUserFollowingUsers:wself.user
-                              success:^{
-                                  if (loadMoreDoneFunc != nil)
-                                  {
-                                      loadMoreDoneFunc();
-                                  }
-                              }
-                              failure:^(NSError* error) {
-                                  [SVProgressHUD showError:error];
-                                  if (loadMoreDoneFunc != nil)
-                                  {
-                                      loadMoreDoneFunc();
-                                  }
-                              }];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[QJPassport sharedPassport]requestUserFollowList:wself.user.uid pageNum:1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [SVProgressHUD showError:error];
+                    if (loadMoreDoneFunc) {
+                        loadMoreDoneFunc();
+                    }
+                }else {
+                    [wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
+                    if (loadMoreDoneFunc) {
+                        loadMoreDoneFunc();
+                    }
+                }
+            });
+        }];
+    });
+
     };
 }
 
@@ -187,25 +157,13 @@
 
 #pragma mark -
 
-- (void)setUser:(OWTUser*)user
+- (void)setUser:(QJUser*)user
 {
     _user = user;
     if (_user != nil)
     {
-        self.navigationItem.title = [NSString stringWithFormat:@"%@关注的人", _user.displayName];
-//        UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, 100, 44)];
-//        label.text = [NSString stringWithFormat:@"关注%@的人", _user.displayName];
-//        
-//        
-//        label.font = [UIFont fontWithName:@"Arial-BoldItalicMT" size:24];
-//        
-//        [label setTextAlignment:NSTextAlignmentCenter];
-//        label.textColor = GetThemer().themeTintColor;
-//        self.navigationItem.titleView =label;
-
-        
-        NSNumber* totalUserNum = [NSNumber numberWithInteger:_user.fellowshipInfo.followingNum];
-        _userFlowViewCon.totalUserNum = totalUserNum;
+        self.navigationItem.title = [NSString stringWithFormat:@"%@关注的人", _user.nickName];
+        _userFlowViewCon.totalUserNum = _user.followAmount;
     }
     else
     {
@@ -213,5 +171,9 @@
         _userFlowViewCon.totalUserNum = nil;
     }
 }
+#pragma mark -getData
+-(void)getTheData
+{
 
+}
 @end

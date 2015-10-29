@@ -19,7 +19,7 @@
 @property (nonatomic, strong) void (^refreshDataFunc)(void (^refreshDoneFunc)());
 @property (nonatomic, strong) void (^loadMoreDataFunc)(void (^loadDoneFunc)());
 @property (nonatomic, strong) NSNumber* totalUserNum;
-
+@property(nonatomic,strong)NSMutableArray *dataResouce;
 - (void)manualRefresh;
 - (void)loadMoreData;
 - (void)reloadData;

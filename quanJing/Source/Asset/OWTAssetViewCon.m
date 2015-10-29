@@ -145,15 +145,13 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.showsVerticalScrollIndicator = NO;
     _collectionView.alwaysBounceVertical = YES;
-//    [_collectionView addFooterWithTarget:self action:@selector(loadMore)];
+//    [_collectionView addFooterWithTarget:self action:@selector(loadRelatedAssetsInSearch)];
 //    _collectionView.footerPullToRefreshText=@"";
 //    _collectionView.footerRefreshingText=@"";
 //    _collectionView.footerReleaseToRefreshText=@"";
     //
     if (_imageAsset != nil)
     {
-        //_assetOwnerUser = [GetUserManager() userForID:_asset.ownerUserID];
-        
         if (_assetOwnerUser != nil)
         {
             
@@ -257,7 +255,12 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
             commentModel.comment=_textField.text;
             commentModel.user=[QJPassport sharedPassport].currentUser;
             commentModel.time=[self getDate];
-            NSMutableArray *comment=(NSMutableArray *)_imageAsset.comments;
+            NSMutableArray *comment;
+            if (_imageAsset.comments) {
+               comment =(NSMutableArray *)_imageAsset.comments;
+            }else {
+                comment=[[NSMutableArray alloc]init];
+            }
             [comment addObject:commentModel];
             _imageAsset.comments=comment;
             [_collectionView reloadData];
@@ -411,7 +414,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     [super viewDidLoad];
     _searchResults = [[NSMutableOrderedSet alloc]init];
     [self loadRelatedAssetsInSearch];
-//    [self getAllAssetData];
+    [self getAllAssetData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -466,47 +469,56 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     [self reloadData];
 
 }
-
-- (void)loadRelatedAssetsInSearch
+#pragma mark -getImages
+-(void)loadImageAssets
 {
     QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
-    if(_imageAsset.tag != nil && [_imageType integerValue] == 1){
+   
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [fm requestImageSearchKey:_imageAsset.tag pageNum:_searchResults.count/50+1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
-            if (error == nil) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (imageObjectArray.count != 0) {
-                    [self mergeAssets:imageObjectArray];
-                }
-                [SVProgressHUD dismiss];
-                [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
-
-            });
-            }else{
-                [SVProgressHUD showErrorWithStatus:@"请求失败"];
+    [fm requestUserImageList:_imageAsset.userId pageNum:_searchResults.count/50+1 pageSize:50 currentImageId:_imageAsset.imageId finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                [SVProgressHUD showErrorWithStatus:@"网络连接错误"];
+                return ;
             }
-
-        }];
+            if (imageObjectArray.count==0) {
+                [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+            }
+            [self mergeAssets:imageObjectArray];
+            [SVProgressHUD dismiss];
+        });
+    }];
     });
-    }else if([_imageType integerValue] == 2){
+}
+- (void)loadRelatedAssetsInSearch
+{
+    if (_imageType.intValue==1) {
+        if(_imageAsset.tag == nil){
+            return;
+        }
+        QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [fm requestUserImageList:nil  pageNum:1 pageSize:60  currentImageId:_imageAsset.imageId finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
+            [fm requestImageSearchKey:_imageAsset.tag pageNum:_searchResults.count/50+1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (error == nil) {
-                        if (albumObjectArray != nil){
-                            [self mergeAssets:albumObjectArray];
-                            [SVProgressHUD dismiss];
-
-                        }
-                    }else{
-                        [SVProgressHUD showErrorWithStatus:@"请求失败"];
+                    if (error) {
+                        [SVProgressHUD showErrorWithStatus:@"网络连接错误"];
+                        return ;
                     }
+                    if (imageObjectArray.count==0) {
+                        [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+                    }
+                    [self mergeAssets:imageObjectArray];
+                    [SVProgressHUD dismiss];
+                    
                 });
             }];
-            
         });
+    }else
+    {
+        [self loadImageAssets];
     }
-    
+
+
 }
 
 #pragma mark - Button Actions 点击赞过的人

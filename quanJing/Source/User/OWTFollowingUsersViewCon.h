@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "QuanJingSDK.h"
 @interface OWTFollowingUsersViewCon : UIViewController
 
-@property (nonatomic, strong) OWTUser* user;
+@property (nonatomic, strong) QJUser* user;
 
 @end

@@ -15,7 +15,7 @@
 #import "OWTUser.h"
 #import "UIView+EasyAutoLayout.h"
 #import <SVPullToRefresh/SVPullToRefresh.h>
-
+#import "QuanJingSDK.h"
 static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 @interface OWTUserFlowViewCon ()
@@ -31,7 +31,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 @end
 
 @implementation OWTUserFlowViewCon
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -44,6 +43,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)setup
 {
+    _dataResouce=[[NSMutableArray alloc]init];
     _tabBarHider = [[OWTTabBarHider alloc] init];
 }
 
@@ -183,21 +183,15 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (_numberOfUsersFunc == nil)
-    {
-        return 0;
-    }
-    
-    return _numberOfUsersFunc();
+    return _dataResouce.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     OWTUserFellowshipCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:kWaterFlowCellID forIndexPath:indexPath];
 
-    OWTUser* user = [self userAtIndex:indexPath.row];
+    QJUser *user=_dataResouce[indexPath.row];
     [cell setUser:user isFollowerUser:_isShowingFollowerUsers];
-
     return cell;
 }
 

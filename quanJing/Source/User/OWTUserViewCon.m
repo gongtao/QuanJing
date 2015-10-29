@@ -76,6 +76,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	UITapGestureRecognizer * _tap;
 	CGFloat _itemSize;
 	NSMutableArray * _dataResouce;
+    BOOL   _isLast;
 }
 
 @property (strong, nonatomic) DXMessageToolBar * chatToolBar;
@@ -133,11 +134,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			return (OWTAsset *)nil;
 	};
 	
-	wself.onAssetSelectedFunc = ^(OWTAsset * asset)
-	{
-		OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset deletionAllowed:YES onDeleteAction:^{[wself reloadData]; }];
-		[wself.navigationController pushViewController:assetViewCon animated:YES];
-	};
 	wself.refreshDataFunc = ^(void (^ refreshDoneFunc)())
 	{
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -234,6 +230,12 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	[_collectionView addHeaderWithTarget:self action:@selector(refresh)];
 	[_collectionView addFooterWithTarget:self action:@selector(loadMore)];
 	[_collectionView headerBeginRefreshing];
+    _collectionView.headerPullToRefreshText=nil;
+    _collectionView.headerRefreshingText=nil;
+    _collectionView.headerReleaseToRefreshText=nil;
+    _collectionView.footerPullToRefreshText=nil;
+    _collectionView.footerRefreshingText=nil;
+    _collectionView.footerReleaseToRefreshText=nil;
 }
 
 - (void)refreshData
@@ -638,6 +640,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
                     [SVProgressHUD showError:error];
                 return;
             }
+            _isLast=isLastPage;
             [_dataResouce addObjectsFromArray:imageObjectArray];
             
             if (i == 2) {
@@ -650,10 +653,15 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)loadMore
 {
+    if (_isLast) {
+        [_collectionView footerEndRefreshing];
+        [SVProgressHUD showErrorWithStatus:@"没有更多数据"];
+        return;
+    }
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+        [[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:_dataResouce.count/30+1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
             if (error) {
-                    [_collectionView headerEndRefreshing];
+                [_collectionView footerEndRefreshing];
                     [_collectionView reloadData];
                 
                 if (![NetStatusMonitor isExistenceNetwork])
@@ -662,9 +670,10 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
                     [SVProgressHUD showError:error];
                 return;
             }
+            _isLast=isLastPage;
             [_dataResouce addObjectsFromArray:imageObjectArray];
             
-                [_collectionView headerEndRefreshing];
+                [_collectionView footerEndRefreshing];
                 [_collectionView reloadData];
         }];
 	});
@@ -800,13 +809,11 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 // album 点击事件
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.section == 1) {
-		OWTAsset * asset = [self assetAtIndex:indexPath.row];
-		
-		if (asset != nil)
-			if (_onAssetSelectedFunc != nil)
-				_onAssetSelectedFunc(asset);
-	}
+    if (indexPath.section == 1) {
+        QJImageObject *imageModel=_dataResouce[indexPath.row];
+        OWTAssetViewCon *assetView=[[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:[NSNumber numberWithInt:2]];
+        [self.navigationController pushViewController:assetView animated:YES];
+    }
 }
 
 #pragma mark - ScrollView Delegate
