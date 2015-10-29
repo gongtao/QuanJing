@@ -1003,7 +1003,7 @@
 	return error;
 }
 
-#pragma mark - 用户列表
+#pragma mark - 用户上传的图片列表
 
 - (void)requestUserImageList:(nullable NSNumber *)userId
 	pageNum:(NSUInteger)pageNum

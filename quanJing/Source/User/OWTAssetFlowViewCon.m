@@ -12,10 +12,9 @@
 #import "OWTTabBarHider.h"
 #import "OWaterFlowCollectionView.h"
 #import "OWTImageCell.h"
-#import "OWTAsset.h"
 #import "UIView+EasyAutoLayout.h"
 #import <SVPullToRefresh/SVPullToRefresh.h>
-
+#import "QJInterfaceManager.h"
 
 #import <SDWebImage/SDWebImageManager.h>
 static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
@@ -125,7 +124,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                 self.parentViewController.navigationItem.rightBarButtonItem = _numItem;
             }
 
-            _numItem.title = [NSString stringWithFormat:@"%d", _totalAssetNum.integerValue];
+            _numItem.title = [NSString stringWithFormat:@"%ld", _totalAssetNum.integerValue];
         }
     }
 }
@@ -165,7 +164,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 #pragma mark - OWaterFlowLayoutDataSource
 
-- (OWTAsset*)assetAtIndex:(NSInteger)index
+- (QJImageObject*)assetAtIndex:(NSInteger)index
 {
     if (_assetAtIndexFunc == nil)
     {
@@ -205,7 +204,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     {
         return 0;
     }
-
     return _numberOfAssetsFunc();
 }
 
@@ -214,14 +212,13 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 {
     OWTImageCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:kWaterFlowCellID forIndexPath:indexPath];
 
-    OWTAsset* asset = [self assetAtIndex:indexPath.row];
+    QJImageObject* asset = [self assetAtIndex:indexPath.row];
     if (asset != nil)
     {
-        OWTImageInfo* imageInfo = asset.imageInfo;
-        if (imageInfo != nil)
+        if (asset != nil)
         {
-//            [cell setImageWithInfo:imageInfo];
-            [cell.imageView setImageWithURL:[NSURL URLWithString:asset.imageInfo.smallURL] placeholderImage:[UIImage imageNamed:@""]];
+            NSString *adataImagURL = [QJInterfaceManager thumbnailUrlFromImageUrl:asset.url size:CGSizeMake(cell.imageView.bounds.size.width, cell.imageView.bounds.size.height)];
+            [cell.imageView setImageWithURL:[NSURL URLWithString:adataImagURL] placeholderImage:[UIImage imageNamed:@""]];
             
         }
         else
@@ -259,7 +256,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    OWTAsset* asset = [self assetAtIndex:indexPath.row];
+    QJImageObject* asset = [self assetAtIndex:indexPath.row];
     if (asset != nil)
     {
         if (_onAssetSelectedFunc != nil)

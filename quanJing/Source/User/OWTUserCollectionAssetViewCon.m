@@ -80,24 +80,24 @@
         return [wself assetNum];
     };
     
-    _assetViewCon.assetAtIndexFunc = ^(NSInteger index)
-    {
-        NSMutableOrderedSet* assets = [wself assets];
-        if (assets != nil)
-        {
-            return (OWTAsset*)[assets objectAtIndex:index];
-        }
-        else
-        {
-            return (OWTAsset*)nil;
-        }
-    };
-    
-    _assetViewCon.onAssetSelectedFunc = ^(OWTAsset* asset)
-    {
-        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset];
-        [wself.navigationController pushViewController:assetViewCon animated:YES];
-    };
+//    _assetViewCon.assetAtIndexFunc = ^(NSInteger index)
+//    {
+//        NSMutableOrderedSet* assets = [wself assets];
+//        if (assets != nil)
+//        {
+//            return (OWTAsset*)[assets objectAtIndex:index];
+//        }
+//        else
+//        {
+//            return (OWTAsset*)nil;
+//        }
+//    };
+//    
+//    _assetViewCon.onAssetSelectedFunc = ^(OWTAsset* asset)
+//    {
+//        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset];
+//        [wself.navigationController pushViewController:assetViewCon animated:YES];
+//    };
     
     _assetViewCon.refreshDataFunc = ^(void (^refreshDoneFunc)())
     {

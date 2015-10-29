@@ -19,9 +19,9 @@
 
 @interface OWTUserAssetsViewCon ()
 
-@property (nonatomic, copy) NSMutableOrderedSet* assets;
 @property (nonatomic, assign)NSInteger currentPage;
-@property (nonatomic, strong)QJAlbumObject *currentAlumbObject;
+@property (nonatomic, strong)QJImageObject *currentAlumbObject;
+@property (nonatomic, strong)NSMutableOrderedSet *imageAssets;
 
 @end
 
@@ -38,25 +38,28 @@
 
 - (NSMutableOrderedSet*)assets
 {
-//    if (self.user1 != nil && self.user1.assetsInfo != nil && self.user.assetsInfo.assets != nil)
-//    {
-//        return self.user1.assetsInfo.assets;
-//    }
-//    else
-//    {
+   if (self.user1 != nil && self.user1.uploadAmount != nil )
+    {
+        return _imageAssets;
+    }
+    else
+    {
         return nil;
- //   }
+    }
 }
 
 - (void)setup
 {
+    _imageAssets = [[NSMutableOrderedSet alloc]init];
+    _currentPage = 1;
+    NSNumber *userID = ([_user1.uid integerValue] != [[[QJPassport sharedPassport]currentUser].uid integerValue])? _user1.uid :nil;
     _assetViewCon = [[OWTAssetFlowViewCon alloc] initWithNibName:nil bundle:nil];
     [self addChildViewController:_assetViewCon];
     
     __weak OWTUserAssetsViewCon* wself = self;
     _assetViewCon.numberOfAssetsFunc = ^
     {
-        NSMutableOrderedSet* assets = [wself assets];
+        NSMutableOrderedSet* assets = [wself imageAssets];
         if (assets != nil)
         {
             return (int)assets.count;
@@ -67,113 +70,95 @@
         }
     };
     
+    //带返回参数的block
     _assetViewCon.assetAtIndexFunc = ^(NSInteger index)
     {
+        
         NSMutableOrderedSet* assets = [wself assets];
         if (assets != nil)
         {
-            return (OWTAsset*)[assets objectAtIndex:index];
+            if (index >= _imageAssets.count ) {
+                return (QJImageObject*)[assets objectAtIndex:_imageAssets.count -1];
+            }
+            return (QJImageObject*)[assets objectAtIndex:index];
         }
         else
         {
-            return (OWTAsset*)nil;
+            return (QJImageObject*)nil;
         }
     };
     
-    _assetViewCon.onAssetSelectedFunc = ^(OWTAsset* asset)
+    //点击动作
+    _assetViewCon.onAssetSelectedFunc = ^(QJImageObject* asset)
     {
+        asset.imageType =  [NSNumber numberWithInt:2];
         OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset deletionAllowed:YES onDeleteAction:^{ [wself.assetViewCon reloadData]; }];
+        assetViewCon.user1 = wself.user1;
         [wself.navigationController pushViewController:assetViewCon animated:YES];
     };
     
     _assetViewCon.refreshDataFunc = ^(void (^refreshDoneFunc)())
     {
-        OWTUserManager* um = GetUserManager();
-        [um refreshUserAssets:wself.user1
-                      success:^{
-                          if (refreshDoneFunc != nil)
-                          {
-                              refreshDoneFunc();
-                          }
-                      }
-                      failure:^(NSError* error) {
-                          [SVProgressHUD showError:error];
-                          if (refreshDoneFunc != nil)
-                          {
-                              refreshDoneFunc();
-                          }
-                      }];
+        QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [fm requestUserImageList:userID  pageNum:1 pageSize:60  currentImageId:nil finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error == nil) {
+                        if (albumObjectArray != nil){
+                            [wself.imageAssets removeAllObjects];
+                            [wself.imageAssets addObjectsFromArray:albumObjectArray];
+                        }
+                        if (refreshDoneFunc != nil){
+                            refreshDoneFunc();
+                        }
+                        NSLog(@"获取相册成功,照片熟量 %ld",wself.imageAssets.count);
+                    }else{
+                        [SVProgressHUD showErrorWithStatus:@"获取相册失败"];
+                        NSLog(@"获取相册失败");
+                        if (refreshDoneFunc != nil)
+                            refreshDoneFunc();
+                    }
+                });
+            }];
+            
+        });
+        
     };
     
     _assetViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)()) {
-        OWTUserManager* um = GetUserManager();
-        [um loadMoreUserAssets:wself.user1
-                         count:60
-                       success:^{
-                           if (loadMoreDoneFunc != nil)
-                           {
-                               loadMoreDoneFunc();
-                           }
-                       }
-                       failure:^(NSError* error) {
-                           [SVProgressHUD showError:error];
-                           if (loadMoreDoneFunc != nil)
-                           {
-                               loadMoreDoneFunc();
-                           }
-                       }];
+        QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+        NSInteger tmp = wself.currentPage+1;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [fm requestUserImageList:userID  pageNum:tmp pageSize:60  currentImageId:nil finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error == nil) {
+                        if (albumObjectArray != nil){
+                            wself.currentPage++;
+                            [wself.imageAssets addObjectsFromArray:albumObjectArray];
+                        }
+                        if (loadMoreDoneFunc != nil){
+                            loadMoreDoneFunc();
+                        }
+                        NSLog(@"获取相册loadmore成功,照片熟量 %ld",wself.imageAssets.count);
+                    }else{
+                        [SVProgressHUD showErrorWithStatus:@"获取相册失败"];
+                        NSLog(@"获取相册loadmore失败");
+                        if (loadMoreDoneFunc != nil)
+                            loadMoreDoneFunc();
+                    }
+                });
+            }];
+            
+        });
     };
 }
 
-
--(void)getAlbumID:(NSInteger)pageNum
-{
-    
-//    NSNumber *userID = ([_user1.uid integerValue] == [[[QJPassport sharedPassport]currentUser].uid integerValue])? _user1.uid :nil;
-    
-    //Quesion 一个相册ID会有多个？
-    QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [fm requestUserAlbumList:pageNum  pageSize:60  finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error == nil) {
-                   _currentAlumbObject = [albumObjectArray firstObject];
-                    [self albumID2Assest:_currentAlumbObject];
-                    NSLog(@"获取相册ID成功");
-                }else{
-                    [SVProgressHUD showErrorWithStatus:@"获取相册失败"];
-                    NSLog(@"获取相册ID失败");
-                }
-            });
-        }];
-
-    });
-}
-
-//通过相册ID获取图片
--(void)albumID2Assest:(QJAlbumObject*)albumObject
-{
-    QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [fm requestUserAlbumImageList:albumObject.aid  pageNum:_currentPage pageSize:60  finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error == nil) {
-                    NSLog(@"获取相册成功end");
-                }else{
-                    [SVProgressHUD showErrorWithStatus:@"获取相册失败"];
-                    NSLog(@"获取相册失败");
-                }
-            });
-        }];
-        
-    });
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _currentPage = 1;
-    [self getAlbumID:_currentPage];
+    [self setup];
+
     [self.view addSubview:_assetViewCon.view];
     [_assetViewCon.view easyFillSuperview];
 }
@@ -193,22 +178,22 @@
 
 - (void)refreshUserAssetsIfNeeded
 {
-    if (_user1 == nil)
-    {
-        return;
-    }
-    
-    if (_user1.uploadAmount != nil && _user1.uploadAmount != nil)
-    {
-        return;
-    }
+//    if (_user1 == nil)
+//    {
+//        return;
+//    }
+//
+//    if (_user1.uploadAmount != nil && _user1.uploadAmount != nil)
+//    {
+//        return;
+//    }
     
     [_assetViewCon manualRefresh];
 }
 
 #pragma mark -
 
-- (void)setUser:(QJUser*)user
+- (void)setUser1:(QJUser*)user
 {
     _user1 = user;
     

@@ -14,6 +14,7 @@
 #import "SVProgressHUD+WTError.h"
 #import "UIView+EasyAutoLayout.h"
 #import "UIViewController+WTExt.h"
+#import "QJInterfaceManager.h"
 
 @interface OWTUserSharedAssetsViewCon ()
 {
@@ -21,6 +22,8 @@
 
 @property (nonatomic, strong) OWTAssetFlowViewCon* assetViewCon;
 @property (nonatomic, strong) UIBarButtonItem* numBarItem;
+@property (nonatomic, strong)NSMutableOrderedSet *imageAssets;
+
 
 @end
 
@@ -38,15 +41,16 @@
 
 - (NSMutableOrderedSet*)assets
 {
-    if (self.user != nil && self.user.assetsInfo != nil && self.user.assetsInfo.sharedAssets != nil)
+    if (self.user1 != nil && self.user1.likeAmount != nil )
     {
-        return self.user.assetsInfo.sharedAssets;
+        return _imageAssets;
     }
     else
     {
         return nil;
     }
 }
+
 
 - (int)assetNum
 {
@@ -85,63 +89,76 @@
         NSMutableOrderedSet* assets = [wself assets];
         if (assets != nil)
         {
-            return (OWTAsset*)[assets objectAtIndex:index];
+            if (index >= _imageAssets.count ) {
+                return (QJImageObject*)[assets objectAtIndex:_imageAssets.count -1];
+            }
+            return (QJImageObject*)[assets objectAtIndex:index];
         }
         else
         {
-            return (OWTAsset*)nil;
+            return (QJImageObject*)nil;
         }
     };
     
-    _assetViewCon.onAssetSelectedFunc = ^(OWTAsset* asset)
+    _assetViewCon.onAssetSelectedFunc = ^(QJImageObject* asset)
     {
         OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset];
         [wself.navigationController pushViewController:assetViewCon animated:YES];
     };
     
-    _assetViewCon.refreshDataFunc = ^(void (^refreshDoneFunc)())
-    {
-        OWTUserManager* um = GetUserManager();
-        [um refreshUserSharedAssets:wself.user
-                            success:^{
-                                if (refreshDoneFunc != nil)
-                                {
-                                    refreshDoneFunc();
-                                }
-                                if (_lightbox==0) {
-                                    wself.numBarItem.title=nil;
-                                }
-                                wself.numBarItem.title = [NSString stringWithFormat:@"%ld", _lightbox];
-                            }
-                            failure:^(NSError* error) {
-                                [SVProgressHUD showError:error];
-                                if (refreshDoneFunc != nil)
-                                {
-                                    refreshDoneFunc();
-                                }
-                            }];
-    };
+    /*// 用户收藏图片列表
+     - (void)requestUserCollectImageList:(NSUInteger)pageNum
+     pageSize:(NSUInteger)pageSize
+     finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
+     */
+//    _assetViewCon.refreshDataFunc = ^(void (^refreshDoneFunc)())
+//    {
+//        QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            [fm requestUserCollectImageList:userID  pageNum:1 pageSize:60  currentImageId:nil finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    if (error == nil) {
+//                        if (albumObjectArray != nil){
+//                            [wself.imageAssets removeAllObjects];
+//                            [wself.imageAssets addObjectsFromArray:albumObjectArray];
+//                        }
+//                        if (refreshDoneFunc != nil){
+//                            refreshDoneFunc();
+//                        }
+//                        NSLog(@"获取相册成功,照片熟量 %ld",wself.imageAssets.count);
+//                    }else{
+//                        [SVProgressHUD showErrorWithStatus:@"获取相册失败"];
+//                        NSLog(@"获取相册失败");
+//                        if (refreshDoneFunc != nil)
+//                            refreshDoneFunc();
+//                    }
+//                });
+//            }];
+//            
+//        });
+//
+//    };
     
-    _assetViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)())
-    {
-        OWTUserManager* um = GetUserManager();
-        [um loadMoreUserSharedAssets:wself.user
-                               count:50
-                             success:^{
-                                 if (loadMoreDoneFunc != nil)
-                                 {
-                                     loadMoreDoneFunc();
-                                 }
-                                   wself.numBarItem.title = [NSString stringWithFormat:@"%ld", _lightbox];
-                             }
-                             failure:^(NSError* error) {
-                                 [SVProgressHUD showError:error];
-                                 if (loadMoreDoneFunc != nil)
-                                 {
-                                     loadMoreDoneFunc();
-                                 }
-                             }];
-    };;
+//    _assetViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)())
+//    {
+//        OWTUserManager* um = GetUserManager();
+//        [um loadMoreUserSharedAssets:wself.user
+//                               count:50
+//                             success:^{
+//                                 if (loadMoreDoneFunc != nil)
+//                                 {
+//                                     loadMoreDoneFunc();
+//                                 }
+//                                   wself.numBarItem.title = [NSString stringWithFormat:@"%ld", _lightbox];
+//                             }
+//                             failure:^(NSError* error) {
+//                                 [SVProgressHUD showError:error];
+//                                 if (loadMoreDoneFunc != nil)
+//                                 {
+//                                     loadMoreDoneFunc();
+//                                 }
+//                             }];
+//    };;
 }
 
 - (void)viewDidLoad
@@ -175,7 +192,7 @@
 
 - (void)refreshUserSharedAssetsIfNeeded
 {
-    if (_user == nil)
+    if (_user1 == nil)
     {
         return;
     }
@@ -191,11 +208,11 @@
 
 #pragma mark -
 
-- (void)setUser:(OWTUser*)user
+- (void)setUser1:(QJUser*)user
 {
-    _user = user;
+    _user1 = user;
 
-    self.navigationItem.title = [NSString stringWithFormat:@"%@收藏的照片", _user.displayName];
+    self.navigationItem.title = [NSString stringWithFormat:@"%@收藏的照片", _user1.collectAmount];
 }
 
 @end

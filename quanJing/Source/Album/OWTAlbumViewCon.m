@@ -95,24 +95,24 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
         }
     };
     
-    _assetViewCon.assetAtIndexFunc = ^(NSInteger index)
-    {
-        NSMutableOrderedSet* assets = wself.album.assets;
-        if (assets != nil)
-        {
-            return (OWTAsset*)[assets objectAtIndex:index];
-        }
-        else
-        {
-            return (OWTAsset*)nil;
-        }
-    };
-    
-    _assetViewCon.onAssetSelectedFunc = ^(OWTAsset* asset)
-    {
-        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset deletionAllowed:YES onDeleteAction:^{ [wself reloadData]; }];
-        [wself.navigationController pushViewController:assetViewCon animated:YES];
-    };
+//    _assetViewCon.assetAtIndexFunc = ^(NSInteger index)
+//    {
+//        NSMutableOrderedSet* assets = wself.album.assets;
+//        if (assets != nil)
+//        {
+//            return (OWTAsset*)[assets objectAtIndex:index];
+//        }
+//        else
+//        {
+//            return (OWTAsset*)nil;
+//        }
+//    };
+//    
+//    _assetViewCon.onAssetSelectedFunc = ^(OWTAsset* asset)
+//    {
+//        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset deletionAllowed:YES onDeleteAction:^{ [wself reloadData]; }];
+//        [wself.navigationController pushViewController:assetViewCon animated:YES];
+//    };
     
     _assetViewCon.refreshDataFunc = ^(void (^refreshDoneFunc)())
     {

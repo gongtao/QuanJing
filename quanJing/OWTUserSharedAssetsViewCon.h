@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "QJUser.h"
 @interface OWTUserSharedAssetsViewCon : UIViewController
 
-@property (nonatomic, strong) OWTUser* user;
+//@property (nonatomic, strong) OWTUser* user;
+@property (nonatomic, strong) QJUser* user1;
 @property (nonatomic, assign) NSInteger lightbox;
 
 @end

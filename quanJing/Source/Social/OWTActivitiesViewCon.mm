@@ -468,8 +468,8 @@ typedef enum
     OWTAsset* asset = [GetAssetManager() getAssetWithID:assetID];
     if (asset != nil)
     {
-        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset];
-        [self.navigationController pushViewController:assetViewCon animated:YES];
+//        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset];
+//        [self.navigationController pushViewController:assetViewCon animated:YES];
     }
 }
 

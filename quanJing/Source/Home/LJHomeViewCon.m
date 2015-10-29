@@ -604,8 +604,8 @@
 	}
 	else {
 		OWTUserSharedAssetsViewCon * likedAssetsViewCon = [[OWTUserSharedAssetsViewCon alloc] initWithNibName:nil bundle:nil];
-		likedAssetsViewCon.user = GetUserManager().currentUser;
-		likedAssetsViewCon.lightbox = GetUserManager().currentUser.assetsInfo.lightbox;
+		likedAssetsViewCon.user1 = [[QJPassport sharedPassport]currentUser];
+		likedAssetsViewCon.lightbox = [likedAssetsViewCon.user1.collectAmount intValue];
 		[_tabBarHider hideTabBar];
 		[self.navigationController pushViewController:likedAssetsViewCon animated:YES];
 	}

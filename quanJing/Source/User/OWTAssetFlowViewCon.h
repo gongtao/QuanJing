@@ -8,14 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "XHRefreshControl.h"
-
+#import "QJImageObject.h"
 @interface OWTAssetFlowViewCon : UIViewController<UICollectionViewDelegate,
                                                   UICollectionViewDataSource,
                                                   XHRefreshControlDelegate>
 
 @property (nonatomic, strong) int (^numberOfAssetsFunc)();
-@property (nonatomic, strong) OWTAsset* (^assetAtIndexFunc)(NSInteger index);
-@property (nonatomic, strong) void (^onAssetSelectedFunc)(OWTAsset* asset);
+@property (nonatomic, strong) QJImageObject* (^assetAtIndexFunc)(NSInteger index);
+@property (nonatomic, strong) void (^onAssetSelectedFunc)(QJImageObject* asset);
 @property (nonatomic, strong) void (^refreshDataFunc)(void (^refreshDoneFunc)());
 @property (nonatomic, strong) void (^loadMoreDataFunc)(void (^loadDoneFunc)());
 @property (nonatomic, strong) NSNumber* totalAssetNum;

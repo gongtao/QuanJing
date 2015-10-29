@@ -1505,8 +1505,8 @@
 {
     
     OWTUserSharedAssetsViewCon* likedAssetsViewCon = [[OWTUserSharedAssetsViewCon alloc] initWithNibName:nil bundle:nil];
-    likedAssetsViewCon.user = _user;
-    likedAssetsViewCon.lightbox = _user.assetsInfo.lightbox;
+    likedAssetsViewCon.user1 = _currentUser;
+    likedAssetsViewCon.lightbox = [_currentUser.collectAmount intValue];
     likedAssetsViewCon.hidesBottomBarWhenPushed=YES;
     [_tabBarHider hideTabBar];
     [self.navigationController pushViewController:likedAssetsViewCon animated:YES];

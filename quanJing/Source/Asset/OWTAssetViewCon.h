@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OWaterFlowLayout.h"
 #import "QJImageObject.h"
-
+#import "QJUser.h"
 @class FSImageViewerViewController;
 @interface OWTAssetViewCon : UIViewController<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OWaterFlowLayoutDataSource>
 
@@ -18,9 +18,10 @@
 @property(nonatomic,assign)BOOL isOpen;
 @property(nonatomic,assign)BOOL isLike;
 @property(strong, nonatomic) FSImageViewerViewController *imageViewController;
-- (instancetype)initWithAsset:(OWTAsset*)asset;
+@property (nonatomic, strong)QJUser* user1;
+- (instancetype)initWithAsset:(QJImageObject*)asset;
 
-- (instancetype)initWithAsset:(OWTAsset*)asset
+- (instancetype)initWithAsset:(QJImageObject*)asset
               deletionAllowed:(BOOL)deletionAllowed
                onDeleteAction:(void (^)())onDeleteAction;
 

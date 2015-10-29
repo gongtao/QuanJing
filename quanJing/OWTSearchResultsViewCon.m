@@ -217,6 +217,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     QJImageObject *model=_assets[indexPath.row];
     if (model != nil)
     {
+        model.imageType = [NSNumber numberWithInt:1];
         OWTAssetViewCon *assetViewCon=[[OWTAssetViewCon alloc]initWithImageId:model imageType:[NSNumber numberWithInt:1]];
 //        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset deletionAllowed:YES onDeleteAction:^{ [self.collectionView reloadData]; }];
         [self.navigationController pushViewController:assetViewCon animated:YES];

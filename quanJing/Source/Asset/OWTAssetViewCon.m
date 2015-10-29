@@ -61,6 +61,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     NSMutableArray *_likeBodys;
     UIImageView *_backView;
     BOOL _isLikeTap;
+    NSInteger _adaptWith;
 }
 
 @property (nonatomic, strong) QJImageObject* imageAsset;
@@ -92,7 +93,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     UIButton *_sendButton;
     NSMutableArray *_users;
 }
-- (instancetype)initWithAsset:(OWTAsset*)asset
+- (instancetype)initWithAsset:(QJImageObject*)asset
 {
     return [self initWithAsset:asset deletionAllowed:NO onDeleteAction:nil];
 }
@@ -111,13 +112,14 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     return self;
 }
 
-- (instancetype)initWithAsset:(OWTAsset*)asset
+- (instancetype)initWithAsset:(QJImageObject*)asset
               deletionAllowed:(BOOL)deletionAllowed
                onDeleteAction:(void (^)())onDeleteAction
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self)
     {
+        _imageType = asset.imageType;
         _imageAsset = asset;
         _deletionAllowed = deletionAllowed;
         _onDeleteAction = onDeleteAction;
@@ -136,6 +138,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     _waterFlowLayout.sectionInset = UIEdgeInsetsMake(5, 10, 5, 10);
     _waterFlowLayout.columnCount = 2;
     _collectionView = [[OWaterFlowCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI-64) collectionViewLayout:_waterFlowLayout];
+    _adaptWith = SCREENWIT/2 - 40;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
     _collectionView.backgroundColor = GetThemer().themeColorBackground;
@@ -408,7 +411,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     [super viewDidLoad];
     _searchResults = [[NSMutableOrderedSet alloc]init];
     [self loadRelatedAssetsInSearch];
-    [self getAllAssetData];
+//    [self getAllAssetData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -466,22 +469,43 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)loadRelatedAssetsInSearch
 {
-    if(_imageAsset.tag == nil){
-        return;
-    }
     QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+    if(_imageAsset.tag != nil && [_imageType integerValue] == 1){
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [fm requestImageSearchKey:_imageAsset.tag pageNum:_searchResults.count/50+1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            if (error == nil) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (imageObjectArray.count==0) {
-                    [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+                if (imageObjectArray.count != 0) {
+                    [self mergeAssets:imageObjectArray];
                 }
-                [self mergeAssets:imageObjectArray];
                 [SVProgressHUD dismiss];
-                
+                [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+
             });
+            }else{
+                [SVProgressHUD showErrorWithStatus:@"请求失败"];
+            }
+
         }];
     });
+    }else if([_imageType integerValue] == 2){
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [fm requestUserImageList:nil  pageNum:1 pageSize:60  currentImageId:_imageAsset.imageId finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error == nil) {
+                        if (albumObjectArray != nil){
+                            [self mergeAssets:albumObjectArray];
+                            [SVProgressHUD dismiss];
+
+                        }
+                    }else{
+                        [SVProgressHUD showErrorWithStatus:@"请求失败"];
+                    }
+                });
+            }];
+            
+        });
+    }
     
 }
 
@@ -750,7 +774,9 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     QJImageObject* asset = [self relatedAssetAtIndexPath:indexPath];
     if (asset != nil)
     {
-        [cell.imageView setImageWithURL:[NSURL URLWithString:asset.url]];
+
+        NSString *urlAdapt = [QJInterfaceManager thumbnailUrlFromImageUrl:asset.url size:CGSizeMake(_adaptWith,_adaptWith*[asset.height intValue]/[asset.width intValue])];
+        [cell.imageView setImageWithURL:[NSURL URLWithString:urlAdapt]];
     }
     
     return cell;
@@ -831,18 +857,18 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                                                  ^{
                                                      [am showAuthViewConWithSuccess:^{
                                                          
-                                                         OWTAssetManager* am = GetAssetManager();
-                                                         
-                                                         [SVProgressHUD show];
-                                                         [am updateAsset:_imageAsset
-                                                         belongingAlbums:_belongingAlbums
-                                                                 success:^{
-                                                                     [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
-                                                                     [SVProgressHUD dismiss];
-                                                                 }
-                                                                 failure:^(NSError* error) {
-                                                                     [SVProgressHUD showError:error];
-                                                                 }];
+//                                                         OWTAssetManager* am = GetAssetManager();
+//                                                         
+//                                                         [SVProgressHUD show];
+//                                                         [am updateAsset:_imageAsset
+//                                                         belongingAlbums:_belongingAlbums
+//                                                                 success:^{
+//                                                                     [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
+//                                                                     [SVProgressHUD dismiss];
+//                                                                 }
+//                                                                 failure:^(NSError* error) {
+//                                                                     [SVProgressHUD showError:error];
+//                                                                 }];
                                                          
                                                          
                                                      }
@@ -864,26 +890,27 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     else
     {
         //写收藏
-        
-        OWTAssetManager* am = GetAssetManager();
-        
-        [SVProgressHUD show];
-        [am updateAsset:_imageAsset
-        belongingAlbums:_belongingAlbums
-                success:^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError *error = [[QJInterfaceManager sharedManager]requestImageCollect:_imageAsset.imageId imageType:_imageAsset.imageType];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error ==nil) {
                     [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
-                    
                     [SVProgressHUD dismiss];
-                    
-                }
-                failure:^(NSError* error) {
+
+                }else{
                     if (![NetStatusMonitor isExistenceNetwork]) {
                         [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
                         return ;
                     }
-                    [SVProgressHUD showError:error];
-                }];
-        
+                    [SVProgressHUD showSuccessWithStatus:@"收藏失败"];
+
+                }
+            });
+            
+
+        });
+        //- (NSError *)requestImageCollect:(NSNumber *)imageId imageType:(NSNumber *)imageType;
+
     }
 }
 
@@ -1123,9 +1150,14 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 {
     if (indexPath.section == 0)
     {
+        
         QJImageObject* relatedAsset = [self relatedAssetAtIndexPath:indexPath];
-        if (relatedAsset != nil)
+        if (relatedAsset != nil && [_imageType integerValue] == 1)
         {
+            OWTAssetViewCon* relatedAssetViewCon = [[OWTAssetViewCon alloc] initWithAsset:relatedAsset];
+            [self.navigationController pushViewController:relatedAssetViewCon animated:YES];
+        }else if (relatedAsset != nil && [_imageType integerValue] == 2){
+            relatedAsset.imageType = _imageType;
             OWTAssetViewCon* relatedAssetViewCon = [[OWTAssetViewCon alloc] initWithAsset:relatedAsset];
             [self.navigationController pushViewController:relatedAssetViewCon animated:YES];
         }
