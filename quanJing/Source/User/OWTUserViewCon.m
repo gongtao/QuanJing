@@ -762,10 +762,8 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)showLikedAssets
 {
-	OWTUserLikedAssetsViewCon * likedAssetsViewCon = [[OWTUserLikedAssetsViewCon alloc] initWithNibName:nil bundle:nil];
-	
-	likedAssetsViewCon.user1 = _user;
-	[self.navigationController pushViewController:likedAssetsViewCon animated:YES];
+    OWTUserLikedAssetsViewCon * likedAssetsViewCon = [[OWTUserLikedAssetsViewCon alloc]initWithUser:_quser];
+    [self.navigationController pushViewController:likedAssetsViewCon animated:YES];
 }
 
 - (void)showFollowings

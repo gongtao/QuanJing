@@ -12,6 +12,6 @@
 @interface OWTUserLikedAssetsViewCon : UIViewController
 
 @property (nonatomic, strong) QJUser* user1;
-- (instancetype)initWithUser:(QJUser *)user;
 
+- (instancetype)initWithUser:(QJUser *)user;
 @end

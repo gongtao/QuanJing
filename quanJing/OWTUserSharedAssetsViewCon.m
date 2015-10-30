@@ -81,6 +81,7 @@
 - (void)setup
 {
     _assetViewCon = [[OWTAssetFlowViewCon alloc] initWithNibName:nil bundle:nil];
+    _imageAssets = [[NSMutableOrderedSet alloc]init];
     [self addChildViewController:_assetViewCon];
     
     _numBarItem = [[UIBarButtonItem alloc] initWithTitle:@""
@@ -115,7 +116,7 @@
     
     _assetViewCon.onAssetSelectedFunc = ^(QJImageObject* asset)
     {
-        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset];
+        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset initWithType:3];
         [wself.navigationController pushViewController:assetViewCon animated:YES];
     };
 

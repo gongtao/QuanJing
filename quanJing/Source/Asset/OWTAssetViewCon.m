@@ -98,6 +98,12 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     return [self initWithAsset:asset deletionAllowed:NO onDeleteAction:nil];
 }
 
+- (instancetype)initWithAsset:(QJImageObject*)asset initWithType:(NSInteger)type
+{
+    self.imageType = [[NSNumber alloc]initWithInteger:type];
+    return [self initWithAsset:asset deletionAllowed:NO onDeleteAction:nil];
+}
+
 // 新的接口
 -(instancetype)initWithImageId:(QJImageObject*)imageAsset imageType:(NSNumber*)imageType
 {
@@ -119,7 +125,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     self = [super initWithNibName:nil bundle:nil];
     if (self)
     {
-        _imageType = asset.imageType;
         _imageAsset = asset;
         _deletionAllowed = deletionAllowed;
         _onDeleteAction = onDeleteAction;
@@ -517,7 +522,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
             }];
         });
         //操作当前用户资源
-    }else if([_imageType integerValue] == 2 && user == nil){
+    }else if([_imageType integerValue] == 2){
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [fm requestUserImageList:nil  pageNum:1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1197,9 +1202,8 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
         {
             OWTAssetViewCon* relatedAssetViewCon = [[OWTAssetViewCon alloc] initWithAsset:relatedAsset];
             [self.navigationController pushViewController:relatedAssetViewCon animated:YES];
-        }else if (relatedAsset != nil && [_imageType integerValue] == 2){
-            relatedAsset.imageType = _imageType;
-            OWTAssetViewCon* relatedAssetViewCon = [[OWTAssetViewCon alloc] initWithAsset:relatedAsset];
+        }else if (relatedAsset != nil){
+            OWTAssetViewCon* relatedAssetViewCon = [[OWTAssetViewCon alloc] initWithImageId:relatedAsset imageType:_imageType];
             [self.navigationController pushViewController:relatedAssetViewCon animated:YES];
         }
     }

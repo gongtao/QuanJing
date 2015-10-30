@@ -19,7 +19,6 @@
 @property(nonatomic,assign)BOOL isLike;
 @property(strong, nonatomic) FSImageViewerViewController *imageViewController;
 @property (nonatomic, strong)QJUser* user1;
-- (instancetype)initWithAsset:(QJImageObject*)asset;
 
 - (instancetype)initWithAsset:(QJImageObject*)asset
               deletionAllowed:(BOOL)deletionAllowed
@@ -27,4 +26,7 @@
 
 
 -(instancetype)initWithImageId:(QJImageObject*)imageModel imageType:(NSNumber*)imageType ;
+
+- (instancetype)initWithAsset:(QJImageObject*)asset initWithType:(NSInteger)type;
+
 @end

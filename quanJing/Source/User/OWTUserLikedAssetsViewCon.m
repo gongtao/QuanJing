@@ -53,7 +53,7 @@
     }
 }
 
-- (instancetype)initWithUser:(QJUser *)user {
+- (instancetype)initWithUser:(QJUser *)user  {
     self =  [super init];
     if (self)
     {
@@ -81,6 +81,7 @@
 - (void)setup
 {
     _assetViewCon = [[OWTAssetFlowViewCon alloc] initWithNibName:nil bundle:nil];
+    _imageAssets = [[NSMutableOrderedSet alloc]init];
     [self addChildViewController:_assetViewCon];
 
     _numBarItem = [[UIBarButtonItem alloc] initWithTitle:@""
@@ -115,7 +116,7 @@
     
     _assetViewCon.onAssetSelectedFunc = ^(QJImageObject* asset)
     {
-        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset];
+        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset initWithType:2];
         assetViewCon.user1 = wself.user1;
         [wself.navigationController pushViewController:assetViewCon animated:YES];
     };
