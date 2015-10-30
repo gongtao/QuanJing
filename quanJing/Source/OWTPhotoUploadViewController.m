@@ -462,7 +462,6 @@
 						// 拍照闪退
 						uploadImage = [imageInfo.image resizedImage:[weakSelf fixedUploadSizeForImage:imageInfo.image withorientation:1] interpolationQuality:kCGInterpolationHigh];
 					NSData * imageData = UIImageJPEGRepresentation(uploadImage, 0.8);
-					UIImageWriteToSavedPhotosAlbum(uploadImage, nil, nil, nil);
 					
 					NSDictionary * info = [weakSelf uploadByImageData:imageData extension:@"jpg"];
 					
