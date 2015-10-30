@@ -116,7 +116,7 @@
     }
     
     if (user.stayAreaAddress != nil) {
-        _HomeCity = user.stayAreaAddress;
+//        _HomeCity = user.stayAreaAddress;
     }else{
         _HomeCity = @"保密";
     }

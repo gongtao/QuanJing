@@ -217,15 +217,15 @@
         }
         //居住城市
         if ([self HomeCity]==nil||[[self HomeCity]isEqualToString:@"保密"]) {
-            params[@"stayArea"] = nil;
+            params[@"residence"] = nil;
         }else{
-            params[@"stayArea"] = [_ljuser cityName2CityCode: [self HomeCity]];
+            params[@"residence"] = [_ljuser cityName2CityCode: [self HomeCity]];
         }
         //出没地
         if ([self City]==nil||[[self City]isEqualToString:@"保密"]) {
-            params[@"stayAreaAddress"] = nil;
+            params[@"stayArea"] = nil;
         }else{
-            params[@"stayAreaAddress"] = [_ljuser cityName2CityCode: [self City]];
+            params[@"stayArea"] = [_ljuser cityName2CityCode: [self City]];
         }
         //职业
         if ([self Occupation]==nil) {
@@ -341,9 +341,9 @@
         //解析出生城市
         _ljuser.BirthLocation = [_ljuser cityCode2CityName: _user1.bornArea];
         //解析居住城市
-        _ljuser.HomeCity = [_ljuser cityCode2CityName: _user1.stayArea];
+        _ljuser.HomeCity = [_ljuser cityCode2CityName: _user1.residence];
         //解析出没地城市
-        _ljuser.City = [_ljuser cityCode2CityName: _user1.stayAreaAddress];
+        _ljuser.City = [_ljuser cityCode2CityName: _user1.stayArea];
     }
 
 }

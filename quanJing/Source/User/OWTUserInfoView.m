@@ -88,7 +88,7 @@ typedef enum
     UITapGestureRecognizer*tapRecognizerleft2=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
     [_nameLabel addGestureRecognizer:tapRecognizerleft2];
     [self updateLikesNum:_user.uploadAmount.intValue];
-    [self updateFollowingNum:_user.uploadAmount.intValue];
+    [self updateFollowingNum:_user.collectAmount.intValue];
     [self updateFollowerNum:_user.followAmount.intValue with:_user.fansAmount.intValue];
     [self updatePhotoNum:_selfNum];
 }
