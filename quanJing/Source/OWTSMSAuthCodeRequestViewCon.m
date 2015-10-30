@@ -85,15 +85,12 @@
     [agreementLable reCommonInit];
     agreementLable.delegate = self;
     NSRange nameRange = [agreementLable.text rangeOfString:@"全景服务条款"];
-
     agreementLable.textColor = [UIColor whiteColor];
 
     NSURL *action = [NSURL URLWithString:@"agreementAction"];
 
     [agreementLable addLinkToURL:action withRange:nameRange];
-
-    }
-
+}
 
 #pragma mark - TTTAttributedLabelDelegate
 - (void)attributedLabel:(__unused TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {

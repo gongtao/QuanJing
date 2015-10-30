@@ -110,19 +110,9 @@ typedef enum
 {
     
     
-    OWTUser *Cuser =GetUserManager().currentUser;
-    
-    
-    
-    
-    
     OWTFollowingUsersViewCon* latestViewCon = [[OWTFollowingUsersViewCon alloc] initWithNibName:nil bundle:nil];
-//    [latestViewCon presentFeed:fm.latestUploadFeed animated:NO refresh:NO];
-    latestViewCon.user =Cuser;
 
     OWTFollowerUsersViewCon* hottestViewCon = [[OWTFollowerUsersViewCon alloc] initWithNibName:nil bundle:nil];
-//    [hottestViewCon presentFeed:[fm feedWithID:kWTFeedWallpaper] animated:NO refresh:NO];
-    hottestViewCon.user =Cuser;
     _pageViews = @[ latestViewCon.view, hottestViewCon.view ];
     _pageViewCons = @[ latestViewCon, hottestViewCon ];
     

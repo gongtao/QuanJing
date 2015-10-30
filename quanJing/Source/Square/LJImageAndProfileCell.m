@@ -95,6 +95,9 @@
 	[self.contentView addSubview:_headerImageView];
 	UITapGestureRecognizer * tap3 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTap3)];
 	[_headerImageView addGestureRecognizer:tap3];
+    _headerImageView.clipsToBounds = YES;
+    _headerImageView.contentMode = UIViewContentModeScaleAspectFill;
+
 	_userName = [LJUIController createLabelWithFrame:CGRectZero Font:12 Text:nil];
 	_userName.textColor = [UIColor colorWithHexString:@"#4c5c8d"];
 	[self.contentView addSubview:_userName];

@@ -33,6 +33,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
+        self.user=[QJPassport sharedPassport].currentUser;
         [self setup];
     }
     return self;
