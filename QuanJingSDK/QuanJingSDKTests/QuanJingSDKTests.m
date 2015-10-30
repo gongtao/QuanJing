@@ -689,12 +689,12 @@
 					XCTFail(@"testActionExample error: %@", error);
 			}];
 			
-			NSString * url = @"http://f.hiphotos.baidu.com/image/pic/item/2cf5e0fe9925bc3161866ee25ddf8db1ca1370f4.jpg";
+			NSString * url = @"http://b.hiphotos.baidu.com/image/pic/item/e4dde71190ef76c666af095f9e16fdfaaf516741.jpg";
 			NSData * imageData1 = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]
 			returningResponse:nil
 			error:nil];
 			
-			url = @"http://g.hiphotos.baidu.com/image/pic/item/d0c8a786c9177f3e117088eb75cf3bc79e3d568b.jpg";
+			url = @"http://g.hiphotos.baidu.com/image/pic/item/4a36acaf2edda3ccd2994a5402e93901213f9241.jpg";
 			NSData * imageData2 = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]
 			returningResponse:nil
 			error:nil];
@@ -717,7 +717,7 @@
 			tag:@"赵丽颖"
 			position:@"北京市朝阳区朝阳门"
 			open:YES
-			finished:^(NSDictionary * imageDic, NSError * error) {
+			finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testActionExample error: %@", error);
 			}];

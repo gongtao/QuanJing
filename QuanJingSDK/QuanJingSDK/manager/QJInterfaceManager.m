@@ -1499,7 +1499,7 @@
 	tag:(NSString *)tag
 	position:(NSString *)position
 	open:(BOOL)open
-	finished:(nullable void (^)(NSDictionary * imageDic, NSError * error))finished
+	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished
 {
 	NSMutableDictionary * actionDic = [[NSMutableDictionary alloc] init];
 	
@@ -1550,11 +1550,26 @@
 	
 	NSLog(@"%@", operation.request.URL);
 	
-	if (!error)
-		NSLog(@"%@", operation.responseObject);
-		
-	if (finished)
-		finished(nil, error);
+    if (!error) {
+        NSLog(@"%@", operation.responseObject);
+        NSArray * dataArray = operation.responseObject[@"data"];
+        
+        if (!QJ_IS_ARRAY_NIL(dataArray)) {
+            __block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+            [dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+                QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+                imageObject.imageType = [NSNumber numberWithInt:2];
+                [resultArray addObject:imageObject];
+            }];
+            
+            if (finished)
+                finished(resultArray, dataArray, error);
+            return;
+        }
+    }
+    
+    if (finished)
+        finished(nil, nil, error);
 }
 
 @end

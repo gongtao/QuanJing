@@ -1528,7 +1528,7 @@
 	tag:(NSString *)tag
 	position:(NSString *)position
 	open:(BOOL)open
-	finished:(nullable void (^)(NSDictionary * imageDic, NSError * error))finished
+	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished
 {
 	NSMutableDictionary * actionDic = [[NSMutableDictionary alloc] init];
 	
@@ -1557,37 +1557,52 @@
 	params[@"json"] = json;
 	
 	// When request fails, if it could, retry it 3 times at most.
-    int i = 3;
-    __block NSError * error = nil;
-    __block NSDictionary * responseObject = nil;
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
 	
 	do {
 		error = nil;
 		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
 		[self.httpRequestManager postPath:kQJUserPostActionPath
-			parameters:params
-                                  success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
-                                      NSLog(@"%@", operation.request.URL);
-                                      responseObject = resultResponseObject;
-                                      dispatch_semaphore_signal(sem);
-                                  }
-                                  failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
-                                      NSLog(@"%@", operation.request.URL);
-                                      error = resultError;
-                                      dispatch_semaphore_signal(sem);
-                                  }];
-        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-        
-        if (!error)
-            error = [QJUtils errorFromOperation:responseObject];
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
-	if (!error)
+	if (!error) {
 		NSLog(@"%@", responseObject);
+		NSArray * dataArray = responseObject[@"data"];
 		
+		if (!QJ_IS_ARRAY_NIL(dataArray)) {
+			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+				imageObject.imageType = [NSNumber numberWithInt:2];
+				[resultArray addObject:imageObject];
+			}];
+			
+			if (finished)
+				finished(resultArray, dataArray, error);
+			return;
+		}
+	}
+	
 	if (finished)
-		finished(nil, error);
+		finished(nil, nil, error);
 }
 
 @end

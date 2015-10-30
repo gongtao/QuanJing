@@ -154,7 +154,7 @@ NS_ASSUME_NONNULL_BEGIN
 	tag:(NSString *)tag
 	position:(NSString *)position
 	open:(BOOL)open
-	finished:(nullable void (^)(NSDictionary * imageDic, NSError * error))finished;
+	finished:(nullable void (^)(NSArray * imageObjectArray, NSArray * resultArray, NSError * error))finished;
 	
 @end
 
