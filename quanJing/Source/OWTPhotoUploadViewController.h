@@ -12,8 +12,8 @@
 
 @property (nonatomic, assign) BOOL isCameraImages;
 
-@property (nonatomic, strong) NSMutableArray *imageInfos;
+@property (nonatomic, strong) NSMutableArray * imageInfos;
 
 @property (nonatomic, copy) void (^doneAction)();
-@property(nonatomic,copy)void(^cancelAction)();
+@property(nonatomic, copy) void (^cancelAction)();
 @end
