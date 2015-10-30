@@ -510,9 +510,6 @@
 				cellHeight += (10 + height);
 			}
 			else {
-				ImageView.contentMode = UIViewContentModeScaleAspectFill;
-				
-				ImageView.clipsToBounds = YES;
 				height = x / imageWidth * imageHeight;
 				
 				if (height > 380) {
@@ -526,12 +523,24 @@
 			}
 		}
 		else {
-			ImageView.contentMode = UIViewContentModeScaleAspectFill;
-			ImageView.clipsToBounds = YES;
 			ImageView.frame = CGRectMake(5, cellHeight, x, 320);
 			cellHeight += 330;
 		}
-		[ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]];
+        ImageView.contentMode = UIViewContentModeScaleAspectFill;
+        ImageView.clipsToBounds = YES;
+        __weak UIImageView * weakImageView = ImageView;
+        [ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]
+                  placeholderImage:nil
+                         completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+                             if (cacheType == SDImageCacheTypeNone) {
+                                 [UIView animateWithDuration:0.3
+                                                  animations:^{
+                                                      weakImageView.alpha = 1.0;
+                                                  }];
+                                 return;
+                             }
+                             weakImageView.alpha = 1.0;
+                         }];
 		ImageView.tag = 400 + number;
 		ImageView.userInteractionEnabled = YES;
 		[self.contentView addSubview:ImageView];
