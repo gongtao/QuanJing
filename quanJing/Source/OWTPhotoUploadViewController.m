@@ -41,6 +41,35 @@
 #define kPhotoUploadNavButtonHighlightedColor	[UIColor colorWithHexString:@"#fb0c09"]
 #define kPhotoUploadVCBackgroundColor			[UIColor colorWithHexString:@"#f2f4f5"]
 
+@interface UIImage (QuanJing)
+
+- (UIImage *)scaleImageSize:(CGSize)size;
+
+@end
+
+@implementation UIImage (QuanJing)
+
+- (UIImage *)scaleImageSize:(CGSize)size
+{
+	CGSize finalSize = size;
+	
+	if (self.size.width > self.size.height)
+		finalSize.width = self.size.width / self.size.height * size.height;
+	else
+		finalSize.height = self.size.height / self.size.width * size.width;
+	UIGraphicsBeginImageContext(size);
+	// 绘制改变大小的图片
+	[self drawInRect:CGRectMake((size.width - finalSize.width) / 2.0, (size.height - finalSize.height) / 2.0, finalSize.width, finalSize.height)];
+	// 从当前context中创建一个改变大小后的图片
+	UIImage * scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+	// 使当前的context出堆栈
+	UIGraphicsEndImageContext();
+	// 返回新的改变大小后的图片
+	return scaledImage;
+}
+
+@end
+
 @interface OWTPhotoUploadViewController () <UITextViewDelegate, OWTPhotoUploadImagesCellDelegate, UITextFieldDelegate, OWTPhotoUploadTagViewDelegate, UIImagePickerControllerDelegate>{
 	BOOL _isPrivate;
 	BOOL _isOriginal;
@@ -319,7 +348,7 @@
 			return originalSize;
 			
 		NSLog(@"11111111111111111%f,%f", originalSize.height, originalSize.width);
-		return CGSizeMake(640 / originalSize.height * originalSize.width, 640);
+		return CGSizeMake(640, 640 / originalSize.height * originalSize.width);
 	}
 	else {
 		CGSize originalSize = image.size;
@@ -327,9 +356,26 @@
 		if (originalSize.width < 640)
 			return originalSize;
 			
-		NSLog(@"11111111111111111%f,%f", originalSize.height, originalSize.width);
 		return CGSizeMake(640, originalSize.height * 640 / originalSize.width);
 	}
+	
+	//    if ((orientation == 8) || (orientation == 7) || (orientation == 6) || (orientation == 5)) {
+	//        CGSize originalSize = image.size;
+	//
+	//        if (originalSize.height < 640)
+	//            return originalSize;
+	//
+	//        NSLog(@"11111111111111111%f,%f", originalSize.height, originalSize.width);
+	//        return CGSizeMake(640 / originalSize.height * originalSize.width, 640);
+	//    }
+	//    else {
+	//        CGSize originalSize = image.size;
+	//
+	//        if (originalSize.width < 640)
+	//            return originalSize;
+	//
+	//        return CGSizeMake(640, originalSize.height * 640 / originalSize.width);
+	//    }
 }
 
 // 图片旋转
@@ -454,32 +500,25 @@
 				[SVProgressHUD setStatus:[NSString stringWithFormat:@"上传第%lu张图片", idx + 1]];
 			});
 			@autoreleasepool {
+				NSString * mimeType = nil;
+				NSData * imageData = nil;
+				
 				if (imageInfo.image) {
+					mimeType = @"jpg";
 					// 拍照图片
 					UIImage * uploadImage = imageInfo.image;
 					
-//					if (_isOriginal)
-//						// 拍照闪退
-//						uploadImage = [imageInfo.image resizedImage:[weakSelf fixedUploadSizeForImage:imageInfo.image withorientation:1] interpolationQuality:kCGInterpolationHigh];
-					NSData * imageData = UIImageJPEGRepresentation(uploadImage, 0.8);
-					
-					NSDictionary * info = [weakSelf uploadByImageData:imageData extension:@"jpg"];
-					
-					if (info) {
-						[imageInfoArray addObject:info];
-					}
-					else {
-						*stop = YES;
-						return;
-					}
+					if (!_isOriginal)
+						// 拍照闪退
+						uploadImage = [imageInfo.image scaleImageSize:[weakSelf fixedUploadSizeForImage:imageInfo.image withorientation:imageInfo.image.imageOrientation]];
+					imageData = UIImageJPEGRepresentation(uploadImage, 1.0);
 				}
 				else {
-					NSData * imageData = nil;
 					// 相册图片
 					ALAssetRepresentation * rep = [imageInfo.asset defaultRepresentation];
 					// mimeType
 					NSString * fileName = [rep filename];
-					NSString * mimeType = [[fileName pathExtension] lowercaseString];
+					mimeType = [[fileName pathExtension] lowercaseString];
 					
 					if (_isOriginal) {
 						uint8_t * buffer = (uint8_t *)malloc(rep.size);
@@ -491,21 +530,10 @@
 							return;
 						}
 						imageData = [NSData dataWithBytes:buffer length:length];
-						
-						NSDictionary * info = [weakSelf uploadByImageData:imageData extension:mimeType];
-						
-						if (info) {
-							[imageInfoArray addObject:info];
-						}
-						else {
-							*stop = YES;
-							return;
-						}
 					}
 					else {
-						CGImageRef iref = [rep fullResolutionImage];
-						UIImage * image = [UIImage imageWithCGImage:iref];
 						uint8_t * buffer = (uint8_t *)malloc(rep.size);
+						
 						NSError * error;
 						NSUInteger length = [rep getBytes:buffer fromOffset:0 length:rep.size error:&error];
 						
@@ -513,27 +541,23 @@
 							*stop = YES;
 							return;
 						}
+						
 						NSData * data = [NSData dataWithBytes:buffer length:length];
-						// 构造 CGImageSource :
-						CGImageSourceRef cImageSource = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
 						
-						CFDictionaryRef imageInfo1 = CGImageSourceCopyPropertiesAtIndex(cImageSource, 0, NULL);
-						
-						NSInteger orientation = [(__bridge NSNumber *)CFDictionaryGetValue (imageInfo1, kCGImagePropertyOrientation)integerValue];
-						
-						image = [image resizedImage:[self fixedUploadSizeForImage:image withorientation:orientation] interpolationQuality:kCGInterpolationHigh];
+						UIImage * image = [UIImage imageWithData:data];
+						image = [image scaleImageSize:[weakSelf fixedUploadSizeForImage:image withorientation:image.imageOrientation]];
 						imageData = UIImageJPEGRepresentation(image, 0.8);
-						
-						NSDictionary * info = [weakSelf uploadByImageData:imageData extension:mimeType];
-						
-						if (info) {
-							[imageInfoArray addObject:info];
-						}
-						else {
-							*stop = YES;
-							return;
-						}
 					}
+				}
+				
+				NSDictionary * info = [weakSelf uploadByImageData:imageData extension:mimeType];
+				
+				if (info) {
+					[imageInfoArray addObject:info];
+				}
+				else {
+					*stop = YES;
+					return;
 				}
 			}
 		}];

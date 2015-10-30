@@ -57,7 +57,7 @@
 	NSUInteger width = (NSUInteger)size.width * [[UIScreen mainScreen] scale];
 	NSUInteger height = (NSUInteger)size.height * [[UIScreen mainScreen] scale];
 	NSString * url = [imageUrl stringByAppendingString:@"@"];
-	NSString * resultUrl = [url stringByAppendingString:[NSString stringWithFormat:@"%luw_%luh_90Q_1x.jpg", width, height]];
+	NSString * resultUrl = [url stringByAppendingString:[NSString stringWithFormat:@"%luw_%luh_90Q_1x_1o.jpg", width, height]];
 	return resultUrl;
 }
 
@@ -1253,6 +1253,84 @@
 		error = nil;
 		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
 		[self.httpRequestManager getPath:kQJUserLikeImageListPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [QJUtils errorFromOperation:responseObject];
+		i--;
+	} while (error && i >= 0);
+	
+	BOOL isLastPage = NO;
+	
+	if (!error) {
+		NSLog(@"%@", responseObject);
+		NSDictionary * dataDic = responseObject[@"data"];
+		
+		NSNumber * lastPageNum = dataDic[@"isLastPage"];
+		
+		if (!QJ_IS_NUM_NIL(lastPageNum))
+			isLastPage = lastPageNum.boolValue;
+			
+		NSArray * dataArray = dataDic[@"list"];
+		
+		if (!QJ_IS_ARRAY_NIL(dataArray)) {
+			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+				imageObject.imageType = [NSNumber numberWithInt:2];
+				[resultArray addObject:imageObject];
+			}];
+			
+			if (finished)
+				finished(resultArray, isLastPage, dataArray, error);
+			return;
+		}
+	}
+	
+	if (finished)
+		finished(nil, isLastPage, nil, error);
+}
+
+// 关注用户的图片列表
+- (void)requestUserFollowUserImageList:(NSNumber *)userId
+	pageNum:(NSUInteger)pageNum
+	pageSize:(NSUInteger)pageSize
+	finished:(nullable void (^)(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished
+{
+	NSParameterAssert(userId);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	
+	if (!QJ_IS_NUM_NIL(userId))
+		params[@"userFollowId"] = userId;
+		
+	if (pageNum == 0)
+		pageNum = 1;
+	params[@"pageNum"] = [NSNumber numberWithUnsignedInteger:pageNum];
+	
+	if (pageSize > 0)
+		params[@"pageSize"] = [NSNumber numberWithUnsignedInteger:pageSize];
+		
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJUserFollowUserImageListPath
 		parameters:params
 		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
 			NSLog(@"%@", operation.request.URL);
