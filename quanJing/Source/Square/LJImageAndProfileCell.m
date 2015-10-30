@@ -528,6 +528,7 @@
 		}
         ImageView.contentMode = UIViewContentModeScaleAspectFill;
         ImageView.clipsToBounds = YES;
+        ImageView.alpha=0;
         __weak UIImageView * weakImageView = ImageView;
         [ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]
                   placeholderImage:nil
