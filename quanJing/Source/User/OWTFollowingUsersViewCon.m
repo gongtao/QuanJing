@@ -44,7 +44,7 @@
     [self addChildViewController:_userFlowViewCon];
 
     __weak OWTFollowingUsersViewCon* wself = self;
-
+    _userFlowViewCon.isShowingFollowerUsers=YES;
     //将block对外部抖出一个口,外部在合适的时候掉用
     _userFlowViewCon.numberOfUsersFunc = ^
     {
@@ -64,14 +64,15 @@
         }
     };
 
-    _userFlowViewCon.onUserSelectedFunc = ^(OWTUser* ownerUser)
+    _userFlowViewCon.onUserSelectedFunc = ^(QJUser* ownerUser)
     {
         if (ownerUser != nil)
         {
+            
                 OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
                 userViewCon1.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:userViewCon1 animated:YES];
-                userViewCon1.user =ownerUser;
+                [wself.navigationController pushViewController:userViewCon1 animated:YES];
+            userViewCon1.quser=ownerUser;
         }
     };
     //请求喜欢当前用户 人的数据
@@ -87,6 +88,7 @@
                         refreshDoneFunc();
                     }
                 }else {
+                    wself.userFlowViewCon.islast=isLastPage;
                     [wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
                     if (refreshDoneFunc!=nil) {
                         refreshDoneFunc();
@@ -99,8 +101,15 @@
     };
     
     _userFlowViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)()){
+        if (wself.userFlowViewCon.islast) {
+            [SVProgressHUD showErrorWithStatus:@"没有更多图片"];
+            if (loadMoreDoneFunc) {
+                loadMoreDoneFunc();
+            }
+            return ;
+        }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[QJPassport sharedPassport]requestUserFollowList:wself.user.uid pageNum:1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+        [[QJPassport sharedPassport]requestUserFollowList:wself.user.uid pageNum:_userFlowViewCon.dataResouce.count/30+1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
                     [SVProgressHUD showError:error];
@@ -118,6 +127,7 @@
     });
 
     };
+    [_userFlowViewCon manualRefresh];
 }
 
 - (void)viewDidLoad

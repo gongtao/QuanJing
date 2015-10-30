@@ -136,7 +136,9 @@ static const int kDefaultLoadItemNum1 = 10;
 				[_categoriesList insertObject:model atIndex:0];
 				_view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 30)];
 				_view.backgroundColor = [UIColor colorWithRed:246 / 255.0 green:246 / 255.0 blue:246 / 255.0 alpha:1.0];
-				
+                if (_categoriesList.count<6) {
+                    return ;
+                }
 				for (int i = 0; i < 6; i++) {
 					QJArticleCategory * model = _categoriesList[i];
 					UIButton * btn = [LJUIController createButtonWithFrame:CGRectMake(SCREENWIT / 6 * i, 5, SCREENWIT / 6, 20) imageName:nil title:model.name target:self action:@selector(naviClick:)];

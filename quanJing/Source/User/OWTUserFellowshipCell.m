@@ -60,24 +60,20 @@
         [_avatarImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_avatarImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"5"]];
         if (_isFollowerUser) {
             _actionButton.hidden=NO;
+            _actionButton.tag=0;
             [_actionButton setTitle:@"已关注" forState:UIControlStateNormal];
         }else{
-        if (_user)
-        {
-            _actionButton.hidden = NO;
+                    _actionButton.hidden = NO;
             if (_user.hasFollowUser.boolValue)
             {
+                _actionButton.tag=0;
                 [_actionButton setTitle:@"已关注" forState:UIControlStateNormal];
             }
             else
             {
+                _actionButton.tag=1;
                 [_actionButton setTitle:@"+关注" forState:UIControlStateNormal];
             }
-        }
-        else
-        {
-            _actionButton.hidden = YES;
-        }
         }
         [self setNeedsLayout];
     }
@@ -92,32 +88,42 @@
 
 - (IBAction)actionButtonPressed:(id)sender
 {
-    OWTUserManager* um = GetUserManager();
+    QJPassport * pt = [QJPassport sharedPassport];
+    
+    
+    if (_actionButton.tag == 0){
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError * error = [pt requestUserFollowUser:_user.uid];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!error) {
+                    [SVProgressHUD dismiss];
+                    _actionButton.tag = 1;
+                    [_actionButton setTitle:@"+关注" forState:UIControlStateNormal];
+                }
+                else {
+                    [SVProgressHUD showError:error];
+                }
+            });
+        });
+    }
+    else{
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError * error = [pt requestUserCancelFollowUser:_user.uid];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!error) {
+                    [SVProgressHUD dismiss];
+                    _actionButton.tag = 0;
+                    [_actionButton setTitle:@"已关注" forState:UIControlStateNormal];
+                }
+                else {
+                    [SVProgressHUD showError:error];
+                }
+            });
+        });}
 
-    OWTUser* currentUser = um.currentUser;
-    if ([currentUser isFollowingUser:_user])
-    {
-        [SVProgressHUD show];
-        [um unfollowUser:_user
-                 success:^{
-                     [SVProgressHUD dismiss];
-                     [_actionButton setTitle:@"+关注" forState:UIControlStateNormal];
-                 }
-                 failure:^(NSError* error) {
-                     [SVProgressHUD showError:error];
-                 }];
-    }
-    else
-    {
-        [um followUser:_user
-               success:^{
-                   [SVProgressHUD dismiss];
-                   [_actionButton setTitle:@"已关注" forState:UIControlStateNormal];
-               }
-               failure:^(NSError* error) {
-                   [SVProgressHUD showError:error];
-               }];
-    }
 }
 
 - (void)prepareForReuse

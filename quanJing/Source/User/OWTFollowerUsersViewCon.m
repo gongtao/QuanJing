@@ -34,112 +34,80 @@
     return self;
 }
 
-- (NSOrderedSet*)followerUsers
-{
-    if (self.user != nil && self.user.fellowshipInfo != nil && self.user.fellowshipInfo.followerUsers != nil)
-    {
-        return self.user.fellowshipInfo.followerUsers;
-    }
-    else
-    {
-        return nil;
-    }
-}
 
 - (void)setup
 {
     _userFlowViewCon = [[OWTUserFlowViewCon alloc] initWithNibName:nil bundle:nil];
-    _userFlowViewCon.isShowingFollowerUsers = YES;
+    _userFlowViewCon.isShowingFollowerUsers = NO;
     [self addChildViewController:_userFlowViewCon];
     
     __weak OWTFollowerUsersViewCon* wself = self;
     
-    _userFlowViewCon.numberOfUsersFunc = ^
-    {
-        NSOrderedSet* followerUsers = [wself followerUsers];
-        if (followerUsers != nil)
-        {
-            return (int)followerUsers.count;
-        }
-        else
-        {
-            return 0;
-        }
-    };
     
-    _userFlowViewCon.userAtIndexFunc = ^(NSUInteger index)
-    {
-        NSOrderedSet* followerUsers = [wself followerUsers];
-        if (followerUsers != nil)
-        {
-            return (OWTUser*)[followerUsers objectAtIndex:index];
-        }
-        else
-        {
-            return (OWTUser*)nil;
-        }
-    };
-    
-    _userFlowViewCon.onUserSelectedFunc = ^(OWTUser* ownerUser)
+    _userFlowViewCon.onUserSelectedFunc = ^(QJUser* ownerUser)
     {
         if (ownerUser != nil)
         {
             
-//            if ([ownerUser.userID isEqualToString:GetUserManager().currentUser.userID ]) {
-//                AlbumPhotosListView1 * userViewCon = [[AlbumPhotosListView1 alloc] initWithNibName:nil bundle:nil];
-//                [self.navigationController pushViewController:userViewCon animated:YES];
-//                
-//            }
-//            //        userViewCon.user = ownerUser;
-//            else
-//            {
-                OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
-                [self.navigationController pushViewController:userViewCon1 animated:YES];
-                userViewCon1.user =ownerUser;
-          
-                
-//            }
-            
+            OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
+            userViewCon1.hidesBottomBarWhenPushed = YES;
+            [wself.navigationController pushViewController:userViewCon1 animated:YES];
+            userViewCon1.quser=ownerUser;
         }
-
     };
-    
+
     _userFlowViewCon.refreshDataFunc = ^(void (^refreshDoneFunc)())
     {
-        OWTUserManager* um = GetUserManager();
-        [um refreshUserFollowerUsers:wself.user
-                             success:^{
-                                 if (refreshDoneFunc != nil)
-                                 {
-                                     refreshDoneFunc();
-                                 }
-                             }
-                             failure:^(NSError* error) {
-                                 [SVProgressHUD showError:error];
-                                 if (refreshDoneFunc != nil)
-                                 {
-                                     refreshDoneFunc();
-                                 }
-                             }];
+        [wself.userFlowViewCon.dataResouce removeAllObjects];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [[QJPassport sharedPassport]requestUserFollowMeList:wself.user.uid pageNum:1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error) {
+                        [SVProgressHUD showError:error];
+                        if (refreshDoneFunc!=nil) {
+                            refreshDoneFunc();
+                        }
+                    }else {
+                        wself.userFlowViewCon.islast=isLastPage;
+                        [wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
+                        if (refreshDoneFunc!=nil) {
+                            refreshDoneFunc();
+                        }
+                    }
+                });
+            }];
+        });
+        
     };
-
+    
     _userFlowViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)()){
-        OWTUserManager* um = GetUserManager();
-        [um loadMoreUserFollowerUsers:wself.user
-                              success:^{
-                                  if (loadMoreDoneFunc != nil)
-                                  {
-                                      loadMoreDoneFunc();
-                                  }
-                              }
-                              failure:^(NSError* error) {
-                                  [SVProgressHUD showError:error];
-                                  if (loadMoreDoneFunc != nil)
-                                  {
-                                      loadMoreDoneFunc();
-                                  }
-                              }];
+        if (wself.userFlowViewCon.islast) {
+            [SVProgressHUD showErrorWithStatus:@"没有更多图片"];
+            if (loadMoreDoneFunc) {
+                loadMoreDoneFunc();
+            }
+            return ;
+        }
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [[QJPassport sharedPassport]requestUserFollowMeList:wself.user.uid pageNum:_userFlowViewCon.dataResouce.count/30+1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error) {
+                        [SVProgressHUD showError:error];
+                        if (loadMoreDoneFunc) {
+                            loadMoreDoneFunc();
+                        }
+                    }else {
+                        [wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
+                        if (loadMoreDoneFunc) {
+                            loadMoreDoneFunc();
+                        }
+                    }
+                });
+            }];
+        });
+        
     };
+    [_userFlowViewCon manualRefresh];
 }
 
 - (void)viewDidLoad
@@ -179,27 +147,14 @@
 
 #pragma mark -
 
-- (void)setUser:(OWTUser*)user
+
+- (void)setUser:(QJUser*)user
 {
     _user = user;
-
     if (_user != nil)
     {
-        self.navigationItem.title = [NSString stringWithFormat:@"关注%@的人", _user.displayName];
-//        UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, 100, 44)];
-//        label.text = [NSString stringWithFormat:@"关注%@的人", _user.displayName];
-//
-//        
-//       label.font = [UIFont fontWithName:@"Arial-BoldItalicMT" size:24];
-//        
-//        [label setTextAlignment:NSTextAlignmentCenter];
-//        label.textColor = GetThemer().themeTintColor;
-//        self.navigationItem.titleView =label;
-
-        
-        
-        NSNumber* totalUserNum = [NSNumber numberWithInteger:_user.fellowshipInfo.followerNum];
-        _userFlowViewCon.totalUserNum = totalUserNum;
+        self.navigationItem.title = [NSString stringWithFormat:@"关注%@的人", _user.nickName];
+        _userFlowViewCon.totalUserNum = _user.fansAmount;
     }
     else
     {

@@ -16,6 +16,7 @@
 #import "UIView+EasyAutoLayout.h"
 #import <SVPullToRefresh/SVPullToRefresh.h>
 #import "QuanJingSDK.h"
+#import "MJRefresh.h"
 static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 @interface OWTUserFlowViewCon ()
@@ -60,7 +61,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     self.view.backgroundColor = GetThemer().themeColorBackground;
     
     [self setupCollectionView];
-    [self setupRefreshControl];
     
     [self reloadData];
 }
@@ -85,15 +85,18 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     
     [self.view addSubview:_collectionView];
     [_collectionView easyFillSuperview];
+    [_collectionView addHeaderWithTarget:self action:@selector(refreshData)];
+    [_collectionView addFooterWithTarget:self action:@selector(loadMoreData)];
+    [_collectionView headerBeginRefreshing];
+    _collectionView.headerPullToRefreshText=nil;
+    _collectionView.headerRefreshingText=nil;
+    _collectionView.headerReleaseToRefreshText=nil;
+    _collectionView.footerPullToRefreshText=nil;
+    _collectionView.footerRefreshingText=nil;
+    _collectionView.footerReleaseToRefreshText=nil;
+
 }
 
-- (void)setupRefreshControl
-{
-    _refreshControl = [[XHRefreshControl alloc] initWithScrollView:_collectionView delegate:self];
-    
-    __weak OWTUserFlowViewCon* wself = self;
-    [_collectionView addInfiniteScrollingWithActionHandler:^{ [wself loadMoreData]; }];
-}
 
 - (void)reloadData
 {
@@ -107,7 +110,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
         return;
     }
 
-    [_refreshControl startPullDownRefreshing];
+    [_collectionView headerBeginRefreshing];
 }
 
 - (void)refreshData
@@ -118,7 +121,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     }
     
     _refreshDataFunc(^{
-                         [_refreshControl endPullDownRefreshing];
+                         [_collectionView headerEndRefreshing];
                          [self reloadData];
                      });
 }
@@ -127,14 +130,14 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 {
     if (_loadMoreDataFunc == nil)
     {
-        [_collectionView.infiniteScrollingView stopAnimating];
+        [_collectionView footerEndRefreshing];
         return;
     }
     
     _loadMoreDataFunc(^
                       {
                           [self.collectionView reloadData];
-                          [_collectionView.infiniteScrollingView stopAnimating];
+                          [_collectionView footerEndRefreshing];
                       });
 }
 
@@ -219,7 +222,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    OWTUser* user = [self userAtIndex:indexPath.row];
+    QJUser *user=_dataResouce[indexPath.row];
     if (user != nil)
     {
         if (_onUserSelectedFunc != nil)
