@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "QJUser.h"
 
 @interface OWTUserLikedAssetsViewCon : UIViewController
 
-@property (nonatomic, strong) OWTUser* user;
+@property (nonatomic, strong) QJUser* user1;
+- (instancetype)initWithUser:(QJUser *)user;
 
 @end

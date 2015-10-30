@@ -1503,9 +1503,8 @@
 //收藏
 - (void)showFollowings
 {
-    
-    OWTUserSharedAssetsViewCon* likedAssetsViewCon = [[OWTUserSharedAssetsViewCon alloc] initWithNibName:nil bundle:nil];
-    likedAssetsViewCon.user1 = _currentUser;
+    _currentUser = [[QJPassport sharedPassport]currentUser];
+    OWTUserSharedAssetsViewCon* likedAssetsViewCon = [[OWTUserSharedAssetsViewCon alloc] initWithUser:_currentUser ];
     likedAssetsViewCon.lightbox = [_currentUser.collectAmount intValue];
     likedAssetsViewCon.hidesBottomBarWhenPushed=YES;
     [_tabBarHider hideTabBar];

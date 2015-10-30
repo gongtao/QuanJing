@@ -14,12 +14,17 @@
 #import "SVProgressHUD+WTError.h"
 #import "UIView+EasyAutoLayout.h"
 #import "UIViewController+WTExt.h"
+#import "QJInterfaceManager.h"
+#import "QJPassport.h"
+
+#define PageSize 50
 
 @interface OWTUserLikedAssetsViewCon ()
 {
 }
 
 @property (nonatomic, strong) OWTAssetFlowViewCon* assetViewCon;
+@property (nonatomic, strong)NSMutableOrderedSet *imageAssets;
 @property (nonatomic, strong) UIBarButtonItem* numBarItem;
 
 @end
@@ -38,14 +43,26 @@
 
 - (NSMutableOrderedSet*)assets
 {
-    if (self.user != nil && self.user.assetsInfo != nil && self.user.assetsInfo.likedAssets != nil)
+    if (self.user1 != nil && self.user1.collectAmount != nil )
     {
-        return self.user.assetsInfo.likedAssets;
+        return _imageAssets;
     }
     else
     {
         return nil;
     }
+}
+
+- (instancetype)initWithUser:(QJUser *)user {
+    self =  [super init];
+    if (self)
+    {
+        self.user1 = user;
+        [self setup];
+        
+        return self;
+    }
+    return nil;
 }
 
 - (int)assetNum
@@ -79,70 +96,95 @@
         return [wself assetNum];
     };
     
-//    _assetViewCon.assetAtIndexFunc = ^(NSInteger index)
-//    {
-//        NSMutableOrderedSet* assets = [wself assets];
-//        if (assets != nil)
-//        {
-//            return (OWTAsset*)[assets objectAtIndex:index];
-//        }
-//        else
-//        {
-//            return (OWTAsset*)nil;
-//        }
-//    };
-//    
-//    _assetViewCon.onAssetSelectedFunc = ^(OWTAsset* asset)
-//    {
-//        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset];
-//        [wself.navigationController pushViewController:assetViewCon animated:YES];
-//    };
-//    
+    _assetViewCon.assetAtIndexFunc = ^(NSInteger index)
+    {
+        NSMutableOrderedSet* assets = [wself assets];
+        if (assets != nil)
+        {
+            if (index >= _imageAssets.count ) {
+                return (QJImageObject*)[assets objectAtIndex:_imageAssets.count -1];
+            }
+            return (QJImageObject*)[assets objectAtIndex:index];
+        }
+        else
+        {
+            return (QJImageObject*)nil;
+        }
+    };
+    
+    
+    _assetViewCon.onAssetSelectedFunc = ^(QJImageObject* asset)
+    {
+        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset];
+        assetViewCon.user1 = wself.user1;
+        [wself.navigationController pushViewController:assetViewCon animated:YES];
+    };
+    
     _assetViewCon.refreshDataFunc = ^(void (^refreshDoneFunc)())
     {
-        OWTUserManager* um = GetUserManager();
-        [um refreshUserLikedAssets:wself.user
-                           success:^{
-                               if (refreshDoneFunc != nil)
-                               {
-                                   refreshDoneFunc();
-                               }
-                               wself.numBarItem.title = [NSString stringWithFormat:@"%d", (int)[wself assetNum]];
-                           }
-                           failure:^(NSError* error) {
-                               [SVProgressHUD showError:error];
-                               if (refreshDoneFunc != nil)
-                               {
-                                   refreshDoneFunc();
-                               }
-                           }];
+        QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [fm requestUserCollectImageList:wself.user1.uid  pageNum:1 pageSize:PageSize finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error == nil) {
+                        if (albumObjectArray != nil){
+                            [wself.imageAssets removeAllObjects];
+                            [wself.imageAssets addObjectsFromArray:albumObjectArray];
+                        }
+                        if (refreshDoneFunc != nil){
+                            refreshDoneFunc();
+                        }
+                        NSLog(@"获取相册收藏成功,照片熟量 %ld",wself.imageAssets.count);
+                    }else{
+                        [SVProgressHUD showErrorWithStatus:@"获取收藏失败"];
+                        NSLog(@"获取相册收藏失败");
+                        if (refreshDoneFunc != nil)
+                            refreshDoneFunc();
+                    }
+                });
+            }];
+            
+        });
+        
     };
 
     _assetViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)())
     {
-        OWTUserManager* um = GetUserManager();
-        [um loadMoreUserLikedAssets:wself.user
-                              count:50
-                           success:^{
-                               if (loadMoreDoneFunc != nil)
-                               {
-                                   loadMoreDoneFunc();
-                               }
-                               wself.numBarItem.title = [NSString stringWithFormat:@"%d", (int)[wself assetNum]];
-                           }
-                           failure:^(NSError* error) {
-                               [SVProgressHUD showError:error];
-                               if (loadMoreDoneFunc != nil)
-                               {
-                                   loadMoreDoneFunc();
-                               }
-                           }];
+        QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [fm requestUserCollectImageList:wself.user1.uid  pageNum:wself.imageAssets.count/PageSize+1 pageSize:PageSize finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error == nil) {
+                        if (albumObjectArray != nil){
+                            [wself.imageAssets addObjectsFromArray:albumObjectArray];
+                        }
+                        if (loadMoreDoneFunc != nil){
+                            loadMoreDoneFunc();
+                        }
+                        wself.numBarItem.title = [NSString stringWithFormat:@"%ld", [wself.user1.collectAmount integerValue]];
+                        NSLog(@"加载更多成功,照片熟量 %ld",wself.imageAssets.count);
+                    }else{
+                        [SVProgressHUD showErrorWithStatus:@"加载更多失败"];
+                        NSLog(@"加载更多失败");
+                        if (loadMoreDoneFunc != nil)
+                            loadMoreDoneFunc();
+                    }
+                });
+            }];
+            
+        });
+        
     };;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    NSString *str = ([_user1.uid integerValue] != [[[QJPassport sharedPassport]currentUser].uid integerValue])?_user1.nickName:@"我";
+    self.navigationItem.title = [NSString stringWithFormat:@"%@收藏的照片", str];
+    _assetViewCon.totalAssetNum = _user1.collectAmount;
+
     [self.view addSubview:_assetViewCon.view];
     [_assetViewCon.view easyFillSuperview];
 }
@@ -169,46 +211,19 @@
 
 - (void)refreshUserLikedAssetsIfNeeded
 {
-    if (_user == nil)
+    if (_imageAssets.count>0)
     {
         return;
     }
-
-    NSMutableOrderedSet* likedAssets = [self assets];
-    if (likedAssets != nil)
-    {
-        return;
-    }
-
+    
     [_assetViewCon manualRefresh];
 }
 
 #pragma mark -
 
-- (void)setUser:(OWTUser*)user
+- (void)setUser1:(QJUser*)user
 {
-    _user = user;
-
-    if (_user != nil)
-    {
-        self.navigationItem.title = [NSString stringWithFormat:@"%@喜欢的照片", _user.displayName];
-//        UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, 100, 44)];
-//        label.text =[NSString stringWithFormat:@"%@喜欢的照片", _user.displayName];
-//        label.font = [UIFont fontWithName:@"Arial-BoldItalicMT" size:24];
-//        
-//        [label setTextAlignment:NSTextAlignmentCenter];
-//        label.textColor = GetThemer().themeTintColor;
-//        self.navigationItem.titleView =label;
-
-        
-        NSNumber* totalAssetNum = [NSNumber numberWithInteger:_user.assetsInfo.likedAssetNum];
-        _assetViewCon.totalAssetNum = totalAssetNum;
-    }
-    else
-    {
-        self.navigationItem.title = @"";
-        _assetViewCon.totalAssetNum = nil;
-    }
+    _user1 = user;
 }
 
 @end

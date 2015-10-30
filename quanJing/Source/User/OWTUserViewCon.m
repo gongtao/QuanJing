@@ -750,7 +750,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	return nil;
 }
 
-#pragma mark - Collection view delegate
+#pragma mark - Collection view delegate 上传过的照片
 - (void)showAssets
 {
 	OWTUserAssetsViewCon * assetsViewCon = [[OWTUserAssetsViewCon alloc] initWithNibName:nil bundle:nil];
@@ -764,7 +764,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 {
 	OWTUserLikedAssetsViewCon * likedAssetsViewCon = [[OWTUserLikedAssetsViewCon alloc] initWithNibName:nil bundle:nil];
 	
-	likedAssetsViewCon.user = _user;
+	likedAssetsViewCon.user1 = _user;
 	[self.navigationController pushViewController:likedAssetsViewCon animated:YES];
 }
 
@@ -772,7 +772,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 {
 	OWTFollowingUsersViewCon * followingUsersViewCon = [[OWTFollowingUsersViewCon alloc] initWithNibName:nil bundle:nil];
 	
-	followingUsersViewCon.user = _user;
+	followingUsersViewCon.user = _quser;
 	[self.navigationController pushViewController:followingUsersViewCon animated:YES];
 }
 

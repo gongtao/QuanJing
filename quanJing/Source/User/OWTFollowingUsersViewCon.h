@@ -12,4 +12,6 @@
 
 @property (nonatomic, strong) QJUser* user;
 
+- (instancetype)initWithUser:(QJUser *)user;
+
 @end

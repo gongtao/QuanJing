@@ -38,6 +38,18 @@
     return self;
 }
 
+- (instancetype)initWithUser:(QJUser *)user {
+    self =  [super init];
+    if (self)
+    {
+        self.user = user;
+        [self setup];
+        
+        return self;
+    }
+    return nil;
+}
+
 - (void)setup
 {
     _userFlowViewCon = [[OWTUserFlowViewCon alloc] initWithNibName:nil bundle:nil];
