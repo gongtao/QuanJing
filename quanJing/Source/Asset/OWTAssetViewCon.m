@@ -414,7 +414,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     [super viewDidLoad];
     _searchResults = [[NSMutableOrderedSet alloc]init];
     [self loadRelatedAssetsInSearch];
-    [self getAllAssetData];
+    //[self getAllAssetData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -492,11 +492,14 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 }
 - (void)loadRelatedAssetsInSearch
 {
+    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+    QJUser *user = ([[[QJPassport sharedPassport]currentUser].uid integerValue] != [_user1.uid integerValue ])?_user1:nil;
+    
     if (_imageType.intValue==1) {
         if(_imageAsset.tag == nil){
             return;
         }
-        QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+        //
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [fm requestImageSearchKey:_imageAsset.tag pageNum:_searchResults.count/50+1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -513,12 +516,31 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                 });
             }];
         });
-    }else
-    {
+        //操作当前用户资源
+    }else if([_imageType integerValue] == 2 && user == nil){
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [fm requestUserImageList:nil  pageNum:1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error == nil) {
+                        if (albumObjectArray != nil){
+                            [self mergeAssets:albumObjectArray];
+                            [SVProgressHUD dismiss];
+                            
+                        }
+                    }else{
+                        [SVProgressHUD showErrorWithStatus:@"请求失败"];
+                    }
+                });
+            }];
+            
+        });
+    }else{
+        //操作当前用户资源d
         [self loadImageAssets];
+        
     }
-
-
+    
+    
 }
 
 #pragma mark - Button Actions 点击赞过的人
@@ -869,18 +891,26 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                                                  ^{
                                                      [am showAuthViewConWithSuccess:^{
                                                          
-//                                                         OWTAssetManager* am = GetAssetManager();
-//                                                         
-//                                                         [SVProgressHUD show];
-//                                                         [am updateAsset:_imageAsset
-//                                                         belongingAlbums:_belongingAlbums
-//                                                                 success:^{
-//                                                                     [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
-//                                                                     [SVProgressHUD dismiss];
-//                                                                 }
-//                                                                 failure:^(NSError* error) {
-//                                                                     [SVProgressHUD showError:error];
-//                                                                 }];
+                                                         //写收藏
+                                                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                                                             NSError *error = [[QJInterfaceManager sharedManager]requestImageCollect:_imageAsset.imageId imageType:_imageAsset.imageType];
+                                                             dispatch_async(dispatch_get_main_queue(), ^{
+                                                                 if (error ==nil) {
+                                                                     [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
+                                                                     [SVProgressHUD dismiss];
+                                                                     
+                                                                 }else{
+                                                                     if (![NetStatusMonitor isExistenceNetwork]) {
+                                                                         [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+                                                                         return ;
+                                                                     }
+                                                                     [SVProgressHUD showSuccessWithStatus:@"收藏失败"];
+                                                                     
+                                                                 }
+                                                             });
+                                                             
+                                                             
+                                                         });
                                                          
                                                          
                                                      }
@@ -908,21 +938,20 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                 if (error ==nil) {
                     [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
                     [SVProgressHUD dismiss];
-
+                    
                 }else{
                     if (![NetStatusMonitor isExistenceNetwork]) {
                         [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
                         return ;
                     }
                     [SVProgressHUD showSuccessWithStatus:@"收藏失败"];
-
+                    
                 }
             });
             
-
+            
         });
-        //- (NSError *)requestImageCollect:(NSNumber *)imageId imageType:(NSNumber *)imageType;
-
+        
     }
 }
 

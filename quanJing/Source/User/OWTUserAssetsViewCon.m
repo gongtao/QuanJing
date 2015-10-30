@@ -167,7 +167,7 @@
 {
     [super viewWillAppear:animated];
     [self substituteNavigationBarBackItem];
-    [_assetViewCon reloadData];
+    //[_assetViewCon reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -178,16 +178,11 @@
 
 - (void)refreshUserAssetsIfNeeded
 {
-//    if (_user1 == nil)
-//    {
-//        return;
-//    }
-//
-//    if (_user1.uploadAmount != nil && _user1.uploadAmount != nil)
-//    {
-//        return;
-//    }
-    
+    if (_imageAssets.count>0)
+    {
+        return;
+    }
+
     [_assetViewCon manualRefresh];
 }
 
