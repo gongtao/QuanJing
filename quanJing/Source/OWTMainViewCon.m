@@ -921,7 +921,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"prompt", @"Prompt") message:NSLocalizedString(@"loginAtOtherDevice", @"your login account has been in other places") delegate:self cancelButtonTitle:NSLocalizedString(@"ok", @"OK") otherButtonTitles:nil, nil];
 		alertView.tag = 100;
 		[alertView show];
-		[GetAuthManager() logout];
+		[[QJPassport sharedPassport] logout];
 		[self showAuthViewCon];
 		
 		@try {

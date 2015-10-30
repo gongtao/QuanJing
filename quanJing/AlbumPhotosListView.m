@@ -224,6 +224,7 @@
             theImage = [info objectForKey:UIImagePickerControllerOriginalImage];
             
         }
+        UIImageWriteToSavedPhotosAlbum(theImage, self, nil, nil);
         NSMutableArray* imageInfos = [[NSMutableArray alloc] init];
         OWTImageInfo* imageInfo = [[OWTImageInfo alloc] init];
         imageInfo.image = theImage;
@@ -252,46 +253,6 @@
     
     [picker dismissViewControllerAnimated:nil completion:nil];
 }
-
--(void)takePhontos1{
-    [_popoverViewCon dismissPopoverAnimated:NO];
-    
-    __weak __typeof(self) weakSelf = self;
-    NBUImagePickerResultBlock resultBlock = ^(NSArray* images)
-    {
-        if (images == nil || images.count == 0)
-        {
-            return;
-        }
-        else
-        {
-            NSMutableArray* imageInfos = [[NSMutableArray alloc] init];
-            OWTImageInfo* imageInfo = [[OWTImageInfo alloc] init];
-            imageInfo.image = images[0];
-            [imageInfos addObject:imageInfo];
-            OWTPhotoUploadViewController *photoUploadVC = [[OWTPhotoUploadViewController alloc] initWithNibName:nil bundle:nil];
-            photoUploadVC.imageInfos = imageInfos;
-            photoUploadVC.hidesBottomBarWhenPushed = YES;
-            photoUploadVC.isCameraImages = YES;
-            photoUploadVC.doneAction = ^{
-                [weakSelf.navigationController popViewControllerAnimated:YES];
-            };
-            [weakSelf.navigationController pushViewController:photoUploadVC animated:NO];
-        }
-    };
-    
-    NBUImagePickerOptions options = NBUImagePickerOptionSingleImage |
-    NBUImagePickerOptionReturnImages |
-    NBUImagePickerOptionStartWithCamera |
-    NBUImagePickerOptionDisableEdition |
-    NBUImagePickerOptionDisableLibrary |
-    NBUImagePickerOptionDoNotSaveImages;
-    
-    [NBUImagePickerController startPickerWithTarget:self
-                                            options:options
-                                   customStoryboard:nil
-                                        resultBlock:resultBlock];
-};
 
 //创建相册
 - (void)createAlbum

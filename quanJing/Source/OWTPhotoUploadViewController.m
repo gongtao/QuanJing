@@ -458,9 +458,9 @@
 					// 拍照图片
 					UIImage * uploadImage = imageInfo.image;
 					
-					if (!_isOriginal)
-						// 拍照闪退
-						uploadImage = [imageInfo.image resizedImage:[weakSelf fixedUploadSizeForImage:imageInfo.image withorientation:1] interpolationQuality:kCGInterpolationHigh];
+//					if (_isOriginal)
+//						// 拍照闪退
+//						uploadImage = [imageInfo.image resizedImage:[weakSelf fixedUploadSizeForImage:imageInfo.image withorientation:1] interpolationQuality:kCGInterpolationHigh];
 					NSData * imageData = UIImageJPEGRepresentation(uploadImage, 0.8);
 					
 					NSDictionary * info = [weakSelf uploadByImageData:imageData extension:@"jpg"];

@@ -780,7 +780,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 {
 	OWTFollowerUsersViewCon * followerUsersViewCon = [[OWTFollowerUsersViewCon alloc] initWithNibName:nil bundle:nil];
 	
-	followerUsersViewCon.user = _user;
+	followerUsersViewCon.user = _quser;
 	[self.navigationController pushViewController:followerUsersViewCon animated:YES];
 }
 

@@ -311,8 +311,7 @@
 -(void)takePhontos1{
         UIImagePickerController *controller = [[UIImagePickerController alloc] init];
         [controller setSourceType:UIImagePickerControllerSourceTypeCamera];// 设置类型
-        
-        
+    
         // 设置所支持的类型，设置只能拍照，或则只能录像，或者两者都可以
         NSString *requiredMediaType = ( NSString *)kUTTypeImage;
         NSString *requiredMediaType1 = ( NSString *)kUTTypeMovie;
@@ -345,8 +344,8 @@
         } else {
             // 照片的元数据参数
             theImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-            
         }
+        UIImageWriteToSavedPhotosAlbum(theImage, self, nil, nil);
         NSMutableArray* imageInfos = [[NSMutableArray alloc] init];
         OWTImageInfo* imageInfo = [[OWTImageInfo alloc] init];
         imageInfo.image = theImage;
@@ -375,46 +374,6 @@
     
     [picker dismissViewControllerAnimated:nil completion:nil];
 }
-
--(void)takePhontos{
-//    [_popoverViewCon dismissPopoverAnimated:NO];
-    
-    __weak __typeof(self) weakSelf = self;
-    NBUImagePickerResultBlock resultBlock = ^(NSArray* images)
-    {
-        if (images == nil || images.count == 0)
-        {
-            return;
-        }
-        else
-        {
-            NSMutableArray* imageInfos = [[NSMutableArray alloc] init];
-            OWTImageInfo* imageInfo = [[OWTImageInfo alloc] init];
-            imageInfo.image = images[0];
-            [imageInfos addObject:imageInfo];
-            OWTPhotoUploadViewController *photoUploadVC = [[OWTPhotoUploadViewController alloc] initWithNibName:nil bundle:nil];
-            photoUploadVC.imageInfos = imageInfos;
-            photoUploadVC.hidesBottomBarWhenPushed = YES;
-            photoUploadVC.isCameraImages = YES;
-            photoUploadVC.doneAction = ^{
-                [weakSelf.navigationController popViewControllerAnimated:YES];
-            };
-            [weakSelf.navigationController pushViewController:photoUploadVC animated:NO];
-        }
-    };
-    
-    NBUImagePickerOptions options = NBUImagePickerOptionSingleImage |
-    NBUImagePickerOptionReturnImages |
-    NBUImagePickerOptionStartWithCamera |
-    NBUImagePickerOptionDisableEdition |
-    NBUImagePickerOptionDisableLibrary |
-    NBUImagePickerOptionDoNotSaveImages;
-    
-    [NBUImagePickerController startPickerWithTarget:self
-                                            options:options
-                                   customStoryboard:nil
-                                        resultBlock:resultBlock];
-};
 
 - (void)uploadPhotosWithFilteredGroupNames:(NSSet*)filteredGroupNames
 {
