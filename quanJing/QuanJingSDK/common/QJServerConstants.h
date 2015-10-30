@@ -18,7 +18,7 @@ static NSString * const kQJServerURL = @"http://mapp.tiankong.com";
 static NSString * const kQJFakePhotoServerHost = @"quanjing-photo.oss.aliyuncs.com";
 
 // 图片域名地址
-static NSString * const kQJPhotoServerHost = @"quanjing-photo.img-cn-hangzhou.aliyuncs.com";
+static NSString * const kQJPhotoServerHost = @"mpic.tiankong.com";
 
 // 图片故事详情url
 static NSString * const kQJArticleDetailURL = @"http://mapp.tiankong.com/articleSys/show?id=";

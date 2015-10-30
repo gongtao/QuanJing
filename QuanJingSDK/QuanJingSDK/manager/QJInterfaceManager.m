@@ -51,12 +51,14 @@
 
 + (NSString *)thumbnailUrlFromImageUrl:(NSString *)imageUrl size:(CGSize)size
 {
-	if (size.width <= 0.0)
+	if ((size.width <= 0.0) && (size.height <= 0.0))
 		return imageUrl;
 		
-	NSUInteger width = (NSUInteger)size.width;
+	NSUInteger width = (NSUInteger)size.width * [[UIScreen mainScreen] scale];
+	NSUInteger height = (NSUInteger)size.height * [[UIScreen mainScreen] scale];
 	NSString * url = [imageUrl stringByAppendingString:@"@"];
-	return [url stringByAppendingString:[NSString stringWithFormat:@"%luw_90Q_1x.jpg", width]];
+	NSString * resultUrl = [url stringByAppendingString:[NSString stringWithFormat:@"%luw_%luh_90Q_1x_1o.jpg", width, height]];
+	return resultUrl;
 }
 
 - (instancetype)init
@@ -1550,26 +1552,26 @@
 	
 	NSLog(@"%@", operation.request.URL);
 	
-    if (!error) {
-        NSLog(@"%@", operation.responseObject);
-        NSArray * dataArray = operation.responseObject[@"data"];
-        
-        if (!QJ_IS_ARRAY_NIL(dataArray)) {
-            __block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
-            [dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-                QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
-                imageObject.imageType = [NSNumber numberWithInt:2];
-                [resultArray addObject:imageObject];
-            }];
-            
-            if (finished)
-                finished(resultArray, dataArray, error);
-            return;
-        }
-    }
-    
-    if (finished)
-        finished(nil, nil, error);
+	if (!error) {
+		NSLog(@"%@", operation.responseObject);
+		NSArray * dataArray = operation.responseObject[@"data"];
+		
+		if (!QJ_IS_ARRAY_NIL(dataArray)) {
+			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
+			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+				imageObject.imageType = [NSNumber numberWithInt:2];
+				[resultArray addObject:imageObject];
+			}];
+			
+			if (finished)
+				finished(resultArray, dataArray, error);
+			return;
+		}
+	}
+	
+	if (finished)
+		finished(nil, nil, error);
 }
 
 @end
