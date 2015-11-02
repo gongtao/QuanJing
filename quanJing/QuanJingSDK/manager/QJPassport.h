@@ -10,9 +10,11 @@
 
 #import "QJUser.h"
 
+#import "QJBaseManager.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QJPassport : NSObject
+@interface QJPassport : QJBaseManager
 
 @property (nonatomic, strong, nullable) QJUser * currentUser;
 

@@ -119,7 +119,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -166,7 +166,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -226,7 +226,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -280,7 +280,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -325,7 +325,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -410,7 +410,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -462,7 +462,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -576,7 +576,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -640,7 +640,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -720,7 +720,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -797,7 +797,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	
@@ -838,7 +838,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		
 		if (!error)
-			error = [QJUtils errorFromOperation:responseObject];
+			error = [self errorFromOperation:responseObject];
 		i--;
 	} while (error && i >= 0);
 	

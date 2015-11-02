@@ -73,6 +73,8 @@
 		31C91FD01BD61BE000DFC3C0 /* QJActionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FCE1BD61BE000DFC3C0 /* QJActionObject.m */; settings = {ASSET_TAGS = (); }; };
 		31C91FD31BD61C9D00DFC3C0 /* QJCommentObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FD11BD61C9D00DFC3C0 /* QJCommentObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31C91FD41BD61C9D00DFC3C0 /* QJCommentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FD21BD61C9D00DFC3C0 /* QJCommentObject.m */; settings = {ASSET_TAGS = (); }; };
+		31E94F791BE700C6004FA928 /* QJBaseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E94F771BE700C6004FA928 /* QJBaseManager.h */; settings = {ASSET_TAGS = (); }; };
+		31E94F7A1BE700C6004FA928 /* QJBaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E94F781BE700C6004FA928 /* QJBaseManager.m */; settings = {ASSET_TAGS = (); }; };
 		31F887931BDC912C007E94C8 /* QJAlbumObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F887911BDC912C007E94C8 /* QJAlbumObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31F887941BDC912C007E94C8 /* QJAlbumObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887921BDC912C007E94C8 /* QJAlbumObject.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
@@ -143,6 +145,8 @@
 		31C91FCE1BD61BE000DFC3C0 /* QJActionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJActionObject.m; sourceTree = "<group>"; };
 		31C91FD11BD61C9D00DFC3C0 /* QJCommentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJCommentObject.h; sourceTree = "<group>"; };
 		31C91FD21BD61C9D00DFC3C0 /* QJCommentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJCommentObject.m; sourceTree = "<group>"; };
+		31E94F771BE700C6004FA928 /* QJBaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJBaseManager.h; sourceTree = "<group>"; };
+		31E94F781BE700C6004FA928 /* QJBaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJBaseManager.m; sourceTree = "<group>"; };
 		31F887911BDC912C007E94C8 /* QJAlbumObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJAlbumObject.h; sourceTree = "<group>"; };
 		31F887921BDC912C007E94C8 /* QJAlbumObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJAlbumObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -239,6 +243,8 @@
 			children = (
 				31C91FBE1BD5C96600DFC3C0 /* QJHTTPManager.h */,
 				31C91FBF1BD5C96600DFC3C0 /* QJHTTPManager.m */,
+				31E94F771BE700C6004FA928 /* QJBaseManager.h */,
+				31E94F781BE700C6004FA928 /* QJBaseManager.m */,
 				317642651BD3DA5A000162FB /* QJInterfaceManager.h */,
 				317642661BD3DA5A000162FB /* QJInterfaceManager.m */,
 				31C91FB81BD5C61700DFC3C0 /* QJPassport.h */,
@@ -332,6 +338,7 @@
 				317642531BD3D96E000162FB /* AFHTTPSessionManager.h in Headers */,
 				3176425A1BD3D96E000162FB /* AFURLConnectionOperation.h in Headers */,
 				317642561BD3D96E000162FB /* AFNetworkReachabilityManager.h in Headers */,
+				31E94F791BE700C6004FA928 /* QJBaseManager.h in Headers */,
 				317642581BD3D96E000162FB /* AFSecurityPolicy.h in Headers */,
 				317642511BD3D96E000162FB /* AFHTTPRequestOperationManager.h in Headers */,
 				317642551BD3D96E000162FB /* AFNetworking.h in Headers */,
@@ -461,6 +468,7 @@
 				311D8B8E1BD78F420003AE4E /* QJArticleCategory.m in Sources */,
 				31C91FD01BD61BE000DFC3C0 /* QJActionObject.m in Sources */,
 				31C91FBB1BD5C61700DFC3C0 /* QJPassport.m in Sources */,
+				31E94F7A1BE700C6004FA928 /* QJBaseManager.m in Sources */,
 				31C91F9D1BD4BF6000DFC3C0 /* QJErrorCode.m in Sources */,
 				317642541BD3D96E000162FB /* AFHTTPSessionManager.m in Sources */,
 				31C91FD41BD61C9D00DFC3C0 /* QJCommentObject.m in Sources */,

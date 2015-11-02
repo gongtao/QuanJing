@@ -12,9 +12,11 @@
 
 #import "QJImageObject.h"
 
+#import "QJBaseManager.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QJInterfaceManager : NSObject
+@interface QJInterfaceManager : QJBaseManager
 
 + (instancetype)sharedManager;
 

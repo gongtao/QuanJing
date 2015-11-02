@@ -39,6 +39,7 @@
 		31CB73C219B6CDD20081B05E /* OWTCommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31CB73B419B6CDD20081B05E /* OWTCommentCell.xib */; };
 		31CB73C319B6CDD20081B05E /* OWTInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CB73B619B6CDD20081B05E /* OWTInputView.m */; };
 		31CB73C519B6CDD20081B05E /* OWTAssetCollectViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CB73BA19B6CDD20081B05E /* OWTAssetCollectViewCon.m */; };
+		31E94F7D1BE70382004FA928 /* QJBaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E94F7C1BE70382004FA928 /* QJBaseManager.m */; settings = {ASSET_TAGS = (); }; };
 		31F2E33619D96E310084F18C /* OWTCategoryManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F2E33519D96E310084F18C /* OWTCategoryManager.m */; };
 		31F887971BDCA3EF007E94C8 /* QJAlbumObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887961BDCA3EF007E94C8 /* QJAlbumObject.m */; settings = {ASSET_TAGS = (); }; };
 		31F887C41BDE1231007E94C8 /* QJDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887C31BDE1231007E94C8 /* QJDatabaseManager.m */; settings = {ASSET_TAGS = (); }; };
@@ -917,6 +918,8 @@
 		31CB73B619B6CDD20081B05E /* OWTInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTInputView.m; sourceTree = "<group>"; };
 		31CB73B919B6CDD20081B05E /* OWTAssetCollectViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTAssetCollectViewCon.h; sourceTree = "<group>"; };
 		31CB73BA19B6CDD20081B05E /* OWTAssetCollectViewCon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTAssetCollectViewCon.m; sourceTree = "<group>"; };
+		31E94F7B1BE70382004FA928 /* QJBaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJBaseManager.h; sourceTree = "<group>"; };
+		31E94F7C1BE70382004FA928 /* QJBaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJBaseManager.m; sourceTree = "<group>"; };
 		31F2E33419D96E310084F18C /* OWTCategoryManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OWTCategoryManager.h; path = ../OWTCategoryManager.h; sourceTree = "<group>"; };
 		31F2E33519D96E310084F18C /* OWTCategoryManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OWTCategoryManager.m; path = ../OWTCategoryManager.m; sourceTree = "<group>"; };
 		31F887951BDCA3EF007E94C8 /* QJAlbumObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJAlbumObject.h; sourceTree = "<group>"; };
@@ -2370,6 +2373,8 @@
 			children = (
 				31C9201B1BD65D7D00DFC3C0 /* QJHTTPManager.h */,
 				31C9201C1BD65D7D00DFC3C0 /* QJHTTPManager.m */,
+				31E94F7B1BE70382004FA928 /* QJBaseManager.h */,
+				31E94F7C1BE70382004FA928 /* QJBaseManager.m */,
 				31C9201D1BD65D7D00DFC3C0 /* QJInterfaceManager.h */,
 				31C9201E1BD65D7D00DFC3C0 /* QJInterfaceManager.m */,
 				31C9201F1BD65D7D00DFC3C0 /* QJPassport.h */,
@@ -5387,6 +5392,7 @@
 				90E24214195D4C7E001F3EF7 /* OWTComment.m in Sources */,
 				E0B99C961B05A1D600ED7831 /* ChatViewController_renameA.m in Sources */,
 				66D799D51AD5222F0030AE48 /* FSBasicImage.m in Sources */,
+				31E94F7D1BE70382004FA928 /* QJBaseManager.m in Sources */,
 				A38346F51BB387C400D7BC94 /* OWTUserViewCon.m in Sources */,
 				E0B95D261B60E74D0003059B /* FeedViewCon.m in Sources */,
 				E0B95D1E1B60BE100003059B /* OQJExploreViewConlvyouinternational.m in Sources */,

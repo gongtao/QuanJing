@@ -12,15 +12,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AFNetworking.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QJUtils : NSObject
 
 + (NSString *)realImageUrlFromServerUrl:(NSString *)url;
-
-+ (nullable NSError *)errorFromOperation:(AFHTTPRequestOperation *)operation;
 
 ///---------------------------------
 /// @name NSString And JSON Object

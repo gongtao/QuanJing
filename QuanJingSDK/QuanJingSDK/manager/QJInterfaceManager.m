@@ -127,7 +127,7 @@
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		NSLog(@"homeIndex end");
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -185,7 +185,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -238,7 +238,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -285,7 +285,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -346,7 +346,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -437,7 +437,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -485,7 +485,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -521,7 +521,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -557,7 +557,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -593,7 +593,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -630,7 +630,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -676,7 +676,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -727,7 +727,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -766,7 +766,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -805,7 +805,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -844,7 +844,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -883,7 +883,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -922,7 +922,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -971,7 +971,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -1046,7 +1046,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -1111,7 +1111,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -1180,7 +1180,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -1252,7 +1252,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -1321,7 +1321,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -1392,7 +1392,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -1472,7 +1472,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
@@ -1546,7 +1546,7 @@
 			dispatch_semaphore_signal(sem);
 		}];
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-		error = [QJUtils errorFromOperation:operation];
+		error = [self errorFromOperation:operation];
 		i--;
 	} while (error && i >= 0);
 	
