@@ -228,7 +228,7 @@
 
 -(void)customViewWithAsset:(QJImageObject *)asset  withOpen:(BOOL)isOpen withController:(OWTAssetViewCon *)controller isLikeTrigger:(BOOL)trigger
 {
-    _likes=asset.likes;
+    _likes=[[asset.likes reverseObjectEnumerator] allObjects];
     _controller=controller;
     _asset=asset;
     _taptrigger = trigger;
@@ -380,10 +380,38 @@
         _commentBackView.frame=CGRectMake(15, viewHeight-likeHeight-commentHeight-5-10, SCREENWIT-28, likeHeight+commentHeight+5+10);
     }
 
+    [self getLikeAndCommendData];
 //    if (comment.count>3) {
 //        _openComment.frame=CGRectMake(10, viewHeight+3, 100, 15);
 //        viewHeight+=20;
 //    }
+}
+
+-(void)getLikeAndCommendData
+{
+    NSInteger integer = ([_asset.imageType integerValue] == 1)?1:2;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [[QJInterfaceManager sharedManager] requestImageDetail:_asset.imageId imageType:[NSNumber numberWithInteger:integer] finished:^(QJImageObject * imageObject, NSError * error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [SVProgressHUD showErrorWithStatus:@"网络连接错误"];
+                    return ;
+                }
+                if (imageObject != nil) {
+                    _asset.captionCn = imageObject.captionCn;
+                    _asset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
+//                    _asset.likes = [[imageObject.likes reverseObjectEnumerator] allObjects];
+
+                }else{
+                    [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+                }
+                [SVProgressHUD dismiss];
+
+               
+            });
+        }];
+    });
+    
 }
 -(BOOL)isLiked:(NSArray *)likes
 {

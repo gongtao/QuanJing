@@ -45,7 +45,7 @@
 @property (nonatomic, strong) OWTUser* assetOwnerUser;
 @property(nonatomic,strong)OWTAssetViewCon *controller;
 @property (nonatomic, strong)QJCommentObject *localComment;
-
+@property (nonatomic, strong)NSNumber *imageType;
 -(void)customViewWithAsset:(QJImageObject *)asset withOpen:(BOOL)isOpen withController:(OWTAssetViewCon*)controller isLikeTrigger:(BOOL)trigger;
 
 @end

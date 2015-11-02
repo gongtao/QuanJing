@@ -244,8 +244,9 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 -(void)postComment
 {
     QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+    NSNumber *typeNumber = ([_imageAsset.imageType integerValue] == 1)?[NSNumber numberWithInt:1]:[NSNumber numberWithInt:2];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSError *error = [fm requestImageComment:_imageAsset.imageId imageType:_imageType comment:_textField.text];
+        NSError *error = [fm requestImageComment:_imageAsset.imageId imageType:typeNumber comment:_textField.text];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (error != nil){
                 if (![NetStatusMonitor isExistenceNetwork]) {
@@ -266,7 +267,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
             }else {
                 comment=[[NSMutableArray alloc]init];
             }
-            [comment addObject:commentModel];
+            [comment insertObject:commentModel atIndex:0];
             _imageAsset.comments=comment;
             [_collectionView reloadData];
             [self backViewTap];
@@ -834,6 +835,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                     [view removeFromSuperview];
                 }
             }
+            assetInfoViewa.imageType = _imageType;
             [assetInfoViewa customViewWithAsset:_imageAsset  withOpen:_isOpen withController:self isLikeTrigger:_isLikeTap];
             _isLikeTap = _isLikeTap?NO:NO;
             assetInfoViewa.canClick=YES;

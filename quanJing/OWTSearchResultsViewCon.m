@@ -218,8 +218,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     if (model != nil)
     {
         model.imageType = [NSNumber numberWithInt:1];
-        OWTAssetViewCon *assetViewCon=[[OWTAssetViewCon alloc]initWithImageId:model imageType:[NSNumber numberWithInt:1]];
-//        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset deletionAllowed:YES onDeleteAction:^{ [self.collectionView reloadData]; }];
+        OWTAssetViewCon *assetViewCon=[[OWTAssetViewCon alloc]initWithImageId:model imageType:model.imageType];
         [self.navigationController pushViewController:assetViewCon animated:YES];
     }
 }

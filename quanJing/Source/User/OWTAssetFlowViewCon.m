@@ -15,6 +15,7 @@
 #import "UIView+EasyAutoLayout.h"
 #import <SVPullToRefresh/SVPullToRefresh.h>
 #import "QJInterfaceManager.h"
+#import "UIImageView+WebCache.h"
 
 #import <SDWebImage/SDWebImageManager.h>
 static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
@@ -217,8 +218,22 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     {
         if (asset != nil)
         {
-            NSString *adataImagURL = [QJInterfaceManager thumbnailUrlFromImageUrl:asset.url size:CGSizeMake(cell.imageView.bounds.size.width, cell.imageView.bounds.size.height)];
-            [cell.imageView setImageWithURL:[NSURL URLWithString:adataImagURL] placeholderImage:[UIImage imageNamed:@""]];
+            NSString *adataImagURL = [QJInterfaceManager thumbnailUrlFromImageUrl:asset.url size:cell.imageView.bounds.size];
+            
+            cell.imageView.alpha = 0.0;
+            __weak UIImageView * weakImageView = cell.imageView;
+            [cell.imageView setImageWithURL:[NSURL URLWithString:adataImagURL]
+                       placeholderImage:nil
+                              completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+                                  if (cacheType == SDImageCacheTypeNone) {
+                                      [UIView animateWithDuration:0.3
+                                                       animations:^{
+                                                           weakImageView.alpha = 1.0;
+                                                       }];
+                                      return;
+                                  }
+                                  weakImageView.alpha = 1.0;
+                              }];
             
         }
         else
