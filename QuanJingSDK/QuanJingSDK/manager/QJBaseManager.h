@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#define kCookieDictionaryKey @"kCookieDictionaryKey"
+#define kCookieDictionaryKey		@"kCookieDictionaryKey"
+#define kQJUserNotLoginNotification @"kQJUserNotLoginNotification"
 
 NS_ASSUME_NONNULL_BEGIN
 

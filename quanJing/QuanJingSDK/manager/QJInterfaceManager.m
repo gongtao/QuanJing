@@ -30,6 +30,8 @@
 
 #import "QJUtils.h"
 
+#import "QJPassport.h"
+
 @interface QJInterfaceManager ()
 
 - (AFHTTPClient *)httpRequestManager;
@@ -74,6 +76,13 @@
 - (AFHTTPClient *)httpRequestManager
 {
 	return [[QJHTTPManager sharedManager] httpRequestManager];
+}
+
+#pragma mark - 注销
+
+- (void)logout
+{
+	[[QJPassport sharedPassport] logout];
 }
 
 #pragma mark - Private

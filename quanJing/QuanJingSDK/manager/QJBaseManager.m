@@ -20,6 +20,10 @@
 
 - (AFHTTPClient *)httpRequestManager;
 
+- (NSError *)requestRelogin;
+
+- (void)logout;
+
 @end
 
 @implementation QJBaseManager
@@ -70,7 +74,7 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-#pragma mark - Request
+#pragma mark - User
 
 - (NSError *)requestRelogin
 {
@@ -110,6 +114,9 @@
 	
 	return error;
 }
+
+- (void)logout
+{}
 
 #pragma mark - Property
 
@@ -181,6 +188,15 @@
 		}
 	else if ([error.domain isEqualToString:QJServerErrorCodeDomain])
 		switch (error.code) {
+			case QJServerErrorCodeNotLogin:
+				{
+					[self logout];
+					dispatch_sync(dispatch_get_main_queue(), ^{
+					[[NSNotificationCenter defaultCenter] postNotificationName:kQJUserNotLoginNotification object:nil];
+				});
+					break;
+				}
+				
 			case QJServerErrorCodeNeedResetTicket:
 				{
 					NSError * reloginError = [self requestRelogin];
