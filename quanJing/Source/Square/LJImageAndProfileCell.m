@@ -221,11 +221,14 @@
 			NSError * error = [pt requestUserFollowUser:actionModel.user.uid];
 			dispatch_async(dispatch_get_main_queue(), ^{
 				if (!error) {
-					_careBtn.tag = 1;
-					actionModel.user.hasFollowUser = [NSNumber numberWithBool:YES];
-					[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
+                    [self reloadCareData:YES withUid:actionModel.user.uid.stringValue];
+                    [_viewContoller reloadData:1000];
+
+//					_careBtn.tag = 1;
+//					actionModel.user.hasFollowUser = [NSNumber numberWithBool:YES];
+//					[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
 					[SVProgressHUD dismiss];
-					[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
+//					[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
 				}
 				else {
 					[SVProgressHUD showError:error];
@@ -240,11 +243,13 @@
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
 				if (!error) {
-					_careBtn.tag = 0;
-					actionModel.user.hasFollowUser = [NSNumber numberWithBool:NO];
-					[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
+                    [self reloadCareData:NO withUid:actionModel.user.uid.stringValue];
+                    [_viewContoller reloadData:1000];
+//					_careBtn.tag = 0;
+//					actionModel.user.hasFollowUser = [NSNumber numberWithBool:NO];
+//					[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
 					[SVProgressHUD dismiss];
-					[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
+//					[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
 				}
 				else {
 					[SVProgressHUD showError:error];
@@ -252,7 +257,20 @@
 			});
 		});
 }
-
+-(void)reloadCareData:(BOOL)ret withUid:(NSString*)userId
+{
+    int i=0;
+    NSMutableArray *ARR=[[NSMutableArray alloc]init];
+    for (QJActionObject *model in _viewContoller.activeList) {
+        if ([model.user.uid.stringValue isEqualToString:userId]) {
+            model.user.hasFollowUser=[NSNumber numberWithBool:ret];
+        }
+        [ARR addObject:model];
+        i++;
+    }
+    [_viewContoller.activeList removeAllObjects];
+    [_viewContoller.activeList addObjectsFromArray:ARR];
+}
 - (void)likeBtnClick:(UIButton *)sender
 {
 	QJInterfaceManager * fm = [QJInterfaceManager sharedManager];

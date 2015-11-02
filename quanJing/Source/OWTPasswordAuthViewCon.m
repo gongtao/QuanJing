@@ -210,6 +210,9 @@
                 });
             }
                                   failure:^(NSError* error){
+                                      dispatch_async(dispatch_get_main_queue(), ^{
+                                    [SVProgressHUD showErrorWithStatus:@"获取个人信息失败" ];  
+                                      });
                                       if (error == nil)
                                       {
                                           return;
@@ -217,7 +220,9 @@
                                       
                                   }];
         }else {
-            [SVProgressHUD showError:error];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [SVProgressHUD showError:error];
+            });
         }
         
     }];

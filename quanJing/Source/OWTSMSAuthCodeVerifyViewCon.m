@@ -22,6 +22,7 @@
 {
    
 
+    __weak IBOutlet UIImageView *backimage;
     __weak IBOutlet UIView *backView;
     IBOutlet UITextField* _verificationCodeTextField;
     
@@ -48,6 +49,10 @@
 - (void)setup
 {
     self.navigationItem.title = NSLocalizedString(@"SMSAUTH_VERIFY_VIEWCON_TITLE", @"SMS Auth");
+    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickHide1:)];
+    backimage.userInteractionEnabled=YES;
+    [backimage addGestureRecognizer:tap];
+
 }
 
 - (void)viewDidLoad
@@ -56,8 +61,13 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inputKeyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inputKeyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [_timeBtn setBackgroundColor:[UIColor colorWithHexString:@"#ff2a00"]];
-
+    }
+-(void)onClickHide1:(UIGestureRecognizer *)sender
+{
+    [_verificationCodeTextField resignFirstResponder];
+    [passwordTextField resignFirstResponder];
 }
+
 -(void)inputKeyboardWillShow:(NSNotification*)notification
 {
     CGFloat animationTime = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];

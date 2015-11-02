@@ -58,11 +58,12 @@
     checkBtn.tag=0;
     UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickHide:)];
     backImage.userInteractionEnabled=YES;
-    [backImage addGestureRecognizer:tap];
+    [self.view addGestureRecognizer:tap];
 }
 -(void)onClickHide:(UIGestureRecognizer *)sender
 {
-    NSLog(@"dd");
+    [_cellphoneTextField resignFirstResponder];
+    [_codeTextField resignFirstResponder];
 }
 -(void)isLogin:(BOOL)islogin
 {
@@ -217,6 +218,9 @@
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [pt loginUser:_cellphone code:_codeTextField.text finished:^(NSNumber * userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
                 if (error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                    [SVProgressHUD showError:error];
+                    });
                     return ;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -229,6 +233,7 @@
                         }
                     }
                                           failure:^(NSError* error){
+                                              [SVProgressHUD showErrorWithStatus:@"获取个人信息失败"];
                                               if (error == nil)
                                               {
                                                   return;

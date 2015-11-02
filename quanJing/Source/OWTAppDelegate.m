@@ -41,7 +41,7 @@
 #import <Crashlytics/Crashlytics.h>
 #import "QJDatabaseManager.h"
 @interface OWTAppDelegate ()
-{}
+
 
 @property (nonatomic, strong) OWTMainViewCon * mainViewCon;
 

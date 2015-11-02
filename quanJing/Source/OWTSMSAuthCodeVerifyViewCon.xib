@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="_verificationCodeTextField" destination="Oh3-t6-6pk" id="0gQ-ig-LxN"/>
                 <outlet property="backView" destination="5mg-iF-Utq" id="09Y-Gh-3Bq"/>
+                <outlet property="backimage" destination="OBj-E3-V7U" id="gmz-LB-3oP"/>
                 <outlet property="passwordTextField" destination="b4d-ck-b6I" id="gBT-wQ-mtm"/>
                 <outlet property="view" destination="Onf-Zh-Rxh" id="hIh-ez-C1d"/>
             </connections>
@@ -21,7 +22,7 @@
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5mg-iF-Utq">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="600"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="磨砂背景.png" translatesAutoresizingMaskIntoConstraints="NO" id="OBj-E3-V7U">
+                        <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="磨砂背景.png" translatesAutoresizingMaskIntoConstraints="NO" id="OBj-E3-V7U">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="600"/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="全景.png" translatesAutoresizingMaskIntoConstraints="NO" id="3VL-Qr-TlD">

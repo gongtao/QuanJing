@@ -820,9 +820,13 @@
 
 -(void)reloadData:(NSInteger)page
 {
+    if (page==1000) {
+        [_tableView reloadData];
+    }else {
     NSIndexPath *indexPath=[NSIndexPath indexPathForRow:page inSection:0];
     NSArray *arr=[NSArray arrayWithObject:indexPath];
     [_tableView reloadRowsAtIndexPaths:arr withRowAnimation:NO];
+    }
 }
 
 - (void)refreshFeed
