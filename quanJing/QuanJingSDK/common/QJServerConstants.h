@@ -123,7 +123,7 @@ static NSString * const kQJUserFollowMeListPath = @"/userFollow/fllowMe";
 static NSString * const kQJUserFollowUserPath = @"/userFollow/save.user";
 
 // 用户取消关注
-static NSString * const kQJUserCancelFollowUserPath = @"/userFollow/save.user";
+static NSString * const kQJUserCancelFollowUserPath = @"/userFollow/cancel.user";
 
 // 关注用户的图片列表
 static NSString * const kQJUserFollowUserImageListPath = @"/imageUser/followDetail.user";
