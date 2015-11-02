@@ -115,7 +115,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -158,7 +158,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -214,7 +214,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -264,7 +264,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -305,7 +305,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -386,7 +386,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -434,7 +434,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -544,7 +544,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -604,7 +604,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -680,7 +680,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -753,7 +753,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	
@@ -790,7 +790,7 @@
 		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		error = [self errorFromOperation:operation];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	NSLog(@"%@", operation.request.URL);
 	

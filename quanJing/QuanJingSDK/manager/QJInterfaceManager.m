@@ -131,7 +131,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
@@ -193,7 +193,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
@@ -250,7 +250,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
@@ -301,7 +301,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
@@ -366,7 +366,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
@@ -462,7 +462,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
@@ -514,7 +514,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -554,7 +554,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -594,7 +594,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -634,7 +634,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -675,7 +675,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -725,7 +725,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
@@ -780,7 +780,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -823,7 +823,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -866,7 +866,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -909,7 +909,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -952,7 +952,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -995,7 +995,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
@@ -1048,7 +1048,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	BOOL isLastPage = NO;
 	
@@ -1127,7 +1127,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	BOOL isLastPage = NO;
 	
@@ -1196,7 +1196,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	BOOL isLastPage = NO;
 	
@@ -1269,7 +1269,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	BOOL isLastPage = NO;
 	
@@ -1347,7 +1347,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	BOOL isLastPage = NO;
 	
@@ -1420,7 +1420,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	BOOL isLastPage = NO;
 	
@@ -1495,7 +1495,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	BOOL isLastPage = NO;
 	
@@ -1581,7 +1581,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
@@ -1659,7 +1659,7 @@
 		if (!error)
 			error = [self errorFromOperation:responseObject];
 		i--;
-	} while (error && i >= 0);
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);

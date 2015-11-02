@@ -8,13 +8,26 @@
 
 #import "QJBaseManager.h"
 
-#import "AFNetworking.h"
+#import "QJHTTPManager.h"
 
 #import "QJCoreMacros.h"
 
 #import "QJErrorCode.h"
 
+@interface QJBaseManager ()
+
+- (AFHTTPRequestOperationManager *)httpRequestManager;
+
+@end
+
 @implementation QJBaseManager
+
+#pragma mark - Property
+
+- (AFHTTPRequestOperationManager *)httpRequestManager
+{
+	return [[QJHTTPManager sharedManager] httpRequestManager];
+}
 
 #pragma mark - error
 
@@ -46,6 +59,39 @@
 		error = [NSError errorWithDomain:kQJServerErrorCodeDomain code:QJServerErrorCodeUnknown userInfo:errorInfo];
 	}
 	return error;
+}
+
+- (BOOL)shouldRetryHttpRequest:(nullable NSError *)error
+{
+	BOOL result = NO;
+	
+	if (!error)
+		return result;
+		
+	if ([error.domain isEqualToString:NSURLErrorDomain])
+		switch (error.code) {
+			case NSURLErrorUnknown:
+			case NSURLErrorHTTPTooManyRedirects:
+			case NSURLErrorRedirectToNonExistentLocation:
+			case NSURLErrorZeroByteResource:
+			case NSURLErrorCannotDecodeRawData:
+			case NSURLErrorCannotDecodeContentData:
+			case NSURLErrorCannotParseResponse:
+			case NSURLErrorFileDoesNotExist:
+			case NSURLErrorNoPermissionsToReadFile:
+			case NSURLErrorCallIsActive:
+				{
+					result = YES;
+					break;
+				}
+				
+			default:
+				break;
+		}
+	else if ([error.domain isEqualToString:QJServerErrorCodeDomain])
+		result = YES;
+		
+	return result;
 }
 
 @end
