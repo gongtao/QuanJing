@@ -922,7 +922,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		alertView.tag = 100;
 		[alertView show];
 		[[QJPassport sharedPassport] logout];
-		[self showAuthViewCon];
+//		[self showAuthViewCon];
 		
 		@try {
 			// self.tabBarController.selectedIndex =0;
