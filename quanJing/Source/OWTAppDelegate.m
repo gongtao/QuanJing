@@ -38,7 +38,6 @@
 #import "UMSocialSinaHandler.h"
 #import "UIColor+HexString.h"
 #import <Fabric/Fabric.h>
-#import "advertisetionViewController.h"
 #import <Crashlytics/Crashlytics.h>
 #import "QJDatabaseManager.h"
 @interface OWTAppDelegate ()
@@ -63,18 +62,21 @@
 	NSString * userPhoneName = [[UIDevice currentDevice] name];
 	NSLog(@"手机别名: %@", userPhoneName);
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *str=[userDefaults objectForKey:@"version"];
+    NSString *str1= [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
+    if ([str isEqualToString:str1]) {
+        OWTMainViewCon *mainView=[[OWTMainViewCon alloc]initWithNibName:nil bundle:nil];
+        mainView.tabBar.hidden=YES;
+        self.window.rootViewController=mainView;
+    }else
+    {
+        StartViewController *svc=[[StartViewController alloc]init];
+        self.window.rootViewController=svc;
+        [userDefaults setObject:str1 forKey:@"version"];
+    }
 	[self.window makeKeyAndVisible];
-	[self addSplashScreen];
 	return YES;
 }
-
-- (void)addSplashScreen
-{
-	advertisetionViewController * avc = [[advertisetionViewController alloc]init];
-	
-	self.window.rootViewController = avc;
-}
-
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {}
 

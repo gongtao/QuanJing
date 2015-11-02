@@ -403,7 +403,6 @@
 		A3C32B0F1BA13485000FB7D7 /* 搜索1_06.png in Resources */ = {isa = PBXBuildFile; fileRef = A3C32B0C1BA13485000FB7D7 /* 搜索1_06.png */; };
 		A3C32B101BA13485000FB7D7 /* 搜索2_03.png in Resources */ = {isa = PBXBuildFile; fileRef = A3C32B0D1BA13485000FB7D7 /* 搜索2_03.png */; };
 		A3C8C5581BD49E86003B75C9 /* jubao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3C8C5571BD49E86003B75C9 /* jubao@2x.png */; };
-		A3C8C55C1BD4C160003B75C9 /* advertisetionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C8C55B1BD4C160003B75C9 /* advertisetionViewController.m */; };
 		A3C957AD1BB0FF0000EADD73 /* OWTUserInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C957AB1BB0FF0000EADD73 /* OWTUserInfoView.m */; };
 		A3C957AE1BB0FF0000EADD73 /* OWTUserInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3C957AC1BB0FF0000EADD73 /* OWTUserInfoView.xib */; };
 		A3C957B21BB0FF2B00EADD73 /* PhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C957B01BB0FF2B00EADD73 /* PhotoCell.m */; };
@@ -1548,8 +1547,6 @@
 		A3C32B0C1BA13485000FB7D7 /* 搜索1_06.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "搜索1_06.png"; sourceTree = "<group>"; };
 		A3C32B0D1BA13485000FB7D7 /* 搜索2_03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "搜索2_03.png"; sourceTree = "<group>"; };
 		A3C8C5571BD49E86003B75C9 /* jubao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "jubao@2x.png"; sourceTree = "<group>"; };
-		A3C8C55A1BD4C160003B75C9 /* advertisetionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = advertisetionViewController.h; sourceTree = "<group>"; };
-		A3C8C55B1BD4C160003B75C9 /* advertisetionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = advertisetionViewController.m; sourceTree = "<group>"; };
 		A3C957AB1BB0FF0000EADD73 /* OWTUserInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTUserInfoView.m; sourceTree = "<group>"; };
 		A3C957AC1BB0FF0000EADD73 /* OWTUserInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OWTUserInfoView.xib; sourceTree = "<group>"; };
 		A3C957AF1BB0FF2B00EADD73 /* PhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoCell.h; sourceTree = "<group>"; };
@@ -3561,8 +3558,6 @@
 			children = (
 				A36C52DC1B60F25900AD8BB3 /* StartViewController.h */,
 				A36C52DD1B60F25900AD8BB3 /* StartViewController.m */,
-				A3C8C55A1BD4C160003B75C9 /* advertisetionViewController.h */,
-				A3C8C55B1BD4C160003B75C9 /* advertisetionViewController.m */,
 			);
 			name = startView;
 			sourceTree = "<group>";
@@ -5668,7 +5663,6 @@
 				A34A29F91B954D8F0061614A /* LJGameModel.m in Sources */,
 				90E241EA195D44E7001F3EF7 /* OWTFeedItemData.m in Sources */,
 				66A4FA6D1AA9A1B7006F6547 /* ALAsset+AGIPC.m in Sources */,
-				A3C8C55C1BD4C160003B75C9 /* advertisetionViewController.m in Sources */,
 				90D5CD9718FB772900D301E3 /* OWTUserInfoNumberAreaBackgroundView.m in Sources */,
 				661AB9A71AB92E270011886B /* OWTimageData.m in Sources */,
 				90A7BC0C195D354200FE2602 /* OWTServerError.m in Sources */,

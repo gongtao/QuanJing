@@ -58,6 +58,7 @@
 #import "OQJSearchPageVC.h"
 #import "QuanJingSDK.h"
 #import <UIImageView+WebCache.h>
+#import "OWTAppDelegate.h"
 #define IS_WIDESCREEN (fabs((double)[[UIScreen mainScreen] bounds].size.height - (double)568) < DBL_EPSILON)
 @interface LJHomeViewCon () <JCTopicDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) JCTopic * Topic;
@@ -90,6 +91,10 @@
 	RESideMenu * _sideMenu;
 	OWTUserViewCon * _userViewCon1;
 	NSString * _keyword;
+    UIImageView *adverBack;
+    UIImageView *advertisetion;
+    NSMutableData *_data;
+    UIWindow *_window;
 }
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -108,15 +113,80 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+    
 	[self setUpNavigation];
 	[self setUpData];
 	[self setUpTableView];
 	[self setUpOtherView];
 	[self setUpHeaderView];
-	
 	[self setupNavMenu];
+    [self setUpAdversation];
 }
-
+-(void)setUpAdversation
+{
+    _window=[[UIWindow alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI)];
+    _window.windowLevel = UIWindowLevelStatusBar + 1;
+    [_window makeKeyAndVisible];
+    adverBack=[LJUIController createImageViewWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI) imageName:@"开机画面6s.png"];
+    //    imageView.backgroundColor=[UIColor whiteColor];
+    [_window addSubview:adverBack];
+    advertisetion=[LJUIController createImageViewWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI-120) imageName:@""];
+    //    advertisetion.backgroundColor=[UIColor whiteColor];
+    [adverBack addSubview:advertisetion];
+    NSUserDefaults *userDefaults=[NSUserDefaults standardUserDefaults];
+    NSString *imgUrl=[userDefaults objectForKey:@"ImgUrl"];
+    if (imgUrl!=nil) {
+        [advertisetion setImageWithURL:[NSURL URLWithString:imgUrl]];
+    }
+    NSURLConnection *connection=[[NSURLConnection alloc]initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://api.tiankong.com/qjapi/homead"]] delegate:self];
+}
+-(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    [_data setLength:0];
+}
+-(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    [_data appendData:data];
+}
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+[UIView animateWithDuration:03 animations:^{
+    adverBack.alpha=0.0;
+}];
+    [self removeAdvertise];
+    [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+}
+-(void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    NSArray *arr=[NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingMutableContainers error:nil];
+    NSUserDefaults *userDefaults=[NSUserDefaults standardUserDefaults];
+    NSDictionary *dict=arr[0];
+    NSString *str=[userDefaults objectForKey:@"id"];
+    NSString *imgUrl=[userDefaults objectForKey:@"ImgUrl"];
+    if ([dict[@"id"] isEqualToString:@"0"]) {
+        
+        [userDefaults removeObjectForKey:@"ImgUrl"];
+        //        [userDefaults removeObjectForKey:@"id"];
+        [userDefaults synchronize];
+        [self removeAdvertise];
+    }else {
+        if (imgUrl!=nil) {
+            [advertisetion setImageWithURL:[NSURL URLWithString:dict[@"ImgUrl"]]];
+        }
+        [self performSelector:@selector(removeAdvertise) withObject:nil afterDelay:3];
+        if (![str isEqualToString:dict[@"id"]]) {
+            [userDefaults setValue:dict[@"id"] forKey:@"id"];
+            [userDefaults setValue:dict[@"ImgUrl"] forKey:@"ImgUrl"];
+        }}
+}
+-(void)removeAdvertise
+{
+    [UIView animateWithDuration:0.3 animations:^{
+        _window.alpha=0;
+    } completion:^(BOOL finished) {
+       [_window removeFromSuperview];
+    }];
+}
 - (void)setUpData
 {
 	_keyword = [[NSString alloc]init];
@@ -124,6 +194,7 @@
 	_showArr = [[NSMutableArray alloc]init];
 	_categaryBeautiful = [[NSMutableArray alloc]init];
 	_biaoqianClickArr = [[NSMutableArray alloc]init];
+    _data=[[NSMutableData alloc]init];
 	[self getThePreserveData];
 }
 

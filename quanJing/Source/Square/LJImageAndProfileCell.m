@@ -465,7 +465,10 @@
 	QJUser * user = actionModel.user;
 	[_headerImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_headerImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像"]];
 	CGSize size = [user.nickName sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(300, 200)];
-	
+    if ([user.uid.stringValue isEqualToString:[QJPassport sharedPassport].currentUser.uid.stringValue]) {
+        _careBtn.hidden=YES;
+    }else {
+        _careBtn.hidden=NO;
 	if (!user.hasFollowUser.boolValue) {
 		_careBtn.tag = 0;
 		[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
@@ -473,7 +476,8 @@
 	else {
 		_careBtn.tag = 1;
 		[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
-	}
+    }
+    }
 	_userName.frame = CGRectMake(65, 13, size.width, size.height);
 	_userName.text = user.nickName;
 	_upTime.frame = CGRectMake(65, 35, 100, 15);
@@ -553,15 +557,12 @@
 	}
 	else {
 		NSInteger assetNum = 0;
-		
 		for (QJImageObject * imageModel in _assets) {
 			if (imageModel.width.floatValue > imageModel.height.floatValue)
 				break;
 			assetNum++;
 		}
-		
 		float imageH;
-		
 		if (assetNum == _assets.count)
 			imageH = 320;
 		else
@@ -569,7 +570,6 @@
 		_bigImageScrollView.frame = CGRectMake(5, cellHeight, x, imageH);
 		_bigImageScrollView.hidden = NO;
 		NSInteger pa = 0;
-		
 		for (QJImageObject * imageModel in _assets) {
 			ImageView = [[UIImageView alloc]initWithFrame:CGRectMake(pa * x, 0, x, imageH)];
 			ImageView.clipsToBounds = YES;
@@ -674,8 +674,8 @@
 				likeHeight += (imageHeight + 5);
 			}
 			UIImageView * likebody = [LJUIController createCircularImageViewWithFrame:CGRectMake(likeWidth, cellHeight + likeHeight, imageHeight, imageHeight) imageName:@"头像"];
-			//            likebody.clipsToBounds=YES;
-			//            likebody.contentMode=UIViewContentModeCenter;
+			            likebody.clipsToBounds=YES;
+            likebody.contentMode=UIViewContentModeScaleAspectFill;
 			[likebody setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:likebody.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像.png"]];
 			UITapGestureRecognizer * liketap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onLikeTap:)];
 			likebody.userInteractionEnabled = YES;
@@ -707,6 +707,8 @@
 			QJCommentObject * commentModel = _comments[i];
 			QJUser * user = commentModel.user;
 			UIImageView * commentImage = [LJUIController createCircularImageViewWithFrame:CGRectMake(45, cellHeight + commentHeight, imageHeight, imageHeight) imageName:nil];
+            commentImage.contentMode=UIViewContentModeScaleAspectFill;
+            commentImage.clipsToBounds = YES;
 			commentImage.tag = 500 + i;
 			UITapGestureRecognizer * commentTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onCommentTap:)];
 			commentImage.userInteractionEnabled = YES;
