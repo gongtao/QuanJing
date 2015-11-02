@@ -369,8 +369,8 @@
                 }
                 else
                 {
-                   wself.user1.avatar = [QJInterfaceManager thumbnailUrlFromImageUrl:wself.user1.avatar size:CGSizeMake(wself.img.bounds.size.width, wself.img.bounds.size.height)];
-                    [wself.img setImageWithURLString:wself.user1.avatar primaryColorHex:nil];
+                    NSString *adaptAvater = [QJInterfaceManager thumbnailUrlFromImageUrl:wself.user1.avatar size:CGSizeMake(wself.img.bounds.size.width, wself.img.bounds.size.height)];
+                    [wself.img setImageWithURLString:adaptAvater primaryColorHex:nil];
                     
                 }
             }

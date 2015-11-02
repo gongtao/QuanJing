@@ -22,6 +22,7 @@
 @interface OWTUserLikedAssetsViewCon ()
 {
 }
+@property (nonatomic, assign)NSInteger currentPage;
 
 @property (nonatomic, strong) OWTAssetFlowViewCon* assetViewCon;
 @property (nonatomic, strong)NSMutableOrderedSet *imageAssets;
@@ -36,7 +37,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        [self setup];
+        
     }
     return self;
 }
@@ -58,7 +59,6 @@
     if (self)
     {
         self.user1 = user;
-        [self setup];
         
         return self;
     }
@@ -83,7 +83,7 @@
     _assetViewCon = [[OWTAssetFlowViewCon alloc] initWithNibName:nil bundle:nil];
     _imageAssets = [[NSMutableOrderedSet alloc]init];
     [self addChildViewController:_assetViewCon];
-
+    _currentPage = 1;
     _numBarItem = [[UIBarButtonItem alloc] initWithTitle:@""
                                                    style:UIBarButtonItemStyleBordered
                                                   target:nil
@@ -152,21 +152,22 @@
     _assetViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)())
     {
         QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+        NSInteger tmp = wself.currentPage+1;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [fm requestUserCollectImageList:wself.user1.uid  pageNum:wself.imageAssets.count/PageSize+1 pageSize:PageSize finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
+            [fm requestUserCollectImageList:wself.user1.uid  pageNum:tmp pageSize:60  finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (error == nil) {
                         if (albumObjectArray != nil){
+                            wself.currentPage++;
                             [wself.imageAssets addObjectsFromArray:albumObjectArray];
                         }
                         if (loadMoreDoneFunc != nil){
                             loadMoreDoneFunc();
                         }
-                        wself.numBarItem.title = [NSString stringWithFormat:@"%ld", [wself.user1.collectAmount integerValue]];
-                        NSLog(@"加载更多成功,照片熟量 %ld",wself.imageAssets.count);
+                        NSLog(@"获取相册loadmore成功,照片熟量 %ld",wself.imageAssets.count);
                     }else{
-                        [SVProgressHUD showErrorWithStatus:@"加载更多失败"];
-                        NSLog(@"加载更多失败");
+                        [SVProgressHUD showErrorWithStatus:@"获取相册失败"];
+                        NSLog(@"获取相册loadmore失败");
                         if (loadMoreDoneFunc != nil)
                             loadMoreDoneFunc();
                     }
@@ -174,14 +175,13 @@
             }];
             
         });
-        
-    };;
+    };
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self setup];
     NSString *str = ([_user1.uid integerValue] != [[[QJPassport sharedPassport]currentUser].uid integerValue])?_user1.nickName:@"我";
     self.navigationItem.title = [NSString stringWithFormat:@"%@收藏的照片", str];
     _assetViewCon.totalAssetNum = _user1.collectAmount;
@@ -194,7 +194,7 @@
 {
     [super viewWillAppear:animated];
     [self substituteNavigationBarBackItem];
-    [self reloadData];
+//    [self reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -203,12 +203,12 @@
     [self refreshUserLikedAssetsIfNeeded];
 }
 
-- (void)reloadData
-{
-    [_assetViewCon reloadData];
-
-    _numBarItem.title = [NSString stringWithFormat:@"%d", (int)[self assetNum]];
-}
+//- (void)reloadData
+//{
+//    [_assetViewCon reloadData];
+//
+//    _numBarItem.title = [NSString stringWithFormat:@"%d", (int)[self assetNum]];
+//}
 
 - (void)refreshUserLikedAssetsIfNeeded
 {

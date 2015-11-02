@@ -1296,29 +1296,24 @@
     [self.maintableview headerEndRefreshing];
                                  [self loadAlbumsAgain];
                                  [self getImgsWithGroup:_reloadAssetGroup];
-                                 [_collectionView reloadData];
-   
-//    OWTUserManager* um = GetUserManager();
-//    
-//    [um refreshPublicInfoForUser:_user
-//                         success:^{
-//                             [_refreshControl endPullDownRefreshing];
-//                             [self loadAlbumsAgain];
-//                             [self getImgsWithGroup:_reloadAssetGroup];
-//                             [_collectionView reloadData];
-//                             
-//                         }
-//                         failure:^(NSError* error) {
-//                             [_refreshControl endPullDownRefreshing];
-//                             [_collectionView reloadData];
-//                             if (![NetStatusMonitor isExistenceNetwork]) {
-//                                 [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-//                             }
-//                             else{
-//                                 [SVProgressHUD showError:error];
-//                             }
-//                             
-//                         }];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[QJPassport sharedPassport] requestUserInfo :^(QJUser * user, NSDictionary * userDic, NSError * error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error == nil && user != nil) {
+                    //适配数据到model LJUserInformation
+                    QJUser *current = [[QJPassport sharedPassport]currentUser];
+                    current = user;
+                    [_collectionView reloadData];
+                }
+                else{
+                    [SVProgressHUD showError:error];
+                }
+            });
+           
+        }];
+});
+
 }
 
 #pragma mark - Collection View Datasource
