@@ -8,9 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+#define kCookieDictionaryKey @"kCookieDictionaryKey"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QJBaseManager : NSObject
+
++ (void)loadURLCookie;
+
++ (void)saveURLCookie;
 
 - (NSError *)errorFromOperation:(id)operation;
 

@@ -16,7 +16,10 @@ FOUNDATION_EXPORT NSString * const kQJServerErrorCodeDomain;
 
 // error code
 typedef enum {
-	QJServerErrorCodeUnknown = -1,							// "Unknown error"
+	QJServerErrorCodeUnknown = -999,						// "Unknown error"
+	QJServerErrorCodeNotLogin = -1,							// "Not Login"
+	QJServerErrorCodeWrongTicket = -2,						// "Wrong ticket"
+	QJServerErrorCodeNeedResetTicket = -3					// "Need reset ticket"
 } QJServerErrorCode;
 
 #endif	/* QJErrorCode_h */

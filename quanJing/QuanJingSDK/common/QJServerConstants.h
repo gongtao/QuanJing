@@ -38,6 +38,9 @@ static NSString * const kQJUserSendLoginSMSPath = @"/user/sendloginCode";
 // 短信登录
 static NSString * const kQJUserLoginSMSPath = @"/user/smsLogin";
 
+// 用户重登录（更换ticket）
+static NSString * const kQJUserReloginPath = @"/user/resetTicket";
+
 // 用户信息
 static NSString * const kQJUserInfoPath = @"/user/info.user";
 

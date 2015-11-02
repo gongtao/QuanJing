@@ -16,8 +16,6 @@
 
 #import "QJUtils.h"
 
-#define kCookieDictionaryKey @"kCookieDictionaryKey"
-
 @implementation QJPassport
 
 + (instancetype)sharedPassport
@@ -35,49 +33,8 @@
 {
 	self = [super init];
 	
-	if (self)
-		[self loadURLCookie];
+	if (self) {}
 	return self;
-}
-
-#pragma mark - Private
-
-- (void)loadURLCookie
-{
-	NSMutableDictionary * cookieDic = [[NSUserDefaults standardUserDefaults] objectForKey:kCookieDictionaryKey];
-	
-	if (QJ_IS_DICT_NIL(cookieDic))
-		return;
-		
-	NSHTTPCookie * cookie = [NSHTTPCookie cookieWithProperties:cookieDic];
-	NSHTTPCookieStorage * cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-	[cookieJar setCookie:cookie];
-}
-
-- (void)saveURLCookie
-{
-	NSURL * url = [NSURL URLWithString:kQJServerURL];
-	NSHTTPCookieStorage * cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-	NSArray * cookies = [cookieJar cookiesForURL:url];
-	
-	__block NSDictionary * cookieDic = nil;
-	
-	[cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * cookie, NSUInteger idx, BOOL * stop) {
-		if ([cookie.name isEqualToString:@"ticket"]) {
-			cookieDic = [NSDictionary dictionaryWithObjectsAndKeys:cookie.name, NSHTTPCookieName,
-			cookie.value, NSHTTPCookieValue,
-			cookie.path, NSHTTPCookiePath,
-			cookie.domain, NSHTTPCookieDomain,
-			nil];
-			*stop = YES;
-		}
-	}];
-	
-	if (QJ_IS_DICT_NIL(cookieDic))
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:kCookieDictionaryKey];
-	else
-		[[NSUserDefaults standardUserDefaults] setObject:cookieDic forKey:kCookieDictionaryKey];
-	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 #pragma mark - Property
@@ -171,7 +128,7 @@
 			self.currentUser = [[QJUser alloc] init];
 		self.currentUser.uid = userId;
 		
-		[self saveURLCookie];
+		[QJBaseManager saveURLCookie];
 		
 		if (finished)
 			finished(userId, data[@"ticket"], error);
@@ -227,7 +184,7 @@
 			self.currentUser = [[QJUser alloc] init];
 		self.currentUser.uid = userId;
 		
-		[self saveURLCookie];
+		[QJBaseManager saveURLCookie];
 		
 		if (finished)
 			finished(userId, data[@"ticket"], error);
@@ -318,7 +275,7 @@
 			self.currentUser = [[QJUser alloc] init];
 		self.currentUser.uid = userId;
 		
-		[self saveURLCookie];
+		[QJBaseManager saveURLCookie];
 		
 		if (finished)
 			finished(userId, data[@"ticket"], error);
