@@ -242,16 +242,22 @@
     _userID.frame=CGRectMake(10, viewHeight+10, 200, 20);
     _reportBtn.frame = CGRectMake(SCREENWIT-10-40, _userID.frame.origin.y, 40, 17.5);
     //*To do 编号 待补全*/
-//    if (_asset.picId != nil && _asset.picId > 0)
-//        _userID.text =[NSString stringWithFormat:@"编号：%@",_asset.picId];
-//    else
-//        _userID.text =[NSString stringWithFormat:@"编号：%@", _asset.picId];
-//    
-    if (_asset.descript.length>0) {
+    if (_asset.captionCn != nil && _asset.captionCn > 0)
+        _userID.text =[NSString stringWithFormat:@"编号：%@",_asset.captionCn];
+    else
+        _userID.text =[NSString stringWithFormat:@"编号：%@", [_asset.imageId stringValue]];
+//
+    if (_asset.tag.length>0 && _asset.descript == nil) {
+        _captionLabel.hidden=NO;
+        _captionLabel.frame=CGRectMake(10, viewHeight+30,SCREENWIT-20 , 20);
+        _captionLabel.text=[NSString stringWithFormat:@"标签：%@",_asset.tag];
+        viewHeight+=50;
+    }else if(_asset.descript.length>0 && _asset.tag == nil) {
         _captionLabel.hidden=NO;
         _captionLabel.frame=CGRectMake(10, viewHeight+30,SCREENWIT-20 , 20);
         _captionLabel.text=[NSString stringWithFormat:@"标签：%@",_asset.descript];
-        viewHeight+=50;}
+        viewHeight+=50;
+    }
     else {
         _captionLabel.hidden=YES;
         viewHeight+=30;
@@ -418,23 +424,31 @@
 
 - (void)updateCaptionLabel
 {
-    if (_asset.captionCn != nil && _asset.captionCn.length > 0)
+    if (_asset.tag != nil && _asset.tag.length > 0 && _asset.description == nil)
     {
         _captionLabel.hidden = NO;
-        _captionLabel.text = [NSString stringWithFormat:@"标签：%@", _asset.captionCn];
-        //if (_asset.oriPic != nil && _asset.oriPic.length > 0)
-            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", @"to_do"];
-       // else
-       //     _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.assetID];
+        _captionLabel.text = [NSString stringWithFormat:@"标签：%@", _asset.tag];
+        if (_asset.captionCn != nil && _asset.captionCn > 0)
+            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.captionCn];
+        else
+            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", [_asset.imageId stringValue]];
+    }
+    else if (_asset.tag == nil && _asset.description != nil){
+        _captionLabel.hidden = NO;
+        _captionLabel.text = [NSString stringWithFormat:@"标签：%@", _asset.descript];
+        if (_asset.captionCn != nil && _asset.captionCn > 0)
+            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.captionCn];
+        else
+            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", [_asset.imageId stringValue]];
     }
     else
     {
         _captionLabel.hidden = YES;
         _captionLabel.text = @"";
-//        if (_asset.oriPic != nil && _asset.oriPic.length > 0)
-//            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.oriPic];
-//        else
-            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", @"to_do"];
+        if (_asset.captionCn != nil && _asset.captionCn > 0)
+            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@", _asset.captionCn];
+        else
+            _picMarkLabel.text =[NSString stringWithFormat:@"编号：%@",[_asset.imageId stringValue]];
     }
 }
 
