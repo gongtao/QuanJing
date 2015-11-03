@@ -50,7 +50,7 @@
 {
     QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [fm requestUserLikeImageList:nil pageNum:50 pageSize:50 finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+        [fm requestUserLikeImageList:[QJPassport sharedPassport].currentUser.uid pageNum:50 pageSize:50 finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error==nil) {
                     if (!loadMore) {
@@ -62,6 +62,7 @@
                     }
                     [_assets addObjectsFromArray:imageObjectArray];
                     [self getCellHeight];
+                    [_collectionView reloadData];
                 }
             });
         }];
@@ -85,6 +86,7 @@
                         }
                         [_assets addObjectsFromArray:imageObjectArray];
                         [self getCellHeight];
+                        [_collectionView reloadData];
                     }
                 });
                             }];
@@ -96,7 +98,9 @@
 {
     [_cellHeights removeAllObjects];
     for (QJImageObject *asset in _assets) {
-        
+        if (asset.height==nil) {
+            return;
+        }
         NSString *str=[NSString stringWithFormat:@"%f",asset.height.floatValue*(ITEMWIDTH/asset.width.floatValue)];
         [_cellHeights addObject:str];
         NSLog(@"%@  %@   %@",str,asset.height.stringValue,asset.width.stringValue);
@@ -129,7 +133,11 @@
 }
 -(CGFloat)collectionView:(UICollectionView *)collectionView layout:(LJCollectionViewLayout *)collectionViewLayout heightForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [_cellHeights[indexPath.item] floatValue];
+    if (_cellHeights.count>0) {
+        return [_cellHeights[indexPath.item] floatValue];
+    }else {
+        return 50;
+    }
 }
 #pragma mark - UICollectionViewDataSource
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
