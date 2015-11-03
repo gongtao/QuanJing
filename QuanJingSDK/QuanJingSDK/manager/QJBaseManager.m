@@ -178,7 +178,8 @@
 		}
 	else if ([error.domain isEqualToString:QJServerErrorCodeDomain])
 		switch (error.code) {
-			case QJServerErrorCodeNotLogin:
+            case QJServerErrorCodeNotLogin:
+            case QJServerErrorCodeWrongTicket:
 				{
 					dispatch_sync(dispatch_get_main_queue(), ^{
 					[[NSNotificationCenter defaultCenter] postNotificationName:kQJUserNotLoginNotification object:nil];
