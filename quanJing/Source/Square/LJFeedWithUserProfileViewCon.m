@@ -510,7 +510,7 @@
         commentModel.user=user;
         commentModel.comment=_textField.text;
         commentModel.time=[NSDate date];
-        [comments addObject:commentModel];
+        [comments insertObject:commentModel atIndex:0];
         actionModel.comments=comments;
         [_activeList replaceObjectAtIndex:_pageNum withObject:actionModel];
         NSString *str;

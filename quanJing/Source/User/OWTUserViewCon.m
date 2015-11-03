@@ -626,6 +626,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 		}];
 		[_dataResouce removeAllObjects];
         [[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            			dispatch_async(dispatch_get_main_queue(), ^{
             i++;
             
             if (error) {
@@ -647,6 +648,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
                 [_collectionView headerEndRefreshing];
                 [_collectionView reloadData];
             }
+                        });
         }];
 	});
 }
@@ -660,6 +662,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
     }
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:_dataResouce.count/30+1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
             if (error) {
                 [_collectionView footerEndRefreshing];
                     [_collectionView reloadData];
@@ -675,6 +678,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
             
                 [_collectionView footerEndRefreshing];
                 [_collectionView reloadData];
+            });
         }];
 	});
 }
@@ -715,7 +719,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			[cell setImageWithInfo:nil];
 			cell.backgroundColor = [UIColor lightGrayColor];
 		}
-		
 		return cell;
 	}
 	

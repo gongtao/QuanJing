@@ -243,7 +243,7 @@ typedef enum {
 		
 		if (currentUser != nil) {
 			// 是否关注
-			if (0) {
+			if (_user.hasFollowUser) {
 				_isCared = YES;
 				_actionButtonType = nWTUserInfoViewActionButtonUnfollow;
 			}

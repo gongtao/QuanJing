@@ -98,6 +98,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	[[NSNotificationCenter defaultCenter] addObserver:self
 	selector:@selector(reachabilityChangedNotification:)
 	name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loginStatusChange:) name:kQJUserNotLoginNotification object:nil];
 	[self setupNetworkMonitor];
 	
 	GetThemer().homePageColor = HWColor(46, 46, 46);
@@ -922,20 +923,16 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		alertView.tag = 100;
 		[alertView show];
 		[[QJPassport sharedPassport] logout];
-//		[self showAuthViewCon];
-		
-		@try {
-			// self.tabBarController.selectedIndex =0;
-			// self.navigationController.tabBarController.selectedIndex= 0;
-			self.selectedIndex = 0;
-			// [[NSNotificationCenter defaultCenter] postNotificationName:@"kWTLoggedOutNotification" object:nil];
-		}
-		@catch(NSException * exception) {
-			NSLog(@"yihcneg %@", exception);
-		}
 	} onQueue:nil];
 }
+-(void)loginStatusChange:(NSNotification *)sender
+{
+    if ([QJPassport sharedPassport].isLogin) {
+        [[QJPassport sharedPassport]logout];
+        [self showAuthViewCon];
+    }
 
+}
 /* [[EaseMob sharedInstance].chatManager asyncLogoffWithUnbindDeviceToken:NO completion:^(NSDictionary *info, EMError *error) {
  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"prompt", @"Prompt") message:NSLocalizedString(@"loginAtOtherDevice", @"your login account has been in other places") delegate:self cancelButtonTitle:NSLocalizedString(@"ok", @"OK") otherButtonTitles:nil, nil];
  alertView.tag = 100;

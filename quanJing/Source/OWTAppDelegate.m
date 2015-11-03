@@ -186,26 +186,8 @@
 
 	[MobClick startWithAppkey:kWTUMengAppKey reportPolicy:SEND_INTERVAL channelId:channelID];
 	
-	[self dumpUMengDeviceID];
 }
 
-- (void)dumpUMengDeviceID
-{
-	NSString * deviceID = nil;
-	
-	Class cls = NSClassFromString(@"UMANUtil");
-	
-	if (cls != nil) {
-		SEL deviceIDSelector = NSSelectorFromString(@"openUDIDString");
-		IMP imp = [cls methodForSelector:deviceIDSelector];
-		
-		if (imp != nil) {
-			id (* func)(id, SEL) = (void *)imp;
-			deviceID = func(cls, deviceIDSelector);
-		}
-	}
-	DDLogDebug(@"{\"oid\": \"%@\"}", deviceID);
-}
 
 - (void)setupCrittercism
 {
