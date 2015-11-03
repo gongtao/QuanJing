@@ -291,7 +291,15 @@
 	if (_mainViewCon)
 		[_mainViewCon jumpToChatList];
 }
-
+-(void)applicationWillEnterForeground:(UIApplication *)application
+{
+OWTUserManager* um = GetUserManager();
+    [um refreshCurrentUserSuccess:^{
+        
+    } failure:^(NSError *) {
+        
+    }];
+}
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
 	return [UMSocialSnsService handleOpenURL:url];
