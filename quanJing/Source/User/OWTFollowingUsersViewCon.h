@@ -10,7 +10,7 @@
 #import "QuanJingSDK.h"
 @interface OWTFollowingUsersViewCon : UIViewController
 
-@property (nonatomic, strong) QJUser* user;
+@property (nonatomic, strong) QJUser * user;
 
 - (instancetype)initWithUser:(QJUser *)user;
 

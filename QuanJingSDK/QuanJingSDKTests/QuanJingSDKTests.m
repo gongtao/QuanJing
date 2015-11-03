@@ -594,7 +594,7 @@
 			[[QJPassport sharedPassport] requestUserFollowList:careUserId
 			pageNum:1
 			pageSize:20
-			finished:^(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+			finished:^(NSArray * followUserArray, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testUserImageListExample error: %@", error);
 			}];
@@ -607,7 +607,7 @@
 			[[QJPassport sharedPassport] requestUserFollowList:nil
 			pageNum:1
 			pageSize:20
-			finished:^(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+			finished:^(NSArray * followUserArray, NSArray * resultArray, NSError * error) {
 				if (error)
 					XCTFail(@"testUserImageListExample error: %@", error);
 			}];

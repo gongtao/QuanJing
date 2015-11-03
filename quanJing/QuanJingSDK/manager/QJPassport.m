@@ -560,7 +560,7 @@
 - (void)requestUserFollowList:(NSNumber *)userId
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
-	finished:(nullable void (^)(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished
+	finished:(nullable void (^)(NSArray * followUserArray, NSArray * resultArray, NSError * error))finished
 {
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
 	
@@ -601,18 +601,9 @@
 		i--;
 	} while ([self shouldRetryHttpRequest:error] && i >= 0);
 	
-	BOOL isLastPage = NO;
-	
 	if (!error) {
 		NSLog(@"%@", responseObject);
-		NSDictionary * dataDic = responseObject[@"data"];
-		
-		NSNumber * lastPageNum = dataDic[@"isLastPage"];
-		
-		if (!QJ_IS_NUM_NIL(lastPageNum))
-			isLastPage = lastPageNum.boolValue;
-			
-		NSArray * dataArray = dataDic[@"list"];
+		NSArray * dataArray = responseObject[@"data"];
 		
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
@@ -624,17 +615,22 @@
 				if (!QJ_IS_NUM_NIL(followId))
 					user.uid = followId;
 					
+				NSString * followUrl = obj[@"followUrl"];
+				
+				if (!QJ_IS_STR_NIL(followUrl))
+					user.avatar = [QJUtils realImageUrlFromServerUrl:followUrl];
+                
 				[resultArray addObject:user];
 			}];
 			
 			if (finished)
-				finished(resultArray, isLastPage, dataArray, error);
+				finished(resultArray, dataArray, error);
 			return;
 		}
 	}
 	
 	if (finished)
-		finished(nil, isLastPage, nil, error);
+		finished(nil, nil, error);
 }
 
 - (void)requestUserFollowMeList:(nullable NSNumber *)userId

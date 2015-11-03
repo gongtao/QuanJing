@@ -10,6 +10,6 @@
 #import "QuanJingSDK.h"
 @interface OWTFollowerUsersViewCon : UIViewController
 
-@property (nonatomic, strong) QJUser* user;
+@property (nonatomic, strong) QJUser * user;
 
 @end

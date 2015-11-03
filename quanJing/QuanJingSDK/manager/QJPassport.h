@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestUserFollowList:(nullable NSNumber *)userId
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
-	finished:(nullable void (^)(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
+	finished:(nullable void (^)(NSArray * followUserArray, NSArray * resultArray, NSError * error))finished;
 	
 // 用户粉丝列表
 - (void)requestUserFollowMeList:(nullable NSNumber *)userId
