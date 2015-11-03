@@ -180,7 +180,6 @@
 		switch (error.code) {
 			case QJServerErrorCodeNotLogin:
 				{
-					[self logout];
 					dispatch_sync(dispatch_get_main_queue(), ^{
 					[[NSNotificationCenter defaultCenter] postNotificationName:kQJUserNotLoginNotification object:nil];
 				});
