@@ -44,36 +44,30 @@
         self.title=@"评论的图片";
     }
     [self setupCollectionView];
-    [self refresh];
 }
 #pragma 网络请求部分
 -(void)getDataSourceWithDict:(NSDictionary *)dict
 {
-    RKObjectManager *um=[RKObjectManager sharedManager];
-    _user=GetUserManager().currentUser;
-    [um getObject:nil path:[NSString stringWithFormat:@"users/%@/likes",_user.userID] parameters:dict success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSDictionary *dict=mappingResult.dictionary;
-        if (!loadMore) {
-            [_assets removeAllObjects];
-            [_collectionView headerEndRefreshing];
-        }else
-        {
-            [_collectionView footerEndRefreshing];
-        }
-        for (OWTAsset *asset in dict[@"assets"]) {
-            [_assets addObject:asset];
-        }
-        [self getCellHeight];
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        if (!loadMore) {
-            [_collectionView headerEndRefreshing];
-        }else
-        {
-            [_collectionView footerEndRefreshing];
-        }
-        [SVProgressHUD showErrorWithStatus:@"网络有点慢"];
-    }];
+    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [fm requestUserLikeImageList:nil pageNum:50 pageSize:50 finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error==nil) {
+                    if (!loadMore) {
+                        [_assets removeAllObjects];
+                        [_collectionView headerEndRefreshing];
+                    }else
+                    {
+                        [_collectionView footerEndRefreshing];
+                    }
+                    [_assets addObjectsFromArray:imageObjectArray];
+                    [self getCellHeight];
+                }
+            });
+        }];
+    });
     
+
 }
 -(void)getDataSourceWithDict1:(NSDictionary *)dict
 {
@@ -105,7 +99,7 @@
         
         NSString *str=[NSString stringWithFormat:@"%f",asset.height.floatValue*(ITEMWIDTH/asset.width.floatValue)];
         [_cellHeights addObject:str];
-        NSLog(@"%@",str);
+        NSLog(@"%@  %@   %@",str,asset.height.stringValue,asset.width.stringValue);
     }
     [_collectionView reloadData];
 }
@@ -121,7 +115,16 @@
     _collectionView.backgroundColor=[UIColor whiteColor];
     [self.view addSubview:_collectionView];
     [_collectionView registerClass:[LJCollectionCell class] forCellWithReuseIdentifier:CELL_IDENTIFIER];
-
+    [_collectionView addHeaderWithTarget:self action:@selector(refreshNew)];
+    [_collectionView headerBeginRefreshing];
+    [_collectionView addFooterWithTarget:self action:@selector(refreshMore)];
+    _collectionView.headerPullToRefreshText = @"";
+    _collectionView.headerReleaseToRefreshText = @"";
+    _collectionView.headerRefreshingText = @"";
+    
+    _collectionView.footerPullToRefreshText = @"";
+    _collectionView.footerReleaseToRefreshText = @"";
+    _collectionView.footerRefreshingText = @"";
 
 }
 -(CGFloat)collectionView:(UICollectionView *)collectionView layout:(LJCollectionViewLayout *)collectionViewLayout heightForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -152,20 +155,6 @@
     };
     
     return cell;
-}
-#pragma MJRefresh
--(void)refresh
-{
-    [_collectionView addHeaderWithTarget:self action:@selector(refreshNew)];
-    [_collectionView headerBeginRefreshing];
-    [_collectionView addFooterWithTarget:self action:@selector(refreshMore)];
-    _collectionView.headerPullToRefreshText = @"";
-    _collectionView.headerReleaseToRefreshText = @"";
-    _collectionView.headerRefreshingText = @"";
-    
-    _collectionView.footerPullToRefreshText = @"";
-    _collectionView.footerReleaseToRefreshText = @"";
-    _collectionView.footerRefreshingText = @"";
 }
 -(void)refreshNew
 {
