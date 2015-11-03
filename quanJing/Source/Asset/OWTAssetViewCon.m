@@ -188,9 +188,37 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     //    [_collectionView easyFillSuperview];
     [self setupInputView];
     [self setupNavigationBar];
-    
-    [self reloadData];
+    [self getLikeAndCommendData];
 }
+
+-(void)getLikeAndCommendData
+{
+    NSInteger integer = ([_imageAsset.imageType integerValue] == 1)?1:2;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[QJInterfaceManager sharedManager] requestImageDetail:_imageAsset.imageId imageType:[NSNumber numberWithInteger:integer] finished:^(QJImageObject * imageObject, NSError * error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [SVProgressHUD showErrorWithStatus:@"网络连接错误"];
+                    return ;
+                }
+                if (imageObject != nil) {
+                    _imageAsset.captionCn = imageObject.captionCn;
+                    _imageAsset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
+                    _imageAsset.likes = imageObject.likes;
+                    [self reloadData];
+
+                }else{
+                    [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+                }
+                [SVProgressHUD dismiss];
+                
+                
+            });
+        }];
+    });
+    
+}
+
 -(void)setupInputView
 {
 
@@ -499,7 +527,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 - (void)loadRelatedAssetsInSearch
 {
     QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
-    QJUser *user = ([[[QJPassport sharedPassport]currentUser].uid integerValue] != [_user1.uid integerValue ])?_user1:nil;
+//    QJUser *user = ([[[QJPassport sharedPassport]currentUser].uid integerValue] != [_user1.uid integerValue ])?_user1:nil;
     
     if (_imageType.intValue==1) {
         if(_imageAsset.tag == nil){
@@ -666,6 +694,9 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                 }
                 _isLikeTap = YES;
                 NSMutableArray *likesArr=(NSMutableArray *)_imageAsset.likes;
+                if (likesArr == nil) {
+                    likesArr = [[NSMutableArray alloc]init];
+                }
                 [likesArr addObject:[QJPassport sharedPassport].currentUser];
                 _imageAsset.likes=likesArr;
                 [_collectionView reloadData];

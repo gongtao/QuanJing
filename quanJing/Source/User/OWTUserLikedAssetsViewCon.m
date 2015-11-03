@@ -17,7 +17,7 @@
 #import "QJInterfaceManager.h"
 #import "QJPassport.h"
 
-#define PageSize 50
+#define PageSize 30
 
 @interface OWTUserLikedAssetsViewCon ()
 {
@@ -152,9 +152,14 @@
     _assetViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)())
     {
         QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
-        NSInteger tmp = wself.currentPage+1;
+        if (wself.imageAssets.count/PageSize == 0) {
+            if (loadMoreDoneFunc != nil){
+                loadMoreDoneFunc();
+            }
+            return ;
+        }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [fm requestUserCollectImageList:wself.user1.uid  pageNum:tmp pageSize:60  finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error){
+            [fm requestUserCollectImageList:wself.user1.uid  pageNum:wself.imageAssets.count/PageSize+1 pageSize:PageSize  finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (error == nil) {
                         if (albumObjectArray != nil){
@@ -183,7 +188,7 @@
     [super viewDidLoad];
     [self setup];
     NSString *str = ([_user1.uid integerValue] != [[[QJPassport sharedPassport]currentUser].uid integerValue])?_user1.nickName:@"我";
-    self.navigationItem.title = [NSString stringWithFormat:@"%@收藏的照片", str];
+    self.navigationItem.title = [NSString stringWithFormat:@"%@喜欢的照片", str];
     _assetViewCon.totalAssetNum = _user1.collectAmount;
 
     [self.view addSubview:_assetViewCon.view];

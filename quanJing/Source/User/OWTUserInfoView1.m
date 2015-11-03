@@ -119,7 +119,7 @@ typedef enum {
 	[self updatePhotoNum:_user.uploadAmount.intValue];
 	[self updateFollowerNum:_user.fansAmount.intValue];
 	[self updateFollowingNum:_user.followAmount.intValue];
-	[self updateLikesNum:0];
+	[self updateLikesNum:[_user.collectAmount integerValue]];
 	[self updateBasedOnIsCurrentUser];
 }
 

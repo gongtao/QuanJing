@@ -217,14 +217,6 @@
 
 }
 
--(NSString*)getPreferredLanguage
-{
-    NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];
-    NSArray* languages = [defs objectForKey:@"AppleLanguages"];
-    NSString* preferredLang = [languages objectAtIndex:0];
-    NSLog(@"Preferred Language:%@", preferredLang);
-    return preferredLang;
-}
 
 -(void)customViewWithAsset:(QJImageObject *)asset  withOpen:(BOOL)isOpen withController:(OWTAssetViewCon *)controller isLikeTrigger:(BOOL)trigger
 {
@@ -250,18 +242,15 @@
     _userID.frame=CGRectMake(10, viewHeight+10, 200, 20);
     _reportBtn.frame = CGRectMake(SCREENWIT-10-40, _userID.frame.origin.y, 40, 17.5);
     //*To do 编号 待补全*/
-    //if (_asset.oriPic != nil && _asset.oriPic.length > 0)
-        _userID.text =[NSString stringWithFormat:@"编号：%@",@"to_do"];
-   // else
-        _userID.text =[NSString stringWithFormat:@"编号：%@", @"to_do"];
-    
-    //查看系统语言配置
-   //NSString *laugeEnv = [self getPreferredLanguage];
-    
-    if (_asset.captionCn.length>0) {
+//    if (_asset.picId != nil && _asset.picId > 0)
+//        _userID.text =[NSString stringWithFormat:@"编号：%@",_asset.picId];
+//    else
+//        _userID.text =[NSString stringWithFormat:@"编号：%@", _asset.picId];
+//    
+    if (_asset.descript.length>0) {
         _captionLabel.hidden=NO;
         _captionLabel.frame=CGRectMake(10, viewHeight+30,SCREENWIT-20 , 20);
-        _captionLabel.text=[NSString stringWithFormat:@"标签：%@",_asset.captionCn];
+        _captionLabel.text=[NSString stringWithFormat:@"标签：%@",_asset.descript];
         viewHeight+=50;}
     else {
         _captionLabel.hidden=YES;
@@ -379,40 +368,14 @@
         _commentBackView.hidden=NO;
         _commentBackView.frame=CGRectMake(15, viewHeight-likeHeight-commentHeight-5-10, SCREENWIT-28, likeHeight+commentHeight+5+10);
     }
-
-    [self getLikeAndCommendData];
+    
 //    if (comment.count>3) {
 //        _openComment.frame=CGRectMake(10, viewHeight+3, 100, 15);
 //        viewHeight+=20;
 //    }
 }
 
--(void)getLikeAndCommendData
-{
-    NSInteger integer = ([_asset.imageType integerValue] == 1)?1:2;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    [[QJInterfaceManager sharedManager] requestImageDetail:_asset.imageId imageType:[NSNumber numberWithInteger:integer] finished:^(QJImageObject * imageObject, NSError * error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error) {
-                    [SVProgressHUD showErrorWithStatus:@"网络连接错误"];
-                    return ;
-                }
-                if (imageObject != nil) {
-                    _asset.captionCn = imageObject.captionCn;
-                    _asset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
-//                    _asset.likes = [[imageObject.likes reverseObjectEnumerator] allObjects];
 
-                }else{
-                    [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
-                }
-                [SVProgressHUD dismiss];
-
-               
-            });
-        }];
-    });
-    
-}
 -(BOOL)isLiked:(NSArray *)likes
 {
     QJUser *currentUser = [QJPassport sharedPassport].currentUser;

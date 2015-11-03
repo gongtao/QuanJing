@@ -16,7 +16,7 @@
 #import "UIViewController+WTExt.h"
 #import "QJInterfaceManager.h"
 #import "QJPassport.h"
-#define PageSize 50
+#define PageSize 30
 @interface OWTUserSharedAssetsViewCon ()
 {
 }
@@ -151,6 +151,12 @@
     _assetViewCon.loadMoreDataFunc = ^(void (^loadMoreDoneFunc)())
     {
         QJInterfaceManager *fm = [QJInterfaceManager sharedManager];
+        if (wself.imageAssets.count/PageSize == 0) {
+            if (loadMoreDoneFunc != nil){
+                loadMoreDoneFunc();
+            }
+                return ;
+        }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [fm requestUserCollectImageList:wself.user1.uid  pageNum:wself.imageAssets.count/PageSize+1 pageSize:PageSize finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
                 dispatch_async(dispatch_get_main_queue(), ^{
