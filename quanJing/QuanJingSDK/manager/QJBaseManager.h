@@ -19,6 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)saveURLCookie;
 
++ (void)setKeyChainAccessGroup:(nullable NSString *)group;
+
++ (NSString *)getDeviceID;
+
 - (nullable NSError *)errorFromOperation:(NSDictionary *)responseObject;
 
 - (BOOL)shouldRetryHttpRequest:(nullable NSError *)error;

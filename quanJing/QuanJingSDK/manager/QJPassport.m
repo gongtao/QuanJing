@@ -331,7 +331,8 @@
 	NSArray * cookies = [cookieJar cookiesForURL:url];
 	
 	[cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * cookie, NSUInteger idx, BOOL * stop) {
-		[cookieJar deleteCookie:cookie];
+		if ([cookie.name isEqualToString:@"ticket"])
+			[cookieJar deleteCookie:cookie];
 	}];
 	
 	self.currentUser = nil;
@@ -619,7 +620,7 @@
 				
 				if (!QJ_IS_STR_NIL(followUrl))
 					user.avatar = [QJUtils realImageUrlFromServerUrl:followUrl];
-                
+					
 				[resultArray addObject:user];
 			}];
 			

@@ -22,8 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (id)jsonObjectFromString:(NSString *)jsonString error:(NSError * __autoreleasing *)error;
 
++ (NSString *)md5String:(NSString *)str;
+
 @end
 
 NS_ASSUME_NONNULL_END
 
-#endif
+#endif /* ifndef QJUtils_h */

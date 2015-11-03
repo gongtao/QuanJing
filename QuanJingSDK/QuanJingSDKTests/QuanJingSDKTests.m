@@ -617,7 +617,7 @@
 			if (error)
 				XCTFail(@"testUserImageListExample error: %@", error);
 				
-            [[QJPassport sharedPassport] requestUserFollowMeList:[NSNumber numberWithInteger:966487]
+            [[QJPassport sharedPassport] requestUserFollowMeList:[NSNumber numberWithInteger:966486]
 			pageNum:1
 			pageSize:20
 			finished:^(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {

@@ -40,6 +40,7 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import "QJDatabaseManager.h"
+#import "QuanJingSDK.h"
 @interface OWTAppDelegate ()
 
 
@@ -52,6 +53,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	[[QJDatabaseManager sharedManager] databaseInitialize];
+
+    // deviceId
+#ifdef DEBUG
+    [QJBaseManager setKeyChainAccessGroup:nil];
+#else
+    [QJBaseManager setKeyChainAccessGroup:@"T3BNK5WMQ7.com.quanjing.device.identifier"];
+#endif
+    
 	[Fabric with:@[[Crashlytics class]]];
 	[self setup];
 	

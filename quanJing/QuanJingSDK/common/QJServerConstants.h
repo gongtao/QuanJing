@@ -11,6 +11,9 @@
 
 #import <Foundation/Foundation.h>
 
+// Cookie Host
+static NSString * const kQJCookieHost = @".tiankong.com";
+
 // 域名地址
 static NSString * const kQJServerURL = @"http://mapp.tiankong.com";
 

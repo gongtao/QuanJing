@@ -16,6 +16,10 @@
 
 #import "QJServerConstants.h"
 
+#import "QJUDIDKeyChainUtil.h"
+
+#import "UIDevice+IdentifierAddition.h"
+
 @interface QJBaseManager ()
 
 - (AFHTTPClient *)httpRequestManager;
@@ -72,6 +76,31 @@
 	else
 		[[NSUserDefaults standardUserDefaults] setObject:cookieDic forKey:kCookieDictionaryKey];
 	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (void)setKeyChainAccessGroup:(NSString *)group
+{
+	[QJUDIDKeyChainUtil setKeyChainAccessGroup:group];
+	[QJBaseManager loadDeviceIDCookie];
+}
+
++ (NSString *)getDeviceID
+{
+	NSString *deviceId = [[UIDevice currentDevice] uniqueGlobalDeviceIdentifier];
+    NSLog(@"deviceId: %@", deviceId);
+    return deviceId;
+}
+
++ (void)loadDeviceIDCookie
+{
+	NSDictionary * cookieDic = @{NSHTTPCookieName: @"deviceId",
+								 NSHTTPCookieValue: [QJBaseManager getDeviceID],
+								 NSHTTPCookiePath: @"/",
+								 NSHTTPCookieDomain: kQJCookieHost};
+	NSHTTPCookie * cookie = [NSHTTPCookie cookieWithProperties:cookieDic];
+	NSHTTPCookieStorage * cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+	
+	[cookieJar setCookie:cookie];
 }
 
 #pragma mark - User
@@ -189,7 +218,7 @@
 	else if ([error.domain isEqualToString:QJServerErrorCodeDomain])
 		switch (error.code) {
 			case QJServerErrorCodeNotLogin:
-            case QJServerErrorCodeWrongTicket:
+			case QJServerErrorCodeWrongTicket:
 				{
 					dispatch_sync(dispatch_get_main_queue(), ^{
 					[[NSNotificationCenter defaultCenter] postNotificationName:kQJUserNotLoginNotification object:nil];

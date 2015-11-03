@@ -330,7 +330,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		
 	NetworkStatus netStatus = [reachability currentReachabilityStatus];
 	_isWifi = (netStatus == kReachableViaWiFi);
-	NSLog(@"haha");
 }
 
 // 我
