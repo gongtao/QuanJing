@@ -292,6 +292,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+
 	OWTUserManager * um = GetUserManager();
 	
 	[um refreshCurrentUserSuccess:^{} failure:^(NSError * error) {}];

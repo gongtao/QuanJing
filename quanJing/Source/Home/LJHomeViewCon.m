@@ -124,6 +124,11 @@
 }
 -(void)setUpAdversation
 {
+    NSUserDefaults *userDefaults=[NSUserDefaults standardUserDefaults];
+    NSString *imgUrl=[userDefaults objectForKey:@"ImgUrl"];
+    if (imgUrl==nil) {
+        return;
+    }
     _window=[[UIWindow alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI)];
     _window.windowLevel = UIWindowLevelStatusBar + 1;
     [_window makeKeyAndVisible];
@@ -133,11 +138,7 @@
     advertisetion=[LJUIController createImageViewWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI-120) imageName:@""];
     //    advertisetion.backgroundColor=[UIColor whiteColor];
     [adverBack addSubview:advertisetion];
-    NSUserDefaults *userDefaults=[NSUserDefaults standardUserDefaults];
-    NSString *imgUrl=[userDefaults objectForKey:@"ImgUrl"];
-    if (imgUrl!=nil) {
         [advertisetion setImageWithURL:[NSURL URLWithString:imgUrl]];
-    }
     NSURLConnection *connection=[[NSURLConnection alloc]initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://api.tiankong.com/qjapi/homead"]] delegate:self];
 }
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
