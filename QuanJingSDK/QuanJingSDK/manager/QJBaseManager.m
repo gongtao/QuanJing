@@ -130,6 +130,13 @@
 
 - (NSError *)requestRelogin
 {
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	
+	NSString * ticket = [QJBaseManager loadUserTicket];
+	
+	if (!QJ_IS_STR_NIL(ticket))
+		params[@"ticket"] = ticket;
+		
 	// When request fails, if it could, retry it 3 times at most.
 	int i = 3;
 	NSError * error = nil;
@@ -139,7 +146,7 @@
 		error = nil;
 		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
 		operation = [self.httpRequestManager GET:kQJUserReloginPath
-			parameters:nil
+			parameters:params
 			success:^(AFHTTPRequestOperation * operation, id responseObject) {
 			dispatch_semaphore_signal(sem);
 		}
@@ -155,6 +162,8 @@
 	
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
+		NSString * ticket = operation.responseObject[@"data"];
+		NSLog(@"ticket: %@", ticket);
 		[QJBaseManager saveURLCookie];
 	}
 	

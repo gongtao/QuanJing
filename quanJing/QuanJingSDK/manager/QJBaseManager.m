@@ -166,6 +166,8 @@
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
+		NSString * ticket = responseObject[@"data"];
+		NSLog(@"ticket: %@", ticket);
 		[QJBaseManager saveURLCookie];
 	}
 	
