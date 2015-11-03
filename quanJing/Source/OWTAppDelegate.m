@@ -43,7 +43,6 @@
 #import "QuanJingSDK.h"
 @interface OWTAppDelegate ()
 
-
 @property (nonatomic, strong) OWTMainViewCon * mainViewCon;
 
 @end
@@ -53,14 +52,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	[[QJDatabaseManager sharedManager] databaseInitialize];
-
-    // deviceId
+	
+	// deviceId
 #ifdef DEBUG
-    [QJBaseManager setKeyChainAccessGroup:nil];
+		[QJBaseManager setKeyChainAccessGroup:nil];
 #else
-    [QJBaseManager setKeyChainAccessGroup:@"T3BNK5WMQ7.com.quanjing.device.identifier"];
+		[QJBaseManager setKeyChainAccessGroup:@"T3BNK5WMQ7.com.quanjing.device.identifier"];
 #endif
-    
+
 	[Fabric with:@[[Crashlytics class]]];
 	[self setup];
 	
@@ -71,21 +70,23 @@
 	NSString * userPhoneName = [[UIDevice currentDevice] name];
 	NSLog(@"手机别名: %@", userPhoneName);
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *str=[userDefaults objectForKey:@"version"];
-    NSString *str1= [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
-    if ([str isEqualToString:str1]) {
-        OWTMainViewCon *mainView=[[OWTMainViewCon alloc]initWithNibName:nil bundle:nil];
-        mainView.tabBar.hidden=YES;
-        self.window.rootViewController=mainView;
-    }else
-    {
-        StartViewController *svc=[[StartViewController alloc]init];
-        self.window.rootViewController=svc;
-        [userDefaults setObject:str1 forKey:@"version"];
-    }
+	NSString * str = [userDefaults objectForKey:@"version"];
+	NSString * str1 = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+	
+	if ([str isEqualToString:str1]) {
+		OWTMainViewCon * mainView = [[OWTMainViewCon alloc]initWithNibName:nil bundle:nil];
+		mainView.tabBar.hidden = YES;
+		self.window.rootViewController = mainView;
+	}
+	else {
+		StartViewController * svc = [[StartViewController alloc]init];
+		self.window.rootViewController = svc;
+		[userDefaults setObject:str1 forKey:@"version"];
+	}
 	[self.window makeKeyAndVisible];
 	return YES;
 }
+
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {}
 
@@ -194,9 +195,7 @@
 #endif
 
 	[MobClick startWithAppkey:kWTUMengAppKey reportPolicy:SEND_INTERVAL channelId:channelID];
-	
 }
-
 
 - (void)setupCrittercism
 {
@@ -283,7 +282,6 @@
 {
 	if (_mainViewCon)
 		[_mainViewCon jumpToChatList];
-		
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
@@ -291,15 +289,14 @@
 	if (_mainViewCon)
 		[_mainViewCon jumpToChatList];
 }
--(void)applicationWillEnterForeground:(UIApplication *)application
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
 {
-OWTUserManager* um = GetUserManager();
-    [um refreshCurrentUserSuccess:^{
-        
-    } failure:^(NSError *) {
-        
-    }];
+	OWTUserManager * um = GetUserManager();
+	
+	[um refreshCurrentUserSuccess:^{} failure:^(NSError * error) {}];
 }
+
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
 	return [UMSocialSnsService handleOpenURL:url];

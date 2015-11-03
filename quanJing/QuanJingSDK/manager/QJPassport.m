@@ -621,6 +621,11 @@
 				if (!QJ_IS_STR_NIL(followUrl))
 					user.avatar = [QJUtils realImageUrlFromServerUrl:followUrl];
 					
+				NSNumber * meFollowed = obj[@"meFollowed"];
+				
+				if (!QJ_IS_NUM_NIL(meFollowed))
+					user.hasFollowUser = meFollowed;
+					
 				[resultArray addObject:user];
 			}];
 			

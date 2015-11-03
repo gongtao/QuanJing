@@ -16,9 +16,21 @@
 
 #import "QJServerConstants.h"
 
+#import "QJUDIDKeyChainUtil.h"
+
+#import "UIDevice+IdentifierAddition.h"
+
 @interface QJBaseManager ()
 
++ (void)loadDeviceIDCookie;
+
++ (NSString *)loadUserTicket;
+
 - (AFHTTPRequestOperationManager *)httpRequestManager;
+
+- (NSError *)requestRelogin;
+
+- (void)logout;
 
 @end
 
@@ -70,6 +82,50 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
++ (void)setKeyChainAccessGroup:(NSString *)group
+{
+	[QJUDIDKeyChainUtil setKeyChainAccessGroup:group];
+	[QJBaseManager loadDeviceIDCookie];
+}
+
++ (NSString *)getDeviceID
+{
+	NSString * deviceId = [[UIDevice currentDevice] uniqueGlobalDeviceIdentifier];
+	
+	NSLog(@"deviceId: %@", deviceId);
+	return deviceId;
+}
+
++ (void)loadDeviceIDCookie
+{
+	NSDictionary * cookieDic = @{NSHTTPCookieName: @"deviceId",
+								 NSHTTPCookieValue: [QJBaseManager getDeviceID],
+								 NSHTTPCookiePath: @"/",
+								 NSHTTPCookieDomain: kQJCookieHost};
+	NSHTTPCookie * cookie = [NSHTTPCookie cookieWithProperties:cookieDic];
+	NSHTTPCookieStorage * cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+	
+	[cookieJar setCookie:cookie];
+}
+
++ (NSString *)loadUserTicket
+{
+	NSURL * url = [NSURL URLWithString:kQJServerURL];
+	NSHTTPCookieStorage * cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+	NSArray * cookies = [cookieJar cookiesForURL:url];
+	
+	__block NSString * ticket = nil;
+	
+	[cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * cookie, NSUInteger idx, BOOL * stop) {
+		if ([cookie.name isEqualToString:@"ticket"]) {
+			ticket = cookie.value;
+			*stop = YES;
+		}
+	}];
+	
+	return ticket;
+}
+
 #pragma mark - User
 
 - (NSError *)requestRelogin
@@ -99,8 +155,6 @@
 	
 	if (!error) {
 		NSLog(@"%@", operation.responseObject);
-		NSDictionary * data = operation.responseObject[@"data"];
-		
 		[QJBaseManager saveURLCookie];
 	}
 	
@@ -178,8 +232,8 @@
 		}
 	else if ([error.domain isEqualToString:QJServerErrorCodeDomain])
 		switch (error.code) {
-            case QJServerErrorCodeNotLogin:
-            case QJServerErrorCodeWrongTicket:
+			case QJServerErrorCodeNotLogin:
+			case QJServerErrorCodeWrongTicket:
 				{
 					dispatch_sync(dispatch_get_main_queue(), ^{
 					[[NSNotificationCenter defaultCenter] postNotificationName:kQJUserNotLoginNotification object:nil];

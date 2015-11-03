@@ -22,6 +22,10 @@
 
 @interface QJBaseManager ()
 
++ (void)loadDeviceIDCookie;
+
++ (NSString *)loadUserTicket;
+
 - (AFHTTPClient *)httpRequestManager;
 
 - (NSError *)requestRelogin;
@@ -86,9 +90,10 @@
 
 + (NSString *)getDeviceID
 {
-	NSString *deviceId = [[UIDevice currentDevice] uniqueGlobalDeviceIdentifier];
-    NSLog(@"deviceId: %@", deviceId);
-    return deviceId;
+	NSString * deviceId = [[UIDevice currentDevice] uniqueGlobalDeviceIdentifier];
+	
+	NSLog(@"deviceId: %@", deviceId);
+	return deviceId;
 }
 
 + (void)loadDeviceIDCookie
@@ -103,10 +108,35 @@
 	[cookieJar setCookie:cookie];
 }
 
++ (NSString *)loadUserTicket
+{
+	NSURL * url = [NSURL URLWithString:kQJServerURL];
+	NSHTTPCookieStorage * cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+	NSArray * cookies = [cookieJar cookiesForURL:url];
+	
+	__block NSString * ticket = nil;
+	
+	[cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * cookie, NSUInteger idx, BOOL * stop) {
+		if ([cookie.name isEqualToString:@"ticket"]) {
+			ticket = cookie.value;
+			*stop = YES;
+		}
+	}];
+	
+	return ticket;
+}
+
 #pragma mark - User
 
 - (NSError *)requestRelogin
 {
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	
+	NSString * ticket = [QJBaseManager loadUserTicket];
+	
+	if (!QJ_IS_STR_NIL(ticket))
+		params[@"ticket"] = ticket;
+		
 	// When request fails, if it could, retry it 3 times at most.
 	int i = 3;
 	__block NSError * error = nil;
@@ -116,7 +146,7 @@
 		error = nil;
 		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
 		[self.httpRequestManager getPath:kQJUserReloginPath
-		parameters:nil
+		parameters:params
 		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
 			NSLog(@"%@", operation.request.URL);
 			responseObject = resultResponseObject;
@@ -136,8 +166,6 @@
 	
 	if (!error) {
 		NSLog(@"%@", responseObject);
-		NSDictionary * data = responseObject[@"data"];
-		
 		[QJBaseManager saveURLCookie];
 	}
 	

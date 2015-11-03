@@ -65,7 +65,6 @@
 	if (QJ_IS_STR_NIL(str))
 		return nil;
 		
-		
 	const char * cStr = [str UTF8String];
 	unsigned char result[CC_MD5_DIGEST_LENGTH];
 	CC_MD5(cStr, (CC_LONG)strlen(cStr), result);

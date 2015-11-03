@@ -21,62 +21,66 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		31121D7D1BE8970E00F8AA56 /* UIDevice+IdentifierAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 31121D7B1BE8970E00F8AA56 /* UIDevice+IdentifierAddition.h */; };
+		31121D7E1BE8970E00F8AA56 /* UIDevice+IdentifierAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 31121D7C1BE8970E00F8AA56 /* UIDevice+IdentifierAddition.m */; };
+		31121D811BE8973000F8AA56 /* QJUDIDKeyChainUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 31121D7F1BE8973000F8AA56 /* QJUDIDKeyChainUtil.h */; };
+		31121D821BE8973000F8AA56 /* QJUDIDKeyChainUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 31121D801BE8973000F8AA56 /* QJUDIDKeyChainUtil.m */; };
 		311D8B8D1BD78F420003AE4E /* QJArticleCategory.h in Headers */ = {isa = PBXBuildFile; fileRef = 311D8B8B1BD78F420003AE4E /* QJArticleCategory.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		311D8B8E1BD78F420003AE4E /* QJArticleCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 311D8B8C1BD78F420003AE4E /* QJArticleCategory.m */; settings = {ASSET_TAGS = (); }; };
+		311D8B8E1BD78F420003AE4E /* QJArticleCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 311D8B8C1BD78F420003AE4E /* QJArticleCategory.m */; };
 		311D8B911BD791650003AE4E /* QJArticleObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 311D8B8F1BD791650003AE4E /* QJArticleObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		311D8B921BD791650003AE4E /* QJArticleObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 311D8B901BD791650003AE4E /* QJArticleObject.m */; settings = {ASSET_TAGS = (); }; };
+		311D8B921BD791650003AE4E /* QJArticleObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 311D8B901BD791650003AE4E /* QJArticleObject.m */; };
 		317642231BD3CC92000162FB /* QuanJingSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642221BD3CC92000162FB /* QuanJingSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3176422A1BD3CC92000162FB /* QuanJingSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3176421F1BD3CC92000162FB /* QuanJingSDK.framework */; settings = {ASSET_TAGS = (); }; };
+		3176422A1BD3CC92000162FB /* QuanJingSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3176421F1BD3CC92000162FB /* QuanJingSDK.framework */; };
 		3176422F1BD3CC92000162FB /* QuanJingSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176422E1BD3CC92000162FB /* QuanJingSDKTests.m */; };
-		3176424F1BD3D96E000162FB /* AFHTTPRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 3176423C1BD3D96E000162FB /* AFHTTPRequestOperation.h */; settings = {ASSET_TAGS = (); }; };
-		317642501BD3D96E000162FB /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176423D1BD3D96E000162FB /* AFHTTPRequestOperation.m */; settings = {ASSET_TAGS = (); }; };
-		317642511BD3D96E000162FB /* AFHTTPRequestOperationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3176423E1BD3D96E000162FB /* AFHTTPRequestOperationManager.h */; settings = {ASSET_TAGS = (); }; };
-		317642521BD3D96E000162FB /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176423F1BD3D96E000162FB /* AFHTTPRequestOperationManager.m */; settings = {ASSET_TAGS = (); }; };
-		317642531BD3D96E000162FB /* AFHTTPSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642401BD3D96E000162FB /* AFHTTPSessionManager.h */; settings = {ASSET_TAGS = (); }; };
-		317642541BD3D96E000162FB /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 317642411BD3D96E000162FB /* AFHTTPSessionManager.m */; settings = {ASSET_TAGS = (); }; };
-		317642551BD3D96E000162FB /* AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642421BD3D96E000162FB /* AFNetworking.h */; settings = {ASSET_TAGS = (); }; };
-		317642561BD3D96E000162FB /* AFNetworkReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642431BD3D96E000162FB /* AFNetworkReachabilityManager.h */; settings = {ASSET_TAGS = (); }; };
-		317642571BD3D96E000162FB /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 317642441BD3D96E000162FB /* AFNetworkReachabilityManager.m */; settings = {ASSET_TAGS = (); }; };
-		317642581BD3D96E000162FB /* AFSecurityPolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642451BD3D96E000162FB /* AFSecurityPolicy.h */; settings = {ASSET_TAGS = (); }; };
-		317642591BD3D96E000162FB /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 317642461BD3D96E000162FB /* AFSecurityPolicy.m */; settings = {ASSET_TAGS = (); }; };
-		3176425A1BD3D96E000162FB /* AFURLConnectionOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642471BD3D96E000162FB /* AFURLConnectionOperation.h */; settings = {ASSET_TAGS = (); }; };
-		3176425B1BD3D96E000162FB /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 317642481BD3D96E000162FB /* AFURLConnectionOperation.m */; settings = {ASSET_TAGS = (); }; };
-		3176425C1BD3D96E000162FB /* AFURLRequestSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642491BD3D96E000162FB /* AFURLRequestSerialization.h */; settings = {ASSET_TAGS = (); }; };
-		3176425D1BD3D96E000162FB /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176424A1BD3D96E000162FB /* AFURLRequestSerialization.m */; settings = {ASSET_TAGS = (); }; };
-		3176425E1BD3D96E000162FB /* AFURLResponseSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3176424B1BD3D96E000162FB /* AFURLResponseSerialization.h */; settings = {ASSET_TAGS = (); }; };
-		3176425F1BD3D96E000162FB /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176424C1BD3D96E000162FB /* AFURLResponseSerialization.m */; settings = {ASSET_TAGS = (); }; };
-		317642601BD3D96E000162FB /* AFURLSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3176424D1BD3D96E000162FB /* AFURLSessionManager.h */; settings = {ASSET_TAGS = (); }; };
-		317642611BD3D96E000162FB /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176424E1BD3D96E000162FB /* AFURLSessionManager.m */; settings = {ASSET_TAGS = (); }; };
+		3176424F1BD3D96E000162FB /* AFHTTPRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 3176423C1BD3D96E000162FB /* AFHTTPRequestOperation.h */; };
+		317642501BD3D96E000162FB /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176423D1BD3D96E000162FB /* AFHTTPRequestOperation.m */; };
+		317642511BD3D96E000162FB /* AFHTTPRequestOperationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3176423E1BD3D96E000162FB /* AFHTTPRequestOperationManager.h */; };
+		317642521BD3D96E000162FB /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176423F1BD3D96E000162FB /* AFHTTPRequestOperationManager.m */; };
+		317642531BD3D96E000162FB /* AFHTTPSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642401BD3D96E000162FB /* AFHTTPSessionManager.h */; };
+		317642541BD3D96E000162FB /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 317642411BD3D96E000162FB /* AFHTTPSessionManager.m */; };
+		317642551BD3D96E000162FB /* AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642421BD3D96E000162FB /* AFNetworking.h */; };
+		317642561BD3D96E000162FB /* AFNetworkReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642431BD3D96E000162FB /* AFNetworkReachabilityManager.h */; };
+		317642571BD3D96E000162FB /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 317642441BD3D96E000162FB /* AFNetworkReachabilityManager.m */; };
+		317642581BD3D96E000162FB /* AFSecurityPolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642451BD3D96E000162FB /* AFSecurityPolicy.h */; };
+		317642591BD3D96E000162FB /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 317642461BD3D96E000162FB /* AFSecurityPolicy.m */; };
+		3176425A1BD3D96E000162FB /* AFURLConnectionOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642471BD3D96E000162FB /* AFURLConnectionOperation.h */; };
+		3176425B1BD3D96E000162FB /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 317642481BD3D96E000162FB /* AFURLConnectionOperation.m */; };
+		3176425C1BD3D96E000162FB /* AFURLRequestSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642491BD3D96E000162FB /* AFURLRequestSerialization.h */; };
+		3176425D1BD3D96E000162FB /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176424A1BD3D96E000162FB /* AFURLRequestSerialization.m */; };
+		3176425E1BD3D96E000162FB /* AFURLResponseSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3176424B1BD3D96E000162FB /* AFURLResponseSerialization.h */; };
+		3176425F1BD3D96E000162FB /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176424C1BD3D96E000162FB /* AFURLResponseSerialization.m */; };
+		317642601BD3D96E000162FB /* AFURLSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3176424D1BD3D96E000162FB /* AFURLSessionManager.h */; };
+		317642611BD3D96E000162FB /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3176424E1BD3D96E000162FB /* AFURLSessionManager.m */; };
 		317642671BD3DA5A000162FB /* QJInterfaceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 317642651BD3DA5A000162FB /* QJInterfaceManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		317642681BD3DA5A000162FB /* QJInterfaceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 317642661BD3DA5A000162FB /* QJInterfaceManager.m */; settings = {ASSET_TAGS = (); }; };
+		317642681BD3DA5A000162FB /* QJInterfaceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 317642661BD3DA5A000162FB /* QJInterfaceManager.m */; };
 		31C91F971BD4BBCB00DFC3C0 /* QJCoreMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91F961BD4B72600DFC3C0 /* QJCoreMacros.h */; };
 		31C91F991BD4BF4900DFC3C0 /* QJErrorCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91F981BD4BF4900DFC3C0 /* QJErrorCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31C91F9D1BD4BF6000DFC3C0 /* QJErrorCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91F9B1BD4BF6000DFC3C0 /* QJErrorCode.m */; settings = {ASSET_TAGS = (); }; };
+		31C91F9D1BD4BF6000DFC3C0 /* QJErrorCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91F9B1BD4BF6000DFC3C0 /* QJErrorCode.m */; };
 		31C91FA01BD4C6E600DFC3C0 /* QJHomeIndexObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91F9E1BD4C6E600DFC3C0 /* QJHomeIndexObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31C91FA11BD4C6E600DFC3C0 /* QJHomeIndexObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91F9F1BD4C6E600DFC3C0 /* QJHomeIndexObject.m */; settings = {ASSET_TAGS = (); }; };
-		31C91FA51BD4D5B000DFC3C0 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FA31BD4D5B000DFC3C0 /* UIDevice-Hardware.h */; settings = {ASSET_TAGS = (); }; };
-		31C91FA61BD4D5B000DFC3C0 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FA41BD4D5B000DFC3C0 /* UIDevice-Hardware.m */; settings = {ASSET_TAGS = (); }; };
+		31C91FA11BD4C6E600DFC3C0 /* QJHomeIndexObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91F9F1BD4C6E600DFC3C0 /* QJHomeIndexObject.m */; };
+		31C91FA51BD4D5B000DFC3C0 /* UIDevice-Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FA31BD4D5B000DFC3C0 /* UIDevice-Hardware.h */; };
+		31C91FA61BD4D5B000DFC3C0 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FA41BD4D5B000DFC3C0 /* UIDevice-Hardware.m */; };
 		31C91FAE1BD4E83A00DFC3C0 /* QJUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FAC1BD4E83A00DFC3C0 /* QJUser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31C91FAF1BD4E83A00DFC3C0 /* QJUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FAD1BD4E83A00DFC3C0 /* QJUser.m */; settings = {ASSET_TAGS = (); }; };
+		31C91FAF1BD4E83A00DFC3C0 /* QJUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FAD1BD4E83A00DFC3C0 /* QJUser.m */; };
 		31C91FB21BD5123500DFC3C0 /* QJImageObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FB01BD5123500DFC3C0 /* QJImageObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31C91FB31BD5123500DFC3C0 /* QJImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FB11BD5123500DFC3C0 /* QJImageObject.m */; settings = {ASSET_TAGS = (); }; };
+		31C91FB31BD5123500DFC3C0 /* QJImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FB11BD5123500DFC3C0 /* QJImageObject.m */; };
 		31C91FB61BD518F300DFC3C0 /* QJImageCategory.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FB41BD518F300DFC3C0 /* QJImageCategory.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31C91FB71BD518F300DFC3C0 /* QJImageCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FB51BD518F300DFC3C0 /* QJImageCategory.m */; settings = {ASSET_TAGS = (); }; };
+		31C91FB71BD518F300DFC3C0 /* QJImageCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FB51BD518F300DFC3C0 /* QJImageCategory.m */; };
 		31C91FBA1BD5C61700DFC3C0 /* QJPassport.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FB81BD5C61700DFC3C0 /* QJPassport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31C91FBB1BD5C61700DFC3C0 /* QJPassport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FB91BD5C61700DFC3C0 /* QJPassport.m */; settings = {ASSET_TAGS = (); }; };
-		31C91FBD1BD5C6B500DFC3C0 /* QJServerConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FBC1BD5C6B500DFC3C0 /* QJServerConstants.h */; settings = {ASSET_TAGS = (); }; };
-		31C91FC01BD5C96600DFC3C0 /* QJHTTPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FBE1BD5C96600DFC3C0 /* QJHTTPManager.h */; settings = {ASSET_TAGS = (); }; };
-		31C91FC11BD5C96600DFC3C0 /* QJHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FBF1BD5C96600DFC3C0 /* QJHTTPManager.m */; settings = {ASSET_TAGS = (); }; };
-		31C91FC51BD5CBC700DFC3C0 /* QJUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FC31BD5CBC700DFC3C0 /* QJUtils.h */; settings = {ASSET_TAGS = (); }; };
-		31C91FC61BD5CBC700DFC3C0 /* QJUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FC41BD5CBC700DFC3C0 /* QJUtils.m */; settings = {ASSET_TAGS = (); }; };
+		31C91FBB1BD5C61700DFC3C0 /* QJPassport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FB91BD5C61700DFC3C0 /* QJPassport.m */; };
+		31C91FBD1BD5C6B500DFC3C0 /* QJServerConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FBC1BD5C6B500DFC3C0 /* QJServerConstants.h */; };
+		31C91FC01BD5C96600DFC3C0 /* QJHTTPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FBE1BD5C96600DFC3C0 /* QJHTTPManager.h */; };
+		31C91FC11BD5C96600DFC3C0 /* QJHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FBF1BD5C96600DFC3C0 /* QJHTTPManager.m */; };
+		31C91FC51BD5CBC700DFC3C0 /* QJUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FC31BD5CBC700DFC3C0 /* QJUtils.h */; };
+		31C91FC61BD5CBC700DFC3C0 /* QJUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FC41BD5CBC700DFC3C0 /* QJUtils.m */; };
 		31C91FCF1BD61BE000DFC3C0 /* QJActionObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FCD1BD61BE000DFC3C0 /* QJActionObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31C91FD01BD61BE000DFC3C0 /* QJActionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FCE1BD61BE000DFC3C0 /* QJActionObject.m */; settings = {ASSET_TAGS = (); }; };
+		31C91FD01BD61BE000DFC3C0 /* QJActionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FCE1BD61BE000DFC3C0 /* QJActionObject.m */; };
 		31C91FD31BD61C9D00DFC3C0 /* QJCommentObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C91FD11BD61C9D00DFC3C0 /* QJCommentObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31C91FD41BD61C9D00DFC3C0 /* QJCommentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FD21BD61C9D00DFC3C0 /* QJCommentObject.m */; settings = {ASSET_TAGS = (); }; };
+		31C91FD41BD61C9D00DFC3C0 /* QJCommentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C91FD21BD61C9D00DFC3C0 /* QJCommentObject.m */; };
 		31E94F791BE700C6004FA928 /* QJBaseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E94F771BE700C6004FA928 /* QJBaseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31E94F7A1BE700C6004FA928 /* QJBaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E94F781BE700C6004FA928 /* QJBaseManager.m */; settings = {ASSET_TAGS = (); }; };
+		31E94F7A1BE700C6004FA928 /* QJBaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E94F781BE700C6004FA928 /* QJBaseManager.m */; };
 		31F887931BDC912C007E94C8 /* QJAlbumObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F887911BDC912C007E94C8 /* QJAlbumObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31F887941BDC912C007E94C8 /* QJAlbumObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887921BDC912C007E94C8 /* QJAlbumObject.m */; settings = {ASSET_TAGS = (); }; };
+		31F887941BDC912C007E94C8 /* QJAlbumObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F887921BDC912C007E94C8 /* QJAlbumObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +94,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		31121D7B1BE8970E00F8AA56 /* UIDevice+IdentifierAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+IdentifierAddition.h"; sourceTree = "<group>"; };
+		31121D7C1BE8970E00F8AA56 /* UIDevice+IdentifierAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+IdentifierAddition.m"; sourceTree = "<group>"; };
+		31121D7F1BE8973000F8AA56 /* QJUDIDKeyChainUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJUDIDKeyChainUtil.h; sourceTree = "<group>"; };
+		31121D801BE8973000F8AA56 /* QJUDIDKeyChainUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJUDIDKeyChainUtil.m; sourceTree = "<group>"; };
 		311D8B8B1BD78F420003AE4E /* QJArticleCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJArticleCategory.h; sourceTree = "<group>"; };
 		311D8B8C1BD78F420003AE4E /* QJArticleCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJArticleCategory.m; sourceTree = "<group>"; };
 		311D8B8F1BD791650003AE4E /* QJArticleObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJArticleObject.h; sourceTree = "<group>"; };
@@ -294,6 +302,8 @@
 			children = (
 				31C91FA31BD4D5B000DFC3C0 /* UIDevice-Hardware.h */,
 				31C91FA41BD4D5B000DFC3C0 /* UIDevice-Hardware.m */,
+				31121D7B1BE8970E00F8AA56 /* UIDevice+IdentifierAddition.h */,
+				31121D7C1BE8970E00F8AA56 /* UIDevice+IdentifierAddition.m */,
 			);
 			path = device;
 			sourceTree = "<group>";
@@ -303,6 +313,8 @@
 			children = (
 				31C91FC31BD5CBC700DFC3C0 /* QJUtils.h */,
 				31C91FC41BD5CBC700DFC3C0 /* QJUtils.m */,
+				31121D7F1BE8973000F8AA56 /* QJUDIDKeyChainUtil.h */,
+				31121D801BE8973000F8AA56 /* QJUDIDKeyChainUtil.m */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -336,6 +348,7 @@
 				3176425C1BD3D96E000162FB /* AFURLRequestSerialization.h in Headers */,
 				317642231BD3CC92000162FB /* QuanJingSDK.h in Headers */,
 				3176424F1BD3D96E000162FB /* AFHTTPRequestOperation.h in Headers */,
+				31121D811BE8973000F8AA56 /* QJUDIDKeyChainUtil.h in Headers */,
 				317642531BD3D96E000162FB /* AFHTTPSessionManager.h in Headers */,
 				3176425A1BD3D96E000162FB /* AFURLConnectionOperation.h in Headers */,
 				317642561BD3D96E000162FB /* AFNetworkReachabilityManager.h in Headers */,
@@ -343,6 +356,7 @@
 				317642511BD3D96E000162FB /* AFHTTPRequestOperationManager.h in Headers */,
 				317642551BD3D96E000162FB /* AFNetworking.h in Headers */,
 				3176425E1BD3D96E000162FB /* AFURLResponseSerialization.h in Headers */,
+				31121D7D1BE8970E00F8AA56 /* UIDevice+IdentifierAddition.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,9 +482,11 @@
 				311D8B8E1BD78F420003AE4E /* QJArticleCategory.m in Sources */,
 				31C91FD01BD61BE000DFC3C0 /* QJActionObject.m in Sources */,
 				31C91FBB1BD5C61700DFC3C0 /* QJPassport.m in Sources */,
+				31121D7E1BE8970E00F8AA56 /* UIDevice+IdentifierAddition.m in Sources */,
 				31E94F7A1BE700C6004FA928 /* QJBaseManager.m in Sources */,
 				31C91F9D1BD4BF6000DFC3C0 /* QJErrorCode.m in Sources */,
 				317642541BD3D96E000162FB /* AFHTTPSessionManager.m in Sources */,
+				31121D821BE8973000F8AA56 /* QJUDIDKeyChainUtil.m in Sources */,
 				31C91FD41BD61C9D00DFC3C0 /* QJCommentObject.m in Sources */,
 				317642591BD3D96E000162FB /* AFSecurityPolicy.m in Sources */,
 				31C91FAF1BD4E83A00DFC3C0 /* QJUser.m in Sources */,
