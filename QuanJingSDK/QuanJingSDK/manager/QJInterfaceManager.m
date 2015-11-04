@@ -1260,8 +1260,16 @@
 		
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
-			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-				[resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
+            [dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
+                QJImageObject *imageObject = [[QJImageObject alloc] initWithJson:obj];
+                
+                // imageId
+                NSNumber * imageId = obj[@"imageId"];
+                
+                if (!QJ_IS_NUM_NIL(imageId))
+                    imageObject.imageId = imageId;
+                
+                [resultArray addObject:imageObject];
 			}];
 			
 			if (finished)
