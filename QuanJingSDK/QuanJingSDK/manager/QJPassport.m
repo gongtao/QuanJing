@@ -676,17 +676,17 @@
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-                QJUser * user = [[QJUser alloc] initWithJson:obj];
-                
-                NSNumber * userId = obj[@"userId"];
-                
-                if (!QJ_IS_NUM_NIL(userId))
-                    user.uid = userId;
-                
-                NSString * userUrl = obj[@"userUrl"];
-                
-                if (!QJ_IS_STR_NIL(userUrl))
-                    user.avatar = [QJUtils realImageUrlFromServerUrl:userUrl];
+				QJUser * user = [[QJUser alloc] initWithJson:obj];
+				
+				NSNumber * userId = obj[@"userId"];
+				
+				if (!QJ_IS_NUM_NIL(userId))
+					user.uid = userId;
+					
+				NSString * userUrl = obj[@"userUrl"];
+				
+				if (!QJ_IS_STR_NIL(userUrl))
+					user.avatar = [QJUtils realImageUrlFromServerUrl:userUrl];
 					
 				// meFollowed
 				NSNumber * meFollowed = obj[@"meFollowed"];
@@ -707,6 +707,65 @@
 	
 	if (finished)
 		finished(nil, isLastPage, nil, error);
+}
+
+- (void)requestUserFriendList:(NSNumber *)userId
+	finished:(nullable void (^)(NSArray * userArray, NSError * error))finished
+{
+	__block NSError * resultError = nil;
+	__block NSMutableSet * friendSet = [[NSMutableSet alloc] init];
+	__block NSMutableArray * friends = [[NSMutableArray alloc] init];
+	
+	NSUInteger page = 1;
+	
+	[self requestUserFollowList:userId
+	pageNum:page
+	pageSize:50
+	finished:^(NSArray * followUserArray, NSArray * resultArray, NSError * error) {
+		if (error) {
+			resultError = error;
+			return;
+		}
+		[followUserArray enumerateObjectsUsingBlock:^(QJUser * obj, NSUInteger idx, BOOL * stop) {
+			if (obj && ![friendSet containsObject:obj.uid]) {
+				[friendSet addObject:obj.uid];
+				[friends addObject:obj];
+			}
+		}];
+	}];
+	
+	if (resultError) {
+		if (finished)
+			finished(friends, resultError);
+		return;
+	}
+	
+	__block BOOL isFinished = NO;
+	
+	for (page = 1; !resultError && !isFinished; page++) {
+		[self requestUserFollowMeList:userId
+		pageNum:page
+		pageSize:50
+		finished:^(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+			if (error) {
+				resultError = error;
+				isFinished = YES;
+				return;
+			}
+			[followUserArray enumerateObjectsUsingBlock:^(QJUser * obj, NSUInteger idx, BOOL * stop) {
+				if (obj && ![friendSet containsObject:obj.uid]) {
+					[friendSet addObject:obj.uid];
+					[friends addObject:obj];
+				}
+            }];
+            if (isLastPage) {
+                isFinished = YES;
+            }
+		}];
+	}
+	
+	if (finished)
+		finished(friends, resultError);
 }
 
 // 用户关注

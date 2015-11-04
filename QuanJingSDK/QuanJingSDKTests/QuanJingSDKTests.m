@@ -584,6 +584,12 @@
 			
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
+			[[QJPassport sharedPassport] requestUserFriendList:[NSNumber numberWithInteger:966486]
+			finished:^(NSArray * userArray, NSError * error) {
+				if (error)
+					XCTFail(@"testUserImageListExample error: %@", error);
+			}];
+			
 			NSNumber * careUserId = [NSNumber numberWithLongLong:966487];
 			[[QJPassport sharedPassport] requestOtherUserInfo:careUserId
 			finished:^(QJUser * user, NSDictionary * userDic, NSError * error) {
@@ -617,7 +623,7 @@
 			if (error)
 				XCTFail(@"testUserImageListExample error: %@", error);
 				
-            [[QJPassport sharedPassport] requestUserFollowMeList:[NSNumber numberWithInteger:966486]
+			[[QJPassport sharedPassport] requestUserFollowMeList:[NSNumber numberWithInteger:966486]
 			pageNum:1
 			pageSize:20
 			finished:^(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {

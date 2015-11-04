@@ -750,6 +750,65 @@
 		finished(nil, isLastPage, nil, error);
 }
 
+- (void)requestUserFriendList:(NSNumber *)userId
+	finished:(nullable void (^)(NSArray * userArray, NSError * error))finished
+{
+	__block NSError * resultError = nil;
+	__block NSMutableSet * friendSet = [[NSMutableSet alloc] init];
+	__block NSMutableArray * friends = [[NSMutableArray alloc] init];
+	
+	NSUInteger page = 1;
+	
+	[self requestUserFollowList:userId
+	pageNum:page
+	pageSize:50
+	finished:^(NSArray * followUserArray, NSArray * resultArray, NSError * error) {
+		if (error) {
+			resultError = error;
+			return;
+		}
+		[followUserArray enumerateObjectsUsingBlock:^(QJUser * obj, NSUInteger idx, BOOL * stop) {
+			if (obj && ![friendSet containsObject:obj.uid]) {
+				[friendSet addObject:obj.uid];
+				[friends addObject:obj];
+			}
+		}];
+	}];
+	
+	if (resultError) {
+		if (finished)
+			finished(friends, resultError);
+		return;
+	}
+	
+	__block BOOL isFinished = NO;
+	
+	for (page = 1; !resultError && !isFinished; page++) {
+		[self requestUserFollowMeList:userId
+		pageNum:page
+		pageSize:50
+		finished:^(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+			if (error) {
+				resultError = error;
+				isFinished = YES;
+				return;
+			}
+			[followUserArray enumerateObjectsUsingBlock:^(QJUser * obj, NSUInteger idx, BOOL * stop) {
+				if (obj && ![friendSet containsObject:obj.uid]) {
+					[friendSet addObject:obj.uid];
+					[friends addObject:obj];
+				}
+			}];
+			
+			if (isLastPage)
+				isFinished = YES;
+		}];
+	}
+	
+	if (finished)
+		finished(friends, resultError);
+}
+
 // 用户关注
 - (NSError *)requestUserFollowUser:(NSNumber *)userId
 {
