@@ -155,11 +155,10 @@
     QJImageObject *imageModel=_assets[indexPath.item];
     [cell.imageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:cell.bounds.size]]];
     cell.touchImagecb=^{
-//        OWTAsset  *asset1=[[OWTAsset alloc]init];
-//        [asset1 mergeWithData:(OWTAssetData *)asset];
-//        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset1 deletionAllowed:YES onDeleteAction:^{  }];
-//        [self.navigationController pushViewController:assetViewCon animated:YES];
-    
+        OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:imageModel.imageType];
+        assetViewCon.isSquare = YES;
+        assetViewCon.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:assetViewCon animated:NO];
     };
     
     return cell;

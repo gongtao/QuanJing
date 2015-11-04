@@ -1097,17 +1097,20 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
             //四个按钮定制
             viewHeight+=(10+30);
             //标签 编号
-        if (_imageAsset.captionCn.length>0) {
-            viewHeight+=50;}
+        if (_imageAsset.tag.length>0 && _imageAsset.descript == nil) {
+            viewHeight+=50;
+        }else if(_imageAsset.descript.length>0 && _imageAsset.tag == nil) {
+            viewHeight+=50;
+        }
         else {
             viewHeight+=30;
         }
+
         //喜欢的人
         CGFloat likeHeight=0;
         CGFloat imageHeight=20;
         if (LikeBodys.count!=0) {
             CGFloat likeWidth=45;
-            CGFloat likeheight=0;
             for (NSInteger i=0;i<LikeBodys.count;i++){
                 if (likeWidth+imageHeight+5>SCREENWIT-25) {
                     likeWidth=45;
