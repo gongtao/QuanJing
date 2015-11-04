@@ -475,7 +475,7 @@
 			
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
-			[[QJInterfaceManager sharedManager] requestUserImageList:nil
+			[[QJInterfaceManager sharedManager] requestUserImageList:[NSNumber numberWithInteger:966486]
 			pageNum:1
 			pageSize:20
 			currentImageId:nil

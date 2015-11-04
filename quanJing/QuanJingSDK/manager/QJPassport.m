@@ -665,7 +665,7 @@
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
 	
 	if (!QJ_IS_NUM_NIL(userId))
-		params[@"userId"] = userId;
+		params[@"followId"] = userId;
 		
 	if (pageNum == 0)
 		pageNum = 1;
@@ -719,10 +719,15 @@
 			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 				QJUser * user = [[QJUser alloc] initWithJson:obj];
 				
-				NSNumber * followId = obj[@"followId"];
+				NSNumber * userId = obj[@"userId"];
 				
-				if (!QJ_IS_NUM_NIL(followId))
-					user.uid = followId;
+				if (!QJ_IS_NUM_NIL(userId))
+					user.uid = userId;
+					
+				NSString * userUrl = obj[@"userUrl"];
+				
+				if (!QJ_IS_STR_NIL(userUrl))
+					user.avatar = [QJUtils realImageUrlFromServerUrl:userUrl];
 					
 				// meFollowed
 				NSNumber * meFollowed = obj[@"meFollowed"];
