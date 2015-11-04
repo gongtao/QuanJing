@@ -538,18 +538,19 @@
 -(void)onCommentTap:(UITapGestureRecognizer*)sender
 {
     NSArray *_comments=_asset.comments;
-    OWTComment *ljcomment;
-    OWTUser *ownerUser=[[OWTUser alloc]init];
+    QJCommentObject *ljcomment;
+    QJUser *ownerUser;
     if (sender.view.tag<600) {
         ljcomment=_comments[sender.view.tag-500];
-        ownerUser=[GetUserManager() userForID:ljcomment.userID];
+        ownerUser =  ljcomment.user;
     }
     if (ownerUser != nil)
     {
         OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
         userViewCon1.hidesBottomBarWhenPushed=YES;
+        userViewCon1.quser =ownerUser;
+
         [_controller.navigationController pushViewController:userViewCon1 animated:YES];
-        userViewCon1.user =ownerUser;
     }
 }
 

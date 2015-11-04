@@ -29,6 +29,9 @@
 #import "UIView+Positioning.h"
 #import "OWTUser.h"
 #import "OWTUserManager.h"
+#import "QJUser.h"
+#import "QJPassport.h"
+#import "QJInterfaceManager.h"
 
 const int INTERSTITIAL_STEPS = 99;
 
@@ -200,15 +203,16 @@ const int INTERSTITIAL_STEPS = 99;
     _profileView.frame = CGRectMake(0, 0, 100*0.9, 100*0.9);
     [_profileView setCenter:CGPointMake(SCREENWIT/2, 161-22)];
     
-    OWTUser *userme =GetUserManager().currentUser;
+    QJUser *userme = [[QJPassport sharedPassport]currentUser];
     _profileView.placeholderImage = [UIImage imageNamed:@"_0003_矢量智能对象"];
-    [_profileView setImageWithInfoAsThumbnail:userme.avatarImageInfo];
+    NSString *adpatURL = [QJInterfaceManager  thumbnailUrlFromImageUrl:userme.avatar size:_profileView.bounds.size];
+    [_profileView setImageWithURL:[NSURL URLWithString:adpatURL] placeholderImage: _profileView.placeholderImage];
     _profileView.userInteractionEnabled = YES;
     
     
     _userLable.frame = CGRectMake(0, 217, SCREENWIT-80, 30);
     [_userLable setCenter:CGPointMake(SCREENWIT/2, _profileView.frame.origin.y+_profileView.size.height+25)];
-    _userLable.text = userme.nickname;
+    _userLable.text = userme.nickName;
     _userLable.font = [UIFont fontWithName:@"冬青黑体" size:11];
     _userLable.textAlignment = NSTextAlignmentCenter;
     _userLable.textColor = [UIColor whiteColor];

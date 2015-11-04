@@ -277,7 +277,7 @@
 - (void)onTapProfileImage:(UIGestureRecognizer *)sender
 {
 	[_sideMenu hide];
-	OWTUser * userme = GetUserManager().currentUser;
+	QJUser * userme = [QJPassport sharedPassport].currentUser;
 	
 	if (userme != nil) {
 		if (_userViewCon1) {
@@ -291,7 +291,7 @@
 		__weak __typeof( & * self) weakSelf = self;
 		
 		[weakSelf.navigationController pushViewController:_userViewCon1 animated:YES];
-		_userViewCon1.user = userme;
+		_userViewCon1.quser = userme;
 	}
 }
 

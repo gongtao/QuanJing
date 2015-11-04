@@ -531,7 +531,6 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 - (void)loadRelatedAssetsInSearch
 {
     QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
-//    QJUser *user = ([[[QJPassport sharedPassport]currentUser].uid integerValue] != [_user1.uid integerValue ])?_user1:nil;
     
     if (_imageType.intValue==1) {
         if(_imageAsset.tag == nil){
