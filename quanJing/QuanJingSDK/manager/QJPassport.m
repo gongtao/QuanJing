@@ -82,6 +82,8 @@
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
+	else
+		NSLog(@"%@", error);
 		
 	return error;
 }
@@ -143,6 +145,8 @@
 		return;
 	}
 	
+	NSLog(@"%@", error);
+	
 	if (finished)
 		finished(nil, nil, error);
 }
@@ -203,6 +207,8 @@
 		return;
 	}
 	
+	NSLog(@"%@", error);
+	
 	if (finished)
 		finished(nil, nil, error);
 }
@@ -243,6 +249,8 @@
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
+	else
+		NSLog(@"%@", error);
 		
 	return error;
 }
@@ -301,6 +309,8 @@
 			finished(userId, data[@"ticket"], error);
 		return;
 	}
+	
+	NSLog(@"%@", error);
 	
 	if (finished)
 		finished(nil, nil, error);
@@ -386,6 +396,8 @@
 		return;
 	}
 	
+	NSLog(@"%@", error);
+	
 	if (finished)
 		finished(self.currentUser, nil, error);
 }
@@ -433,6 +445,8 @@
 			finished(user, dataDic, error);
 		return;
 	}
+	
+	NSLog(@"%@", error);
 	
 	if (finished)
 		finished(nil, nil, error);
@@ -552,6 +566,8 @@
 		return;
 	}
 	
+	NSLog(@"%@", error);
+	
 	if (finished)
 		finished(self.currentUser, nil, error);
 }
@@ -634,6 +650,8 @@
 			return;
 		}
 	}
+	
+	NSLog(@"%@", error);
 	
 	if (finished)
 		finished(nil, nil, error);
@@ -721,6 +739,8 @@
 		}
 	}
 	
+	NSLog(@"%@", error);
+	
 	if (finished)
 		finished(nil, isLastPage, nil, error);
 }
@@ -762,6 +782,8 @@
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
+	else
+		NSLog(@"%@", error);
 		
 	return error;
 }
@@ -803,6 +825,8 @@
 	
 	if (!error)
 		NSLog(@"%@", responseObject);
+	else
+		NSLog(@"%@", error);
 		
 	return error;
 }

@@ -78,6 +78,8 @@
 	
 	if (!error)
 		NSLog(@"%@", operation.responseObject);
+	else
+		NSLog(@"%@", error);
 		
 	return error;
 }
@@ -135,6 +137,8 @@
 		return;
 	}
 	
+	NSLog(@"%@", error);
+	
 	if (finished)
 		finished(nil, nil, error);
 }
@@ -191,6 +195,8 @@
 		return;
 	}
 	
+	NSLog(@"%@", error);
+	
 	if (finished)
 		finished(nil, nil, error);
 }
@@ -227,6 +233,8 @@
 	
 	if (!error)
 		NSLog(@"%@", operation.responseObject);
+	else
+		NSLog(@"%@", error);
 		
 	return error;
 }
@@ -281,6 +289,8 @@
 			finished(userId, data[@"ticket"], error);
 		return;
 	}
+	
+	NSLog(@"%@", error);
 	
 	if (finished)
 		finished(nil, nil, error);
@@ -361,6 +371,8 @@
 		return;
 	}
 	
+	NSLog(@"%@", error);
+	
 	if (finished)
 		finished(self.currentUser, nil, error);
 }
@@ -404,6 +416,8 @@
 			finished(user, dataDic, error);
 		return;
 	}
+	
+	NSLog(@"%@", error);
 	
 	if (finished)
 		finished(nil, nil, error);
@@ -519,6 +533,8 @@
 		return;
 	}
 	
+	NSLog(@"%@", error);
+	
 	if (finished)
 		finished(self.currentUser, nil, error);
 }
@@ -577,18 +593,18 @@
 				NSNumber * followId = obj[@"followId"];
 				
 				if (!QJ_IS_NUM_NIL(followId))
-                    user.uid = followId;
-                
-                NSString * followUrl = obj[@"followUrl"];
-                
-                if (!QJ_IS_STR_NIL(followUrl))
-                    user.avatar = [QJUtils realImageUrlFromServerUrl:followUrl];
-                
-                NSNumber * meFollowed = obj[@"meFollowed"];
-                
-                if (!QJ_IS_NUM_NIL(meFollowed))
-                    user.hasFollowUser = meFollowed;
-                
+					user.uid = followId;
+					
+				NSString * followUrl = obj[@"followUrl"];
+				
+				if (!QJ_IS_STR_NIL(followUrl))
+					user.avatar = [QJUtils realImageUrlFromServerUrl:followUrl];
+					
+				NSNumber * meFollowed = obj[@"meFollowed"];
+				
+				if (!QJ_IS_NUM_NIL(meFollowed))
+					user.hasFollowUser = meFollowed;
+					
 				[resultArray addObject:user];
 			}];
 			
@@ -597,6 +613,8 @@
 			return;
 		}
 	}
+	
+	NSLog(@"%@", error);
 	
 	if (finished)
 		finished(nil, nil, error);
@@ -680,6 +698,8 @@
 		}
 	}
 	
+	NSLog(@"%@", error);
+	
 	if (finished)
 		finished(nil, isLastPage, nil, error);
 }
@@ -717,6 +737,8 @@
 	
 	if (!error)
 		NSLog(@"%@", operation.responseObject);
+	else
+		NSLog(@"%@", error);
 		
 	return error;
 }
@@ -754,6 +776,8 @@
 	
 	if (!error)
 		NSLog(@"%@", operation.responseObject);
+	else
+		NSLog(@"%@", error);
 		
 	return error;
 }

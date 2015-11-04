@@ -50,7 +50,7 @@
 {
     QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [fm requestUserLikeImageList:[QJPassport sharedPassport].currentUser.uid pageNum:50 pageSize:50 finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+        [fm requestUserLikeImageList:[QJPassport sharedPassport].currentUser.uid pageNum:1 pageSize:50 finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error==nil) {
                     if (!loadMore) {
