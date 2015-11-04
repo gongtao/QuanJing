@@ -112,11 +112,11 @@
             return (QJImageObject*)nil;
         }
     };
-    
+
     
     _assetViewCon.onAssetSelectedFunc = ^(QJImageObject* asset)
     {
-        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset initWithType:2];
+        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithImageId:asset imageType:asset.imageType];
         assetViewCon.user1 = wself.user1;
         [wself.navigationController pushViewController:assetViewCon animated:YES];
     };

@@ -1471,7 +1471,6 @@
 - (void)showFollowers
 {
     OQJSelectedViewCon2* followerUsersViewCon = [[OQJSelectedViewCon2 alloc] initWithNibName:nil bundle:nil];
-    //    followerUsersViewCon.user = _user;
     followerUsersViewCon.hidesBottomBarWhenPushed=YES;
     [_tabBarHider hideTabBar];
     [self.navigationController pushViewController:followerUsersViewCon animated:YES];

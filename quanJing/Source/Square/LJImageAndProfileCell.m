@@ -444,8 +444,8 @@
 - (void)onTapBigImage:(UIGestureRecognizer *)sender
 {
 	QJImageObject * imageModel = _assets[sender.view.tag - 400];
+    imageModel.userId = _qjuser.uid;
 	OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:imageModel.imageType];
-	
 	assetViewCon.isSquare = YES;
 	assetViewCon.hidesBottomBarWhenPushed = YES;
 	[_viewContoller.navigationController pushViewController:assetViewCon animated:NO];

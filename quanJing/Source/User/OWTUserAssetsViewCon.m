@@ -90,7 +90,6 @@
     //点击动作
     _assetViewCon.onAssetSelectedFunc = ^(QJImageObject* asset)
     {
-        asset.imageType =  [NSNumber numberWithInt:2];
         OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset deletionAllowed:YES onDeleteAction:^{ [wself.assetViewCon reloadData]; }];
         assetViewCon.user1 = wself.user1;
         [wself.navigationController pushViewController:assetViewCon animated:YES];
@@ -134,7 +133,7 @@
             return ;
         }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [fm requestUserImageList:wself.user1.uid   pageNum:wself.imageAssets.count/PageSize+1 pageSize:60  currentImageId:nil finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error){
+            [fm requestUserImageList:wself.user1.uid   pageNum:wself.imageAssets.count/PageSize+1 pageSize:PageSize  currentImageId:nil finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (error == nil) {
                         if (albumObjectArray != nil){

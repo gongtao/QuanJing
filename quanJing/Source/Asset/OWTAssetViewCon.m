@@ -126,6 +126,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     if (self)
     {
         _imageAsset = asset;
+        _imageType = asset.imageType;
         _deletionAllowed = deletionAllowed;
         _onDeleteAction = onDeleteAction;
         _isOpen=NO;
@@ -194,6 +195,9 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 -(void)getLikeAndCommendData
 {
     NSInteger integer = ([_imageAsset.imageType integerValue] == 1)?1:2;
+    if (integer == 2) {
+        return;
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[QJInterfaceManager sharedManager] requestImageDetail:_imageAsset.imageId imageType:[NSNumber numberWithInteger:integer] finished:^(QJImageObject * imageObject, NSError * error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -553,7 +557,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
         //操作当前用户资源
     }else if([_imageType integerValue] == 2){
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [fm requestUserImageList:nil  pageNum:1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
+            [fm requestUserImageList:_imageAsset.userId  pageNum:1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * albumObjectArray, BOOL isLastPage,NSArray * resultArray, NSError * error){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (error == nil) {
                         if (albumObjectArray != nil){
