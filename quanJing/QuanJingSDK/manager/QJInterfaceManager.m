@@ -1355,9 +1355,7 @@
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
-				imageObject.imageType = [NSNumber numberWithInt:2];
-				[resultArray addObject:imageObject];
+				[resultArray addObject:[[QJImageObject alloc] initWithJson:obj]];
 			}];
 			
 			if (finished)
