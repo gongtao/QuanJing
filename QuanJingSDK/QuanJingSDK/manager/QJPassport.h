@@ -74,7 +74,8 @@ NS_ASSUME_NONNULL_BEGIN
 	pageNum:(NSUInteger)pageNum
 	pageSize:(NSUInteger)pageSize
 	finished:(nullable void (^)(NSArray * followUserArray, BOOL isLastPage, NSArray * resultArray, NSError * error))finished;
-	
+
+// 用户好友列表
 - (void)requestUserFriendList:(NSNumber *)userId
 	finished:(nullable void (^)(NSArray * userArray, NSError * error))finished;
 	
