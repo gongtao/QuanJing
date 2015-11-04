@@ -4886,7 +4886,7 @@
 				ORGANIZATIONNAME = "SparkingSoft Co., Ltd";
 				TargetAttributes = {
 					9044E3C018CAE4D800784D38 = {
-						DevelopmentTeam = B6DQ38AV7Y;
+						DevelopmentTeam = T3BNK5WMQ7;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -5862,8 +5862,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -6073,7 +6073,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "efaeb623-e231-4ce0-8548-0aabd1256299";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 				VALID_ARCHS = "armv7 arm64";
@@ -6230,7 +6230,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "efaeb623-e231-4ce0-8548-0aabd1256299";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
