@@ -624,8 +624,10 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 				}
 			});
 		}];
-		[_dataResouce removeAllObjects];
-        [[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_dataResouce removeAllObjects];
+        });
+		        [[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
             			dispatch_async(dispatch_get_main_queue(), ^{
             i++;
             
