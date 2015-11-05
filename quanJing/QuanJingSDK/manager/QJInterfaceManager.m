@@ -51,9 +51,11 @@
 	return sharedAdapter;
 }
 
-+ (NSString *)thumbnailUrlFromImageUrl:(NSString *)imageUrl size:(CGSize)size
++ (NSString *)thumbnailUrlFromImageUrl:(NSString *)imageUrl
+	originalSize:(CGSize)originalSize
+	size:(CGSize)size
 {
-	if ((size.width <= 0.0) && (size.height <= 0.0))
+	if (CGSizeEqualToSize(size, CGSizeZero))
 		return imageUrl;
 		
 	if ([imageUrl rangeOfString:kQJPhotoServerHost].location == NSNotFound)
@@ -61,6 +63,11 @@
 		
 	NSUInteger width = (NSUInteger)size.width * [[UIScreen mainScreen] scale];
 	NSUInteger height = (NSUInteger)size.height * [[UIScreen mainScreen] scale];
+	
+	if (!CGSizeEqualToSize(originalSize, CGSizeZero) &&
+		((width > originalSize.width) || (height > originalSize.height)))
+		return imageUrl;
+		
 	NSString * url = [imageUrl stringByAppendingString:@"@"];
 	NSString * resultUrl = [url stringByAppendingString:[NSString stringWithFormat:@"%luw_%luh_100Q_1x_1o.jpg", width, height]];
 	return resultUrl;
