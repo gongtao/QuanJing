@@ -87,7 +87,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     [_collectionView easyFillSuperview];
     [_collectionView addHeaderWithTarget:self action:@selector(refreshData)];
     [_collectionView addFooterWithTarget:self action:@selector(loadMoreData)];
-    [_collectionView headerBeginRefreshing];
+//    [_collectionView headerBeginRefreshing];
     _collectionView.headerPullToRefreshText=nil;
     _collectionView.headerRefreshingText=nil;
     _collectionView.headerReleaseToRefreshText=nil;

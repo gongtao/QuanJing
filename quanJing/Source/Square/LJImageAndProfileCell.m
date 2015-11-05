@@ -596,7 +596,7 @@
 			ImageView.userInteractionEnabled = YES;
 			ImageView.alpha = 0.0;
 			__weak UIImageView * weakImageView = ImageView;
-			[ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:CGSizeMake(x, height)]]
+			[ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url size:ImageView.bounds.size]]
 			placeholderImage:nil
 			completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
 				if (cacheType == SDImageCacheTypeNone) {
