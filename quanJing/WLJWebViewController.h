@@ -8,23 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "WLJArticle.h"
-//#import "ui"
+// #import "ui"
 @class FSImageViewerViewController;
 
 @interface WLJWebViewController : UIViewController
 
-@property(strong, nonatomic) FSImageViewerViewController *imageViewController;
+@property(strong, nonatomic) FSImageViewerViewController * imageViewController;
 
+@property (nonatomic, strong) NSString * urlString;
+@property (nonatomic, strong) WLJArticle * article;
 
-@property (nonatomic, strong) NSString *urlString;
-@property (nonatomic, strong) WLJArticle *article;
+@property (nonatomic, copy) NSString * titleS;
+@property (nonatomic, copy) NSString * assetUrl;
 
-
-
-
-@property (nonatomic, copy)NSString *titleS;
-@property (nonatomic, copy)NSString *assetUrl;
-
-
-@property (nonatomic, copy)NSString *SummaryStr;
+@property (nonatomic, copy) NSString * SummaryStr;
 @end
