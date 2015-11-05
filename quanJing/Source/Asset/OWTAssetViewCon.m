@@ -467,8 +467,8 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 }
 - (void)updateNavBarButtons
 {
-    OWTUser* currentUser = GetUserManager().currentUser;
-    if (currentUser != nil && [currentUser isOwnerOf:_imageAsset])
+    QJUser *user=[QJPassport sharedPassport].currentUser;
+    if ([user.uid.stringValue isEqualToString:_imageAsset.userId.stringValue])
     {
         static UIImage* kEditImage = nil;
         if (kEditImage == nil)
@@ -500,6 +500,68 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
         self.navigationItem.leftBarButtonItems = items;
     }
 }
+//- (void)editAsset
+//{
+//    LJAssetEditView *ljvc=[[LJAssetEditView alloc]initWithAsset:self.asset deletionAllowed:_deletionAllowed];
+//    OWTAssetEditViewCon* editViewCon = [[OWTAssetEditViewCon alloc] initWithAsset:self.asset deletionAllowed:_deletionAllowed];
+//    ljvc.doneAction = ^(EWTDoneType doneType) {
+//        switch (doneType)
+//        {
+//            case nWTDoneTypeCancelled:
+//                [self dismissViewControllerAnimated:YES completion:nil];
+//                break;
+//            case nWTDoneTypeUpdated:
+//                [self reloadData];
+//                [self dismissViewControllerAnimated:YES completion:nil];
+//                break;
+//            case nWTDoneTypeDeleted:
+//            {
+//                AssertTR(_deletionAllowed);
+//                [self dismissViewControllerAnimated:YES completion:^{
+//                    if (_onDeleteAction != nil)
+//                    {
+//                        _onDeleteAction();
+//                    }
+//                    [self.navigationController popViewControllerAnimated:YES];
+//                }];
+//                break;
+//            }
+//            default:
+//                break;
+//        }
+//    };
+//    editViewCon.doneAction=^(EWTDoneType doneType) {
+//        switch (doneType)
+//        {
+//            case nWTDoneTypeCancelled:
+//                [self dismissViewControllerAnimated:YES completion:nil];
+//                break;
+//            case nWTDoneTypeUpdated:
+//                [self reloadData];
+//                [self dismissViewControllerAnimated:YES completion:nil];
+//                break;
+//            case nWTDoneTypeDeleted:
+//            {
+//                AssertTR(_deletionAllowed);
+//                [self dismissViewControllerAnimated:YES completion:^{
+//                    if (_onDeleteAction != nil)
+//                    {
+//                        _onDeleteAction();
+//                    }
+//                    [self.navigationController popViewControllerAnimated:YES];
+//                }];
+//                break;
+//            }
+//            default:
+//                break;
+//        }
+//    };
+//    
+//    UINavigationController* navCon = [[UINavigationController alloc] initWithRootViewController:editViewCon];
+//    UINavigationController *navc=[[UINavigationController alloc]initWithRootViewController:ljvc];
+//    [self presentViewController:navCon animated:YES completion:nil];
+//}
+//
 
 -(void)mergeAssets:(NSArray*)imageObjectArray
 {

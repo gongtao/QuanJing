@@ -231,8 +231,7 @@
     float height = [_asset.height floatValue];
     float scr=SCREENWIT-20;
     _assetImageView.frame=CGRectMake(10, 10, SCREENWIT-20,scr/width*height);
-    
-    NSString *adpatUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:_asset.url size:CGSizeMake(scr, scr/width*height)];
+    NSString *adpatUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:_asset.url  originalSize:CGSizeMake(_asset.width.floatValue, _asset.height.floatValue) size:CGSizeMake(scr, scr/width*height) ];
     [_assetImageView setImageWithURL:[NSURL URLWithString:adpatUrl]];
 
     UITapGestureRecognizer*tapRecognizerleft=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
