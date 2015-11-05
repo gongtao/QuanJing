@@ -209,6 +209,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                     _imageAsset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
                     _imageAsset.likes = imageObject.likes;
                     [self reloadData];
+                    [self loadRelatedAssetsInSearch];
 
                 }else{
                     [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
@@ -450,7 +451,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 {
     [super viewDidLoad];
     _searchResults = [[NSMutableOrderedSet alloc]init];
-    [self loadRelatedAssetsInSearch];
+
     //[self getAllAssetData];
 }
 
