@@ -94,7 +94,8 @@
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		NSError * error = nil;
 		// html解析
-		NSString * htmlString = [NSString stringWithContentsOfURL:[NSURL URLWithString:_urlString]
+		NSURL * url = [NSURL URLWithString:_urlString];
+		NSString * htmlString = [NSString stringWithContentsOfURL:url
 		encoding:NSUTF8StringEncoding
 		error:&error];
 		
@@ -129,7 +130,7 @@
 			self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, _ifCustom ? 10 : 0, self.view.bounds.size.width, _ifCustom ? self.view.bounds.size.height : self.view.bounds.size.height)];
 			_webView.delegate = self;
 			[self.view addSubview:self.webView];
-			[self.webView loadHTMLString:htmlString baseURL:nil];
+			[self.webView loadHTMLString:htmlString baseURL:url.baseURL];
 		});
 	});
 	
