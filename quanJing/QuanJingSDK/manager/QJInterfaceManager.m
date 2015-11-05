@@ -56,7 +56,7 @@
 	if ((size.width <= 0.0) && (size.height <= 0.0))
 		return imageUrl;
 		
-	if ([imageUrl rangeOfString:kQJFakePhotoServerHost].location == NSNotFound)
+	if ([imageUrl rangeOfString:kQJPhotoServerHost].location == NSNotFound)
 		return imageUrl;
 		
 	NSUInteger width = (NSUInteger)size.width * [[UIScreen mainScreen] scale];
