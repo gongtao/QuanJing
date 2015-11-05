@@ -953,6 +953,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)downloadAsset
 {
+    [[QJInterfaceManager sharedManager]requestImageAddDownload:_imageAsset.imageId imageType:_imageAsset.imageType];
     [SVProgressHUD showWithStatus:@"保存图片中..." maskType:SVProgressHUDMaskTypeBlack];
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
     NSURL* url = [NSURL URLWithString:_imageAsset.url];
