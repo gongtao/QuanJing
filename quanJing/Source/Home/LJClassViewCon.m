@@ -53,8 +53,9 @@
 	
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		[fm requestImageRootCategory:^(NSArray * _Nonnull imageCategoryArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
-			[_dataArr addObjectsFromArray:imageCategoryArray];
+			
 			dispatch_async(dispatch_get_main_queue(), ^{
+                [_dataArr addObjectsFromArray:imageCategoryArray];
 				[_tableView reloadData];
 			});
 		}];

@@ -82,20 +82,20 @@
     }
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:self.urlString]];
     
-    NSURL *url =[NSURL URLWithString:_urlString];
-    //
-    //html解析
-    NSString *htmlString=[NSString stringWithContentsOfURL:url encoding: NSUTF8StringEncoding error:nil];
-    NSData *htmlData=[htmlString dataUsingEncoding:NSUTF8StringEncoding];
-    TFHpple *xpathParser = [[TFHpple alloc] initWithHTMLData:htmlData];
-    NSArray *elements  = [xpathParser searchWithXPathQuery:@"//title"]; // get the
-    //网络异常的时候，处理指针异常
-    if (elements.count<1) {
-        return;
-    }
-    TFHppleElement *element = [elements objectAtIndex:0];
-    Tstr = [element content];
-    NSLog(@"result = %@",Tstr);
+//    NSURL *url =[NSURL URLWithString:_urlString];
+//    //
+//    //html解析
+//    NSString *htmlString=[NSString stringWithContentsOfURL:url encoding: NSUTF8StringEncoding error:nil];
+//    NSData *htmlData=[htmlString dataUsingEncoding:NSUTF8StringEncoding];
+//    TFHpple *xpathParser = [[TFHpple alloc] initWithHTMLData:htmlData];
+//    NSArray *elements  = [xpathParser searchWithXPathQuery:@"//title"]; // get the
+//    //网络异常的时候，处理指针异常
+//    if (elements.count<1) {
+//        return;
+//    }
+//    TFHppleElement *element = [elements objectAtIndex:0];
+//    Tstr = [element content];
+//    NSLog(@"result = %@",Tstr);
     
     
     

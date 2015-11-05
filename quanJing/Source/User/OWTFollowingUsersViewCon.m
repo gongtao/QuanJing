@@ -109,32 +109,33 @@
 	};
 	
 	_userFlowViewCon.loadMoreDataFunc = ^(void (^ loadMoreDoneFunc)()) {
-		if (wself.userFlowViewCon.islast) {
-			[SVProgressHUD showErrorWithStatus:@"没有更多图片"];
-			
-			if (loadMoreDoneFunc)
-				loadMoreDoneFunc();
-			return;
-		}
-		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			[[QJPassport sharedPassport]requestUserFollowList:wself.user.uid pageNum:_userFlowViewCon.dataResouce.count / 30 + 1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
-				dispatch_async(dispatch_get_main_queue(), ^{
-					if (error) {
-						[SVProgressHUD showError:error];
-						
-						if (loadMoreDoneFunc)
-							loadMoreDoneFunc();
-					}
-					else {
-						wself.userFlowViewCon.islast = (!followUserArray || followUserArray.count == 0 || followUserArray.count % 30 != 0);
-						[wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
-						
-						if (loadMoreDoneFunc)
-							loadMoreDoneFunc();
-					}
-				});
-			}];
-		});
+        return ;
+//		if (wself.userFlowViewCon.islast) {
+//			[SVProgressHUD showErrorWithStatus:@"没有更多图片"];
+//			
+//			if (loadMoreDoneFunc)
+//				loadMoreDoneFunc();
+//			return;
+//		}
+//		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//			[[QJPassport sharedPassport]requestUserFollowList:wself.user.uid pageNum:_userFlowViewCon.dataResouce.count / 30 + 1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+//				dispatch_async(dispatch_get_main_queue(), ^{
+//					if (error) {
+//						[SVProgressHUD showError:error];
+//						
+//						if (loadMoreDoneFunc)
+//							loadMoreDoneFunc();
+//					}
+//					else {
+//						wself.userFlowViewCon.islast = (!followUserArray || followUserArray.count == 0 || followUserArray.count % 30 != 0);
+//						[wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
+//						
+//						if (loadMoreDoneFunc)
+//							loadMoreDoneFunc();
+//					}
+//				});
+//			}];
+//		});
 	};
 	[_userFlowViewCon manualRefresh];
 }

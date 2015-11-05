@@ -205,14 +205,14 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     _user=GetUserManager().currentUser;
     if (_user.nickname.length==0) {
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请先完善个人信息" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
         [alert show];
     }
     
-    [super viewWillAppear:animated];
-    self.title = @"消息";
+        self.title = @"消息";
     [self refreshDataSource];
     [self registerNotifications];
     _mPopView.frame = CGRectMake(self.view.frame.size.width-5-120, -90, 120, 90);

@@ -610,7 +610,7 @@
 		[fm requestHomeIndex:^(NSDictionary * _Nonnull homeIndexDic, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
 			if (error != nil)
 				return;
-				
+             dispatch_async(dispatch_get_main_queue(), ^{
 			NSString * homeDictionary = NSHomeDirectory();	// 获取根目录
 			NSString * homePath = [homeDictionary stringByAppendingString:@"/Documents/homeIndex.archiver"];
 			BOOL ret = [NSKeyedArchiver archiveRootObject:homeIndexDic toFile:homePath];
@@ -629,7 +629,6 @@
 			_Topic.pics = tempArray;
 			_Topic.ifHomePage = YES;
 			_page.numberOfPages = tempArray.count;
-			dispatch_async(dispatch_get_main_queue(), ^{
 				[_Topic upDate];
 				[self reloadImageViewImage];
 				[_tableView reloadData];

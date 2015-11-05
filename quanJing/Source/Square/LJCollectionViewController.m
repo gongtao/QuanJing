@@ -157,7 +157,7 @@
     cell.touchImagecb=^{
         OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:imageModel.imageType];
         assetViewCon.isSquare = YES;
-        assetViewCon.hidesBottomBarWhenPushed = YES;
+//        assetViewCon.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:assetViewCon animated:NO];
     };
     

@@ -334,6 +334,13 @@
     [self setupSection2];
     [self setupSection3];
 }
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor colorWithHexString:@"f6f6f6"] forKey:UITextAttributeTextColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
+
+}
 
 -(void)getcitybyCode
 {

@@ -195,9 +195,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 -(void)getLikeAndCommendData
 {
     NSInteger integer = ([_imageAsset.imageType integerValue] == 1)?1:2;
-    if (integer == 2) {
-        return;
-    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[QJInterfaceManager sharedManager] requestImageDetail:_imageAsset.imageId imageType:[NSNumber numberWithInteger:integer] finished:^(QJImageObject * imageObject, NSError * error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -206,6 +204,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
                     return ;
                 }
                 if (imageObject != nil) {
+                    _imageAsset.tag=imageObject.tag;
                     _imageAsset.captionCn = imageObject.captionCn;
                     _imageAsset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
                     _imageAsset.likes = imageObject.likes;
