@@ -9,6 +9,7 @@
 #import "LJSearchViewController.h"
 #import "OWTSearchResultsViewCon.h"
 #import "LJSearchCell.h"
+#import "UIColor+HexString.h"
 @interface LJSearchViewController ()<UISearchBarDelegate,UITableViewDelegate,UITableViewDataSource,NSURLConnectionDataDelegate>
 
 @end
@@ -85,7 +86,8 @@
     _searchBar.delegate=self;
     _searchBar.placeholder=@"搜图片";
     _searchBar.userInteractionEnabled=YES;
-    //    _searchBar.translucent = NO;
+        _searchBar.translucent = NO;
+    _searchBar.tintColor=[UIColor lightGrayColor];
     _searchBar.searchBarStyle = UISearchBarStyleMinimal;
     [_searchBar becomeFirstResponder];
     [_searchBar setSearchFieldBackgroundImage:[[UIImage imageNamed:@"SearchBarBG"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)]

@@ -86,6 +86,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)dealloc
 {
+    [SVProgressHUD dismiss];
     _collectionView.delegate = nil;
     _collectionView.dataSource = nil;
 }
@@ -95,7 +96,11 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     [super viewWillAppear:animated];
     [self substituteNavigationBarBackItem];
 }
-
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [SVProgressHUD dismiss];
+}
 - (void)setKeyword:(NSString *)keyword
 {
     [SVProgressHUD show];
