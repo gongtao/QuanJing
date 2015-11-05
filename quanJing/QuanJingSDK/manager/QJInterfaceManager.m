@@ -56,10 +56,13 @@
 	if ((size.width <= 0.0) && (size.height <= 0.0))
 		return imageUrl;
 		
+	if ([imageUrl rangeOfString:kQJFakePhotoServerHost].location == NSNotFound)
+		return imageUrl;
+		
 	NSUInteger width = (NSUInteger)size.width * [[UIScreen mainScreen] scale];
 	NSUInteger height = (NSUInteger)size.height * [[UIScreen mainScreen] scale];
 	NSString * url = [imageUrl stringByAppendingString:@"@"];
-	NSString * resultUrl = [url stringByAppendingString:[NSString stringWithFormat:@"%luw_%luh_90Q_1x_1o.jpg", width, height]];
+	NSString * resultUrl = [url stringByAppendingString:[NSString stringWithFormat:@"%luw_%luh_100Q_1x_1o.jpg", width, height]];
 	return resultUrl;
 }
 
@@ -1355,14 +1358,14 @@
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			__block NSMutableArray * resultArray = [[NSMutableArray alloc] init];
 			[dataArray enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
-                QJImageObject *imageObject = [[QJImageObject alloc] initWithJson:obj];
-                
-                // imageId
-                NSNumber * imageId = obj[@"imageId"];
-                
-                if (!QJ_IS_NUM_NIL(imageId))
-                    imageObject.imageId = imageId;
-                
+				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
+				
+				// imageId
+				NSNumber * imageId = obj[@"imageId"];
+				
+				if (!QJ_IS_NUM_NIL(imageId))
+					imageObject.imageId = imageId;
+					
 				[resultArray addObject:imageObject];
 			}];
 			
