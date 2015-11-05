@@ -13,7 +13,7 @@
 #import "QuanJingSDK.h"
 
 #define kPhoneNumber	@"18600962172"
-#define kPassword		@"Gongtao1987"
+#define kPassword		@"123456"
 
 @interface QuanJingSDKTests : XCTestCase
 
@@ -37,7 +37,7 @@
 
 - (void)testThumbnailSizeExample
 {
-	NSString * url = [QJInterfaceManager thumbnailUrlFromImageUrl:@"http://quanjing-test.oss.aliyuncs.com/041/819/0418191be0c4e584005436e1235ffc4a/dd8fac16fece498dabd03625cc5cfa7d.gif" size:CGSizeMake(200.0, 200.0)];
+	NSString * url = [QJInterfaceManager thumbnailUrlFromImageUrl:@"http://quanjing-test.oss.aliyuncs.com/041/819/0418191be0c4e584005436e1235ffc4a/dd8fac16fece498dabd03625cc5cfa7d.gif" originalSize:CGSizeZero size:CGSizeMake(200.0, 200.0)];
 	
 	NSLog(@"%@", url);
 }

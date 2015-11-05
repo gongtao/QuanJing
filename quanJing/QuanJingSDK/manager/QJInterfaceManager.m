@@ -52,6 +52,14 @@
 }
 
 + (NSString *)thumbnailUrlFromImageUrl:(NSString *)imageUrl
+	size:(CGSize)size
+{
+	return [QJInterfaceManager thumbnailUrlFromImageUrl:imageUrl
+		   originalSize:CGSizeZero
+		   size:size];
+}
+
++ (NSString *)thumbnailUrlFromImageUrl:(NSString *)imageUrl
 	originalSize:(CGSize)originalSize
 	size:(CGSize)size
 {

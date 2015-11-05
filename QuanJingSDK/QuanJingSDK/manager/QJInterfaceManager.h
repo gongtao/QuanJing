@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 图片格式URL转换
 + (NSString *)thumbnailUrlFromImageUrl:(NSString *)imageUrl
+	size:(CGSize)size;
+	
++ (NSString *)thumbnailUrlFromImageUrl:(NSString *)imageUrl
 	originalSize:(CGSize)originalSize
 	size:(CGSize)size;
 	

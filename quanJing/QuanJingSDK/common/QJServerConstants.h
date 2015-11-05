@@ -15,7 +15,8 @@
 static NSString * const kQJCookieHost = @".tiankong.com";
 
 // 域名地址
-static NSString * const kQJServerURL = @"http://mapp.tiankong.com";
+//static NSString * const kQJServerURL = @"http://mapp.tiankong.com";
+static NSString * const kQJServerURL = @"http://123.57.175.151:8080";
 
 // 要替换的图片域名地址
 static NSString * const kQJFakePhotoServerHost = @"quanjing-photo.oss.aliyuncs.com";
