@@ -330,7 +330,10 @@
             [commentImage setImageWithURL:[NSURL URLWithString:commentModel.user.avatar]];
             [commentImage addGestureRecognizer:commentTap];
             [self addSubview:commentImage];
+            
             NSString *name= commentModel.user.nickName;
+            if (commentModel.user.nickName.length == 0)
+                name = @"匿名";
             NSString *commentContent=[NSString stringWithFormat:@"%@",commentModel.comment];
             NSString *commentText=[NSString stringWithFormat:@"%@:%@",name,commentContent];
                 NSMutableAttributedString *attString=[[NSMutableAttributedString alloc]initWithString:commentText];

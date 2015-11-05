@@ -217,11 +217,6 @@ typedef enum {
 	
 	preController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 	
-	//    [self.navigationController presentViewController:preController animated:YES completion:^{
-	////
-	////        // do nothing
-	////
-	//    }];
 }
 
 - (void)updateBasedOnIsCurrentUser
@@ -243,7 +238,7 @@ typedef enum {
 		
 		if (currentUser != nil) {
 			// 是否关注
-			if (_user.hasFollowUser) {
+			if (_user.hasFollowUser.boolValue) {
 				_isCared = YES;
 				_actionButtonType = nWTUserInfoViewActionButtonUnfollow;
 			}

@@ -738,7 +738,7 @@
 				NSString * name = user.nickName;
 				
 				if (user.nickName.length == 0)
-					name = user.uid.stringValue;
+					name = @"匿名";
 				NSString * commentContent = [NSString stringWithFormat:@"%@", commentModel.comment];
 				NSString * commentText = [NSString stringWithFormat:@"%@:%@", name, commentContent];
 				NSMutableAttributedString * attString = [[NSMutableAttributedString alloc]initWithString:commentText];
