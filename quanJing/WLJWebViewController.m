@@ -221,8 +221,6 @@
 	NSString * result = [webView stringByEvaluatingJavaScriptFromString:js];
 	
 	NSLog(@"%@", result);
-    [SVProgressHUD showWithStatus:@"准备图片中..." maskType:SVProgressHUDMaskTypeBlack];
-    
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
