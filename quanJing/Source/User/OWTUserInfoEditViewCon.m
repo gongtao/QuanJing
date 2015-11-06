@@ -475,8 +475,11 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     if ([[info objectForKey:UIImagePickerControllerMediaType] isEqualToString:(__bridge NSString *)kUTTypeImage]) {
+        
         UIImage *img = [info objectForKey:UIImagePickerControllerEditedImage];
-        [self performSelector:@selector(saveImage:)  withObject:img afterDelay:0.5];
+        self.updatedAvatar = img;
+        _updatedAvatarAcion = YES;
+        self.img.image = img;
     }
     else if ([[info objectForKey:UIImagePickerControllerMediaType] isEqualToString:(__bridge NSString *)kUTTypeMovie]) {
         NSString *videoPath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
@@ -492,31 +495,6 @@
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)saveImage:(UIImage *)image {
-    //    NSLog(@"保存头像！");
-    //    [userPhotoButton setImage:image forState:UIControlStateNormal];
-    BOOL success;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSError *error;
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *imageFilePath = [documentsDirectory stringByAppendingPathComponent:@"selfPhoto.jpg"];
-    NSLog(@"imageFile->>%@",imageFilePath);
-    success = [fileManager fileExistsAtPath:imageFilePath];
-    if(success) {
-        success = [fileManager removeItemAtPath:imageFilePath error:&error];
-        _updatedAvatarAcion = YES;
-
-    }
-    //    UIImage *smallImage=[self scaleFromImage:image toSize:CGSizeMake(80.0f, 80.0f)];//将图片尺寸改为80*80
-    //    UIImage *smallImage = [self thumbnailWithImageWithoutScale:image size:CGSizeMake(93, 93)];
-    [UIImageJPEGRepresentation(image, 1.0f) writeToFile:imageFilePath atomically:YES];//写入文件
-    UIImage *selfPhoto = [UIImage imageWithContentsOfFile:imageFilePath];//读取图片文件
-    //    [userPhotoButton setImage:selfPhoto forState:UIControlStateNormal];
-    self.img.image = selfPhoto;
-    self.updatedAvatar =selfPhoto;
-}
 
 // 改变图像的尺寸，方便上传服务器
 - (UIImage *) scaleFromImage: (UIImage *) image toSize: (CGSize) size

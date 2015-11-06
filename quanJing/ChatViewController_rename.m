@@ -410,7 +410,7 @@
             return timeCell;
         }
         else{
-            MessageModel *model = (MessageModel *)obj;
+            __block MessageModel *model = (MessageModel *)obj;
             NSString *cellIdentifier = [EMChatViewCell cellIdentifierForMessageModel:model];
             EMChatViewCell *cell = (EMChatViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
             if (cell == nil) {
@@ -437,15 +437,20 @@
             model.senderImage =  _senderImage;
             if (model.isChatGroup) {
                 NSString *userId = [model.username substringFromIndex:2];
+                __block QJUser *qjuser;
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                   qjuser = [HxNickNameImageModel checekisExsitByID:userId];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSString *adaptURL = [QJInterfaceManager thumbnailUrlFromImageUrl:qjuser.avatar size:CGSizeMake(50, 50)];
+                        if (adaptURL == nil) {
+                            model.thumbnailImage = [UIImage imageNamed:@"chatListCellHead"];
+                        }
+                        model.headImageURL = [NSURL URLWithString:adaptURL];
+                        cell.messageModel = model;
 
-                QJUser *qjuser = [HxNickNameImageModel checekisExsitByID:userId];
+                    });
+                });
                 
-                NSString *adaptURL = [QJInterfaceManager thumbnailUrlFromImageUrl:qjuser.avatar size:CGSizeMake(50, 50)];
-                if (adaptURL == nil) {
-                    model.thumbnailImage = [UIImage imageNamed:@"chatListCellHead"];
-                }
-                model.headImageURL = [NSURL URLWithString:adaptURL];
-
 //                [HxNickNameImageModel askProfileNickNamebyUserIds:[NSArray arrayWithObject:userId]];
 //                model.senderImage = [HxNickNameImageModel getProfileImage:model.username];
 //                if (model.senderImage == nil) {
