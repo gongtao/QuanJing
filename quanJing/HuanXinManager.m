@@ -106,7 +106,7 @@ static HuanXinManager *_instance = nil;
              switch (error.errorCode) {
                  case EMErrorServerNotReachable:
                     if (connectCnt<1) {
-                         TTAlertNoTitle(NSLocalizedString(@"服务异常,请重新启动", @"Connect to the server failed!"));
+//                         TTAlertNoTitle(NSLocalizedString(@"服务异常,请重新启动", @"Connect to the server failed!"));
                      }
                      //再次重连
                      else
@@ -116,13 +116,13 @@ static HuanXinManager *_instance = nil;
                      }
                      break;
                  case EMErrorServerAuthenticationFailure:
-                     TTAlertNoTitle(error.description);
+//                     TTAlertNoTitle(error.description);
                      break;
                  case EMErrorServerTimeout:
-                     TTAlertNoTitle(NSLocalizedString(@"网络失败.", @"Connect to the server timed out!"));
+//                     TTAlertNoTitle(NSLocalizedString(@"网络失败.", @"Connect to the server timed out!"));
                      break;
                  default:
-                     TTAlertNoTitle(NSLocalizedString(@"网络失败..", @"Logon failure"));
+//                     TTAlertNoTitle(NSLocalizedString(@"网络失败..", @"Logon failure"));
                      break;
              }
          }

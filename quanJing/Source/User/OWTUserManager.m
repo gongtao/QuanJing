@@ -188,6 +188,7 @@
 
 -(void)getFirendList:(OWTUser *)user
 {
+
     //就是一个异步的线程
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //耗时操作

@@ -602,10 +602,8 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 						[SVProgressHUD showError:error];
 					return;
 				}
-				
-				user.hasFollowUser = _quser.hasFollowUser;
-				_quser = user;
-				
+                user.hasFollowUser=_quser.hasFollowUser;
+                _quser = user;				
 				if (i == 2) {
 					[_collectionView headerEndRefreshing];
 					[_collectionView reloadData];
