@@ -37,12 +37,6 @@
 
 @implementation WLJWebViewController
 
-+ (void)initialize
-{
-	if ([self class] == [WLJWebViewController class])
-		[UIWebView setDefaultUserAgent:[QJInterfaceManager userAgent]];
-}
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -56,6 +50,9 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+	
+	[UIWebView setDefaultUserAgent:[[QJInterfaceManager sharedManager] userAgent]];
+	
 	self.view.backgroundColor = [UIColor whiteColor];
 	_viewRect = self.view.frame;
 	self.title = @"全景图片";

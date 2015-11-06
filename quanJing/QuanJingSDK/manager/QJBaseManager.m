@@ -126,11 +126,6 @@
 	return ticket;
 }
 
-+ (NSString *)userAgent
-{
-	return [QJHTTPManager sharedManager].userAgent;
-}
-
 #pragma mark - User
 
 - (NSError *)requestRelogin
@@ -187,6 +182,11 @@
 - (AFHTTPClient *)httpRequestManager
 {
 	return [[QJHTTPManager sharedManager] httpRequestManager];
+}
+
+- (NSString *)userAgent
+{
+    return [QJHTTPManager sharedManager].userAgent;
 }
 
 #pragma mark - Error
