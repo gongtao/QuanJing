@@ -25,4 +25,12 @@
 +(void)synDeleChatData:(NSString *)userId;
 
 +(void)getProfileByavatarUrl:(NSArray*)userArray;
+
++(NSMutableArray*)getTriggleValeByIDArray:(NSArray*)usrIds;
+
++(id)getTriggleValeByuserID:(NSString*)usrId;
+
++(id)checekisExsitByID:(NSString*)userId;
+
+
 @end

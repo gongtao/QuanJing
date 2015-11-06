@@ -371,7 +371,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 				[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * concurrencyContext) {
 					QJImageCaption * model = [weakManager getImageCaptionByUrl:dict[@"imageurl"]
 					context:concurrencyContext];
-					
+					//若本地没有 发起网络请求并
 					if ((model == nil) || model.isSelfInsert.boolValue)
 						[self getResouceWithImageUrl:dict[@"imageurl"]
 						model:model

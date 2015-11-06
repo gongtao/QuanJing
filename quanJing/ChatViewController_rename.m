@@ -68,7 +68,7 @@
 @property(nonatomic,strong)UIImage* firmImage;
 @property(nonatomic,strong)UIImageView *fimeImagView;
 @property (nonatomic, strong)NSString *diffCreatMask;
-
+@property (nonatomic, strong)NSArray *cacheDataArray;
 
 @end
 
@@ -84,13 +84,13 @@
         _chatter = chatter;
         _isChatGroup = isGroup;
         _messages = [NSMutableArray array];
-        
+        _cacheDataArray = [[NSMutableArray alloc]init];
         [[[EaseMob sharedInstance] deviceManager] addDelegate:self onQueue:nil];
         [[EaseMob sharedInstance].chatManager removeDelegate:self];
         //注册为SDK的ChatManager的delegate
         [[EaseMob sharedInstance].chatManager addDelegate:self delegateQueue:nil];
         
-        
+        [self getCacheData];
         //根据接收者的username获取当前会话的管理者
         _conversation = [[EaseMob sharedInstance].chatManager conversationForChatter:chatter isGroup:isGroup];
         [_conversation markAllMessagesAsRead:YES];
@@ -100,6 +100,12 @@
     return self;
 }
 
+-(void)getCacheData
+{
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+    _cacheDataArray = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -412,18 +418,41 @@
                 cell.backgroundColor = [UIColor clearColor];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
+            NSString *adaptURLCurrent = [QJInterfaceManager thumbnailUrlFromImageUrl:_currentUser.avatar size:CGSizeMake(50, 50)];
+            
+            NSString *adaptURLOther = [QJInterfaceManager thumbnailUrlFromImageUrl:_otherUser.avatar size:CGSizeMake(50, 50)];
+
+            if (model.isSender) {
+                if (adaptURLCurrent == nil) {
+                    model.thumbnailImage = [UIImage imageNamed:@"chatListCellHead"];
+                }
+                model.headImageURL = [NSURL URLWithString:adaptURLCurrent];
+            }else{
+                if (adaptURLOther == nil) {
+                    model.thumbnailImage = [UIImage imageNamed:@"chatListCellHead"];
+                }
+                    model.headImageURL = [NSURL URLWithString:adaptURLOther];
+            }
             //群聊头像数据的获取
             model.senderImage =  _senderImage;
             if (model.isChatGroup) {
                 NSString *userId = [model.username substringFromIndex:2];
-                [HxNickNameImageModel askProfileNickNamebyUserIds:[NSArray arrayWithObject:userId]];
-                model.senderImage = [HxNickNameImageModel getProfileImage:model.username];
-                if (model.senderImage == nil) {
-                    model.senderImage = [UIImage imageNamed:@"chatListCellHead"];
+
+                QJUser *qjuser = [HxNickNameImageModel checekisExsitByID:userId];
+                
+                NSString *adaptURL = [QJInterfaceManager thumbnailUrlFromImageUrl:qjuser.avatar size:CGSizeMake(50, 50)];
+                if (adaptURL == nil) {
+                    model.thumbnailImage = [UIImage imageNamed:@"chatListCellHead"];
                 }
+                model.headImageURL = [NSURL URLWithString:adaptURL];
+
+//                [HxNickNameImageModel askProfileNickNamebyUserIds:[NSArray arrayWithObject:userId]];
+//                model.senderImage = [HxNickNameImageModel getProfileImage:model.username];
+//                if (model.senderImage == nil) {
+//                    model.senderImage = [UIImage imageNamed:@"chatListCellHead"];
+//                }
             }
             
-            model.receiveImage = _currentUserImage;
             cell.messageModel = model;
             
             return cell;
@@ -432,6 +461,7 @@
     
     return nil;
 }
+
 
 #pragma mark - Table view delegate
 
@@ -512,14 +542,14 @@
 -(void)showUserDetailPage:(NSString*)userID
 {
     //从管理器中所有的ID中选中 当前被选中的用户信息（通过ownerUserID 拿到比如 UserID的传入）
-    OWTUser* user = [[OWTUser alloc]init];
-    user.userID = userID;
+    QJUser* user = [[QJUser alloc]init];
+    user.uid = [NSNumber numberWithInteger:[userID integerValue]];
     
     
     OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
     userViewCon1.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:userViewCon1 animated:YES];
-    userViewCon1.user =user;
+    userViewCon1.quser =user;
 
     
 }

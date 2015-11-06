@@ -160,21 +160,9 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			}];
 		});
 		
-		//		OWTUserManager * um = GetUserManager();
-		//		[um refreshUserAssets:wself.user
-		//		success:^{
-		//			if (refreshDoneFunc != nil)
-		//				refreshDoneFunc();
-		//		}
-		//		failure:^(NSError * error) {
-		//			if (![NetStatusMonitor isExistenceNetwork])
-		//				[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-		//			else
-		//				[SVProgressHUD showError:error];
-		//
-		//			if (refreshDoneFunc != nil)
-		//				refreshDoneFunc();
-		//		}];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        });
 	};
 	
 	wself.loadMoreDataFunc = ^(void (^ loadMoreDoneFunc)()) {
@@ -401,8 +389,8 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	// 开始聊天
 	_chatVC = [[ChatViewController_rename alloc] initWithChatter:toChat isGroup:NO tile1:@"" title2:@""];
 	_chatVC.title = _user.nickname;
-	_chatVC.currentUserImage = GetUserManager().currentUser.currentImage;
-	_chatVC.senderImage = _userInfoView1.mAvatarView.avatarImage;
+	_chatVC.currentUser = [[QJPassport sharedPassport]currentUser];
+	_chatVC.otherUser = _quser;
 }
 
 - (BOOL)authouDetect

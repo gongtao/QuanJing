@@ -25,7 +25,7 @@
 #import "UIScrollView+MJRefresh.h"
 #import "UIViewController+HUD.h"
 #import "MBProgressHUD.h"
-
+#import <UIImageView+WebCache.h>
 
 
 @interface ContactsViewController ()<UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, BaseTableCellDelegate, SRRefreshDelegate>
@@ -86,6 +86,7 @@
     [self setupRefresh];
     
     self.title = @"通讯录";
+    [self getCacheData];
     [self getFriendsList];
     [self.view bringSubviewToFront:_progress];
     
@@ -222,19 +223,24 @@
         }
         
         cell.indexPath = indexPath;
+        __weak BaseTableViewCell *wself = cell;
+
+        QJUser *user = [[self.dataSource objectAtIndex:(indexPath.section - 1)] objectAtIndex:indexPath.row];
         
-        NSDictionary *dic = [[self.dataSource objectAtIndex:(indexPath.section - 1)] objectAtIndex:indexPath.row];
-        
-        NSData *avatarData = [dic objectForKey:@"smallURLImage"];
-        if (avatarData == nil) {
-            cell.roudContactProfile.image = [UIImage imageNamed:@"chatListCellHead"];
+        NSString *adaptURL = [QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:CGSizeMake(50, 50)];
+        if (adaptURL == nil) {
+            [cell.roudContactProfile setImage:[UIImage imageNamed:@"chatListCellHead"]];
         }else{
-            UIImage *avatarImage = [UIImage imageWithData:avatarData];
-            cell.roudContactProfile.image = avatarImage;
+            [cell.roudContactProfile  setImageWithURL:[NSURL URLWithString:adaptURL]
+                                     placeholderImage:nil/*[UIImage imageNamed:@"chatListCellHead"]*/
+                                            completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+                                                if (image == nil) {
+                                                    [wself.roudContactProfile setImage:[UIImage imageNamed:@"chatListCellHead"]];
+                                                }
+                                            }];
         }
-        
-        
-        cell.textLabel.text = [dic objectForKey:@"nickName"];
+
+        cell.textLabel.text = (user.nickName.length>0)? user.nickName:[user.uid stringValue];
         cell.backgroundColor = [UIColor whiteColor];
     }
     
@@ -348,19 +354,8 @@
         [self.navigationController pushViewController:_groupController animated:YES];
     }
     else{
-        NSDictionary *mdic = [[self.dataSource objectAtIndex:(indexPath.section - 1)] objectAtIndex:indexPath.row];
-        NSString *toChat = [mdic objectForKey:@"userID"];
-        //        ChatViewController_rename *chatVC = [[ChatViewController_rename alloc]initWithChatter:toChat isGroup:NO tile1:@"" title2:@""];
-        //
-        //        chatVC.title = [mdic objectForKey:@"nickName"];
-        //        chatVC.currentUserImage = GetUserManager().currentUser.currentImage;
-        //        NSData *avatarData = [mdic objectForKey:@"smallURLImage"];
-        //        UIImage *avatarImage = [UIImage imageWithData:avatarData];
-        //        chatVC.senderImage = avatarImage;
-        //
-        //        [self.navigationController pushViewController:chatVC animated:YES];
-        
-        [self showUserDetailPage:toChat];
+        QJUser *user = [[self.dataSource objectAtIndex:(indexPath.section - 1)] objectAtIndex:indexPath.row];
+        [self showUserDetailPage:user];
         
     }
 }
@@ -368,25 +363,14 @@
 
 
 #pragma -mark 点击聊天页面的用户头像 跳转到用户信息详情页
--(void)showUserDetailPage:(NSString*)userID
+-(void)showUserDetailPage:(QJUser*)user
 {
     //从管理器中所有的ID中选中 当前被选中的用户信息（通过ownerUserID 拿到比如 UserID的传入）
-    OWTUser* user = [[OWTUser alloc]init];
-    user.userID = userID;
     
     OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
     userViewCon1.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:userViewCon1 animated:YES];
-    userViewCon1.user =user;
-
-    
-//    OWTUserManager* um = GetUserManager();
-//    [um refreshPublicInfoForUser:user
-//                         success:^{
-//                                                      }
-//                         failure:^(NSError* error) {
-//                             
-//                         }];
+    userViewCon1.quser = user;
     
 }
 
@@ -479,12 +463,12 @@
     }
     
     //名字分section
-    for (NSDictionary *dic in dataArray) {
+    for (QJUser *user in dataArray) {
         //getUserName是实现中文拼音检索的核心，见NameIndex类
         NSString *nameStr;
         
         @try {
-            nameStr = [dic objectForKey:@"nickName"];
+            nameStr = (user.nickName != nil)?user.nickName:[user.uid stringValue];
             
         }
         @catch (NSException *exception) {
@@ -499,16 +483,16 @@
         NSInteger section = [indexCollation sectionForObject:[firstLetter substringToIndex:1] collationStringSelector:@selector(uppercaseString)];
         
         NSMutableArray *array = [sortedArray objectAtIndex:section];
-        [array addObject:dic];
+        [array addObject:user];
     }
     
     //每个section内的数组排序
     for (int i = 0; i < [sortedArray count]; i++) {
-        NSArray *array = [[sortedArray objectAtIndex:i] sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
-            NSString *firstLetter1 = [ChineseToPinyin pinyinFromChineseString:[obj1 objectForKey:@"nickName"]];
+        NSArray *array = [[sortedArray objectAtIndex:i] sortedArrayUsingComparator:^NSComparisonResult(QJUser *obj1, QJUser *obj2) {
+            NSString *firstLetter1 = [ChineseToPinyin pinyinFromChineseString:(obj1.nickName != nil && obj1.nickName.length>0)?obj1.nickName:[obj1.uid stringValue]];
             firstLetter1 = [[firstLetter1 substringToIndex:1] uppercaseString];
             
-            NSString *firstLetter2 = [ChineseToPinyin pinyinFromChineseString:[obj2 objectForKey:@"nickName"]];
+            NSString *firstLetter2 = [ChineseToPinyin pinyinFromChineseString:(obj2.nickName != nil && obj2.nickName.length>0)?obj2.nickName:[obj2.uid stringValue]];
             firstLetter2 = [[firstLetter2 substringToIndex:1] uppercaseString];
             
             return [firstLetter1 caseInsensitiveCompare:firstLetter2];
@@ -522,48 +506,71 @@
     return sortedArray;
 }
 
+
+-(void)getCacheData
+{
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+    NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSMutableArray *dataArray = [[NSMutableArray alloc]init];
+    if (array.count >0) {
+        for (NSDictionary* dic in array) {
+            NSDictionary *json = [dic objectForKey:@"uid"];
+            QJUser *user = [[QJUser alloc]initWithJson:json];
+            [dataArray addObject:user];
+        }
+        [self goAssembleData:dataArray];
+
+    }
+}
+
 #pragma mark - dataSource
 
 -(void)getFriendsList
 {
-    /*[self hideHud];
-     [self showHudInView:self.view hint:NSLocalizedString(@"loadData", @"Load data...")];
-     
-     __weak typeof(self) weakSelf = self;
-     ChatroomListViewController *strongSelf = weakSelf;
-     */
-    
     [_progress setHidden:NO];
-    
-    _user =  [[OWTUser alloc]init];
     __weak ContactsViewController* wself = self;
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
     
+    NSArray *tmpCache = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSMutableArray *cacheArray = [[NSMutableArray alloc]initWithArray:tmpCache];
     
-    _user.userID = GetUserManager().currentUser.userID;
-    OWTUserManager* um = GetUserManager();
-    
-    [um getUserFriendByUser:wself.user
-                    success:^{
-                        _friendsArray = wself.user.friendListArray ;
-                        //拿着一组ID，如果本地没有 就去缓存头像
-                        NSMutableArray *array =   [HxNickNameImageModel getAvatarNickNameArray:_friendsArray];
-                        [self goAssembleData:array];
-                        
-                        [wself hideHud];
-                        [_tableView headerEndRefreshing];
-                        [_progress setHidden:YES];
-                        
+    //从cacheArray 取出uid存入cacheValue
+    NSMutableArray *cacheValue = [[NSMutableArray alloc]init];
+    for (NSDictionary *dic in cacheArray) {
+        [cacheValue addObject:[[dic objectForKey:@"uid"] objectForKey:@"uid"]];
+    }
+    //异步线程
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //耗时操作
+        [[QJPassport sharedPassport]requestUserFriendList:[[QJPassport sharedPassport]currentUser].uid finished:^(NSArray * userArray, NSError * error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error == nil) {
+                    for (QJUser *user in userArray) {
+                        if (user.uid != nil && user.nickName != nil &&  user.avatar != nil) {
+                            if (![cacheValue containsObject:user.uid]) {
+                                NSDictionary *dic = [NSDictionary dictionaryWithObjects:@[user.uid,user.nickName,user.avatar] forKeys:@[@"uid",@"nickName",@"avatar"]];
+                                [cacheArray addObject:[NSDictionary dictionaryWithObject:dic forKey:@"uid"]];
+                                [NSKeyedArchiver archiveRootObject:cacheArray toFile:homePath];
+                            }
+                        }
                     }
-                    failure:^(NSError* error) {
-                        [_tableView headerEndRefreshing];
-                        [_progress setHidden:YES];
-                        
-                        // [SVProgressHUD showError:error];
-                        //  if (loadMoreDoneFunc != nil)
-                        // {
-                        //   loadMoreDoneFunc();
-                        // }
-                    }];
+                    [_dataSource removeAllObjects];
+                    [self goAssembleData:[NSMutableArray arrayWithArray:userArray]];
+                    [wself hideHud];
+                    [_tableView headerEndRefreshing];
+                    [_progress setHidden:YES];
+                    
+                }else{
+                    [_tableView headerEndRefreshing];
+                    [_progress setHidden:YES];
+                    [SVProgressHUD showErrorWithStatus:@"获取失败"];
+                }
+            });
+        }];
+    });
+
     
 }
 

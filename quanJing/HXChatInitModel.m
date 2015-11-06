@@ -40,6 +40,7 @@ static NSString* kWTClientID = @"3ae125d6e9a009a6fcce3f081f4ce5ff";
                 result[12], result[13], result[14], result[15]
                 ];
     passWord = passWord.uppercaseString;
+
     return [NSArray arrayWithObjects:huanxinCount, passWord.uppercaseString,nil];
 }
 

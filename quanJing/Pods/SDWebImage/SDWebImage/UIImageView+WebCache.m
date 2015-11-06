@@ -22,7 +22,8 @@ static char operationArrayKey;
     [self setImageWithURL:url placeholderImage:placeholder options:0 progress:nil completed:nil];
 }
 
-- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options {
+- (void)setImageWithURL:(NSURL *)url
+                       :(UIImage *)placeholder options:(SDWebImageOptions)options {
     [self setImageWithURL:url placeholderImage:placeholder options:options progress:nil completed:nil];
 }
 

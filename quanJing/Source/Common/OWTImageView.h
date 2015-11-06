@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
 @interface OWTImageView : UIImageView
 
 @property (nonatomic, assign) BOOL fadeTransitionEnabled;
@@ -32,5 +31,6 @@
 - (void)setImageWithURL:(NSURL *)url primaryColor:(UIColor*)primaryColor;
 
 - (void)clearImageAnimated:(BOOL)animated;
+- (void)setImageWithURL:(NSURL *)url completedBlock:(void (^) (BOOL sucess)) block;
 
 @end

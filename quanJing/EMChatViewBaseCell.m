@@ -72,11 +72,11 @@ NSString *const kRouterEventChatHeadImageTapEventName = @"kRouterEventChatHeadIm
     
     _nameLabel.hidden = !messageModel.isChatGroup;
     
-    //    UIImage *placeholderImage = [UIImage imageNamed:@"chatListCellHead"];
-    //    [self.headImageView sd_setImageWithURL:_messageModel.headImageURL placeholderImage:placeholderImage];
+        UIImage *placeholderImage = [UIImage imageNamed:@"chatListCellHead"];
+        [self.headImageView sd_setImageWithURL:_messageModel.headImageURL placeholderImage:placeholderImage];
     
-    BOOL isReceiver = _messageModel.isSender;
-    [self.headImageView sd_setImageWithURL:_messageModel.headImageURL placeholderImage:isReceiver? _messageModel.receiveImage:_messageModel.senderImage];
+//    BOOL isReceiver = _messageModel.isSender;
+//    [self.headImageView sd_setImageWithURL:_messageModel.headImageURL placeholderImage:isReceiver? _messageModel.receiveImage:_messageModel.senderImage];
     
     
 }

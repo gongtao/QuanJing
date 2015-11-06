@@ -7,10 +7,13 @@
 #import "HXChatInitModel.h"
 #import "HxNickNameImageModel.h"
 #import "QJPassport.h"
+#import "QJInterfaceManager.h"
+#import <UIImageView+WebCache.h>
 @interface OWTUserManager ()
 {
     NSMutableDictionary* _usersByID;
     NSString* _accessToken;
+    NSMutableArray *_imageArray;
 }
 
 @end
@@ -139,103 +142,21 @@
                      failure(error);
                  }
              }else {
-                 [self initHuanXinSDK:nil];
-                 [self getFirendList:nil];
-                 if (success != nil)
-                 {
-                     success();
-                 }
-             }
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     _imageArray = [[NSMutableArray alloc]init];
+                     [self initHuanXinSDK:nil];
+                     [self getFirendList:nil];
+                     if (success != nil)
+                     {
+                         success();
+                     }
+
+                 });
+            }
          }];
  
      });
-//        RKObjectManager* om = [RKObjectManager sharedManager];
-//    [om getObjectsAtPath:@"users/me"
-//              parameters:nil
-//                 success:^(RKObjectRequestOperation* o, RKMappingResult* result) {
-//                     [o logResponse];
-//                     
-//                     NSDictionary* resultObjects = result.dictionary;
-//                     OWTServerError* error = resultObjects[@"error"];
-//                     if (error != nil)
-//                     {
-//                         if (failure != nil)
-//                         {
-//                             failure([error toNSError]);
-//                         }
-//                         return;
-//                     }
-//                     
-//                     OWTUserData* userData = resultObjects[@"user"];
-//                     if (userData == nil)
-//                     {
-//                         if (failure != nil)
-//                         {
-//                             failure([[OWTServerError unknownError] toNSError]);
-//                         }
-//                         return;
-//                     }
-//                     
-//                     OWTUser* user = [self registerUserData:userData];
-//                     if (_currentUser == nil)
-//                     {
-//                         _currentUser = user;
-//                         NSString *urlPath =  _currentUser.avatarImageInfo.url;
-//                         
-//                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//                             //耗时操作
-//                             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlPath]]];
-//                             
-//                             if (image != nil) {
-//                                 //更新数据
-//                                 dispatch_async(dispatch_get_main_queue(), ^{
-//                                     [_currentUser setCurrentImage:image];
-//                                 });}
-//                         });
-//                     }
-//                     else
-//                     {
-//                         AssertTR(_currentUser == user);
-//                     }
-//
-//                     [self initHuanXinSDK:user];
-//                     [self getFirendList:user];
-//
-//                     NSArray* relatedAssetDatas = resultObjects[@"relatedAssets"];
-//                     if (relatedAssetDatas == nil)
-//                     {
-//                         if (failure != nil)
-//                         {
-//                             failure([[OWTServerError unknownError] toNSError]);
-//                         }
-//                         return;
-//                     }
-//                     [GetAssetManager() registerAssetDatas:relatedAssetDatas];
-//                     
-//                     NSArray* relatedUserDatas = resultObjects[@"relatedUsers"];
-//                     if (relatedUserDatas == nil)
-//                     {
-//                         if (failure != nil)
-//                         {
-//                             failure([[OWTServerError unknownError] toNSError]);
-//                         }
-//                         return;
-//                     }
-//                     [GetUserManager() registerUserDatas:relatedUserDatas];
-//
-//                     if (success != nil)
-//                     {
-//                         success();
-//                     }
-//                 }
-//                 failure:^(RKObjectRequestOperation* o, NSError* error) {
-//                     OWTUserManager* am = GetUserManager();
-//                     am.ifLoginFail = YES;
-//                     if (failure != nil)
-//                     {
-//                         failure(error);
-//                     }
-//                 }];
+
 }
 
 -(void)initHuanXinSDK:(OWTUser*)user
@@ -249,7 +170,7 @@
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
             //耗时操作
-            [HuanXinManager   logoutHuanxin];
+            [HuanXinManager logoutHuanxin];
             [HuanXinManager sharedTool:hxUsrId passWord:password];
         });
     }
@@ -270,31 +191,41 @@
     //就是一个异步的线程
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //耗时操作
-        QJPassport *pt=[QJPassport sharedPassport];
-//稍后修改；
-        OWTUserManager* um = GetUserManager();
+        //稍后修改；
         __block NSArray * friendsArray = [NSArray array];
-        [um getUserFriendByUser:nil
-                        success:^{
-                            
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *homeDictionary = NSHomeDirectory();//获取根目录
+        NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+        NSMutableArray *urlArrays = [[NSMutableArray alloc]init];
+        [[QJPassport sharedPassport]requestUserFriendList:[[QJPassport sharedPassport]currentUser].uid finished:^(NSArray * userArray, NSError * error){
+            if (error == nil) {
+                for (QJUser *user in userArray) {
+                    UIImageView *_imageView = [[UIImageView alloc]init];
+                    NSString *adaptURL = [QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:CGSizeMake(50, 50)];
+                    [_imageArray addObject:_imageView];
+                    [_imageView setImageWithURL:[NSURL URLWithString:adaptURL]
+                               placeholderImage:nil
+                                      completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+                                          if (image != nil) {
+                                              NSLog(@"dfads");
+                                          }
+                                      }];
                     
-                        friendsArray = user.friendListArray ;
-                            //拿着一组ID，如果本地没有 就去缓存头像
-                        [HxNickNameImageModel getAvatarNickNameRequest:friendsArray];
-                
-                });
-                        }
-                        failure:^(NSError* error) {
-                            
-                            // [SVProgressHUD showError:error];
-                            //  if (loadMoreDoneFunc != nil)
-                            // {
-                            //   loadMoreDoneFunc();
-                            // }
-                        }];
+                    if (user.uid != nil ) {
+                        user.nickName = ( user.nickName.length>0)? user.nickName:nil;
+                        user.avatar = ( user.avatar.length>0)? user.nickName:nil;
+                        NSMutableDictionary *dic2 = [[NSMutableDictionary alloc]init];
+                        [dic2 setValue:user.uid forKey:@"uid"];
+                        [dic2 setValue:user.nickName forKey:@"nickName"];
+                        [dic2 setValue:user.avatar forKey:@"avatar"];
+                        [urlArrays addObject:[NSDictionary dictionaryWithObject:dic2 forKey:@"uid"]];
+                    }
+                   
+                }
+                [NSKeyedArchiver archiveRootObject:urlArrays toFile:homePath];
 
-    });
+            }
+        }];
+});
 
 
 }

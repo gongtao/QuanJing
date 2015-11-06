@@ -15,7 +15,6 @@
 @interface EMRemarkImageView : UIView
 {
     UILabel *_remarkLabel;
-    UIImageView *_imageView;
     
     NSInteger _index;
     BOOL _editing;
@@ -25,5 +24,7 @@
 @property (nonatomic) BOOL editing;
 @property (strong, nonatomic) NSString *remark;
 @property (strong, nonatomic) UIImage *image;
+@property (strong, nonatomic) UIImageView *imageView;
+
 
 @end

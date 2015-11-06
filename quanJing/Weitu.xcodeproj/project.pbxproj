@@ -3350,9 +3350,9 @@
 				31F887CE1BDE16F7007E94C8 /* QJSearchWord.h */,
 				31F887CF1BDE16F7007E94C8 /* QJSearchWord.m */,
 				31F887D01BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.h */,
+				31F887D31BDE16F7007E94C8 /* QJImageCaption.m */,
 				31F887D11BDE16F7007E94C8 /* QJImageCaption+CoreDataProperties.m */,
 				31F887D21BDE16F7007E94C8 /* QJImageCaption.h */,
-				31F887D31BDE16F7007E94C8 /* QJImageCaption.m */,
 			);
 			name = coreData;
 			sourceTree = "<group>";
@@ -4886,7 +4886,7 @@
 				ORGANIZATIONNAME = "SparkingSoft Co., Ltd";
 				TargetAttributes = {
 					9044E3C018CAE4D800784D38 = {
-						DevelopmentTeam = T3BNK5WMQ7;
+						DevelopmentTeam = B6DQ38AV7Y;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -6073,7 +6073,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "efaeb623-e231-4ce0-8548-0aabd1256299";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 				VALID_ARCHS = "armv7 arm64";
@@ -6230,7 +6230,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "efaeb623-e231-4ce0-8548-0aabd1256299";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";

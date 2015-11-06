@@ -12,13 +12,16 @@
 
 #import <UIKit/UIKit.h>
 #import "DXMessageToolBar.h"
-
+#import "QJUser.h"
 @interface ChatViewController_rename : UIViewController
 
 @property (nonatomic,strong)NSString *hxUserID;
 @property (nonatomic,strong)NSString *currentUserName;
 @property (nonatomic,strong)UIImage *currentUserImage;
 @property (nonatomic,strong)UIImage *senderImage;
+@property (nonatomic, strong)QJUser *otherUser;
+@property (nonatomic, strong)QJUser *currentUser;
+
 @property (strong, nonatomic) UITableView *tableView;
 
 @property (nonatomic, assign)NSInteger  chatType;

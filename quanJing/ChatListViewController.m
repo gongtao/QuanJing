@@ -12,10 +12,7 @@
 
 #import "ChatListViewController.h"
 #import "ChatListCell.h"
-//#import "EMSearchBar.h"
-#import "NSDate+Category.h"z
-//导航栏 里面的边输入边搜索 的功能 全景当前不上
-//#import "RealtimeSearchUtil.h"x
+#import "NSDate+Category.h"
 #import "ChatViewController_rename.h"
 #import "EMSearchDisplayController.h"
 #import "ConvertToCommonEmoticonsHelper.h"
@@ -38,7 +35,10 @@
 #import "UIScrollView+MJRefresh.h"
 #import "UIViewController+WTExt.h"
 #import "OWTTabBarHider.h"
-
+#import "QJUser.h"
+#import "QJPassport.h"
+#import "QJInterfaceManager.h"
+#import <UIImageView+WebCache.h>
 
 @interface ChatListViewController ()<UITableViewDelegate,UITableViewDataSource, UISearchDisplayDelegate,SRRefreshDelegate, IChatManagerDelegate,UIAlertViewDelegate>
 
@@ -54,11 +54,17 @@
 @property (strong, nonatomic)PoperView *mPopView;
 @property (assign, nonatomic)BOOL isSelect;
 @property (strong, nonatomic)UITapGestureRecognizer *tap;
+@property (strong, nonatomic)NSArray *cacheArray;
+@property (strong, nonatomic)NSMutableArray *thatUsrs1;
+@property (strong, nonatomic)NSMutableArray *thatUsrs2;
+
+
+
 @end
 
 @implementation ChatListViewController
 {
-    OWTUser *_user;
+    QJUser *_user;
     OWTTabBarHider * _tabBarHider;
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -74,9 +80,9 @@
 {
     [super viewDidLoad];
     [self substituteNavigationBarBackItem2];
-
-    [self removeEmptyConversationsFromDB];
     
+    [self removeEmptyConversationsFromDB];
+    [self setup];
     [self.view addSubview:self.tableView];
     //[self.tableView addSubview:self.slimeView];
     [self networkStateView];
@@ -89,6 +95,25 @@
     
 }
 
+-(void)setup
+{
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+    _cacheArray = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    _thatUsrs1 = [[NSMutableArray alloc]init];
+    _thatUsrs2 = [[NSMutableArray alloc]init];
+
+    if (_cacheArray.count >0) {
+        for (NSDictionary* dic in _cacheArray) {
+            NSDictionary *json = [dic objectForKey:@"uid"];
+            QJUser *user = [[QJUser alloc]initWithJson:json];
+            [_thatUsrs1 addObject:user];
+        }
+        
+    }
+
+
+}
 - (void)popViewControllerWithAnimation
 {
     
@@ -206,8 +231,8 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    _user=GetUserManager().currentUser;
-    if (_user.nickname.length==0) {
+    _user = [[QJPassport sharedPassport]currentUser];
+    if (_user.nickName.length==0) {
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请先完善个人信息" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
         [alert show];
     }
@@ -355,19 +380,37 @@
 {
     NSMutableArray *array = [[NSMutableArray alloc]init];
     for (EMConversation *conversation in displayArray) {
-        NSString  *usrId = [conversation.chatter substringFromIndex:2];
+        NSString *str = [NSString stringWithString:conversation.chatter];
+        NSString  *usrId = [str substringFromIndex:2];
         [array addObject:usrId];
     }
     
     [self getServerUsrInfo: array];
 }
 
--(void)getServerUsrInfo:(NSArray*)usrId
+
+-(void)getServerUsrInfo:(NSArray*)usrIds
 {
+//    //头像等数据 若本地不存在则去请求网络
+//    NSMutableArray *cacheValue = [[NSMutableArray alloc]init];
+//    NSMutableArray *filetArray = [[NSMutableArray alloc]init];
+//    for (NSDictionary *dic in _cacheArray) {
+//        [cacheValue addObject:[[[dic objectForKey:@"uid"] objectForKey:@"uid"] stringValue]];
+//    }
+//    
+//    for (NSString* userID in usrIds) {
+//        if (![cacheValue containsObject:userID]) {
+//            [filetArray addObject:userID];
+//        }
+//    }
+    //_thatUsrs2 = [[NSMutableArray alloc]initWithArray:_thatUsrs1];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
         //耗时操作
-        [HxNickNameImageModel askProfileNickNamebyUserIds:usrId];
+        NSArray *result = [HxNickNameImageModel getTriggleValeByIDArray:usrIds];
+            if (result.count >0) {
+                [_thatUsrs2 removeAllObjects];
+                [_thatUsrs2 addObjectsFromArray:result];
+            }
         dispatch_async(dispatch_get_main_queue(), ^{
             [_tableView reloadData];
         });
@@ -447,19 +490,23 @@
     //cell.name =  conversation.chatter;
     
     //nickName
-    NSString *chater = [HxNickNameImageModel getNickName:conversation.chatter];
-    //聊天者的名字
-    cell.name = [HxNickNameImageModel getNickName:conversation.chatter];
+    NSString *chater = [NSString stringWithString:conversation.chatter];
+    chater = [chater substringFromIndex:2];
+    QJUser *qjuser = nil;
+    for (QJUser *user in _thatUsrs2) {
+        if ([[user.uid stringValue] isEqualToString:chater]) {
+            qjuser = user;
+            break;
+        }
+    }
     
+    //聊天者的名字
+    cell.name = (qjuser.nickName.length>0)?qjuser.nickName:[qjuser.uid stringValue];
     //头像
     if (!conversation.isGroup) {
-        UIImage *profile = [HxNickNameImageModel getProfileImage:conversation.chatter];
-        if (profile) {
-            cell.placeholderImage = profile;
-        }else{
-            
-            cell.placeholderImage = [UIImage imageNamed:@"chatListCellHead"];
-        }
+        NSString *adaptURL = [QJInterfaceManager thumbnailUrlFromImageUrl:qjuser.avatar size:CGSizeMake(50, 50)];
+        cell.placeholderImage = [UIImage imageNamed:@"chatListCellHead"];
+        cell.imageURL = [NSURL URLWithString:adaptURL];
     }
     //群聊
     else{
@@ -534,16 +581,24 @@
         }
     }
     
-    NSString *chatter = conversation.chatter;
+    NSString *chatter = [NSString stringWithString:conversation.chatter];
+
     chatController = [[ChatViewController_rename alloc] initWithChatter:chatter isGroup:conversation.isGroup tile1:@"" title2:@""];
-    //chatController.title = title;
-    chatController.title = [HxNickNameImageModel getNickName:conversation.chatter];
+    QJUser *qjuser = [[QJUser alloc]init];
+    qjuser.uid = [NSNumber numberWithInteger:[chatter integerValue]] ;
+    for (QJUser *user in _thatUsrs2) {
+        if (user.uid != nil && [[user.uid stringValue] isEqualToString:[chatter substringFromIndex:2]]) {
+            qjuser = user;
+            break;
+        }
+    }
+    chatController.title = (qjuser.nickName.length>0)?qjuser.nickName:[qjuser.uid stringValue];
     if (conversation.isGroup) {
         chatController.title = title;
     }
-    chatController.senderImage = [HxNickNameImageModel getProfileImage:conversation.chatter];
+    chatController.otherUser = qjuser;
     chatController.hxUserID = conversation.chatter;
-    chatController.currentUserImage = GetUserManager().currentUser.currentImage;
+    chatController.currentUser = [[QJPassport sharedPassport]currentUser];
     chatController.hidesBottomBarWhenPushed =YES;
     [self.navigationController pushViewController:chatController animated:YES];
 }

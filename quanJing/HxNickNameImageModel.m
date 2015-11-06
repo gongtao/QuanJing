@@ -8,6 +8,9 @@
 
 #import "HxNickNameImageModel.h"
 #import "OWTUser.h"
+#import "QJInterfaceManager.h"
+#import "QJUser.h"
+#import "QJPassport.h"
 @implementation HxNickNameImageModel
 
 +(NSString*)getNickName:(NSString*)userId
@@ -234,7 +237,7 @@
     
     return  avatarNickNameArray;
 }
-
+//通过一组user，取头像后，加上昵称和userID后写沙河并返回这个数组
 +(NSMutableArray*)getAvatarNickNameRequest:(NSArray*)userArray
 {
 
@@ -272,4 +275,69 @@
     return  avatarNickNameArray;
 }
 
++(NSMutableArray*)getTriggleValeByIDArray:(NSArray*)usrIds
+{
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    for (NSString *userId in usrIds) {
+        NSNumber *uid = [NSNumber numberWithInteger:[userId integerValue]];
+        [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
+            if (error == nil && user != nil) {
+                [array addObject:user];
+            }
+        }];
+    }
+    return array;
+}
+
++(id)getTriggleValeByuserID:(NSString*)usrId
+{
+        __block QJUser *_user = nil;
+        NSNumber *uid = [NSNumber numberWithInteger:[usrId integerValue]];
+        [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
+            if (error == nil && user != nil) {
+                _user = user;
+            }
+        }];
+    return _user;
+}
+
++(id)checekisExsitByID:(NSString*)userId
+{
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+    NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSMutableArray *mutableArray = [NSMutableArray arrayWithArray:array];
+    BOOL isExist = NO;
+    __block QJUser *_user = [[QJUser alloc]init];
+    for (NSDictionary *dic in mutableArray) {
+      NSDictionary *dic2  =  [dic objectForKey:@"uid"];
+        NSNumber*  num = [dic2 objectForKey:@"uid"];
+        if ( [[num stringValue] isEqualToString:userId]) {
+            if ([dic objectForKey:@"avatar"] != nil &&  [dic objectForKey:@"nickName"] != nil) {
+                isExist = YES;
+                [_user setPropertiesFromJson:dic];
+                return _user;
+                break;
+            }
+        }
+    }
+    
+    if (!isExist) {
+        NSNumber *uid = [NSNumber numberWithInteger:[userId integerValue]];
+            [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
+                    if (error == nil && user != nil) {
+                        _user = user;
+                        NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+                        [dic setValue:user.uid forKey:@"uid"];
+                        [dic setValue:user.nickName forKey:@"nickName"];
+                        [dic setValue:user.avatar forKey:@"avatar"];
+                        NSDictionary *tmp = [NSDictionary dictionaryWithObject:dic forKey:@"uid"];
+                        [NSKeyedArchiver archiveRootObject:tmp toFile:homePath];
+                        
+                    }
+            }];
+
+    }
+    return _user;
+}
 @end

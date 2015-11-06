@@ -24,6 +24,9 @@
 #import "TTGlobalUICommon.h"
 #import "AddFriendListViewController.h"
 #import "UIViewController+HUD.h"
+#import "QJUser.h"
+#import "QJInterfaceManager.h"
+#import <UIImageView+WebCache.h>
 #pragma mark - ChatGroupDetailViewController
 
 #define kColOfRow 5
@@ -485,7 +488,6 @@
     BOOL isEditing = self.addButton.hidden ? YES : NO;
     BOOL isEnd = NO;
     
-    NSMutableArray *usrIdArray = [[NSMutableArray alloc]init];
     for (i = 0; i < row; i++) {
         for (j = 0; j < kColOfRow; j++) {
             NSInteger index = i * kColOfRow + j;
@@ -493,15 +495,27 @@
                 //qj+Id
                 NSString *username = [self.dataSource objectAtIndex:index];
                 NSString *userId = [username substringFromIndex:2];
-                [usrIdArray addObject:userId];
                 //如果本地缓存没有相关数据 去服务器请求头像和昵称的数据
-                [HxNickNameImageModel askProfileNickNamebyUserIds:usrIdArray];
-
+                QJUser *qjuser = [HxNickNameImageModel getTriggleValeByuserID:userId];
+                
                 ContactView *contactView = [[ContactView alloc] initWithFrame:CGRectMake(j * kContactSize, i * kContactSize, kContactSize, kContactSize)];
                 contactView.index = i * kColOfRow + j;
+                
+                NSString *adaptURL = [QJInterfaceManager thumbnailUrlFromImageUrl:qjuser.avatar size:CGSizeMake(50, 50)];
                 //头像
-                contactView.image = [HxNickNameImageModel getProfileImage:username];
-                contactView.remark = [HxNickNameImageModel getNickName:username];
+                if (adaptURL == nil) {
+                    [contactView.imageView  setImage:[UIImage imageNamed:@"chatListCellHead"]];
+
+                }else{
+                    [contactView.imageView  setImageWithURL:[NSURL URLWithString:adaptURL]
+                                             placeholderImage:[UIImage imageNamed:@"chatListCellHead"]
+                                                    completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+                                                        if (image != nil) {
+                                                            //[contactView.imageView  setImage:[UIImage imageNamed:@"chatListCellHead"]];
+                                                        }
+                                                    }];
+                }
+                contactView.remark =  (qjuser.nickName.length>0)?qjuser.nickName:[qjuser.uid stringValue];
                 if (![username isEqualToString:loginUsername]) {
                     contactView.editing = isEditing;
                 }

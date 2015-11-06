@@ -8,9 +8,9 @@
 
 #import "OWTImageView.h"
 #import "OWTImageInfo.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 #import <NSLayoutConstraint+ExpressionFormat/NSLayoutConstraint+ExpressionFormat.h>
-#import <SDWebImage/UIImageView+WebCache.h>
 #import <UIView+Positioning/UIView+Positioning.h>
 #import <UIColor-HexString/UIColor+HexString.h>
 
@@ -168,6 +168,22 @@
         primaryColor = [UIColor lightGrayColor];
     }
     [self setImageWithURL:url primaryColor:primaryColor];
+}
+
+- (void)setImageWithURL:(NSURL *)url completedBlock:(void (^) (BOOL sucess))block
+{
+    
+    //传入一个头像的URL 调用SDWebImage 去获取用户的头像的image
+    [self setImageWithURL:url
+         placeholderImage:nil
+                  options:SDWebImageRetryFailed
+                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                    if (image != nil )
+                    {
+                        block(YES);
+                    }
+                }];
+
 }
 
 - (void)setImageWithURL:(NSURL *)url primaryColor:(UIColor*)primaryColor

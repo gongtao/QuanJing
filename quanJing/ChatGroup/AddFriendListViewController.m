@@ -18,6 +18,9 @@
 #import "SRRefreshView.h"
 #import "ContactsViewController.h"
 #import "UIScrollView+MJRefresh.h"
+#import <UIImageView+WebCache.h>
+#import "QJPassport.h"
+#import "QJInterfaceManager.h"
 
 @interface AddFriendListViewController ()<SRRefreshDelegate>
 {
@@ -25,7 +28,7 @@
 }
 
 @property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) NSArray *dataSource;
+@property (strong, nonatomic) NSMutableArray *dataSource;
 @property (strong, nonatomic) NSMutableArray *selectedContacts;
 @property (strong, nonatomic) NSArray *userFirendList;
 @property (strong, nonatomic) OWTUser *user;
@@ -33,13 +36,15 @@
 @property (strong, nonatomic) NSMutableArray *contacts;
 @property (strong, nonatomic) UILabel *noMesglable;
 @property (strong, nonatomic) SRRefreshView *slimeView;
+@property (strong, nonatomic) NSMutableArray *imageArray;
 @end
 
 @implementation AddFriendListViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    _imageArray = [[NSMutableArray alloc]init];
+    _dataSource = [[NSMutableArray alloc]init];
     _progress = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:_progress];
     [self.view bringSubviewToFront:_progress];
@@ -48,7 +53,7 @@
     
     
     UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-    [doneButton setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    [doneButton setTitleColor:[UIColor whiteColor]forState:UIControlStateNormal];
     
     [doneButton setTitle:@"完成" forState:UIControlStateNormal];
     [doneButton addTarget:self action:@selector(addgropChatAction:) forControlEvents:UIControlEventTouchDown];
@@ -58,11 +63,12 @@
     self.title = @"发起群聊";
     _contacts = [[NSMutableArray alloc]init];
     _selectedContacts = [[NSMutableArray alloc]init];
-    _dataSource = [[NSArray alloc]init];
     _ewMenber = [[NSMutableArray alloc]init];
     _userFirendList = [[NSArray alloc]init];
-    [self getFriendsList];
     [self.view addSubview:self.tableView];
+
+    [self getCacheData];
+    [self getFriendsList];
     [self setupRefresh];
     
     //[self.tableView addSubview:self.slimeView];
@@ -94,9 +100,9 @@
 -(void)addgropChatAction:(UIButton*)sender
 {
     if (_existMenberArray) {
-        for (OWTUser *user in _selectedContacts) {
-            if (![_existMenberArray containsObject:user.userID]) {
-                NSString *hxUserID = [@"qj" stringByAppendingString: user.userID];
+        for (QJUser *user in _selectedContacts) {
+            if (![_existMenberArray containsObject:[user.uid stringValue]]) {
+                NSString *hxUserID = [@"qj" stringByAppendingString: [user.uid stringValue]];
                 [_ewMenber addObject:hxUserID];
             }
         }
@@ -108,8 +114,8 @@
         }
         [self showHudInView:self.view hint:NSLocalizedString(@"group.create.ongoing", @"create a group...")];
         NSMutableArray *source = [NSMutableArray array];
-        for (OWTUser *user in _selectedContacts) {
-            [source addObject: [@"qj" stringByAppendingString: user.userID]];
+        for (QJUser *user in _selectedContacts) {
+            [source addObject: [@"qj" stringByAppendingString: [user.uid stringValue]]];
         }
         EMGroupStyleSetting *setting = [[EMGroupStyleSetting alloc] init];
         
@@ -230,18 +236,22 @@
     if (cell == nil) {
         cell = [[CustomBaseTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    
-    OWTUser *usr = [_dataSource  objectAtIndex:indexPath.row];
-    
-    UIImage *image = [HxNickNameImageModel getProfileImageWithoutPrefix:usr.userID];
-    if (image == nil) {
-        cell.roudContactProfile.image = [UIImage imageNamed:@"chatListCellHead"];
+    __weak CustomBaseTableViewCell *wself = cell;
+    QJUser *usr = [_dataSource  objectAtIndex:indexPath.row];
+    NSString *adaptURL = [QJInterfaceManager thumbnailUrlFromImageUrl:usr.avatar size:CGSizeMake(50, 50)];
+    if (adaptURL == nil) {
+        [cell.roudContactProfile setImage:[UIImage imageNamed:@"chatListCellHead"]];
     }else{
-        cell.roudContactProfile.image = image;
-        
+    [cell.roudContactProfile  setImageWithURL:[NSURL URLWithString:adaptURL]
+               placeholderImage:nil
+                      completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+                          if (image == nil) {
+                              [wself.roudContactProfile setImage:[UIImage imageNamed:@"chatListCellHead"]];
+                          }
+                      }];
     }
-    cell.textLabel.text = usr.nickname ;
-    
+    cell.textLabel.text = (usr.nickName.length>0)? usr.nickName:[usr.uid stringValue];
+
     NSUInteger row = [indexPath row];
     NSMutableDictionary *dic = [_contacts objectAtIndex:row];
     if ([[dic objectForKey:@"checked"] isEqualToString:@"NO"]) {
@@ -338,7 +348,6 @@
         [dic setValue:@"NO" forKey:@"checked"];
         [_contacts addObject:dic];
     }
-    [self.view addSubview:_tableView];
     [_tableView reloadData];
     [_slimeView endRefresh];
     [_tableView headerEndRefreshing];
@@ -358,35 +367,76 @@
     
 }
 
+-(void)getCacheData
+{
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+    NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    if (array.count >0) {
+        for (NSDictionary* dic in array) {
+            NSDictionary *json = [dic objectForKey:@"uid"];
+            if ([json objectForKey:@"uid"] == nil) {
+                return;
+            }
+            QJUser *user = [[QJUser alloc]initWithJson:json];
+            [_dataSource addObject:user];
+        }
+        [self loadDataSource];
+
+
+    }
+}
 -(void)getFriendsList
 {
-    _user =  [[OWTUser alloc]init];
-    __weak AddFriendListViewController* wself = self;
     [_progress setHidden:NO];
     
-    _user.userID = GetUserManager().currentUser.userID;
-    OWTUserManager* um = GetUserManager();
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
     
-    [um getUserFriendByUser:wself.user
-                    success:^{
-                        _userFirendList = wself.user.friendListArray ;
-                        _dataSource = _userFirendList;
-                        //拿着一组ID，如果本地没有 就去缓存头像
-                        [HxNickNameImageModel getProfileByavatarUrl:_dataSource];
-                        [self loadDataSource];
-                        [_tableView headerEndRefreshing];
-                        [_progress setHidden:YES];
+    NSArray *tmpCache = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSMutableArray *cacheArray = [[NSMutableArray alloc]initWithArray:tmpCache];
+    
+    //从cacheArray 取出uid存入cacheValue
+    NSMutableArray *cacheValue = [[NSMutableArray alloc]init];
+    for (NSDictionary *dic in cacheArray) {
+        [cacheValue addObject:[[dic objectForKey:@"uid"] objectForKey:@"uid"]];
+    }
+
+    //异步线程
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //耗时操作
+        [[QJPassport sharedPassport]requestUserFriendList:[[QJPassport sharedPassport]currentUser].uid finished:^(NSArray * userArray, NSError * error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+            if (error == nil) {
+                NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+                for (QJUser *user in userArray) {
+                    if (user.uid != nil ) {
+                        if (![cacheValue containsObject:user.uid]) {
+                            user.nickName = (user.nickName.length>0)?user.nickName:nil;
+                            user.avatar = (user.avatar.length>0)?user.avatar:nil;
+                            [dic setValue:user.uid forKey:@"uid"];
+                            [dic setValue:user.nickName forKey:@"nickName"];
+                            [dic setValue:user.avatar forKey:@"avatar"];
+                            [cacheArray addObject:[NSDictionary dictionaryWithObject:dic forKey:@"uid"]];
+                        }
                     }
-                    failure:^(NSError* error) {
-                        [_tableView headerEndRefreshing];
-                        [_progress setHidden:YES];
-                        // [SVProgressHUD showError:error];
-                        //  if (loadMoreDoneFunc != nil)
-                        // {
-                        //   loadMoreDoneFunc();
-                        // }
-                    }];
-    
+                    [NSKeyedArchiver archiveRootObject:cacheArray toFile:homePath];
+
+                }
+                [_dataSource removeAllObjects];
+                _dataSource = [NSMutableArray arrayWithArray:userArray];
+                [self loadDataSource];
+                [_progress setHidden:YES];
+
+            }else{
+                [_tableView headerEndRefreshing];
+                [_progress setHidden:YES];
+                [SVProgressHUD showErrorWithStatus:@"获取失败"];
+            }
+            });
+        }];
+    });
+
 }
 
 - (void)didReceiveMemoryWarning {
