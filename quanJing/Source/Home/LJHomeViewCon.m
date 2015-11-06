@@ -448,6 +448,9 @@
 	if (_showArr.count > 0) {
 		NSMutableArray * tempArray = [[NSMutableArray alloc]init];
 		[_showArr enumerateObjectsUsingBlock:^(QJHomeIndexObject * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (!obj.imageUrl||!obj.title) {
+                return ;
+            }
 			NSString * str = obj.imageUrl;
 			NSString * str1 = obj.title;
 			[tempArray addObject:[NSDictionary dictionaryWithObjects:@[str, str1, @NO] forKeys:@[@"pic", @"title", @"isLoc"]]];
@@ -624,7 +627,10 @@
 			[_showArr addObjectsFromArray:homeIndexDic[@"lbt"]];
 			NSMutableArray * tempArray = [[NSMutableArray alloc]init];
 			[_showArr enumerateObjectsUsingBlock:^(QJHomeIndexObject * obj, NSUInteger idx, BOOL * _Nonnull stop) {
-				NSString * str = obj.imageUrl;
+                if (!obj.imageUrl||!obj.title) {
+                    return ;
+                }
+                NSString * str = obj.imageUrl;
 				NSString * str1 = obj.title;
 				[tempArray addObject:[NSDictionary dictionaryWithObjects:@[str, str1, @NO] forKeys:@[@"pic", @"title", @"isLoc"]]];
 			}];

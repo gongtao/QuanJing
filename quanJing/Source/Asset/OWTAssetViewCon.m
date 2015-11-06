@@ -199,6 +199,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
                     _imageAsset.captionCn = imageObject.captionCn;
                     _imageAsset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
                     _imageAsset.likes = imageObject.likes;
+                    _imageAsset.userId=imageObject.userId;
                     [self reloadData];
                     [self loadRelatedAssetsInSearch];
 

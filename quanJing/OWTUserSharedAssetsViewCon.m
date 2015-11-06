@@ -116,7 +116,8 @@
     
     _assetViewCon.onAssetSelectedFunc = ^(QJImageObject* asset)
     {
-        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset initWithType:3];
+        OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc]initWithImageId:asset imageType:asset.imageType];
+//        OWTAssetViewCon* assetViewCon = [[OWTAssetViewCon alloc] initWithAsset:asset initWithType:3];
         [wself.navigationController pushViewController:assetViewCon animated:YES];
     };
 
