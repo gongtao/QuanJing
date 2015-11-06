@@ -588,11 +588,12 @@
 	[self.navigationController pushViewController:lvc animated:NO];
 }
 
-- (void)performSearch
+- (void)performSearch:(NSString *)title
 {
 	OWTSearchResultsViewCon * searchResultsViewCon = [[OWTSearchResultsViewCon alloc] initWithNibName:nil bundle:nil];
 	
 	searchResultsViewCon.view.tag = 8173;
+    searchResultsViewCon.title=title;
 	[searchResultsViewCon setKeyword:_keyword];
 	searchResultsViewCon.hidesBottomBarWhenPushed = YES;
 	//	[searchResultsViewCon substituteNavigationBarBackItem];
@@ -603,7 +604,7 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar					// called when
 {
-	[self performSearch];
+    [self performSearch:nil];
 	[_searchBar resignFirstResponder];
 	_searchBar.text = @"";
 }
@@ -893,7 +894,7 @@
 	[MobClick event:@"index_shzm" attributes:dict];
 	if ([Type isEqualToString:@"search"]) {
 		_keyword = searchValue;
-		[self performSearch];
+        [self performSearch:model.title];
 	}
 	else if ([Type isEqualToString:@"article"]) {
 		if ([searchValue isEqualToString:@"1"]) {

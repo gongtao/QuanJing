@@ -109,7 +109,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 {
     [SVProgressHUD show];
     _keyword = [keyword copy];
-    self.title = keyword;
+//    self.title = keyword;
     _assets = [[NSMutableOrderedSet alloc]init];
     [self loadMoreData];
     [_collectionView setContentOffset:CGPointMake(0, -self.collectionView.contentInset.top) animated:YES];
