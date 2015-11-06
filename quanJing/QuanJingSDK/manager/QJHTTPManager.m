@@ -17,6 +17,8 @@
 	AFHTTPClient * _httpRequestManager;
 }
 
+@property (readwrite, nonatomic, strong) NSString * userAgent;
+
 @end
 
 @implementation QJHTTPManager
@@ -54,12 +56,11 @@
 					userAgent = mutableUserAgent;
 			}
 			[self.httpRequestManager setDefaultHeader:userAgent value:@"User-Agent"];
+			_userAgent = userAgent;
 		}
 		
 		[self.httpRequestManager setDefaultHeader:@"Accept" value:@"application/json,text/json,text/javascript"];
 		[self.httpRequestManager registerHTTPOperationClass:[AFJSONRequestOperation class]];
-		//        self.httpRequestManager.requestSerializer.timeoutInterval = 30.0;
-		//        self.httpRequestManager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableLeaves];
 	}
 	return self;
 }

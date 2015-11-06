@@ -126,6 +126,11 @@
 	return ticket;
 }
 
++ (NSString *)userAgent
+{
+	return [QJHTTPManager sharedManager].userAgent;
+}
+
 #pragma mark - User
 
 - (NSError *)requestRelogin

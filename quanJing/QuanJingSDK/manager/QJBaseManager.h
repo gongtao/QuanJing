@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)getDeviceID;
 
++ (NSString *)userAgent;
+
 - (nullable NSError *)errorFromOperation:(NSDictionary *)responseObject;
 
 - (BOOL)shouldRetryHttpRequest:(nullable NSError *)error;

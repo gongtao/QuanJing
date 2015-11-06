@@ -17,6 +17,8 @@
 #import "DealErrorPageViewController.h"
 #import "NetStatusMonitor.h"
 #import "OWTTabBarHider.h"
+#import "QuanJingSDK.h"
+#import <NBUAdditions.h>
 
 @interface WLJWebViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, UIWebViewDelegate>{
 	NSString * _articleTitle;
@@ -24,6 +26,8 @@
 	DealErrorPageViewController * _vc;
 	CGRect _viewRect;
 	BOOL _ifCustom;
+	
+	UIActivityIndicatorView * _activityIndicator;
 }
 
 @property (nonatomic, strong) UIWebView * webView;
@@ -32,9 +36,13 @@
 @end
 
 @implementation WLJWebViewController
+
++ (void)initialize
 {
-	UIActivityIndicatorView * _activityIndicator;
+	if ([self class] == [WLJWebViewController class])
+		[UIWebView setDefaultUserAgent:[QJInterfaceManager userAgent]];
 }
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

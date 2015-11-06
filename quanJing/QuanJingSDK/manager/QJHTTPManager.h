@@ -16,6 +16,8 @@
 
 @interface QJHTTPManager : NSObject
 
+@property (readonly, nonatomic, strong) NSString * userAgent;
+
 + (instancetype)sharedManager;
 
 - (AFHTTPClient *)httpRequestManager;
