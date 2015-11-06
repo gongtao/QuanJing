@@ -11,22 +11,20 @@
 #import "QJImageObject.h"
 #import "QJUser.h"
 @class FSImageViewerViewController;
-@interface OWTAssetViewCon : UIViewController<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OWaterFlowLayoutDataSource>
+@interface OWTAssetViewCon : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OWaterFlowLayoutDataSource>
 
+@property(nonatomic, assign) BOOL isSquare;
+@property(nonatomic, assign) BOOL isOpen;
+@property(nonatomic, assign) BOOL isLike;
+@property(strong, nonatomic) FSImageViewerViewController * imageViewController;
+@property (nonatomic, strong) QJUser * user1;
 
-@property(nonatomic,assign)BOOL isSquare;
-@property(nonatomic,assign)BOOL isOpen;
-@property(nonatomic,assign)BOOL isLike;
-@property(strong, nonatomic) FSImageViewerViewController *imageViewController;
-@property (nonatomic, strong)QJUser* user1;
+- (instancetype)initWithAsset:(QJImageObject *)asset
+	deletionAllowed:(BOOL)deletionAllowed
+	onDeleteAction:(void (^)())onDeleteAction;
+	
+- (instancetype)initWithImageId:(QJImageObject *)imageModel imageType:(NSNumber *)imageType;
 
-- (instancetype)initWithAsset:(QJImageObject*)asset
-              deletionAllowed:(BOOL)deletionAllowed
-               onDeleteAction:(void (^)())onDeleteAction;
-
-
--(instancetype)initWithImageId:(QJImageObject*)imageModel imageType:(NSNumber*)imageType ;
-
-- (instancetype)initWithAsset:(QJImageObject*)asset initWithType:(NSInteger)type;
+- (instancetype)initWithAsset:(QJImageObject *)asset initWithType:(NSInteger)type;
 
 @end
