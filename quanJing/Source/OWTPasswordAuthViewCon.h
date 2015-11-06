@@ -8,11 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OWTPasswordAuthViewCon : UIViewController<UITextFieldDelegate>
+@interface OWTPasswordAuthViewCon : UIViewController <UITextFieldDelegate>
 
 @property (nonatomic, strong) void (^cancelFunc)();
 @property (nonatomic, strong) void (^successFunc)();
-
-
 
 @end
