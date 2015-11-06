@@ -1284,7 +1284,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	[array addObject:_imageAsset];
 	float imageWith = SCREENWIT;
 	float imagehigh = [_imageAsset.width floatValue] * imageWith / [_imageAsset.height floatValue];
-	NSString * adaptUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:_imageAsset.url size:CGSizeMake(imageWith, imagehigh)];
+
 	
 	for (id object in _searchResults) {
 		QJImageObject * asset1 = object;
@@ -1295,6 +1295,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	
 	for (int i = 0; i < array.count; i++) {
 		QJImageObject * asset1 = array[i];
+        NSString * adaptUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:asset1.url size:CGSizeMake(imageWith, imagehigh)];
 		FSBasicImage * firstPhoto = [[FSBasicImage alloc] initWithImageURL:[NSURL URLWithString:adaptUrl] name:asset1.captionCn];
 		[FSArr addObject:firstPhoto];
 	}

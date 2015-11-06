@@ -472,7 +472,7 @@
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
     self.scrollView.contentOffset = CGPointMake(0.0f, 0.0f);
     self.imageView.frame = self.scrollView.bounds;
-    if (_islocal==YES) {
+//    if (_islocal==YES) {
         NSLog(@"ss%f",self.imageView.frame.origin.y);
         if (self.scrollView.frame.origin.y+self.imageView.frame.size.height>SCREENHEI-95) {
             CGRect frame=self.imageView.frame;
@@ -480,7 +480,7 @@
             frame.size.height=SCREENHEI-95-_scrollView.frame.origin.y;
             self.imageView.frame=frame;
         }
-    }
+//    }
     
 //    NSLog(@"%f  %f  %f   %f",self.imageView.frame.origin.x,self.imageView.frame.size.width,self.imageView.frame.origin.y,self.imageView.frame.size.height);
     //NSLog(@"ss%f",self.imageView.frame.size.height+self.imageView.frame.origin.y);
@@ -544,7 +544,7 @@
     self.scrollView.frame = CGRectMake(leftOffset, topOffset, newWidth, newHeight);
     self.imageView.frame = self.scrollView.bounds;
     //NSLog(@"dd%f",self.imageView.frame.size.height+self.imageView.frame.origin.y);
-    if (_islocal==YES) {
+//    if (_islocal==YES) {
         if (self.scrollView.frame.origin.y+self.imageView.frame.size.height>SCREENHEI-95) {
             CGRect frame=self.imageView.frame;
             
@@ -552,7 +552,7 @@
             self.imageView.frame=frame;
         }
 
-    }
+//    }
     [UIView commitAnimations];
 
 }
