@@ -82,6 +82,7 @@
 #import "QJPassport.h"
 #import "QJDatabaseManager.h"
 #import "QJAdviseCaption.h"
+#import "MobClick.h"
 @interface OWTUserInfoAlbumSectionHeaderView : UICollectionReusableView
 {
     KHFlatButton* _uploadButton;
@@ -532,6 +533,11 @@
     _allPhotos=[[NSMutableArray alloc]init];
     [self setUpTableView];
         }
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self viewWillDisappear:animated];
+    [MobClick endEvent:@"我"];
+}
 -(void)setUpTableView
 {
     CGRect viewFrame=self.view.frame;
@@ -1190,6 +1196,8 @@
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     [_tabBarHider showTabBar];
     [_collectionViewCon.collectionView reloadData];
+    [MobClick beginEvent:@"我"];
+
     
 }
 

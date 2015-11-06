@@ -19,6 +19,7 @@
 #import "UIView+EasyAutoLayout.h"
 #import <SVPullToRefresh/SVPullToRefresh.h>
 #import "QuanJingSDK.h"
+#import "MobClick.h"
 static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 @interface OWTSearchResultsViewCon ()
@@ -95,11 +96,14 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 {
     [super viewWillAppear:animated];
     [self substituteNavigationBarBackItem];
+    [MobClick beginEvent:@"搜索"];
+    
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [SVProgressHUD dismiss];
+    [MobClick endEvent:@"搜索"];
 }
 - (void)setKeyword:(NSString *)keyword
 {

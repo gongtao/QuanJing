@@ -158,6 +158,8 @@ static const int kDefaultLoadItemNum1 = 10;
 				}
 				
 				[self.view addSubview:_view];
+                QJArticleCategory *model1=_categoriesList[0];
+                [MobClick beginEvent:model1.name];
 				[currentTableView headerBeginRefreshing];
 			});
 		}];
@@ -219,9 +221,12 @@ static const int kDefaultLoadItemNum1 = 10;
 #pragma mark scrollViewDelegate
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    QJArticleCategory *mode1=_categoriesList[_pageCount];
+    [MobClick endEvent:mode1.name];
 	if (scrollView == _scrollView) {
 		_pageCount = scrollView.contentOffset.x / SCREENWIT;
-		
+            QJArticleCategory *mode2=_categoriesList[_pageCount];
+        [MobClick beginEvent:mode2.name];
 		for (UIView * view in _scrollView.subviews)
 			if (view.tag == 200 + _pageCount)
 				currentTableView = (UITableView *)view;
@@ -266,6 +271,8 @@ static const int kDefaultLoadItemNum1 = 10;
 #pragma mark clickAndTap
 - (void)naviClick:(UIButton *)sender
 {
+    QJArticleCategory *mode1=_categoriesList[_pageCount];
+    [MobClick endEvent:mode1.name];
 	NSInteger i = sender.tag - 300;
 	
 	for (UIView * view in _view.subviews) {
@@ -283,7 +290,9 @@ static const int kDefaultLoadItemNum1 = 10;
 	
 	[_scrollView setContentOffset:CGPointMake(SCREENWIT * i, 0) animated:YES];
 	_pageCount = i;
-	
+    QJArticleCategory *model2=_categoriesList[_pageCount];
+
+    [MobClick beginEvent:model2.name];
 	for (UIView * view in _scrollView.subviews)
 		if (view.tag == 200 + _pageCount)
 			currentTableView = (UITableView *)view;
@@ -533,8 +542,9 @@ static const int kDefaultLoadItemNum1 = 10;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	QJArticleObject * category;
-    NSDictionary *dict=@{@"title":_categoriesList[_pageCount]};
+    QJArticleObject * category;
+    QJArticleCategory *model=_categoriesList[_pageCount];
+    NSDictionary *dict=@{@"title":model.name};
     [MobClick event:@"article_category" attributes:dict];
 	if (_pageCount == 0)
 		category = _categories[indexPath.row];

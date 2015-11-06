@@ -47,6 +47,7 @@
 #import "OWTComment.h"
 #import "OWTInputView.h"
 #import "QuanJingSDK.h"
+#import "MobClick.h"
 static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 @interface OWTAssetViewCon () <NSCopying>
@@ -458,9 +459,13 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
     [self substituteNavigationBarBackItem];
 //    [self updateNavBarButtons];
     [_tabBarHider hideTabBar];
-    
+    [MobClick beginEvent:@"图片详情"];
 }
-
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endEvent:@"图片详情"];
+}
 - (void)updateNavBarButtons
 {
 	QJUser * user = [QJPassport sharedPassport].currentUser;

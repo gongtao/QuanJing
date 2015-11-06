@@ -45,6 +45,7 @@
 #import "UIColor+HexString.h"
 #import "OWTPhotoUploadViewController.h"
 #import "QuanJingSDK.h"
+#import "MobClick.h"
 #define IS_WIDESCREEN ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 
 
@@ -92,11 +93,13 @@
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     _user=GetUserManager().currentUser;
 //    if (_user.nickname.length==0) {
 //        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请先完善个人信息" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
 //        [alert show];
 //    }
+    [MobClick beginEvent:@"圈子"];
         if (isFirst) {
         [_feed getResouceWithSuccess:^{
             [self getResourceData];
@@ -105,6 +108,11 @@
     [_tabBarHider showTabBar];
     isFirst=NO;
 
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endEvent:@"圈子"];
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {

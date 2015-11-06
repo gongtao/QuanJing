@@ -102,7 +102,7 @@
 {
 	[_tabBarHider showTabBar];
 	[self.view setHidden:NO];
-	
+    [MobClick beginEvent:@"首页"];
 	//    [self setupNavigationBarColor];
 }
 
@@ -110,6 +110,7 @@
 {
 	[_searchBar resignFirstResponder];
 	_searchBar.text = nil;
+    [MobClick endEvent:@"首页"];
 }
 
 - (void)viewDidLoad

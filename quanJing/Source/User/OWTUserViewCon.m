@@ -58,6 +58,7 @@
 #import "TTGlobalUICommon.h"
 #import "RRConst.h"
 #import "MJRefresh.h"
+#import "MobClick.h"
 static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 #pragma mark -
@@ -322,9 +323,14 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	[_collectionViewCon.collectionView reloadData];
 	[self initCustomchatBar];
 	[self manualRefresh];
+    [MobClick beginEvent:@"用户"];
 	//   }
 }
-
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endEvent:@"用户"];
+}
 // 返回按钮的代理方法
 - (void)popViewControllerWithAnimation
 {
