@@ -702,7 +702,7 @@
 		
 	QJHomeIndexObject * model = _categaryBeautiful[selectTag];
 	BOOL isSearch = [model.type isEqualToString:@"search"];
-    NSDictionary *dict=@{@"title":model.detailText};
+    NSDictionary *dict=@{@"title":model.title};
     [MobClick event:@"index_mehrs" attributes:dict];
 
 	// 旅游的跳转页面
@@ -813,7 +813,7 @@
 	[_tabBarHider hideTabBar];
 	QJHomeIndexObject * model = _showArr[self.page.currentPage];
 	WLJWebViewController * evc = [[WLJWebViewController alloc]init];
-    NSDictionary *dict=@{@"title":model.detailText};
+    NSDictionary *dict=@{@"title":model.title};
     [MobClick event:@"index_shzm" attributes:dict];
 	//
 	evc.SummaryStr = model.detailText;
