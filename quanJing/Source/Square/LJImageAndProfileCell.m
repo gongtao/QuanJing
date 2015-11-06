@@ -198,14 +198,13 @@
 
 - (void)onLikeTap:(UIGestureRecognizer *)sender
 {
-	LJLike * ljlike = _likes[sender.view.tag - 700];
-	OWTUser * ownerUser = [GetUserManager() userForID:ljlike.likeUserid];
-	
-	if (ownerUser != nil) {
+	QJUser *user = _likes[sender.view.tag - 700];
+	if (user != nil) {
 		OWTUserViewCon * userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
+        userViewCon1.quser=user;
 		userViewCon1.hidesBottomBarWhenPushed = YES;
 		[_viewContoller.navigationController pushViewController:userViewCon1 animated:YES];
-		userViewCon1.user = ownerUser;
+
 	}
 }
 
@@ -410,24 +409,22 @@
 
 - (void)onCommentTap:(UITapGestureRecognizer *)sender
 {
-	LJComment * ljcomment = [[LJComment alloc]init];
-	OWTUser * ownerUser = [[OWTUser alloc]init];
-	
+    QJCommentObject *model;
 	if (sender.view.tag < 600) {
-		ljcomment = _comments[sender.view.tag - 500];
-		ownerUser = [GetUserManager() userForID:ljcomment.userid];
+		model = _comments[sender.view.tag - 500];
+
 	}
 	else {
-		ljcomment = _comments[sender.view.tag - 600];
-		ownerUser = [GetUserManager() userForID:ljcomment.replyuserid];
+		model = _comments[sender.view.tag - 600];
+
 	}
 	
-	if (ownerUser != nil) {
+	if (model != nil) {
 		OWTUserViewCon * userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
+        userViewCon1.quser=model.user;
 		userViewCon1.hidesBottomBarWhenPushed = YES;
 		[_viewContoller.navigationController pushViewController:userViewCon1 animated:YES];
-		userViewCon1.user = ownerUser;
-	}
+			}
 }
 
 - (void)onReplyTap:(UITapGestureRecognizer *)sender
