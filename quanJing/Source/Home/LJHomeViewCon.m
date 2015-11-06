@@ -702,103 +702,14 @@
 		return;
 		
 	QJHomeIndexObject * model = _categaryBeautiful[selectTag];
-	BOOL isSearch = [model.type isEqualToString:@"search"];
     if (model.title) {
         NSDictionary *dict=@{@"title":model.title};
         [MobClick event:@"index_mehrs" attributes:dict];
     }
-    
+    _keyword = model.typeValue;
+    [self performSearch:model.title];
 
 	// 旅游的跳转页面
-	if (selectTag == lvyou) {
-		if (isSearch) {
-			OQJSearchPageVC * jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
-			jumpserach.hidesBottomBarWhenPushed = YES;
-			[self.navigationController pushViewController:jumpserach animated:NO];
-			return;
-		}
-		OQJFusionViewVC * hottestViewCon = [[OQJFusionViewVC alloc] init];
-		hottestViewCon.VcTag = lvyou;
-		hottestViewCon.contentType = @"lvyou";
-		[self.navigationController pushViewController:hottestViewCon animated:NO];
-		return;
-	}
-	
-	if (selectTag == jiaju) {
-		if (isSearch) {
-			OQJSearchPageVC * jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
-			jumpserach.hidesBottomBarWhenPushed = YES;
-			[self.navigationController pushViewController:jumpserach animated:NO];
-			return;
-		}
-		OQJFusionViewVC * hottestViewCon = [[OQJFusionViewVC alloc] init];
-		hottestViewCon.VcTag = 2;
-		hottestViewCon.contentType = @"jiaju";
-		
-		[self.navigationController pushViewController:hottestViewCon animated:YES];
-		return;
-	}
-	
-	if (selectTag == qiche) {
-		if (isSearch) {
-			OQJSearchPageVC * jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
-			jumpserach.hidesBottomBarWhenPushed = YES;
-			
-			[self.navigationController pushViewController:jumpserach animated:NO];
-			return;
-		}
-		OQJFusionViewVC * hottestViewCon = [[OQJFusionViewVC alloc] init];
-		hottestViewCon.VcTag = 3;
-		hottestViewCon.contentType = @"qiche";
-		
-		[self.navigationController pushViewController:hottestViewCon animated:YES];
-		return;
-	}
-	
-	if (selectTag == meishi) {
-		if (isSearch) {
-			OQJSearchPageVC * jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
-			jumpserach.hidesBottomBarWhenPushed = YES;
-			[self.navigationController pushViewController:jumpserach animated:NO];
-			return;
-		}
-		OQJFusionViewVC * hottestViewCon = [[OQJFusionViewVC alloc] init];
-		hottestViewCon.VcTag = 4;
-		hottestViewCon.contentType = @"meishi";
-		
-		[self.navigationController pushViewController:hottestViewCon animated:YES];
-		return;
-	}
-	
-	if (selectTag == shishang) {
-		if (isSearch) {
-			OQJSearchPageVC * jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
-			jumpserach.hidesBottomBarWhenPushed = YES;
-			[self.navigationController pushViewController:jumpserach animated:NO];
-			return;
-		}
-		OQJFusionViewVC * hottestViewCon = [[OQJFusionViewVC alloc] init];
-		hottestViewCon.VcTag = 5;
-		hottestViewCon.contentType = @"shishang";
-		
-		[self.navigationController pushViewController:hottestViewCon animated:YES];
-		return;
-	}
-	
-	if (selectTag == baike) {
-		if (isSearch) {
-			OQJSearchPageVC * jumpserach = [[OQJSearchPageVC alloc]initWithSeachContent:model.title];
-			jumpserach.hidesBottomBarWhenPushed = YES;
-			[self.navigationController pushViewController:jumpserach animated:NO];
-			return;
-		}
-		OQJFusionViewVC * hottestViewCon = [[OQJFusionViewVC alloc] init];
-		hottestViewCon.VcTag = 6;
-		hottestViewCon.contentType = @"baike";
-		
-		[self.navigationController pushViewController:hottestViewCon animated:YES];
-		return;
-	}
 }
 
 #pragma mark JCTopicDelegate
