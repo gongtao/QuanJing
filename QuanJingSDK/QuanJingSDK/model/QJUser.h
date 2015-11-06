@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSString * avatar;
 
+@property (nonatomic, strong, nullable) NSString * bgUrl;
+
 @property (nonatomic, strong, nullable) NSNumber * bornArea;
 
 @property (nonatomic, strong, nullable) NSNumber * collectAmount;

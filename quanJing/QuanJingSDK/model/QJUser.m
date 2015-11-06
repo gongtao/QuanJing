@@ -72,6 +72,14 @@
 	else
 		self.avatar = nil;
 		
+	// bgUrl
+	NSString * bgUrl = json[@"bgUrl"];
+	
+	if (!QJ_IS_STR_NIL(bgUrl))
+		self.bgUrl = [QJUtils realImageUrlFromServerUrl:bgUrl];
+	else
+		self.bgUrl = nil;
+		
 	// bornArea
 	NSNumber * bornArea = json[@"bornArea"];
 	
