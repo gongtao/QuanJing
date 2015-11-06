@@ -38,6 +38,7 @@
 #import "UIColor+HexString.h"
 #import "LJExploreViewCellTableViewCell.h"
 #import "QuanJingSDK.h"
+#import "MobClick.h"
 static NSString * kCategoryCellID = @"kCategoryCellID";
 
 static const int kDefaultLoadItemNum1 = 10;
@@ -533,7 +534,8 @@ static const int kDefaultLoadItemNum1 = 10;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	QJArticleObject * category;
-	
+    NSDictionary *dict=@{@"title":_categoriesList[_pageCount]};
+    [MobClick event:@"article_category" attributes:dict];
 	if (_pageCount == 0)
 		category = _categories[indexPath.row];
 	else if (_pageCount == 1)
@@ -549,8 +551,8 @@ static const int kDefaultLoadItemNum1 = 10;
 		
 	else
 		category = _categories5[indexPath.row];
-		
-		
+    
+
 	WLJWebViewController * evc = [[WLJWebViewController alloc]init];
 	
 	//

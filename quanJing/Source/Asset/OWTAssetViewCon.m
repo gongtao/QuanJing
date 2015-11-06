@@ -185,32 +185,33 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)getLikeAndCommendData
 {
-	NSInteger integer = ([_imageAsset.imageType integerValue] == 1) ? 1 : 2;
-	
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		[[QJInterfaceManager sharedManager] requestImageDetail:_imageAsset.imageId imageType:[NSNumber numberWithInteger:integer] finished:^(QJImageObject * imageObject, NSError * error) {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				if (error) {
-					[SVProgressHUD showErrorWithStatus:@"网络连接错误"];
-					return;
-				}
-				
-				if (imageObject != nil) {
-					_imageAsset.tag = imageObject.tag;
-					_imageAsset.captionCn = imageObject.captionCn;
-					_imageAsset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
-					_imageAsset.likes = imageObject.likes;
-					_imageAsset.descript = imageObject.descript;
-					[self reloadData];
-					[self loadRelatedAssetsInSearch];
-				}
-				else {
-					[SVProgressHUD showErrorWithStatus:@"没有找到图片"];
-				}
-				[SVProgressHUD dismiss];
-			});
-		}];
-	});
+    NSInteger integer = ([_imageAsset.imageType integerValue] == 1)?1:2;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[QJInterfaceManager sharedManager] requestImageDetail:_imageAsset.imageId imageType:[NSNumber numberWithInteger:integer] finished:^(QJImageObject * imageObject, NSError * error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [SVProgressHUD showErrorWithStatus:@"网络连接错误"];
+                    return ;
+                }
+                if (imageObject != nil) {
+                    _imageAsset.tag=imageObject.tag;
+                    _imageAsset.captionCn = imageObject.captionCn;
+                    _imageAsset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
+                    _imageAsset.likes = imageObject.likes;
+                    [self reloadData];
+                    [self loadRelatedAssetsInSearch];
+
+                }else{
+                    [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+                }
+                [SVProgressHUD dismiss];
+                
+                
+            });
+        }];
+    });
+    
 }
 
 - (void)setupInputView
@@ -450,12 +451,13 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	[super viewWillAppear:animated];
-	
-	[_collectionView reloadData];
-	[self substituteNavigationBarBackItem];
-	[self updateNavBarButtons];
-	[_tabBarHider hideTabBar];
+    [super viewWillAppear:animated];
+    
+    [_collectionView reloadData];
+    [self substituteNavigationBarBackItem];
+//    [self updateNavBarButtons];
+    [_tabBarHider hideTabBar];
+    
 }
 
 - (void)updateNavBarButtons

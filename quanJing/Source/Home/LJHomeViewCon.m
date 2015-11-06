@@ -59,6 +59,8 @@
 #import "QuanJingSDK.h"
 #import <UIImageView+WebCache.h>
 #import "OWTAppDelegate.h"
+#import "MobClick.h"
+
 #define IS_WIDESCREEN (fabs((double)[[UIScreen mainScreen] bounds].size.height - (double)568) < DBL_EPSILON)
 @interface LJHomeViewCon () <JCTopicDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) JCTopic * Topic;
@@ -693,7 +695,9 @@
 		
 	QJHomeIndexObject * model = _categaryBeautiful[selectTag];
 	BOOL isSearch = [model.type isEqualToString:@"search"];
-	
+    NSDictionary *dict=@{@"title":model.detailText};
+    [MobClick event:@"index_mehrs" attributes:dict];
+
 	// 旅游的跳转页面
 	if (selectTag == lvyou) {
 		if (isSearch) {
@@ -802,7 +806,8 @@
 	[_tabBarHider hideTabBar];
 	QJHomeIndexObject * model = _showArr[self.page.currentPage];
 	WLJWebViewController * evc = [[WLJWebViewController alloc]init];
-	
+    NSDictionary *dict=@{@"title":model.detailText};
+    [MobClick event:@"index_shzm" attributes:dict];
 	//
 	evc.SummaryStr = model.detailText;
 	//    //
@@ -871,7 +876,8 @@
 	NSString * Type = model.type;
 	NSString * searchValue = model.typeValue;
 	NSLog(@"searchValue  %@", searchValue);
-	
+    NSDictionary *dict=@{@"title":searchValue};
+	[MobClick event:@"index_shzm" attributes:dict];
 	if ([Type isEqualToString:@"search"]) {
 		_keyword = searchValue;
 		[self performSearch];

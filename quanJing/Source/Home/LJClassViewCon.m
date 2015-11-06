@@ -14,6 +14,7 @@
 #import "UIColor+HexString.h"
 #import "QuanJingSDK.h"
 #import <UIImageView+WebCache.h>
+#import "MobClick.h"
 @interface LJClassViewCon () <UITableViewDelegate, UITableViewDataSource, ASIHTTPRequestDelegate, UISearchBarDelegate>
 
 @end
@@ -181,7 +182,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	QJImageCategory * model = _dataArr[indexPath.row];
-	
+    NSDictionary *dict=@{@"title":model.name};
+    [MobClick event:@"index_category" attributes:dict];
+
 	[self performSearch:model.name];
 }
 
