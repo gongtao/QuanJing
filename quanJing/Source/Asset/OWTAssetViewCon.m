@@ -200,6 +200,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 					_imageAsset.captionCn = imageObject.captionCn;
 					_imageAsset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
 					_imageAsset.likes = imageObject.likes;
+					_imageAsset.descript = imageObject.descript;
 					[self reloadData];
 					[self loadRelatedAssetsInSearch];
 				}
@@ -585,12 +586,19 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	QJInterfaceManager * fm = [QJInterfaceManager sharedManager];
 	
 	if (_imageType.intValue == 1) {
-		if (_imageAsset.tag == nil)
+		NSString * searchTag = _imageAsset.tag;
+		
+		if (!searchTag || (searchTag.length == 0))
+			searchTag = _imageAsset.descript;
+			
+		if (!searchTag || (searchTag.length == 0))
 			return;
 			
-		//
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			[fm requestImageSearchKey:_imageAsset.tag pageNum:_searchResults.count / 50 + 1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+			[fm requestImageSearchKey:searchTag
+			pageNum:_searchResults.count / 50 + 1 pageSize:50
+			currentImageId:_imageAsset.imageId
+			finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					if (error) {
 						[SVProgressHUD showErrorWithStatus:@"网络连接错误"];
@@ -608,7 +616,11 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	}
 	else if ([_imageType integerValue] == 2) {
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			[fm requestUserImageList:_imageAsset.userId pageNum:1 pageSize:50  currentImageId:_imageAsset.imageId finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+			[fm requestUserImageList:_imageAsset.userId
+			pageNum:1
+			pageSize:50
+			currentImageId:_imageAsset.imageId
+			finished:^(NSArray * albumObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					if (error == nil) {
 						if (albumObjectArray != nil) {
@@ -842,7 +854,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	if (_searchResults == nil)
 		return 0;
 		
-		
 	return _searchResults.count;
 }
 
@@ -850,7 +861,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 {
 	if ((_imageAsset == nil) || (_searchResults == nil))
 		return nil;
-		
 		
 	NSInteger row = indexPath.row;
 	
@@ -1051,8 +1061,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			shareToSnsNames:[NSArray arrayWithObjects:UMShareToSina, UMShareToWechatTimeline, UMShareToWechatSession, UMShareToWechatFavorite, UMShareToQzone, UMShareToQQ, UMShareToSms, nil]
 			delegate:nil];
 		}];
-		
-		
 }
 
 - (void)showAllAssetComments
@@ -1154,12 +1162,12 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 					commentHeight = commentHeight + size2.height + 5;
 				else
 					commentHeight = commentHeight + imageHeight + 5;
-					
 			}
 		}
-		else if (likeHeight != 0)
+		else if (likeHeight != 0) {
 			viewHeight += 10;
-			
+		}
+		
 		viewHeight += commentHeight;
 		return viewHeight;
 	}
@@ -1294,7 +1302,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	else
 	
 		[self.navigationController pushViewController:_imageViewController animated:YES];
-		
 }
 
 // 底部的评论按钮事件
