@@ -466,6 +466,7 @@
 		A3DB10C41BABAD690033522F /* 关注01.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10BD1BABAD690033522F /* 关注01.png */; };
 		A3DB10C51BABAD690033522F /* 评论.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10BE1BABAD690033522F /* 评论.png */; };
 		A3DB10C71BABAD690033522F /* 赞00.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10C01BABAD690033522F /* 赞00.png */; };
+		A3E1810C1BECE282004EDD22 /* seach@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E1810B1BECE282004EDD22 /* seach@3x.png */; settings = {ASSET_TAGS = (); }; };
 		A3E447FC1A79B00C000DE7BA /* selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E447FB1A79B00C000DE7BA /* selected@2x.png */; };
 		A3EB5A411BD7412B00E08563 /* OWTSearchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A3C1BD7412B00E08563 /* OWTSearchManager.m */; };
 		A3EB5A421BD7412B00E08563 /* OWTSearchResultsViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A3E1BD7412B00E08563 /* OWTSearchResultsViewCon.m */; };
@@ -1642,6 +1643,7 @@
 		A3DB10BD1BABAD690033522F /* 关注01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "关注01.png"; sourceTree = "<group>"; };
 		A3DB10BE1BABAD690033522F /* 评论.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "评论.png"; sourceTree = "<group>"; };
 		A3DB10C01BABAD690033522F /* 赞00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "赞00.png"; sourceTree = "<group>"; };
+		A3E1810B1BECE282004EDD22 /* seach@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "seach@3x.png"; sourceTree = "<group>"; };
 		A3E447FB1A79B00C000DE7BA /* selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selected@2x.png"; sourceTree = "<group>"; };
 		A3EB5A3B1BD7412B00E08563 /* OWTSearchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTSearchManager.h; sourceTree = SOURCE_ROOT; };
 		A3EB5A3C1BD7412B00E08563 /* OWTSearchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTSearchManager.m; sourceTree = SOURCE_ROOT; };
@@ -3668,6 +3670,7 @@
 		A3B1A6241BA90DD70044B645 /* 首页 */ = {
 			isa = PBXGroup;
 			children = (
+				A3E1810B1BECE282004EDD22 /* seach@3x.png */,
 				E0EC117D1BBBB6790047938B /* _0001_矢量智能对象-拷贝-3@2x.png */,
 				E0EC117F1BBBB6870047938B /* _0000_矢量智能对象2@2x.png */,
 				A3831C971BB2C71200A25AFF /* webShare1@2x.png */,
@@ -5197,6 +5200,7 @@
 				661F802A1AE7513500E429FD /* ic_index_less.png in Resources */,
 				E08754E61B17769C00797E9A /* Selected.png in Resources */,
 				E0BCFF311B0D842C009D1D20 /* chatBar_more_camera.png in Resources */,
+				A3E1810C1BECE282004EDD22 /* seach@3x.png in Resources */,
 				E013916B1B0C3EA500051B78 /* nav_createGroup@2x.png in Resources */,
 				A39A71441BAFA46900B59BEE /* 登陆背景.png in Resources */,
 				A309F37B1BDE1C31003EB0B1 /* 5@3x.png in Resources */,

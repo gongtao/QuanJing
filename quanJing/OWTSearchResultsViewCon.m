@@ -25,6 +25,7 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 @interface OWTSearchResultsViewCon ()
 {
     OWTTabBarHider* _tabBarHider;
+    UIImageView *_imageView1;
 }
 
 @property (nonatomic, strong) NSString* keyword;
@@ -51,8 +52,17 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     [super viewDidLoad];
     [self setupCollectionView];
     [self setupRefreshControl];
+    [self setUpBackView];
 }
-
+-(void)setUpBackView
+{
+    _imageView1=[LJUIController createImageViewWithFrame:CGRectMake(0, 0, 100, 100) imageName:@"seach"];
+//    _imageView1.backgroundColor=[UIColor blackColor];
+    _imageView1.hidden=YES;
+//    _imageView1.center=self.view.center;
+    _imageView1.center=CGPointMake(self.view.center.x, self.view.center.y-50);
+    [self.view addSubview:_imageView1];
+}
 - (void)setupCollectionView
 {
     _collectionViewLayout = [[OWaterFlowLayout alloc] init];
@@ -137,8 +147,16 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [fm requestImageSearchKey:_keyword pageNum:_assets.count/50+1 pageSize:50 currentImageId:nil finished:^(NSArray *  imageObjectArray, NSArray *  resultArray, NSError *  error) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [SVProgressHUD showError:error];
+                    return ;
+                }
                 if (imageObjectArray.count==0) {
-                    [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+                    if (_assets.count==0) {
+                     _imageView1.hidden=NO;
+                    }
+                }else{
+                    _imageView1.hidden=YES;
                 }
                 [_collectionView.infiniteScrollingView stopAnimating];
                 [self mergeAssets:imageObjectArray];

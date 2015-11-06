@@ -888,7 +888,7 @@
 - (void)showFollowings
 {
     OWTFollowingUsersViewCon* followingUsersViewCon = [[OWTFollowingUsersViewCon alloc] initWithNibName:nil bundle:nil];
-    followingUsersViewCon.user = _user;
+//    followingUsersViewCon.user = _user;
     followingUsersViewCon.hidesBottomBarWhenPushed=YES;
     [_tabBarHider hideTabBar];
     [self.navigationController pushViewController:followingUsersViewCon animated:YES];
@@ -897,7 +897,7 @@
 - (void)showFollowers
 {
     OWTFollowerUsersViewCon* followerUsersViewCon = [[OWTFollowerUsersViewCon alloc] initWithNibName:nil bundle:nil];
-    followerUsersViewCon.user = _user;
+//    followerUsersViewCon.user = _user;
     followerUsersViewCon.hidesBottomBarWhenPushed=YES;
     [_tabBarHider hideTabBar];
     [self.navigationController pushViewController:followerUsersViewCon animated:YES];
