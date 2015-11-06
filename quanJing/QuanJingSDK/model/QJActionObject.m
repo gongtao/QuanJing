@@ -41,6 +41,25 @@
 		self.comments = array;
 	}
 	
+	// user
+	NSDictionary * user = json[@"user"];
+	
+	if (!QJ_IS_DICT_NIL(user)) {
+		self.user = [[QJUser alloc] initWithJson:user];
+		
+		// hasFollowUser
+		NSNumber * hasFollowUser = json[@"hasFollowUser"];
+		
+		if (!QJ_IS_NUM_NIL(hasFollowUser))
+			self.user.hasFollowUser = hasFollowUser;
+	}
+	
+	// userId
+	NSNumber * userId = json[@"userId"];
+	
+	if (!QJ_IS_NUM_NIL(userId))
+		self.userId = userId;
+		
 	// images
 	NSString * content = json[@"content"];
 	
@@ -52,6 +71,7 @@
 			[images enumerateObjectsUsingBlock:^(NSDictionary * obj, NSUInteger idx, BOOL * stop) {
 				QJImageObject * imageObject = [[QJImageObject alloc] initWithJson:obj];
 				imageObject.imageType = [NSNumber numberWithInt:2];
+				imageObject.userId = self.userId;
 				[array addObject:imageObject];
 			}];
 			self.images = array;
@@ -86,25 +106,6 @@
 	
 	if (!QJ_IS_NUM_NIL(type))
 		self.type = type;
-		
-	// user
-	NSDictionary * user = json[@"user"];
-	
-	if (!QJ_IS_DICT_NIL(user)) {
-		self.user = [[QJUser alloc] initWithJson:user];
-		
-		// hasFollowUser
-		NSNumber * hasFollowUser = json[@"hasFollowUser"];
-		
-		if (!QJ_IS_NUM_NIL(hasFollowUser))
-			self.user.hasFollowUser = hasFollowUser;
-	}
-	
-	// userId
-	NSNumber * userId = json[@"userId"];
-	
-	if (!QJ_IS_NUM_NIL(userId))
-		self.userId = userId;
 		
 	// descript
 	NSString * descript = json[@"text"];
