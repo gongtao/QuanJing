@@ -503,7 +503,11 @@
 		
 	// starSign
 	if (!QJ_IS_STR_NIL(user.starSign))
-		params[@"starSign"] = user.starSign;
+        params[@"starSign"] = user.starSign;
+    
+    // bgUrl
+    if (!QJ_IS_STR_NIL(user.bgUrl))
+        params[@"bgUrl"] = user.bgUrl;
 		
 	// bornArea
 	if (!QJ_IS_NUM_NIL(user.bornArea))
