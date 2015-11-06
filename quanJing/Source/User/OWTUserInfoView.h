@@ -21,5 +21,6 @@
 @property (nonatomic, strong) void (^showLikedAssetsAction)();
 @property (nonatomic, strong) void (^showFollowingsAction)();
 @property (nonatomic, strong) void (^showFollowersAction)();
+@property (nonatomic, strong) void (^changBgImageACtion)(UIImageView* imageVIew);
 @property (nonatomic, assign) NSInteger selfNum;
 @end

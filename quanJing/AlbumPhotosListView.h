@@ -13,7 +13,7 @@
 
 #import "OWTAssetFlowViewCon.h"
 #import <AssetsLibrary/AssetsLibrary.h>
-@interface AlbumPhotosListView : UIViewController<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, XHRefreshControlDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface AlbumPhotosListView : UIViewController<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, XHRefreshControlDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate>
 
 
 

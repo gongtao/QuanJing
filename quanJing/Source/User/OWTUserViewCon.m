@@ -389,8 +389,8 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	// 开始聊天
 	_chatVC = [[ChatViewController_rename alloc] initWithChatter:toChat isGroup:NO tile1:@"" title2:@""];
 	_chatVC.title = _user.nickname;
-	_chatVC.currentUser = [[QJPassport sharedPassport]currentUser];
-	_chatVC.otherUser = _quser;
+	_chatVC.currentUserImage = GetUserManager().currentUser.currentImage;
+	_chatVC.senderImage = _userInfoView1.mAvatarView.avatarImage;
 }
 
 - (BOOL)authouDetect

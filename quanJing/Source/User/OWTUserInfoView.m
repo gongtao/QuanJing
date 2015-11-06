@@ -63,6 +63,9 @@ typedef enum
     
     _avatarView.layer.borderColor = [UIColor whiteColor].CGColor;
     _avatarView.layer.borderWidth = 1.0;
+    
+    _userImageView.contentMode = UIViewContentModeScaleAspectFill;
+    _userImageView.clipsToBounds = YES;
 }
 
 - (void)setUser:(QJUser*)user
@@ -73,6 +76,14 @@ typedef enum
 
 - (void)updateWithUser
 {
+    UIImage *preImage;
+    if (_user.bgUrl != nil && (_user.bgUrl.length>0)) {
+        preImage = [UIImage imageNamed:@"我背景.jpg"];
+    }else{
+        preImage = _userImageView.image;
+    }
+    [_userImageView setImageWithURL:[NSURL URLWithString:_user.bgUrl] placeholderImage:preImage];
+
     [self updateNickname:_user.nickName];
     [self.avatarView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:_user.avatar size:self.avatarView.bounds.size]] placeholderImage:[UIImage imageNamed:@"5"]];
     self.avatarView.userInteractionEnabled =YES;
@@ -87,12 +98,26 @@ typedef enum
     
     UITapGestureRecognizer*tapRecognizerleft2=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
     [_nameLabel addGestureRecognizer:tapRecognizerleft2];
+    
+    UILongPressGestureRecognizer *longPressReconize = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPrss:)];
+    [_userImageView addGestureRecognizer:longPressReconize];
+    _userImageView.userInteractionEnabled = YES;
     [self updateLikesNum:_user.uploadAmount.intValue];
     [self updateFollowingNum:_user.collectAmount.intValue];
     [self updateFollowerNum:_user.followAmount.intValue with:_user.fansAmount.intValue];
     [self updatePhotoNum:_selfNum];
 }
 
+
+-(void)longPrss:(UILongPressGestureRecognizer *)gestureRecognizer
+{
+    if(gestureRecognizer.state == UIGestureRecognizerStateBegan)
+    {
+          _changBgImageACtion(_userImageView);
+
+        NSLog(@"长按触发");
+    }
+}
 #pragma mark - Action
 
 #pragma mark - Info updating methods

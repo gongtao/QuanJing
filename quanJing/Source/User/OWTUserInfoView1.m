@@ -238,6 +238,7 @@ typedef enum {
 		
 		if (currentUser != nil) {
 			// 是否关注
+            [self isFollowingUser:_user];
 			if (_user.hasFollowUser.boolValue) {
 				_isCared = YES;
 				_actionButtonType = nWTUserInfoViewActionButtonUnfollow;
@@ -260,6 +261,19 @@ typedef enum {
 		}
 	}
 }
+
+- (BOOL)isFollowingUser:(QJUser*)user
+{
+    NSNumber* userID = user.uid;
+//    if (_fellowshipInfo == nil || _fellowshipInfo.followingUserIDs == nil)
+//    {
+//        return NO;
+//    }
+    
+   //BOOL isFollowing = [user.hasFollowUser containsObject:userID];
+    return NO;
+}
+
 
 // 加关注按钮
 - (void)careButtonPressed

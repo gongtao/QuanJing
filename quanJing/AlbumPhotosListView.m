@@ -102,7 +102,7 @@
 
 #define MAXIMAGE 9
 
-@interface AlbumPhotosListView ()<ImageSelectedDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate>
+@interface AlbumPhotosListView ()<ImageSelectedDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
     
     UIScrollView *scrollV;
@@ -126,6 +126,7 @@
     BOOL isSearching;
     NSString *_captions;
     CGFloat _photoCellSize;
+    UIImageView *_backgoundImage;
 }
 
 @property (nonatomic, strong) XHRefreshControl* refreshControl;
@@ -208,46 +209,7 @@
         
     }];
 }
--(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
-    NSLog(@"Picker returned successfully.");
-    NSLog(@"%@", info);
-    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-    // 判断获取类型：图片
-    if ([mediaType isEqualToString:( NSString *)kUTTypeImage]){
-        UIImage *theImage = nil;
-        // 判断，图片是否允许修改
-        if ([picker allowsEditing]){
-            //获取用户编辑之后的图像
-            theImage = [info objectForKey:UIImagePickerControllerEditedImage];
-        } else {
-            // 照片的元数据参数
-            theImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-            
-        }
-        UIImageWriteToSavedPhotosAlbum(theImage, self, nil, nil);
-        NSMutableArray* imageInfos = [[NSMutableArray alloc] init];
-        OWTImageInfo* imageInfo = [[OWTImageInfo alloc] init];
-        imageInfo.image = theImage;
-        [imageInfos addObject:imageInfo];
-        OWTPhotoUploadViewController *photoUploadVC = [[OWTPhotoUploadViewController alloc] initWithNibName:nil bundle:nil];
-        photoUploadVC.imageInfos = imageInfos;
-        photoUploadVC.hidesBottomBarWhenPushed = YES;
-        photoUploadVC.isCameraImages = YES;
-        photoUploadVC.doneAction = ^{
-            [self.navigationController popViewControllerAnimated:YES];
-        };
-        photoUploadVC.doneAction = ^{
-            [self.navigationController popViewControllerAnimated:YES];
-        };
 
-        [self.navigationController pushViewController:photoUploadVC animated:NO];
-        
-        
-        
-    }
-    
-    [picker dismissViewControllerAnimated:nil completion:nil];
-}
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
     
@@ -1342,7 +1304,7 @@
     return nil;
 }
 
-// The view that is returned must be retrieved from a call to -dequeueReusableSupplementaryViewOfKind:withReuseIdentifier:forIndexPath:
+// The view that is returned must be retrieved from a call to -dequeueReusableSupplementaryViewOfKind:withReuseIdentiifier:forIndexPath:
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
     if (kind == UICollectionElementKindSectionHeader)
@@ -1360,6 +1322,8 @@
             userInfoView.showFollowingsAction = ^{ [wself showFollowings]; };
             userInfoView.showFollowersAction = ^{ [wself showFollowers]; };
             userInfoView.showAssetsAction = ^{ [wself showLocalAssets]; };//本地相册
+            userInfoView.changBgImageACtion =  ^(UIImageView* imageView){
+                 [wself excuteAction:imageView];};
             //            userInfoView.showLikedAssetsAction = ^{ [wself showAssets]; };//发布图片
             //            userInfoView.showFollowingsAction = ^{ [wself showCollectionAssets]; };//收藏
             //            userInfoView.showFollowersAction = ^{ [wself showFollowings]; };//圈子
@@ -1369,6 +1333,162 @@
     }
     
     return nil;
+}
+
+-(void)excuteAction:(UIImageView *)backgroudview
+{
+    backgroudview.contentMode = UIViewContentModeScaleAspectFill;
+    backgroudview.clipsToBounds = YES;
+    _backgoundImage = backgroudview;
+    [self takePictureClick];
+}
+
+//从相册获取图片
+-(void)takePictureClick
+{
+    UIActionSheet* actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:@"请选择文件来源"
+                                  delegate:self
+                                  cancelButtonTitle:@"取消"
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:@"本地相簿",nil];
+    [actionSheet showInView:self.view];
+    
+}
+
+#pragma UIActionSheet Delegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"buttonIndex = [%ld]",buttonIndex);
+    switch (buttonIndex) {
+                  case 0://本地相簿
+        {
+            UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+            imagePicker.delegate = self;
+            imagePicker.allowsEditing = YES;
+            imagePicker.view.tag = 121;
+            //            imagePicker.allowsImageEditing=YES;
+            imagePicker.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor colorWithHexString:@"f6f6f6"] forKey:UITextAttributeTextColor];
+            imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            imagePicker.navigationBar.barTintColor=[UIColor blackColor];
+            //            [self presentModalViewController:imagePicker animated:YES];
+            [self presentViewController:imagePicker animated:YES completion:nil];
+        }
+                    break;
+        default:
+            break;
+    }
+}
+
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
+    if (picker.view.tag == 121) {
+        if ([[info objectForKey:UIImagePickerControllerMediaType] isEqualToString:(__bridge NSString *)kUTTypeImage]) {
+            UIImage *img = [info objectForKey:UIImagePickerControllerEditedImage];
+            [self performSelector:@selector(saveImage:)  withObject:img afterDelay:0.5];
+        }
+        else if ([[info objectForKey:UIImagePickerControllerMediaType] isEqualToString:(__bridge NSString *)kUTTypeMovie]) {
+            NSString *videoPath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
+            [NSData dataWithContentsOfFile:videoPath];
+        }
+        //    [picker dismissModalViewControllerAnimated:YES];
+        [picker dismissViewControllerAnimated:YES completion:nil];
+    }
+    else{
+    NSLog(@"Picker returned successfully.");
+    NSLog(@"%@", info);
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    // 判断获取类型：图片
+    if ([mediaType isEqualToString:( NSString *)kUTTypeImage]){
+        UIImage *theImage = nil;
+        // 判断，图片是否允许修改
+        if ([picker allowsEditing]){
+            //获取用户编辑之后的图像
+            theImage = [info objectForKey:UIImagePickerControllerEditedImage];
+        } else {
+            // 照片的元数据参数
+            theImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+            
+        }
+        UIImageWriteToSavedPhotosAlbum(theImage, self, nil, nil);
+        NSMutableArray* imageInfos = [[NSMutableArray alloc] init];
+        OWTImageInfo* imageInfo = [[OWTImageInfo alloc] init];
+        imageInfo.image = theImage;
+        [imageInfos addObject:imageInfo];
+        OWTPhotoUploadViewController *photoUploadVC = [[OWTPhotoUploadViewController alloc] initWithNibName:nil bundle:nil];
+        photoUploadVC.imageInfos = imageInfos;
+        photoUploadVC.hidesBottomBarWhenPushed = YES;
+        photoUploadVC.isCameraImages = YES;
+        photoUploadVC.doneAction = ^{
+            [self.navigationController popViewControllerAnimated:YES];
+        };
+        photoUploadVC.doneAction = ^{
+            [self.navigationController popViewControllerAnimated:YES];
+        };
+        
+        [self.navigationController pushViewController:photoUploadVC animated:NO];
+    }
+    
+    [picker dismissViewControllerAnimated:nil completion:nil];
+    }
+}
+
+- (void)saveImage:(UIImage *)image {
+    BOOL success;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *imageFilePath = [documentsDirectory stringByAppendingPathComponent:@"backgroudPhoto.jpg"];
+    NSLog(@"imageFile->>%@",imageFilePath);
+    success = [fileManager fileExistsAtPath:imageFilePath];
+    if(success) {
+        success = [fileManager removeItemAtPath:imageFilePath error:&error];
+    }
+    [UIImageJPEGRepresentation(image, 1.0f) writeToFile:imageFilePath atomically:YES];//写入文件
+    UIImage *resultImage = [UIImage imageWithContentsOfFile:imageFilePath];//读取图片文件
+    NSData *imageData = UIImageJPEGRepresentation(resultImage,0.5);
+
+    if (resultImage != nil) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
+            [[QJInterfaceManager sharedManager] requestUserAvatarTempData:imageData extension:@"jpg" finished:^(NSString * imageUrl, NSDictionary * imageDic, NSError * error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(error == nil){
+                        _backgoundImage.image = resultImage;
+                        if (imageUrl != nil) {
+                            QJUser *user = [[QJUser alloc]init];
+                            user.uid = [[[QJPassport sharedPassport]currentUser]uid];
+                            user.bgUrl = imageUrl;
+                            [self updateBackgroudByURL:user];
+                        }
+
+                    }
+                
+                });
+
+        }];
+        });
+    }
+}
+
+-(void)updateBackgroudByURL:(QJUser*)user1
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[QJPassport sharedPassport] requestModifyUserInfo:user1 finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error == nil) {
+                    [SVProgressHUD dismiss];
+                    [SVProgressHUD showSuccessWithStatus:@"修改成功"];
+                    [self.navigationController popViewControllerAnimated:YES];
+                }else{
+                    [SVProgressHUD showError:error];
+                }
+            });
+        }];
+        
+    });
 }
 // 本机按钮触发
 - (void)showLocalAssets

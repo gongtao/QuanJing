@@ -96,20 +96,20 @@
     _user.userID = GetUserManager().currentUser.userID;
     OWTUserManager* um = GetUserManager();
     
-    [um getUserFriendByUser:wself.user
-                    success:^{
-                        _dataSource = wself.user.friendListArray ;
-                        //拿着一组ID，如果本地没有 就去缓存头像
-                        [HxNickNameImageModel getProfileByavatarUrl:_dataSource];
-                        [self loadDataSource];
-                    }
-                    failure:^(NSError* error) {
-                        // [SVProgressHUD showError:error];
-                        //  if (loadMoreDoneFunc != nil)
-                        // {
-                        //   loadMoreDoneFunc();
-                        // }
-                    }];
+//    [um getUserFriendByUser:wself.user
+//                    success:^{
+//                        _dataSource = wself.user.friendListArray ;
+//                        //拿着一组ID，如果本地没有 就去缓存头像
+//                        [HxNickNameImageModel getProfileByavatarUrl:_dataSource];
+//                        [self loadDataSource];
+//                    }
+//                    failure:^(NSError* error) {
+//                        // [SVProgressHUD showError:error];
+//                        //  if (loadMoreDoneFunc != nil)
+//                        // {
+//                        //   loadMoreDoneFunc();
+//                        // }
+//                    }];
     
 }
 
@@ -156,16 +156,16 @@
     user.userID = userID;
     
     OWTUserManager* um = GetUserManager();
-    [um refreshPublicInfoForUser:user
-                         success:^{
-                             OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
-                             userViewCon1.hidesBottomBarWhenPushed = YES;
-                             [self.navigationController pushViewController:userViewCon1 animated:YES];
-                             userViewCon1.user =user;
-                         }
-                         failure:^(NSError* error) {
-                             
-                         }];
+//    [um refreshPublicInfoForUser:user
+//                         success:^{
+//                             OWTUserViewCon* userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
+//                             userViewCon1.hidesBottomBarWhenPushed = YES;
+//                             [self.navigationController pushViewController:userViewCon1 animated:YES];
+//                             userViewCon1.user =user;
+//                         }
+//                         failure:^(NSError* error) {
+//                             
+//                         }];
     
 }
 
