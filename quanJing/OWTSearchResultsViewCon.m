@@ -20,18 +20,18 @@
 #import <SVPullToRefresh/SVPullToRefresh.h>
 #import "QuanJingSDK.h"
 #import "MobClick.h"
-static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
+static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 @interface OWTSearchResultsViewCon ()
 {
-    OWTTabBarHider* _tabBarHider;
-    UIImageView *_imageView1;
+	OWTTabBarHider * _tabBarHider;
+	UIImageView * _imageView1;
 }
 
-@property (nonatomic, strong) NSString* keyword;
-@property (nonatomic, strong) NSMutableOrderedSet* assets;
-@property (nonatomic, strong) UICollectionView* collectionView;
-@property (nonatomic, strong) OWaterFlowLayout* collectionViewLayout;
+@property (nonatomic, strong) NSString * keyword;
+@property (nonatomic, strong) NSMutableOrderedSet * assets;
+@property (nonatomic, strong) UICollectionView * collectionView;
+@property (nonatomic, strong) OWaterFlowLayout * collectionViewLayout;
 
 @end
 
@@ -39,227 +39,225 @@ static NSString* kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self)
-    {
-        _tabBarHider = [[OWTTabBarHider alloc] init];
-    }
-    return self;
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+	
+	if (self)
+		_tabBarHider = [[OWTTabBarHider alloc] init];
+	return self;
 }
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    [self setupCollectionView];
-    [self setupRefreshControl];
-    [self setUpBackView];
+	[super viewDidLoad];
+	[self setupCollectionView];
+	[self setupRefreshControl];
+	[self setUpBackView];
 }
--(void)setUpBackView
+
+- (void)setUpBackView
 {
-    _imageView1=[LJUIController createImageViewWithFrame:CGRectMake(0, 0, 100, 100) imageName:@"seach"];
-//    _imageView1.backgroundColor=[UIColor blackColor];
-    _imageView1.hidden=YES;
-//    _imageView1.center=self.view.center;
-    _imageView1.center=CGPointMake(self.view.center.x, self.view.center.y-50);
-    [self.view addSubview:_imageView1];
+	_imageView1 = [LJUIController createImageViewWithFrame:CGRectMake(0, 0, 100, 100) imageName:@"seach"];
+	//    _imageView1.backgroundColor=[UIColor blackColor];
+	_imageView1.hidden = YES;
+	//    _imageView1.center=self.view.center;
+	_imageView1.center = CGPointMake(self.view.center.x, self.view.center.y - 50);
+	[self.view addSubview:_imageView1];
 }
+
 - (void)setupCollectionView
 {
-    _collectionViewLayout = [[OWaterFlowLayout alloc] init];
-    _collectionViewLayout.sectionInset = UIEdgeInsetsMake(5, 10, 5, 10);
-    _collectionViewLayout.columnCount = 2;
-    
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
-                                             collectionViewLayout:_collectionViewLayout];
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
-    
-    [self.view addSubview:_collectionView];
-    [_collectionView easyFillSuperview];
-    
-    self.view.backgroundColor = GetThemer().themeColorBackground;
-    
-    [self.collectionView registerClass:OWTImageCell.class forCellWithReuseIdentifier:kWaterFlowCellID];
-    
-    self.collectionView.backgroundColor = GetThemer().themeColorBackground;
-    self.collectionView.showsHorizontalScrollIndicator = NO;
-    self.collectionView.showsVerticalScrollIndicator = NO;
-    
-    self.collectionView.alwaysBounceVertical = YES;
-    
+	_collectionViewLayout = [[OWaterFlowLayout alloc] init];
+	_collectionViewLayout.sectionInset = UIEdgeInsetsMake(5, 10, 5, 10);
+	_collectionViewLayout.columnCount = 2;
+	
+	self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
+		collectionViewLayout:_collectionViewLayout];
+	self.collectionView.delegate = self;
+	self.collectionView.dataSource = self;
+	
+	[self.view addSubview:_collectionView];
+	[_collectionView easyFillSuperview];
+	
+	self.view.backgroundColor = GetThemer().themeColorBackground;
+	
+	[self.collectionView registerClass:OWTImageCell.class forCellWithReuseIdentifier:kWaterFlowCellID];
+	
+	self.collectionView.backgroundColor = GetThemer().themeColorBackground;
+	self.collectionView.showsHorizontalScrollIndicator = NO;
+	self.collectionView.showsVerticalScrollIndicator = NO;
+	
+	self.collectionView.alwaysBounceVertical = YES;
 }
 
 - (void)setupRefreshControl
 {
-    __weak OWTSearchResultsViewCon* wself = self;
-    [_collectionView addInfiniteScrollingWithActionHandler:^{ [wself loadMoreData]; }];
+	__weak OWTSearchResultsViewCon * wself = self;
+	
+	[_collectionView addInfiniteScrollingWithActionHandler:^{[wself loadMoreData]; }];
 }
 
 - (void)dealloc
 {
-    [SVProgressHUD dismiss];
-    _collectionView.delegate = nil;
-    _collectionView.dataSource = nil;
+	[SVProgressHUD dismiss];
+	_collectionView.delegate = nil;
+	_collectionView.dataSource = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    [self substituteNavigationBarBackItem];
-    [MobClick beginEvent:@"搜索"];
-    
+	[super viewWillAppear:animated];
+	[self substituteNavigationBarBackItem];
+	[MobClick beginEvent:@"搜索"];
 }
--(void)viewWillDisappear:(BOOL)animated
+
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
-    [SVProgressHUD dismiss];
-    [MobClick endEvent:@"搜索"];
+	[super viewWillDisappear:animated];
+	[SVProgressHUD dismiss];
+	[MobClick endEvent:@"搜索"];
 }
+
 - (void)setKeyword:(NSString *)keyword
 {
-    [SVProgressHUD show];
-    _keyword = [keyword copy];
-//    self.title = keyword;
-    _assets = [[NSMutableOrderedSet alloc]init];
-    [self loadMoreData];
-    [_collectionView setContentOffset:CGPointMake(0, -self.collectionView.contentInset.top) animated:YES];
-
+	[SVProgressHUD show];
+	_keyword = [keyword copy];
+	//    self.title = keyword;
+	_assets = [[NSMutableOrderedSet alloc]init];
+	[self loadMoreData];
+	[_collectionView setContentOffset:CGPointMake(0, -self.collectionView.contentInset.top) animated:YES];
 }
 
-- (void)setKeyword:(NSString *)keyword withAssets:(NSArray*)assets
+- (void)setKeyword:(NSString *)keyword withAssets:(NSArray *)assets
 {
-    _keyword = [keyword copy];
-    self.title = keyword;
-    _assets = [NSMutableOrderedSet orderedSetWithArray:assets];
-    [self.collectionView reloadData];
-    [_collectionView setContentOffset:CGPointMake(0, -self.collectionView.contentInset.top) animated:YES];
+	_keyword = [keyword copy];
+	self.title = keyword;
+	
+	if (assets && (assets.count > 0))
+		_assets = [NSMutableOrderedSet orderedSetWithArray:assets];
+	else
+		_assets = nil;
+	[self.collectionView reloadData];
+	[_collectionView setContentOffset:CGPointMake(0, -self.collectionView.contentInset.top) animated:YES];
 }
 
-- (void)mergeAssets:(NSArray*)assets
+- (void)mergeAssets:(NSArray *)assets
 {
-    [_assets addObjectsFromArray:assets];
-    [_collectionView reloadData];
+	[_assets addObjectsFromArray:assets];
+	[_collectionView reloadData];
 }
 
 - (void)loadMoreData
 {
-    QJInterfaceManager *fm=[QJInterfaceManager sharedManager];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [fm requestImageSearchKey:_keyword pageNum:_assets.count/50+1 pageSize:50 currentImageId:nil finished:^(NSArray *  imageObjectArray, NSArray *  resultArray, NSError *  error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error) {
-                    [SVProgressHUD showError:error];
-                    return ;
-                }
-                if (imageObjectArray.count==0) {
-                    if (_assets.count==0) {
-                     _imageView1.hidden=NO;
-                    }
-                }else{
-                    _imageView1.hidden=YES;
-                }
-                [_collectionView.infiniteScrollingView stopAnimating];
-                [self mergeAssets:imageObjectArray];
-                [SVProgressHUD dismiss];
-    
-            });
-            }];
-    });
+	QJInterfaceManager * fm = [QJInterfaceManager sharedManager];
+	
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		[fm requestImageSearchKey:_keyword pageNum:_assets.count / 50 + 1 pageSize:50 currentImageId:nil finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if (error) {
+					[SVProgressHUD showError:error];
+					return;
+				}
+				
+				if (imageObjectArray.count == 0) {
+					if (_assets.count == 0)
+						_imageView1.hidden = NO;
+				}
+				else {
+					_imageView1.hidden = YES;
+				}
+				[_collectionView.infiniteScrollingView stopAnimating];
+				[SVProgressHUD dismiss];
+				
+				if (imageObjectArray && (imageObjectArray.count > 0))
+					[self mergeAssets:imageObjectArray];
+			});
+		}];
+	});
 }
 
 #pragma mark - OWaterFlowLayoutDataSource
 
-- (CGSize)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath*)indexPath
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    QJImageObject *model= _assets[indexPath.row];
-    if (model != nil)
-    {
-        return CGSizeMake(model.width.intValue,model.height.intValue);
-    }
-    else
-    {
-        return CGSizeZero;
-    }
+	QJImageObject * model = _assets[indexPath.row];
+	
+	if (model != nil)
+		return CGSizeMake(model.width.intValue, model.height.intValue);
+	else
+		return CGSizeZero;
 }
 
 #pragma mark - UICollectionViewDataSource methods
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 1;
+	return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (_assets != nil)
-    {
-        return _assets.count;
-    }
-    else
-    {
-        return 0;
-    }
+	if (_assets != nil)
+		return _assets.count;
+	else
+		return 0;
 }
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    OWTImageCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:kWaterFlowCellID forIndexPath:indexPath];
-    QJImageObject *model=_assets[indexPath.row];
-    OWTImageInfo *imageInfo=[[OWTImageInfo alloc]init];
-    imageInfo.url=model.url;
-    imageInfo.width=model.width.intValue;
-    imageInfo.height=model.height.intValue;
-    imageInfo.primaryColorHex=model.bgcolor;
-    if (model != nil)
-    {
-        if (imageInfo != nil)
-        {
-            [cell setImageWithInfo:imageInfo];
-        }
-        else
-        {
-            cell.backgroundColor = [UIColor lightGrayColor];
-        }
-    }
-    
-    return cell;
+	OWTImageCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:kWaterFlowCellID forIndexPath:indexPath];
+	QJImageObject * model = _assets[indexPath.row];
+	OWTImageInfo * imageInfo = [[OWTImageInfo alloc]init];
+	
+	imageInfo.url = model.url;
+	imageInfo.width = model.width.intValue;
+	imageInfo.height = model.height.intValue;
+	imageInfo.primaryColorHex = model.bgcolor;
+	
+	if (model != nil) {
+		if (imageInfo != nil)
+			[cell setImageWithInfo:imageInfo];
+		else
+			cell.backgroundColor = [UIColor lightGrayColor];
+	}
+	
+	return cell;
 }
 
 #pragma mark - UICollectionViewDelegate methods
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return YES;
+	return YES;
 }
 
 // called when the user taps on an already-selected item in multi-select mode
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return YES;
+	return YES;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    QJImageObject *model=_assets[indexPath.row];
-    if (model != nil)
-    {
-        model.imageType = [NSNumber numberWithInt:1];
-        OWTAssetViewCon *assetViewCon=[[OWTAssetViewCon alloc]initWithImageId:model imageType:model.imageType];
-        [self.navigationController pushViewController:assetViewCon animated:YES];
-    }
+	QJImageObject * model = _assets[indexPath.row];
+	
+	if (model != nil) {
+		model.imageType = [NSNumber numberWithInt:1];
+		OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc]initWithImageId:model imageType:model.imageType];
+		[self.navigationController pushViewController:assetViewCon animated:YES];
+	}
 }
 
 #pragma mark - ScrollView Delegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    [_tabBarHider notifyScrollViewWillBeginDraggin:scrollView];
+	[_tabBarHider notifyScrollViewWillBeginDraggin:scrollView];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    [_tabBarHider notifyScrollViewDidScroll:scrollView];
+	[_tabBarHider notifyScrollViewDidScroll:scrollView];
 }
 
 @end

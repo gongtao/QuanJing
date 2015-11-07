@@ -30,7 +30,7 @@
 #import <QBFlatButton/QBFlatButton.h>
 #import <SHBarButtonItemBlocks/SHBarButtonItemBlocks.h>
 #import <SIAlertView/SIAlertView.h>
-#import <SDWebImage/SDWebImageManager.h>
+#import <UIImageView+WebCache.h>
 #import <ALAssetsLibrary-CustomPhotoAlbum/ALAssetsLibrary+CustomPhotoAlbum.h>
 #import "XHImageViewer.h"
 #import "OWTAssetManager.h"
@@ -186,35 +186,32 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)getLikeAndCommendData
 {
-    NSInteger integer = ([_imageAsset.imageType integerValue] == 1)?1:2;
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[QJInterfaceManager sharedManager] requestImageDetail:_imageAsset.imageId imageType:[NSNumber numberWithInteger:integer] finished:^(QJImageObject * imageObject, NSError * error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error) {
-                    [SVProgressHUD showErrorWithStatus:@"网络连接错误"];
-                    return ;
-                }
-                if (imageObject != nil) {
-                    _imageAsset.tag=imageObject.tag;
-                    _imageAsset.captionCn = imageObject.captionCn;
-                    _imageAsset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
-                    _imageAsset.likes = imageObject.likes;
-                    _imageAsset.userId=imageObject.userId;
-                    _imageAsset.descript=imageObject.descript;
-                    [self reloadData];
-                    [self loadRelatedAssetsInSearch];
-
-                }else{
-                    [SVProgressHUD showErrorWithStatus:@"没有找到图片"];
-                }
-                [SVProgressHUD dismiss];
-                
-                
-            });
-        }];
-    });
-    
+	NSInteger integer = ([_imageAsset.imageType integerValue] == 1) ? 1 : 2;
+	
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		[[QJInterfaceManager sharedManager] requestImageDetail:_imageAsset.imageId imageType:[NSNumber numberWithInteger:integer] finished:^(QJImageObject * imageObject, NSError * error) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if (error) {
+					[SVProgressHUD showErrorWithStatus:@"网络连接错误"];
+					return;
+				}
+				
+				if (imageObject != nil) {
+					_imageAsset.tag = imageObject.tag;
+					_imageAsset.captionCn = imageObject.captionCn;
+					_imageAsset.comments = [[imageObject.comments reverseObjectEnumerator] allObjects];
+					_imageAsset.likes = imageObject.likes;
+					_imageAsset.userId = imageObject.userId;
+					_imageAsset.descript = imageObject.descript;
+					[self reloadData];
+					[self loadRelatedAssetsInSearch];
+				}
+				else {
+					[SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+				}
+			});
+		}];
+	});
 }
 
 - (void)setupInputView
@@ -454,19 +451,21 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    
-    [_collectionView reloadData];
-    [self substituteNavigationBarBackItem];
-//    [self updateNavBarButtons];
-    [_tabBarHider hideTabBar];
-    [MobClick beginEvent:@"图片详情"];
+	[super viewWillAppear:animated];
+	
+	[_collectionView reloadData];
+	[self substituteNavigationBarBackItem];
+	//    [self updateNavBarButtons];
+	[_tabBarHider hideTabBar];
+	[MobClick beginEvent:@"图片详情"];
 }
--(void)viewWillDisappear:(BOOL)animated
+
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
-    [MobClick endEvent:@"图片详情"];
+	[super viewWillDisappear:animated];
+	[MobClick endEvent:@"图片详情"];
 }
+
 - (void)updateNavBarButtons
 {
 	QJUser * user = [QJPassport sharedPassport].currentUser;
@@ -614,8 +613,10 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 						return;
 					}
 					
-					if (imageObjectArray.count == 0)
+					if (imageObjectArray.count == 0) {
 						[SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+						return;
+					}
 					[self mergeAssets:imageObjectArray];
 					[SVProgressHUD dismiss];
 				});
@@ -886,9 +887,22 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	
 	QJImageObject * asset = [self relatedAssetAtIndexPath:indexPath];
 	
+	cell.imageView.alpha = 0.0;
+	
 	if (asset != nil) {
 		NSString * urlAdapt = [QJInterfaceManager thumbnailUrlFromImageUrl:asset.url size:CGSizeMake(_adaptWith, _adaptWith *[asset.height intValue] / [asset.width intValue])];
-		[cell.imageView setImageWithURL:[NSURL URLWithString:urlAdapt]];
+		
+		__weak UIImageView * weakImageView = cell.imageView;
+		[cell.imageView setImageWithURL:[NSURL URLWithString:urlAdapt]
+		completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+			if (cacheType == SDImageCacheTypeNone)
+				[UIView animateWithDuration:0.3
+				animations:^{
+					weakImageView.alpha = 1.0;
+				}];
+			else
+				weakImageView.alpha = 1.0;
+		}];
 	}
 	
 	return cell;
@@ -1284,7 +1298,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	[array addObject:_imageAsset];
 	float imageWith = SCREENWIT;
 	float imagehigh = [_imageAsset.width floatValue] * imageWith / [_imageAsset.height floatValue];
-
 	
 	for (id object in _searchResults) {
 		QJImageObject * asset1 = object;
@@ -1295,7 +1308,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	
 	for (int i = 0; i < array.count; i++) {
 		QJImageObject * asset1 = array[i];
-        NSString * adaptUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:asset1.url size:CGSizeMake(imageWith, imagehigh)];
+		NSString * adaptUrl = [QJInterfaceManager thumbnailUrlFromImageUrl:asset1.url size:CGSizeMake(imageWith, imagehigh)];
 		FSBasicImage * firstPhoto = [[FSBasicImage alloc] initWithImageURL:[NSURL URLWithString:adaptUrl] name:asset1.captionCn];
 		[FSArr addObject:firstPhoto];
 	}

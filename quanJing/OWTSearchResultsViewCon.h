@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OWTSearchResultsViewCon : UIViewController<UICollectionViewDelegate, UICollectionViewDataSource>
-- (void)setKeyword:(NSString *)keyword withAssets:(NSArray*)assets;
-- (void)setKeyword:(NSString *)keyword ;
+@interface OWTSearchResultsViewCon : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource>
+- (void)setKeyword:(NSString *)keyword withAssets:(NSArray *)assets;
+- (void)setKeyword:(NSString *)keyword;
 
 @end
