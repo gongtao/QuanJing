@@ -20,16 +20,14 @@
 #import "QuanJingSDK.h"
 @interface OWTSMSAuthCodeVerifyViewCon ()
 {
-   
-
-    __weak IBOutlet UIImageView *backimage;
-    __weak IBOutlet UIView *backView;
-    IBOutlet UITextField* _verificationCodeTextField;
-    
-    __weak IBOutlet UITextField *passwordTextField;
-    __weak IBOutlet UIButton *_timeBtn;
-    NSTimer* _resendTimer;
-    NSTimeInterval _resendTimeLeft;
+	__weak IBOutlet UIImageView * backimage;
+	__weak IBOutlet UIView * backView;
+	IBOutlet UITextField * _verificationCodeTextField;
+	
+	__weak IBOutlet UITextField * passwordTextField;
+	__weak IBOutlet UIButton * _timeBtn;
+	NSTimer * _resendTimer;
+	NSTimeInterval _resendTimeLeft;
 }
 
 @end
@@ -38,135 +36,126 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self)
-    {
-        [self setup];
-    }
-    return self;
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+	
+	if (self)
+		[self setup];
+	return self;
 }
 
 - (void)setup
 {
-    self.navigationItem.title = NSLocalizedString(@"SMSAUTH_VERIFY_VIEWCON_TITLE", @"SMS Auth");
-    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickHide1:)];
-    backimage.userInteractionEnabled=YES;
-    [backimage addGestureRecognizer:tap];
-
+	self.navigationItem.title = NSLocalizedString(@"SMSAUTH_VERIFY_VIEWCON_TITLE", @"SMS Auth");
+	UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickHide1:)];
+	backimage.userInteractionEnabled = YES;
+	[backimage addGestureRecognizer:tap];
 }
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inputKeyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inputKeyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    [_timeBtn setBackgroundColor:[UIColor colorWithHexString:@"#ff2a00"]];
-    }
--(void)onClickHide1:(UIGestureRecognizer *)sender
-{
-    [_verificationCodeTextField resignFirstResponder];
-    [passwordTextField resignFirstResponder];
+	[super viewDidLoad];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inputKeyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inputKeyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	[_timeBtn setBackgroundColor:[UIColor colorWithHexString:@"#ff2a00"]];
 }
 
--(void)inputKeyboardWillShow:(NSNotification*)notification
+- (void)onClickHide1:(UIGestureRecognizer *)sender
 {
-    CGFloat animationTime = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    [UIView animateWithDuration:animationTime animations:^{
-        CGRect keyBoardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        if (self.view) {
-            NSLog(@"%f",self.view.center.y);
-            NSInteger highInjust = SCREENHEI==480?60:0;
-            backView.center=CGPointMake(backView.center.x, self.view.center.y-keyBoardFrame.size.height+125-highInjust);
-            NSLog(@"%f",self.view.center.y);
-        }
-    }];
-    
+	[_verificationCodeTextField resignFirstResponder];
+	[passwordTextField resignFirstResponder];
 }
--(void)inputKeyboardWillHide:(NSNotification*)notification
+
+- (void)inputKeyboardWillShow:(NSNotification *)notification
 {
-    CGFloat animationTime = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    CGRect frame=[UIScreen mainScreen].bounds;
-    [UIView animateWithDuration:animationTime animations:^{
-        CGRect keyBoardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        backView.center=CGPointMake(backView.center.x, self.view.center.y+keyBoardFrame.size.height-125);
-    }];
-    
+	CGFloat animationTime = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+	
+	[UIView animateWithDuration:animationTime animations:^{
+		CGRect keyBoardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+		
+		if (self.view) {
+			NSLog(@"%f", self.view.center.y);
+			NSInteger highInjust = SCREENHEI == 480 ? 60 : 0;
+			backView.center = CGPointMake(backView.center.x, self.view.center.y - keyBoardFrame.size.height + 125 - highInjust);
+			NSLog(@"%f", self.view.center.y);
+		}
+	}];
+}
+
+- (void)inputKeyboardWillHide:(NSNotification *)notification
+{
+	CGFloat animationTime = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+	CGRect frame = [UIScreen mainScreen].bounds;
+	
+	[UIView animateWithDuration:animationTime animations:^{
+		CGRect keyBoardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+		backView.center = CGPointMake(backView.center.x, self.view.center.y + keyBoardFrame.size.height - 125);
+	}];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-
+	[super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
-
+	[super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
+	[super viewWillDisappear:animated];
 }
 
 - (void)setCellphone:(NSString *)cellphone
-{
-}
+{}
 
 - (void)attributedLabel:(TTTAttributedLabel *)label
-   didSelectLinkWithURL:(NSURL *)url
+	didSelectLinkWithURL:(NSURL *)url
 {
-    OWTLicenseViewCon* licenseViewCon = [[OWTLicenseViewCon alloc] initWithNibName:nil bundle:nil];
-    [self.navigationController pushViewController:licenseViewCon animated:YES];
+	OWTLicenseViewCon * licenseViewCon = [[OWTLicenseViewCon alloc] initWithNibName:nil bundle:nil];
+	
+	[self.navigationController pushViewController:licenseViewCon animated:YES];
 }
-
-
 
 #pragma mark - Code Verification Related
 
-- (IBAction)loginClick:(id)sender {
-
-    if (_verificationCodeTextField.text==nil||passwordTextField.text==nil||![_verificationCodeTextField.text isEqualToString:passwordTextField.text]) {
-        [SVProgressHUD showErrorWithStatus:@"密码填写有误"];
-        [passwordTextField resignFirstResponder];
-        return;
-    }
-    [SVProgressHUD show];
-    QJPassport *pt=[QJPassport sharedPassport];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [pt registerUser:_cellphone1 password:passwordTextField.text code:_code finished:^(NSNumber * _Nonnull userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [SVProgressHUD dismiss];
-                if (error) {
-                    [SVProgressHUD showError:error];
-                }else {
-                    [SVProgressHUD showSuccessWithStatus:@"注册成功"];
-                    OWTUserManager* um = GetUserManager();
-                    [um refreshCurrentUserSuccess:^{
-                        if (_successFunc != nil)
-                        {
-                            _successFunc();
-                        }
-                    }
-                                          failure:^(NSError* error){
-                                              if (error == nil)
-                                              {
-                                                  return;
-                                              }
-                                          }];
-                    
-                }
-  
-            });
-        }];
-            });
+- (IBAction)loginClick:(id)sender
+{
+	if ((_verificationCodeTextField.text == nil) || (passwordTextField.text == nil) || ![_verificationCodeTextField.text isEqualToString:passwordTextField.text]) {
+		[SVProgressHUD showErrorWithStatus:@"密码填写有误"];
+		[passwordTextField resignFirstResponder];
+		return;
+	}
+	[SVProgressHUD show];
+	QJPassport * pt = [QJPassport sharedPassport];
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		[pt registerUser:_cellphone1 password:passwordTextField.text code:_code finished:^(NSNumber * _Nonnull userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if (error) {
+					[SVProgressHUD showError:error];
+				}
+				else {
+					[SVProgressHUD showSuccessWithStatus:@"注册成功"];
+					OWTUserManager * um = GetUserManager();
+					[um refreshCurrentUserSuccess:^{
+						if (_successFunc != nil)
+							_successFunc();
+					}
+					failure:^(NSError * error) {
+						if (error == nil)
+							return;
+					}];
+				}
+			});
+		}];
+	});
 }
 
--(void)dealloc
+- (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 @end

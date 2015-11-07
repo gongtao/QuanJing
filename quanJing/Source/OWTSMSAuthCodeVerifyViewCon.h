@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <TTTAttributedLabel/TTTAttributedLabel.h>
 
-@interface OWTSMSAuthCodeVerifyViewCon : UIViewController<TTTAttributedLabelDelegate, UITextFieldDelegate>
-@property(nonatomic,copy)NSString *cellphone1;
-@property (nonatomic, copy) NSString* code;
+@interface OWTSMSAuthCodeVerifyViewCon : UIViewController <TTTAttributedLabelDelegate, UITextFieldDelegate>
+@property(nonatomic, copy) NSString * cellphone1;
+@property (nonatomic, copy) NSString * code;
 @property (nonatomic, strong) void (^successFunc)();
 @property (nonatomic, strong) void (^cancelBlock) ();
 - (void)verifyCode;

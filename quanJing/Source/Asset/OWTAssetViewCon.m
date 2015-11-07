@@ -580,10 +580,13 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 					return;
 				}
 				
-				if (imageObjectArray.count == 0)
+				if (imageObjectArray.count == 0) {
 					[SVProgressHUD showErrorWithStatus:@"没有找到图片"];
-				[self mergeAssets:imageObjectArray];
-				[SVProgressHUD dismiss];
+				}
+				else {
+					[self mergeAssets:imageObjectArray];
+					[SVProgressHUD dismiss];
+				}
 			});
 		}];
 	});

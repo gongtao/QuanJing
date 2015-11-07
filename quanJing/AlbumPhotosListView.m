@@ -551,7 +551,6 @@
 					NSDictionary * dict = @{@"imageurl":model.imageUrl, @"caption":model.caption};
 					[_captionsResouce addObject:dict];
 				}
-				
 		} finished:^(NSManagedObjectContext * mainContext) {
 			dispatch_semaphore_signal(sem);
 		}];
@@ -1197,7 +1196,6 @@
 	if ((_user.assetsInfo != nil) && (_user.assetsInfo.assets != nil))
 		return;
 		
-		
 	[_assetViewCon1 manualRefresh];
 }
 
@@ -1215,7 +1213,6 @@
 		
 	if (_user.isPublicInfoAvailable)
 		return;
-		
 		
 	[self manualRefresh];
 }
@@ -1259,7 +1256,6 @@
 {
 	if (section == 0)
 		return 0;
-		
 		
 	return 0;
 }
@@ -1443,7 +1439,6 @@
 		[[QJPassport sharedPassport] requestModifyUserInfo:user1 finished:^(QJUser * user, NSDictionary * userDic, NSError * error) {
 			dispatch_async(dispatch_get_main_queue(), ^{
 				if (error == nil) {
-					[SVProgressHUD dismiss];
 					[SVProgressHUD showSuccessWithStatus:@"修改成功"];
 					[self.navigationController popViewControllerAnimated:YES];
 				}
@@ -1595,7 +1590,6 @@
 {
 	if (section == 0)
 		return CGSizeMake(320, 212);
-		
 		
 	return CGSizeZero;
 }
