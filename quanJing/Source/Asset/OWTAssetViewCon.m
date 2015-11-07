@@ -766,7 +766,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 				[likesArr addObject:[QJPassport sharedPassport].currentUser];
 				_imageAsset.likes = likesArr;
 				[_collectionView reloadData];
-				[SVProgressHUD dismiss];
+				[SVProgressHUD showSuccessWithStatus:@"喜欢成功"];
 			});
 		});
 	}
@@ -795,7 +795,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 				[likesArr removeObjectAtIndex:i];
 				_imageAsset.likes = likesArr;
 				[_collectionView reloadData];
-				[SVProgressHUD dismiss];
+				[SVProgressHUD showSuccessWithStatus:@"取消喜欢成功"];
 			});
 		});
 	}
@@ -987,14 +987,13 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 						dispatch_async(dispatch_get_main_queue(), ^{
 							if (error == nil) {
 								[SVProgressHUD showSuccessWithStatus:@"收藏成功"];
-								[SVProgressHUD dismiss];
 							}
 							else {
 								if (![NetStatusMonitor isExistenceNetwork]) {
 									[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
 									return;
 								}
-								[SVProgressHUD showSuccessWithStatus:@"收藏失败"];
+								[SVProgressHUD showErrorWithStatus:@"收藏失败"];
 							}
 						});
 					});
@@ -1020,14 +1019,13 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			dispatch_async(dispatch_get_main_queue(), ^{
 				if (error == nil) {
 					[SVProgressHUD showSuccessWithStatus:@"收藏成功"];
-					[SVProgressHUD dismiss];
 				}
 				else {
 					if (![NetStatusMonitor isExistenceNetwork]) {
 						[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
 						return;
 					}
-					[SVProgressHUD showSuccessWithStatus:@"收藏失败"];
+					[SVProgressHUD showErrorWithStatus:@"收藏失败"];
 				}
 			});
 		});
