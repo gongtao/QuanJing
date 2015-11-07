@@ -466,7 +466,7 @@
 		A3DB10C41BABAD690033522F /* 关注01.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10BD1BABAD690033522F /* 关注01.png */; };
 		A3DB10C51BABAD690033522F /* 评论.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10BE1BABAD690033522F /* 评论.png */; };
 		A3DB10C71BABAD690033522F /* 赞00.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10C01BABAD690033522F /* 赞00.png */; };
-		A3E1810C1BECE282004EDD22 /* seach@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E1810B1BECE282004EDD22 /* seach@3x.png */; settings = {ASSET_TAGS = (); }; };
+		A3E1810C1BECE282004EDD22 /* seach@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E1810B1BECE282004EDD22 /* seach@3x.png */; };
 		A3E447FC1A79B00C000DE7BA /* selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E447FB1A79B00C000DE7BA /* selected@2x.png */; };
 		A3EB5A411BD7412B00E08563 /* OWTSearchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A3C1BD7412B00E08563 /* OWTSearchManager.m */; };
 		A3EB5A421BD7412B00E08563 /* OWTSearchResultsViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A3E1BD7412B00E08563 /* OWTSearchResultsViewCon.m */; };
@@ -4889,7 +4889,6 @@
 				ORGANIZATIONNAME = "SparkingSoft Co., Ltd";
 				TargetAttributes = {
 					9044E3C018CAE4D800784D38 = {
-						DevelopmentTeam = T3BNK5WMQ7;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
