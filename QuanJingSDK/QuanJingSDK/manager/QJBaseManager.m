@@ -180,6 +180,11 @@
 	return [[QJHTTPManager sharedManager] httpRequestManager];
 }
 
+- (NSString *)userAgent
+{
+    return [QJHTTPManager sharedManager].userAgent;
+}
+
 #pragma mark - error
 
 - (NSError *)errorFromOperation:(id)operation

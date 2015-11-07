@@ -508,6 +508,9 @@
 		if (!QJ_IS_ARRAY_NIL(dataArray)) {
 			[self resultArrayFromActionListResponseData:dataArray
 			finished:^(NSArray * actionArray, NSNumber * nextCursorIndex) {
+				if (QJ_IS_NUM_NIL(nextCursorIndex))
+					nextCursorIndex = cursorIndex;
+					
 				if (finished)
 					finished(actionArray, dataArray, nextCursorIndex, error);
 			}];
@@ -518,7 +521,7 @@
 	NSLog(@"%@", error);
 	
 	if (finished)
-		finished(nil, nil, nil, error);
+		finished(nil, nil, cursorIndex, error);
 }
 
 - (NSError *)requestLikeAction:(NSNumber *)actionId

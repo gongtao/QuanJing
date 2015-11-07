@@ -17,6 +17,8 @@
     AFHTTPRequestOperationManager *_httpRequestManager;
 }
 
+@property (readwrite, nonatomic, strong) NSString * userAgent;
+
 @end
 
 @implementation QJHTTPManager
@@ -54,6 +56,7 @@
                     userAgent = mutableUserAgent;
             }
             [self.httpRequestManager.requestSerializer setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+            _userAgent = userAgent;
         }
         
         self.httpRequestManager.requestSerializer.timeoutInterval = 30.0;

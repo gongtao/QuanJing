@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)saveURLCookie;
 
+- (NSString *)userAgent;
+
 - (NSError *)errorFromOperation:(id)operation;
 
 - (BOOL)shouldRetryHttpRequest:(nullable NSError *)error;
