@@ -76,6 +76,7 @@
 	RESideMenu * _sideMenu;
 	UIView * _headView;
 	NSNumber * _cuIndex;
+    UIImageView  *_redPoint;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -141,6 +142,21 @@
 - (void)setup
 {
 	_tabBarHider = [[OWTTabBarHider alloc] init];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setNewPointStatus:) name:@"setRedPointStatus" object:nil];
+}
+
+//通过通知中心发送通知
+
+-(void)setNewPointStatus:(NSNotification *)notify
+{
+     NSNumber *number = (NSNumber*)notify.userInfo;
+    if ([number boolValue]) {
+        [_redPoint setHidden:NO];
+    }else{
+        [_redPoint setHidden:YES];
+    }
+
 }
 
 - (void)viewDidLoad
@@ -196,8 +212,13 @@
 	button2.titleLabel.font = [UIFont systemFontOfSize:12];
 	[_headView addSubview:button1];
 	[_headView addSubview:button2];
+    _redPoint = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"repoint"]];
+    _redPoint.frame = CGRectMake(button2.bounds.size.width-8-5, 0+3, 8, 8);
+    [button2 addSubview:_redPoint];
+    [_redPoint setHidden:YES];
 	self.navigationItem.titleView = _headView;
 }
+
 
 - (void)guanchangClick:(UIButton *)sender
 {}
@@ -207,6 +228,9 @@
 	OWTAppDelegate * delegate = (OWTAppDelegate *)[UIApplication sharedApplication].delegate;
 	OQJNavCon * hx = delegate.hxChatNavCon;
 	
+    //去设置圈子里的红点 － 显示
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"setRedPointStatus" object:nil userInfo:(NSDictionary*)[NSNumber numberWithBool:NO]];
+    
 	if (hx.viewControllers.count > 0) {
 		ChatListViewController * chatlistVC = [hx.viewControllers firstObject];
 		[chatlistVC slimeRefreshStartRefresh:nil];

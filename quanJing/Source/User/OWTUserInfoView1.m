@@ -270,8 +270,8 @@ typedef enum {
 //        return NO;
 //    }
     
-   //BOOL isFollowing = [user.hasFollowUser containsObject:userID];
-    return NO;
+   BOOL isFollowing = [user.hasFollowUser boolValue];
+    return isFollowing;
 }
 
 
@@ -295,6 +295,7 @@ typedef enum {
 						[SVProgressHUD showError:error];
 						return;
 					}
+                    _user.hasFollowUser = [NSNumber numberWithBool:YES];
 					[SVProgressHUD dismiss];
 					[self updateBasedOnIsCurrentUser];
 				});
@@ -311,6 +312,7 @@ typedef enum {
 						[SVProgressHUD showError:error];
 						return;
 					}
+                    _user.hasFollowUser = [NSNumber numberWithBool:NO];
 					[SVProgressHUD dismiss];
 					[self updateBasedOnIsCurrentUser];
 				});

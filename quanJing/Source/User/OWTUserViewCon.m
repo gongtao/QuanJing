@@ -391,6 +391,9 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 		[HuanXinManager sharedTool:hxUsrId passWord:password];
 		return;
 	}
+    if (_quser.uid == nil) {
+        return;
+    }
 	NSString * toChat = [@"qj" stringByAppendingString:[_quser.uid stringValue]];
 	// 开始聊天
 	_chatVC = [[ChatViewController_rename alloc] initWithChatter:toChat isGroup:NO tile1:@"" title2:@""];

@@ -128,11 +128,11 @@
 	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_urlString]]];
 	
 	UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-	[button setBackgroundImage:[UIImage imageNamed:@"webShare1.png"]
+	[button setBackgroundImage:[UIImage imageNamed:@"webShare2"]
 	forState:UIControlStateNormal];
 	[button addTarget:self action:@selector(shareAsset)
 	forControlEvents:UIControlEventTouchUpInside];
-	button.frame = CGRectMake(0, 0, 20, 20);
+	button.frame = CGRectMake(0, 0, 20, 6);
 	
 	UIBarButtonItem * menuButton = [[UIBarButtonItem alloc] initWithCustomView:button];
 	self.navigationItem.rightBarButtonItem = menuButton;

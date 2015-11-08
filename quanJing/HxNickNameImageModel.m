@@ -294,7 +294,7 @@
         __block QJUser *_user = nil;
         NSNumber *uid = [NSNumber numberWithInteger:[usrId integerValue]];
         [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
-            if (error == nil && user != nil) {
+            if (error == nil && user != nil && user.uid != nil) {
                 
                 NSString *homeDictionary = NSHomeDirectory();//获取根目录
                 NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
@@ -337,7 +337,7 @@
             [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error)
              {
                  dispatch_async(dispatch_get_main_queue(), ^{
-                     if (error == nil && user != nil) {
+                     if (error == nil && user != nil && user.uid != nil) {
                          NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
                          [dic setValue:user.uid forKey:@"id"];
                          [dic setValue:user.nickName forKey:@"nickName"];

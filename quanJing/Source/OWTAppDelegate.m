@@ -74,9 +74,9 @@
 	NSString * str1 = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
 	
 	if ([str isEqualToString:str1]) {
-		OWTMainViewCon * mainView = [[OWTMainViewCon alloc]initWithNibName:nil bundle:nil];
-		mainView.tabBar.hidden = YES;
-		self.window.rootViewController = mainView;
+		 _mainViewCon = [[OWTMainViewCon alloc]initWithNibName:nil bundle:nil];
+		_mainViewCon.tabBar.hidden = YES;
+		self.window.rootViewController = _mainViewCon;
 	}
 	else {
 		StartViewController * svc = [[StartViewController alloc]init];

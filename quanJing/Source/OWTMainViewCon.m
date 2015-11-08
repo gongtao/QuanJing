@@ -97,6 +97,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	selector:@selector(reachabilityChangedNotification:)
 	name:kReachabilityChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loginStatusChange:) name:kQJUserNotLoginNotification object:nil];
+
 	[self setupNetworkMonitor];
 	
 	GetThemer().homePageColor = HWColor(46, 46, 46);
@@ -761,11 +762,13 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		// #if !TARGET_IPHONE_SIMULATOR
 		
 		BOOL isAppActivity = [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive;
-		
-		if (!isAppActivity)
+		//如果app在后台 震动加声音
+        if (!isAppActivity){
 			[self showNotificationWithMessage:message];
+            [self playSoundAndVibration];
+        }
 		else
-			[self playSoundAndVibration];
+            [self playVibration];
 		// #endif
 	}
 	
@@ -805,6 +808,28 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	[[EaseMob sharedInstance].deviceManager asyncPlayNewMessageSound];
 	// 收到消息时，震动
 	[[EaseMob sharedInstance].deviceManager asyncPlayVibration];
+}
+
+- (void)playVibration
+{
+    NSTimeInterval timeInterval = [[NSDate date]
+                                   timeIntervalSinceDate:self.lastPlaySoundDate];
+    
+    if (timeInterval < kDefaultPlaySoundInterval) {
+        // 如果距离上次响铃和震动时间太短, 则跳过响铃
+        NSLog(@"skip ringing & vibration %@, %@", [NSDate date], self.lastPlaySoundDate);
+        return;
+    }
+    
+    // 保存最后一次响铃时间
+    self.lastPlaySoundDate = [NSDate date];
+    
+    // 收到消息时，播放音频
+//    [[EaseMob sharedInstance].deviceManager asyncPlayNewMessageSound];
+    // 收到消息时，震动
+    [[EaseMob sharedInstance].deviceManager asyncPlayVibration];
+    //去设置圈子里的红点 － 显示
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"setRedPointStatus" object:nil userInfo:(NSDictionary*)[NSNumber numberWithBool:YES]];
 }
 
 - (void)showNotificationWithMessage:(EMMessage *)message
@@ -886,6 +911,8 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 #pragma mark - public  收到本地推送后 直接进入聊天页面
 - (void)jumpToChatList
 {
+    /*//[[NSNotificationCenter defaultCenter] postNotificationName:@"setRedPointStatus" object:nil userInfo:(NSDictionary*)[NSNumber numberWithBool:YES]];
+*/
 	[[UIApplication sharedApplication] cancelAllLocalNotifications];
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 	
