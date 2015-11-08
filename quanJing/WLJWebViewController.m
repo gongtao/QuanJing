@@ -122,7 +122,8 @@
 		NSLog(@"result = %@", _articleTitle);
 	});
     
-	self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, _ifCustom ? 10 : 0, self.view.bounds.size.width, _ifCustom ? self.view.bounds.size.height : self.view.bounds.size.height)];
+	self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, _ifCustom ? 10 : 0, self.view.bounds.size.width, _ifCustom ? self.view.bounds.size.height : self.view.bounds.size.height - 42.0 - 64.0)];
+    NSLog(@"height:%f", self.view.bounds.size.height);
 	_webView.delegate = self;
 	[self.view addSubview:self.webView];
 	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_urlString]]];
