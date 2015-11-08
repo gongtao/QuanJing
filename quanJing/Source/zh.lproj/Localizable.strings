@@ -10,7 +10,6 @@
 "WALLPAPERS" = "热门壁纸";
 "DONE" = "完成";
 
-//"NETWORK_ERROR" = "无法连接服务器，请检查您的网络";
 "NETWORK_ERROR" = "网络连接失败";
 
 "GENERAL_ERROR_TRY_LATER" = "请求失败，请稍后再试";
