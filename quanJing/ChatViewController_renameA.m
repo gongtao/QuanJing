@@ -81,7 +81,7 @@
         _isChatGroup = isGroup;
         _messages = [NSMutableArray array];
         
-        //根据接收者的username获取当前会话的管理者,用单例对象 做了初始化和登陆
+        //根据接收者的username获取当前会话的管理者,用单例对象 做了初始化和登录
         
         [[[EaseMob sharedInstance] deviceManager] addDelegate:self onQueue:nil];
         [[EaseMob sharedInstance].chatManager removeDelegate:self];

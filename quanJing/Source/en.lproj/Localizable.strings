@@ -250,7 +250,7 @@
 "login.endAutoLogin" = "自动登录结束...";
 "login.errorAutoLogin" = "自动登录失败.";
 "login.nameNotSupportZh" = "用户名不支持中文";
-"login.ongoing" = "正在登陆...";
+"login.ongoing" = "正在登录...";
 "login.fail" = "登录失败";
 "login.inputNameAndPswd" = "请输入账号和密码";
 "login.inputApnsNickname" = "填写推送消息时使用的昵称";
@@ -258,7 +258,7 @@
 //register
 "register.ongoing" = "正在注册...";
 "register.fail" = "注册失败";
-"register.success" = "注册成功，请登陆";
+"register.success" = "注册成功，请登录";
 "register.repeat" = "您注册的用户已存在!";
 "register.confirmPassword" = "两次输入密码不一致,请重新输入";
 
