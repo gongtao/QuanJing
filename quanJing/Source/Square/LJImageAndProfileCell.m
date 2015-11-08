@@ -38,7 +38,6 @@
 	UILabel * _userName;
 	UILabel * _upTime;
 	OWTUser * _user;
-	QJUser * _qjuser;
 	NSMutableArray * _assets;
 	OWTActivityData * _activity;
 	NSMutableArray * _likes;
@@ -76,7 +75,6 @@
 	if (self) {
 		commentcb = [cb copy];
 		_viewContoller = viewConctroller;
-		_qjuser = [QJPassport sharedPassport].currentUser;
 		_careUser = [[OWTUserData alloc]init];
 		self.contentView.backgroundColor = GetThemer().themeColorBackground;
 		_imageNum = 0;
@@ -326,8 +324,8 @@
 						str = [NSString stringWithFormat:@"%f", height.floatValue + imageHeight];
 					[_viewContoller.heights replaceObjectAtIndex:_number withObject:str];
 				}
-                if (_qjuser)
-                    [arr addObject:_qjuser];
+                if ([QJPassport sharedPassport].currentUser)
+                    [arr addObject:[QJPassport sharedPassport].currentUser];
 				actionModel.likes = arr;
 				[_viewContoller reloadData:_number];
 			});
@@ -373,7 +371,7 @@
 				
 				NSArray * array = [arr copy];
 				[array enumerateObjectsUsingBlock:^(QJUser * likeUser, NSUInteger idx, BOOL * stop) {
-					if ([likeUser.uid.stringValue isEqualToString:_qjuser.uid.stringValue]) {
+					if ([likeUser.uid.stringValue isEqualToString:[QJPassport sharedPassport].currentUser.uid.stringValue]) {
 						[arr removeObject:likeUser];
 						*stop = YES;
 					}
@@ -998,7 +996,7 @@
 - (BOOL)isLike:(NSArray *)like
 {
 	for (QJUser * ljlike in like)
-		if ([_qjuser.uid.stringValue isEqualToString:ljlike.uid.stringValue])
+		if ([[QJPassport sharedPassport].currentUser.uid.stringValue isEqualToString:ljlike.uid.stringValue])
 			return YES;
 			
 	return NO;
