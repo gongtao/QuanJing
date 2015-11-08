@@ -124,7 +124,6 @@
     
 	self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, _ifCustom ? 10 : 0, self.view.bounds.size.width, _ifCustom ? self.view.bounds.size.height : self.view.bounds.size.height)];
 	_webView.delegate = self;
-	_webView.alpha = 0.0;
 	[self.view addSubview:self.webView];
 	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_urlString]]];
 	
@@ -217,11 +216,6 @@
 	NSString * result = [webView stringByEvaluatingJavaScriptFromString:js];
 	
 	NSLog(@"%@", result);
-	
-	[UIView animateWithDuration:0.3
-	animations:^{
-		webView.alpha = 1.0;
-	}];
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
