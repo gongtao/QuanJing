@@ -13,6 +13,7 @@
 #import "MessageReadManager.h"
 #import "UIImageView+EMWebCache.h"
 #import "EaseMob.h"
+#import "OWTAppDelegate.h"
 static MessageReadManager *detailInstance = nil;
 
 @interface MessageReadManager()
@@ -135,8 +136,13 @@ static MessageReadManager *detailInstance = nil;
         
         self.photos = photoArray;
     }
+    // 模态视图再次弹出了模态视图 导致
+    OWTAppDelegate * delegate = (OWTAppDelegate *)[UIApplication sharedApplication].delegate;
+    OQJNavCon * hx = delegate.hxChatNavCon;
     
-    UIViewController *rootController = [self.keyWindow rootViewController];
+//    UIViewController *rootController = [self.keyWindow rootViewController];
+//    UIViewController *rootController =
+    UIViewController *rootController = hx.topViewController;
     [rootController presentViewController:self.photoNavigationController animated:YES completion:nil];
 }
 
