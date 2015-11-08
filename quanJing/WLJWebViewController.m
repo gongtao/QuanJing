@@ -95,7 +95,6 @@
 
 - (void)goRefresh
 {
-	[SVProgressHUD showWithStatus:@"正在加载"];
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		NSError * error = nil;
 		// html解析
@@ -104,12 +103,8 @@
 		encoding:NSUTF8StringEncoding
 		error:&error];
 		
-		if (error) {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[SVProgressHUD showErrorWithStatus:@"加载失败"];
-			});
-			return;
-		}
+		if (error)
+            return;
 		
 		NSLog(@"%@", htmlString);
 		
@@ -118,19 +113,15 @@
 		NSArray * elements = [_xpathParser searchWithXPathQuery:@"//title"];	// get the
 		
 		// 网络异常的时候，处理指针异常
-		if (elements.count < 1) {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[SVProgressHUD showErrorWithStatus:@"加载失败"];
-			});
+		if (elements.count < 1)
 			return;
-		}
 		
 		TFHppleElement * element = [elements objectAtIndex:0];
 		NSString * title = [element content];
 		_articleTitle = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		NSLog(@"result = %@", _articleTitle);
 	});
-	
+    
 	self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, _ifCustom ? 10 : 0, self.view.bounds.size.width, _ifCustom ? self.view.bounds.size.height : self.view.bounds.size.height)];
 	_webView.delegate = self;
 	_webView.alpha = 0.0;
@@ -234,10 +225,13 @@
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
-{}
+{
+    [SVProgressHUD showWithStatus:@"正在加载"];
+}
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
+    [SVProgressHUD showErrorWithStatus:@"加载失败"];
 	NSLog(@"didFailLoadWithError");
 }
 
