@@ -77,7 +77,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	UITapGestureRecognizer * _tap;
 	CGFloat _itemSize;
 	NSMutableArray * _dataResouce;
-    BOOL   _isLast;
+	BOOL _isLast;
 }
 
 @property (strong, nonatomic) DXMessageToolBar * chatToolBar;
@@ -161,9 +161,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			}];
 		});
 		
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        });
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{});
 	};
 	
 	wself.loadMoreDataFunc = ^(void (^ loadMoreDoneFunc)()) {
@@ -219,12 +217,12 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	[_collectionView addHeaderWithTarget:self action:@selector(refresh)];
 	[_collectionView addFooterWithTarget:self action:@selector(loadMore)];
 	[_collectionView headerBeginRefreshing];
-    _collectionView.headerPullToRefreshText=nil;
-    _collectionView.headerRefreshingText=nil;
-    _collectionView.headerReleaseToRefreshText=nil;
-    _collectionView.footerPullToRefreshText=nil;
-    _collectionView.footerRefreshingText=nil;
-    _collectionView.footerReleaseToRefreshText=nil;
+	_collectionView.headerPullToRefreshText = nil;
+	_collectionView.headerRefreshingText = nil;
+	_collectionView.headerReleaseToRefreshText = nil;
+	_collectionView.footerPullToRefreshText = nil;
+	_collectionView.footerRefreshingText = nil;
+	_collectionView.footerReleaseToRefreshText = nil;
 }
 
 - (void)refreshData
@@ -323,14 +321,16 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	[_collectionViewCon.collectionView reloadData];
 	[self initCustomchatBar];
 	[self manualRefresh];
-    [MobClick beginEvent:@"用户"];
+	[MobClick beginEvent:@"用户"];
 	//   }
 }
--(void)viewWillDisappear:(BOOL)animated
+
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
-    [MobClick endEvent:@"用户"];
+	[super viewWillDisappear:animated];
+	[MobClick endEvent:@"用户"];
 }
+
 // 返回按钮的代理方法
 - (void)popViewControllerWithAnimation
 {
@@ -590,17 +590,65 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 - (void)refresh
 {
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		__block NSInteger i = 0;
 		[[QJPassport sharedPassport] requestOtherUserInfo:_quser.uid
 		finished:^(QJUser * user, NSDictionary * userDic, NSError * error) {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				i++;
-				
+			dispatch_sync(dispatch_get_main_queue(), ^{
 				if (error) {
-					if (i == 2) {
-						[_collectionView headerEndRefreshing];
-						[_collectionView reloadData];
+					if (![NetStatusMonitor isExistenceNetwork]) {
+						[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
 					}
+					else {
+						NSString * reason = error.userInfo[@"reason"];
+						[SVProgressHUD showErrorWithStatus:reason];
+					}
+					return;
+				}
+				user.hasFollowUser = _quser.hasFollowUser;
+				_quser = user;
+			});
+		}];
+		[[QJInterfaceManager sharedManager] requestUserImageList:_quser.uid
+		pageNum:1 pageSize:30
+		currentImageId:nil
+		finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if (error) {
+					[_collectionView headerEndRefreshing];
+					[_collectionView reloadData];
+					
+					if (![NetStatusMonitor isExistenceNetwork]) {
+						[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
+					}
+					else {
+						NSString * reason = error.userInfo[@"reason"];
+						[SVProgressHUD showErrorWithStatus:reason];
+					}
+					return;
+				}
+				_isLast = isLastPage;
+				[_dataResouce removeAllObjects];
+				[_dataResouce addObjectsFromArray:imageObjectArray];
+				
+				[_collectionView headerEndRefreshing];
+				[_collectionView reloadData];
+			});
+		}];
+	});
+}
+
+- (void)loadMore
+{
+	if (_isLast) {
+		[_collectionView footerEndRefreshing];
+		[SVProgressHUD showErrorWithStatus:@"没有更多数据"];
+		return;
+	}
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		[[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:_dataResouce.count / 30 + 1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if (error) {
+					[_collectionView footerEndRefreshing];
+					[_collectionView reloadData];
 					
 					if (![NetStatusMonitor isExistenceNetwork])
 						[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
@@ -608,72 +656,13 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 						[SVProgressHUD showError:error];
 					return;
 				}
-                user.hasFollowUser=_quser.hasFollowUser;
-                _quser = user;				
-				if (i == 2) {
-					[_collectionView headerEndRefreshing];
-					[_collectionView reloadData];
-				}
+				_isLast = isLastPage;
+				[_dataResouce addObjectsFromArray:imageObjectArray];
+				
+				[_collectionView footerEndRefreshing];
+				[_collectionView reloadData];
 			});
 		}];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_dataResouce removeAllObjects];
-        });
-		        [[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
-            			dispatch_async(dispatch_get_main_queue(), ^{
-            i++;
-            
-            if (error) {
-                if (i == 2) {
-                    [_collectionView headerEndRefreshing];
-                    [_collectionView reloadData];
-                }
-                
-                if (![NetStatusMonitor isExistenceNetwork])
-                    [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-                else
-                    [SVProgressHUD showError:error];
-                return;
-            }
-            _isLast=isLastPage;
-            [_dataResouce addObjectsFromArray:imageObjectArray];
-            
-            if (i == 2) {
-                [_collectionView headerEndRefreshing];
-                [_collectionView reloadData];
-            }
-                        });
-        }];
-	});
-}
-
-- (void)loadMore
-{
-    if (_isLast) {
-        [_collectionView footerEndRefreshing];
-        [SVProgressHUD showErrorWithStatus:@"没有更多数据"];
-        return;
-    }
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[QJInterfaceManager sharedManager]requestUserImageList:_quser.uid pageNum:_dataResouce.count/30+1 pageSize:30 currentImageId:nil finished:^(NSArray * _Nonnull imageObjectArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-            if (error) {
-                [_collectionView footerEndRefreshing];
-                    [_collectionView reloadData];
-                
-                if (![NetStatusMonitor isExistenceNetwork])
-                    [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"NETWORK_ERROR", @"Notify user network error.")];
-                else
-                    [SVProgressHUD showError:error];
-                return;
-            }
-            _isLast=isLastPage;
-            [_dataResouce addObjectsFromArray:imageObjectArray];
-            
-                [_collectionView footerEndRefreshing];
-                [_collectionView reloadData];
-            });
-        }];
 	});
 }
 
@@ -759,8 +748,9 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)showLikedAssets
 {
-    OWTUserLikedAssetsViewCon * likedAssetsViewCon = [[OWTUserLikedAssetsViewCon alloc]initWithUser:_quser];
-    [self.navigationController pushViewController:likedAssetsViewCon animated:YES];
+	OWTUserLikedAssetsViewCon * likedAssetsViewCon = [[OWTUserLikedAssetsViewCon alloc]initWithUser:_quser];
+	
+	[self.navigationController pushViewController:likedAssetsViewCon animated:YES];
 }
 
 - (void)showFollowings
@@ -804,11 +794,11 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 // album 点击事件
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 1) {
-        QJImageObject *imageModel=_dataResouce[indexPath.row];
-        OWTAssetViewCon *assetView=[[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:[NSNumber numberWithInt:2]];
-        [self.navigationController pushViewController:assetView animated:YES];
-    }
+	if (indexPath.section == 1) {
+		QJImageObject * imageModel = _dataResouce[indexPath.row];
+		OWTAssetViewCon * assetView = [[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:[NSNumber numberWithInt:2]];
+		[self.navigationController pushViewController:assetView animated:YES];
+	}
 }
 
 #pragma mark - ScrollView Delegate

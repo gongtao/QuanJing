@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface LJCollectionViewController : UIViewController
-@property(nonatomic,assign)BOOL isLike;
+@property(nonatomic, assign) BOOL isLike;
 @end

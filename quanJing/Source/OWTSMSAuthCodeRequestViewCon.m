@@ -54,7 +54,6 @@
 - (void)setup
 {
 	self.navigationItem.title = NSLocalizedString(@"SMSAUTH_REQUEST_VIEWCON_TITLE", @"SMS Auth");
-	checkBtn.tag = 0;
 	UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickHide:)];
 	backImage.userInteractionEnabled = YES;
 	[self.view addGestureRecognizer:tap];
@@ -92,7 +91,10 @@
 	
 	NSURL * action = [NSURL URLWithString:@"agreementAction"];
 	
-	[agreementLable addLinkToURL:action withRange:nameRange];
+    [agreementLable addLinkToURL:action withRange:nameRange];
+    
+    checkBtn.tag = 1;
+    [checkBtn setBackgroundImage:[UIImage imageNamed:@"红色对号.png"] forState:UIControlStateNormal];
 }
 
 #pragma mark - TTTAttributedLabelDelegate
@@ -106,7 +108,6 @@
 {
 	if (checkBtn.tag == 0) {
 		[checkBtn setBackgroundImage:[UIImage imageNamed:@"红色对号.png"] forState:UIControlStateNormal];
-		//        checkBtn.selected=YES;
 		checkBtn.tag = 1;
 	}
 	else {
@@ -221,7 +222,8 @@
 	}
 	QJPassport * pt = [QJPassport sharedPassport];
 	
-	if (_isLogin)
+    if (_isLogin) {
+        [SVProgressHUD show];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			[pt loginUser:_cellphone code:_codeTextField.text finished:^(NSNumber * userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
 				if (error) {
@@ -250,6 +252,7 @@
 				});
 			}];
 		});
+    }
 	else if (_doneFunc != nil)
 		_doneFunc(_cellphone, _codeTextField.text);
 }

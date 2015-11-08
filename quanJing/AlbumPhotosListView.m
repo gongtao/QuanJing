@@ -1233,7 +1233,7 @@
 			dispatch_async(dispatch_get_main_queue(), ^{
 				if ((error == nil) && (user != nil)) {
 					// 适配数据到model LJUserInformation
-					QJUser * current = [[QJPassport sharedPassport]currentUser];
+					QJUser * current = [[QJPassport sharedPassport] currentUser];
 					current = user;
 					[_collectionView reloadData];
 				}

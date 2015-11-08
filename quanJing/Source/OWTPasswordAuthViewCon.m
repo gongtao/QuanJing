@@ -180,27 +180,21 @@
 	NSString * username = usernameTextField.text;
 	NSString * password = _passwordTextField.text;
 	
-	//    [SVProgressHUD showWithStatus:NSLocalizedString(@"PLEASE_WAIT", @"Please wait.")
-	//                         maskType:SVProgressHUDMaskTypeBlack];
 	[SVProgressHUD show];
 	QJPassport * pt = [QJPassport sharedPassport];
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		[pt loginUser:username password:password finished:^(NSNumber * userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
 			if (error == nil) {
 				OWTUserManager * um = GetUserManager();
-				[um refreshCurrentUserSuccess:^{
-					dispatch_async(dispatch_get_main_queue(), ^{
-						[SVProgressHUD dismiss];
-						
-						if (_successFunc != nil)
-							_successFunc();
-					});
+                [um refreshCurrentUserSuccess:^{
+                    [SVProgressHUD dismiss];
+                    
+                    if (_successFunc != nil)
+                        _successFunc();
 				}
 				failure:^(NSError * error) {
-					dispatch_async(dispatch_get_main_queue(), ^{
-						[SVProgressHUD showErrorWithStatus:@"获取个人信息失败"];
-					});
-					
+                    [SVProgressHUD showErrorWithStatus:@"获取个人信息失败"];
+                    
 					if (error == nil)
 						return;
 				}];
@@ -218,17 +212,6 @@
 	});
 }
 
-// - (BOOL)hasValidUsernameInput
-// {
-//    NSString* username = _usernameTextField.text;
-//    return username != nil && username.length > 3;
-// }
-
-// - (BOOL)hasValidPasswordInput
-// {
-//    NSString* password = _passwordTextField.text;
-//    return (password != nil && password.length > 0);
-// }
 - (IBAction)back1:(id)sender
 {
 	[self dismissViewControllerAnimated:YES completion:nil];

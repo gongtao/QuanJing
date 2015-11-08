@@ -55,13 +55,15 @@
 	
 	_userFlowViewCon.refreshDataFunc = ^(void (^ refreshDoneFunc)())
 	{
-		[wself.userFlowViewCon.dataResouce removeAllObjects];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			NSNumber * uid = wself.user.uid;
 			
 			if ([uid isEqualToNumber:[QJPassport sharedPassport].currentUser.uid])
 				uid = nil;
-			[[QJPassport sharedPassport]requestUserFollowMeList:uid pageNum:1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+			[[QJPassport sharedPassport] requestUserFollowMeList:uid
+			pageNum:1
+			pageSize:30
+			finished:^(NSArray * _Nonnull followUserArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					if (error) {
 						[SVProgressHUD showError:error];
@@ -71,6 +73,7 @@
 					}
 					else {
 						wself.userFlowViewCon.islast = isLastPage;
+						[wself.userFlowViewCon.dataResouce removeAllObjects];
 						[wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
 						
 						if (refreshDoneFunc != nil)
@@ -94,7 +97,10 @@
 			
 			if ([uid isEqualToNumber:[QJPassport sharedPassport].currentUser.uid])
 				uid = nil;
-			[[QJPassport sharedPassport]requestUserFollowMeList:uid pageNum:_userFlowViewCon.dataResouce.count / 30 + 1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+			[[QJPassport sharedPassport] requestUserFollowMeList:uid
+			pageNum:_userFlowViewCon.dataResouce.count / 30 + 1
+			pageSize:30
+			finished:^(NSArray * _Nonnull followUserArray, BOOL isLastPage, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					if (error) {
 						[SVProgressHUD showError:error];
@@ -112,6 +118,7 @@
 			}];
 		});
 	};
+	
 	[_userFlowViewCon manualRefresh];
 }
 
