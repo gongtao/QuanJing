@@ -623,8 +623,7 @@
 - (void)getAllData
 {
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		QJInterfaceManager * fm = [QJInterfaceManager sharedManager];
-		[fm requestHomeIndex:^(NSDictionary * _Nonnull homeIndexDic, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+		[[QJInterfaceManager sharedManager] requestHomeIndex:^(NSDictionary * _Nonnull homeIndexDic, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
 			if (error != nil)
 				return;
 				
@@ -638,14 +637,15 @@
 				[_categaryBeautiful addObjectsFromArray:homeIndexDic[@"mhrs"]];
 				[_biaoqianClickArr addObjectsFromArray:homeIndexDic[@"shzm"]];
 				[_showArr addObjectsFromArray:homeIndexDic[@"lbt"]];
-				NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+				NSMutableArray * tempArray = [[NSMutableArray alloc] init];
 				[_showArr enumerateObjectsUsingBlock:^(QJHomeIndexObject * obj, NSUInteger idx, BOOL * _Nonnull stop) {
 					if (!obj.imageUrl || !obj.title)
 						return;
 						
 					NSString * str = obj.imageUrl;
 					NSString * str1 = obj.title;
-					[tempArray addObject:[NSDictionary dictionaryWithObjects:@[str, str1, @NO] forKeys:@[@"pic", @"title", @"isLoc"]]];
+					[tempArray addObject:[NSDictionary dictionaryWithObjects:@[str, str1, @NO]
+					forKeys:@[@"pic", @"title", @"isLoc"]]];
 				}];
 				_Topic.pics = tempArray;
 				_Topic.ifHomePage = YES;
