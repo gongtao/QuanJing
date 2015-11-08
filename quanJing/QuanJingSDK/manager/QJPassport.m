@@ -439,8 +439,15 @@
 	if (!error) {
 		NSLog(@"%@", responseObject);
 		NSDictionary * dataDic = responseObject[@"data"];
-		QJUser * user = [[QJUser alloc] initWithJson:dataDic];
 		
+		NSDictionary * userDic = dataDic[@"user"];
+		QJUser * user = [[QJUser alloc] initWithJson:userDic];
+		
+		NSNumber * followed = dataDic[@"followed"];
+		
+		if (!QJ_IS_NUM_NIL(followed))
+			user.hasFollowUser = followed;
+			
 		if (finished)
 			finished(user, dataDic, error);
 		return;
@@ -503,11 +510,11 @@
 		
 	// starSign
 	if (!QJ_IS_STR_NIL(user.starSign))
-        params[@"starSign"] = user.starSign;
-    
-    // bgUrl
-    if (!QJ_IS_STR_NIL(user.bgUrl))
-        params[@"bgUrl"] = user.bgUrl;
+		params[@"starSign"] = user.starSign;
+		
+	// bgUrl
+	if (!QJ_IS_STR_NIL(user.bgUrl))
+		params[@"bgUrl"] = user.bgUrl;
 		
 	// bornArea
 	if (!QJ_IS_NUM_NIL(user.bornArea))
