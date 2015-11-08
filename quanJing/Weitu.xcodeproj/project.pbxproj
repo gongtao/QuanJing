@@ -780,6 +780,7 @@
 		E0B99C9C1B05BE7C00ED7831 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B99C9B1B05BE7C00ED7831 /* libiconv.dylib */; };
 		E0B99C9E1B05BE8C00ED7831 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B99C9D1B05BE8C00ED7831 /* libresolv.dylib */; };
 		E0B99CA01B05BEC200ED7831 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B99C9F1B05BEC200ED7831 /* libstdc++.6.0.9.dylib */; };
+		E0B9A7171BEFB84C00DFE852 /* webShare2.png in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A7161BEFB84C00DFE852 /* webShare2.png */; settings = {ASSET_TAGS = (); }; };
 		E0BAB5231B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational2.m in Sources */ = {isa = PBXBuildFile; fileRef = E0BAB5161B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational2.m */; };
 		E0BAB5241B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational3.m in Sources */ = {isa = PBXBuildFile; fileRef = E0BAB5181B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational3.m */; };
 		E0BAB5251B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational4.m in Sources */ = {isa = PBXBuildFile; fileRef = E0BAB51A1B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational4.m */; };
@@ -2188,6 +2189,7 @@
 		E0B99C9B1B05BE7C00ED7831 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		E0B99C9D1B05BE8C00ED7831 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
 		E0B99C9F1B05BEC200ED7831 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
+		E0B9A7161BEFB84C00DFE852 /* webShare2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = webShare2.png; sourceTree = "<group>"; };
 		E0BAB5151B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OQJExploreViewConlvyouinternational2.h; sourceTree = "<group>"; };
 		E0BAB5161B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OQJExploreViewConlvyouinternational2.m; sourceTree = "<group>"; };
 		E0BAB5171B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OQJExploreViewConlvyouinternational3.h; sourceTree = "<group>"; };
@@ -3673,6 +3675,7 @@
 				A3E1810B1BECE282004EDD22 /* seach@3x.png */,
 				E0EC117D1BBBB6790047938B /* _0001_矢量智能对象-拷贝-3@2x.png */,
 				E0EC117F1BBBB6870047938B /* _0000_矢量智能对象2@2x.png */,
+				E0B9A7161BEFB84C00DFE852 /* webShare2.png */,
 				A3831C971BB2C71200A25AFF /* webShare1@2x.png */,
 				A3B729881BB28FDF001D1C7D /* _0004_圆角矩形-5@2x.png */,
 				A3B729821BB28B6A001D1C7D /* 喜欢图片@2x.png */,
@@ -4157,10 +4160,10 @@
 		E0B99B251B05951C00ED7831 /* HX(环信) */ = {
 			isa = PBXGroup;
 			children = (
+				E0B99C8C1B05A1AB00ED7831 /* HuanXinVC */,
 				E0127E9A1B41025B00D0E19C /* Contacts */,
 				E0BC01CF1B0E1432009D1D20 /* ChatGroup */,
 				E0BCFF441B0DB782009D1D20 /* chatList */,
-				E0B99C8C1B05A1AB00ED7831 /* HuanXinVC */,
 				E0B99C871B05A01200ED7831 /* RRconstRelate */,
 				E0B99C841B059FCE00ED7831 /* resources_hx */,
 				E0B99C821B059FC500ED7831 /* lib */,
@@ -4889,6 +4892,7 @@
 				ORGANIZATIONNAME = "SparkingSoft Co., Ltd";
 				TargetAttributes = {
 					9044E3C018CAE4D800784D38 = {
+						DevelopmentTeam = T3BNK5WMQ7;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -5152,6 +5156,7 @@
 				66A4FA461AA94D8F006F6547 /* 照片管理2_05(2).png in Resources */,
 				E01391651B0C3EA500051B78 /* chat_video_play.png in Resources */,
 				E01391471B0C3EA500051B78 /* VoiceSearchFeedback019.png in Resources */,
+				E0B9A7171BEFB84C00DFE852 /* webShare2.png in Resources */,
 				E013916F1B0C3EA500051B78 /* group_participant_addHL@2x.png in Resources */,
 				E01391351B0C3EA500051B78 /* VoiceSearchFeedback010.png in Resources */,
 				A3DB10C31BABAD690033522F /* 关注00.png in Resources */,
@@ -5941,8 +5946,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6074,9 +6079,9 @@
 					"-force_load",
 					"\"$(SRCROOT)/libEaseMobClientSDKLite.a\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "c0c39a9e-d64b-42e0-b92d-5402cf3a7e66";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 				VALID_ARCHS = "armv7 arm64";
@@ -6098,8 +6103,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CODE_SIGN_ENTITLEMENTS = KeychainAccessGroups.plist;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6231,9 +6236,9 @@
 					"-force_load",
 					"\"$(SRCROOT)/libEaseMobClientSDKLite.a\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "c0c39a9e-d64b-42e0-b92d-5402cf3a7e66";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
