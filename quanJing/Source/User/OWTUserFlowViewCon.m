@@ -183,7 +183,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	
 	QJUser * user = _dataResouce[indexPath.row];
 	
-	[cell setUser:user isFollowerUser:_isShowingFollowerUsers];
+	[cell setUser:user];
 	return cell;
 }
 
