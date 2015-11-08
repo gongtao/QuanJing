@@ -309,7 +309,7 @@
 					arr = [actionModel.likes mutableCopy];
 				else
 					arr = [[NSMutableArray alloc] init];
-				NSMutableArray * arr1 = (NSMutableArray *)actionModel.comments;
+				NSMutableArray * arr1 = [actionModel.comments mutableCopy];
 				
 				if (arr1.count > 0)
 					imageHeight += 20;
@@ -326,7 +326,8 @@
 						str = [NSString stringWithFormat:@"%f", height.floatValue + imageHeight];
 					[_viewContoller.heights replaceObjectAtIndex:_number withObject:str];
 				}
-				[arr addObject:_qjuser];
+                if (_qjuser)
+                    [arr addObject:_qjuser];
 				actionModel.likes = arr;
 				[_viewContoller reloadData:_number];
 			});
