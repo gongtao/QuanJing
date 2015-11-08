@@ -95,9 +95,9 @@
 	[self.contentView addSubview:_headerImageView];
 	UITapGestureRecognizer * tap3 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTap3)];
 	[_headerImageView addGestureRecognizer:tap3];
-    _headerImageView.clipsToBounds = YES;
-    _headerImageView.contentMode = UIViewContentModeScaleAspectFill;
-
+	_headerImageView.clipsToBounds = YES;
+	_headerImageView.contentMode = UIViewContentModeScaleAspectFill;
+	
 	_userName = [LJUIController createLabelWithFrame:CGRectZero Font:12 Text:nil];
 	_userName.textColor = [UIColor colorWithHexString:@"#4c5c8d"];
 	[self.contentView addSubview:_userName];
@@ -198,13 +198,13 @@
 
 - (void)onLikeTap:(UIGestureRecognizer *)sender
 {
-	QJUser *user = _likes[sender.view.tag - 700];
+	QJUser * user = _likes[sender.view.tag - 700];
+	
 	if (user != nil) {
 		OWTUserViewCon * userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
-        userViewCon1.quser=user;
+		userViewCon1.quser = user;
 		userViewCon1.hidesBottomBarWhenPushed = YES;
 		[_viewContoller.navigationController pushViewController:userViewCon1 animated:YES];
-
 	}
 }
 
@@ -220,14 +220,14 @@
 			NSError * error = [pt requestUserFollowUser:actionModel.user.uid];
 			dispatch_async(dispatch_get_main_queue(), ^{
 				if (!error) {
-                    [self reloadCareData:YES withUid:actionModel.user.uid.stringValue];
-                    [_viewContoller reloadData:1000];
-
-//					_careBtn.tag = 1;
-//					actionModel.user.hasFollowUser = [NSNumber numberWithBool:YES];
-//					[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
+					[self reloadCareData:YES withUid:actionModel.user.uid.stringValue];
+					[_viewContoller reloadData:1000];
+					
+					//					_careBtn.tag = 1;
+					//					actionModel.user.hasFollowUser = [NSNumber numberWithBool:YES];
+					//					[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
 					[SVProgressHUD dismiss];
-//					[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
+					//					[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
 				}
 				else {
 					[SVProgressHUD showError:error];
@@ -242,13 +242,13 @@
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
 				if (!error) {
-                    [self reloadCareData:NO withUid:actionModel.user.uid.stringValue];
-                    [_viewContoller reloadData:1000];
-//					_careBtn.tag = 0;
-//					actionModel.user.hasFollowUser = [NSNumber numberWithBool:NO];
-//					[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
+					[self reloadCareData:NO withUid:actionModel.user.uid.stringValue];
+					[_viewContoller reloadData:1000];
+					//					_careBtn.tag = 0;
+					//					actionModel.user.hasFollowUser = [NSNumber numberWithBool:NO];
+					//					[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
 					[SVProgressHUD dismiss];
-//					[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
+					//					[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
 				}
 				else {
 					[SVProgressHUD showError:error];
@@ -256,95 +256,131 @@
 			});
 		});
 }
--(void)reloadCareData:(BOOL)ret withUid:(NSString*)userId
+
+- (void)reloadCareData:(BOOL)ret withUid:(NSString *)userId
 {
-    int i=0;
-    NSMutableArray *ARR=[[NSMutableArray alloc]init];
-    for (QJActionObject *model in _viewContoller.activeList) {
-        if ([model.user.uid.stringValue isEqualToString:userId]) {
-            model.user.hasFollowUser=[NSNumber numberWithBool:ret];
-        }
-        [ARR addObject:model];
-        i++;
-    }
-    [_viewContoller.activeList removeAllObjects];
-    [_viewContoller.activeList addObjectsFromArray:ARR];
+	int i = 0;
+	NSMutableArray * ARR = [[NSMutableArray alloc]init];
+	
+	for (QJActionObject * model in _viewContoller.activeList) {
+		if ([model.user.uid.stringValue isEqualToString:userId])
+			model.user.hasFollowUser = [NSNumber numberWithBool:ret];
+		[ARR addObject:model];
+		i++;
+	}
+	
+	[_viewContoller.activeList removeAllObjects];
+	[_viewContoller.activeList addObjectsFromArray:ARR];
 }
+
 - (void)likeBtnClick:(UIButton *)sender
 {
-	QJInterfaceManager * fm = [QJInterfaceManager sharedManager];
-	CGFloat imageHeight = 20;
+	static BOOL isRequest = NO;
+	
+	if (isRequest)
+		return;
+		
+	__block CGFloat imageHeight = 20;
+	
+	isRequest = YES;
+	[SVProgressHUD show];
 	
 	if (sender.selected == NO) {
-		_likeBtn.selected = YES;
-		[_likeBtn setBackgroundImage:[UIImage imageNamed:@"发现10_24.png"] forState:UIControlStateNormal];
 		QJActionObject * actionModel = _viewContoller.activeList[_number];
-		NSMutableArray * arr;
-		
-		if (actionModel.likes)
-			arr = (NSMutableArray *)actionModel.likes;
-		else
-			arr = [[NSMutableArray alloc]init];
-		NSMutableArray * arr1 = (NSMutableArray *)actionModel.comments;
-		
-		if (arr1.count > 0)
-			imageHeight += 20;
-		else
-			imageHeight += 10;
-			
-		if (arr.count % 10 == 0) {
-			NSString * height = _viewContoller.heights[_number];
-			NSString * str;
-			
-			if (arr.count / 10 != 0)
-				str = [NSString stringWithFormat:@"%f", height.floatValue + imageHeight + 5];
-			else
-				str = [NSString stringWithFormat:@"%f", height.floatValue + imageHeight];
-			[_viewContoller.heights replaceObjectAtIndex:_number withObject:str];
-		}
-		[arr addObject:_qjuser];
-		actionModel.likes = arr;
-		[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
-		[_viewContoller reloadData:_number];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			[fm requestLikeAction:actionModel.aid];
+			NSError * error = [[QJInterfaceManager sharedManager] requestLikeAction:actionModel.aid];
+			
+			if (error) {
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[SVProgressHUD showErrorWithStatus:@"喜欢失败"];
+					isRequest = NO;
+				});
+				return;
+			}
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[SVProgressHUD dismiss];
+				isRequest = NO;
+				_likeBtn.selected = YES;
+				[_likeBtn setBackgroundImage:[UIImage imageNamed:@"发现10_24.png"]
+				forState:UIControlStateNormal];
+				NSMutableArray * arr = nil;
+				
+				if (actionModel.likes)
+					arr = [actionModel.likes mutableCopy];
+				else
+					arr = [[NSMutableArray alloc] init];
+				NSMutableArray * arr1 = (NSMutableArray *)actionModel.comments;
+				
+				if (arr1.count > 0)
+					imageHeight += 20;
+				else
+					imageHeight += 10;
+					
+				if (arr.count % 10 == 0) {
+					NSString * height = _viewContoller.heights[_number];
+					NSString * str = nil;
+					
+					if (arr.count / 10 != 0)
+						str = [NSString stringWithFormat:@"%f", height.floatValue + imageHeight + 5];
+					else
+						str = [NSString stringWithFormat:@"%f", height.floatValue + imageHeight];
+					[_viewContoller.heights replaceObjectAtIndex:_number withObject:str];
+				}
+				[arr addObject:_qjuser];
+				actionModel.likes = arr;
+				[_viewContoller reloadData:_number];
+			});
 		});
 	}
 	else {
-		_likeBtn.selected = NO;
-		[_likeBtn setBackgroundImage:[UIImage imageNamed:@"发现10_25.png"] forState:UIControlStateNormal];
 		QJActionObject * actionModel = _viewContoller.activeList[_number];
-		NSMutableArray * arr = (NSMutableArray *)actionModel.likes;
-		NSMutableArray * arr1 = (NSMutableArray *)actionModel.comments;
-		
-		if (arr1.count > 0)
-			imageHeight += 20;
-		else
-			imageHeight += 10;
-			
-		if (arr.count % 10 == 1) {
-			NSString * height = _viewContoller.heights[_number];
-			NSString * str;
-			
-			if (arr.count / 10 != 0)
-				str = [NSString stringWithFormat:@"%f", height.floatValue - imageHeight - 5];
-			else
-				str = [NSString stringWithFormat:@"%f", height.floatValue - imageHeight];
-				
-			[_viewContoller.heights replaceObjectAtIndex:_number withObject:str];
-		}
-		
-		for (QJUser * likeUser in arr)
-			if ([likeUser.uid.stringValue isEqualToString:_qjuser.uid.stringValue]) {
-				[arr removeObject:likeUser];
-				break;
-			}
-			
-		actionModel.likes = arr;
-		[_viewContoller.activeList replaceObjectAtIndex:_number withObject:actionModel];
-		[_viewContoller reloadData:_number];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			[fm requestCancelLikeAction:actionModel.aid];
+			NSError * error = [[QJInterfaceManager sharedManager] requestCancelLikeAction:actionModel.aid];
+			
+			if (error) {
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[SVProgressHUD showErrorWithStatus:@"喜欢失败"];
+					isRequest = NO;
+				});
+				return;
+			}
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[SVProgressHUD dismiss];
+				isRequest = NO;
+				_likeBtn.selected = NO;
+				[_likeBtn setBackgroundImage:[UIImage imageNamed:@"发现10_25.png"]
+				forState:UIControlStateNormal];
+				NSMutableArray * arr = [actionModel.likes mutableCopy];
+				NSMutableArray * arr1 = [actionModel.comments mutableCopy];
+				
+				if (arr1.count > 0)
+					imageHeight += 20;
+				else
+					imageHeight += 10;
+					
+				if (arr.count % 10 == 1) {
+					NSString * height = _viewContoller.heights[_number];
+					NSString * str;
+					
+					if (arr.count / 10 != 0)
+						str = [NSString stringWithFormat:@"%f", height.floatValue - imageHeight - 5];
+					else
+						str = [NSString stringWithFormat:@"%f", height.floatValue - imageHeight];
+						
+					[_viewContoller.heights replaceObjectAtIndex:_number withObject:str];
+				}
+				
+				NSArray * array = [arr copy];
+				[array enumerateObjectsUsingBlock:^(QJUser * likeUser, NSUInteger idx, BOOL * stop) {
+					if ([likeUser.uid.stringValue isEqualToString:_qjuser.uid.stringValue]) {
+						[arr removeObject:likeUser];
+						*stop = YES;
+					}
+				}];
+				
+				actionModel.likes = arr;
+				[_viewContoller reloadData:_number];
+			});
 		});
 	}
 }
@@ -352,16 +388,14 @@
 - (void)downLoadBtnClick
 {
 	QJImageObject * imageModel = _assets[_imageNum];
-	QJInterfaceManager * fm = [QJInterfaceManager sharedManager];
 	
 	[SVProgressHUD showWithStatus:@"保存图片中..." maskType:SVProgressHUDMaskTypeBlack];
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		NSError * error = [fm requestImageAddDownload:imageModel.imageId imageType:imageModel.imageType];
-		dispatch_async(dispatch_get_main_queue(), ^{});
+		[[QJInterfaceManager sharedManager] requestImageAddDownload:imageModel.imageId
+		imageType:imageModel.imageType];
 	});
-	SDWebImageManager * manager = [SDWebImageManager sharedManager];
 	NSURL * url = [NSURL URLWithString:imageModel.url];
-	[manager downloadWithURL:url
+	[[SDWebImageManager sharedManager] downloadWithURL:url
 	options:SDWebImageHighPriority
 	progress:nil
 	completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType, BOOL finished) {
@@ -409,22 +443,20 @@
 
 - (void)onCommentTap:(UITapGestureRecognizer *)sender
 {
-    QJCommentObject *model;
-	if (sender.view.tag < 600) {
-		model = _comments[sender.view.tag - 500];
-
-	}
-	else {
-		model = _comments[sender.view.tag - 600];
-
-	}
+	QJCommentObject * model;
 	
+	if (sender.view.tag < 600)
+		model = _comments[sender.view.tag - 500];
+		
+	else
+		model = _comments[sender.view.tag - 600];
+		
 	if (model != nil) {
 		OWTUserViewCon * userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
-        userViewCon1.quser=model.user;
+		userViewCon1.quser = model.user;
 		userViewCon1.hidesBottomBarWhenPushed = YES;
 		[_viewContoller.navigationController pushViewController:userViewCon1 animated:YES];
-			}
+	}
 }
 
 - (void)onReplyTap:(UITapGestureRecognizer *)sender
@@ -442,6 +474,7 @@
 {
 	QJImageObject * imageModel = _assets[sender.view.tag - 400];
 	OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:imageModel.imageType];
+	
 	assetViewCon.isSquare = YES;
 	assetViewCon.hidesBottomBarWhenPushed = YES;
 	[_viewContoller.navigationController pushViewController:assetViewCon animated:NO];
@@ -479,19 +512,22 @@
 	QJUser * user = actionModel.user;
 	[_headerImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_headerImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像"]];
 	CGSize size = [user.nickName sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(300, 200)];
-    if ([user.uid.stringValue isEqualToString:[QJPassport sharedPassport].currentUser.uid.stringValue]) {
-        _careBtn.hidden=YES;
-    }else {
-        _careBtn.hidden=NO;
-	if (!user.hasFollowUser.boolValue) {
-		_careBtn.tag = 0;
-		[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
+	
+	if ([user.uid.stringValue isEqualToString:[QJPassport sharedPassport].currentUser.uid.stringValue]) {
+		_careBtn.hidden = YES;
 	}
 	else {
-		_careBtn.tag = 1;
-		[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
-    }
-    }
+		_careBtn.hidden = NO;
+		
+		if (!user.hasFollowUser.boolValue) {
+			_careBtn.tag = 0;
+			[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
+		}
+		else {
+			_careBtn.tag = 1;
+			[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
+		}
+	}
 	_userName.frame = CGRectMake(65, 13, size.width, size.height);
 	_userName.text = user.nickName;
 	_upTime.frame = CGRectMake(65, 35, 100, 15);
@@ -547,22 +583,22 @@
 			ImageView.frame = CGRectMake(5, cellHeight, x, 320);
 			cellHeight += 330;
 		}
-        ImageView.contentMode = UIViewContentModeScaleAspectFill;
-        ImageView.clipsToBounds = YES;
-        ImageView.alpha=0;
-        __weak UIImageView * weakImageView = ImageView;
-        [ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url originalSize:CGSizeMake(imageModel.width.floatValue, imageModel.height.floatValue) size:CGSizeMake(x, height) ]]
-                  placeholderImage:nil
-                         completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
-                             if (cacheType == SDImageCacheTypeNone) {
-                                 [UIView animateWithDuration:0.3
-                                                  animations:^{
-                                                      weakImageView.alpha = 1.0;
-                                                  }];
-                                 return;
-                             }
-                             weakImageView.alpha = 1.0;
-                         }];
+		ImageView.contentMode = UIViewContentModeScaleAspectFill;
+		ImageView.clipsToBounds = YES;
+		ImageView.alpha = 0;
+		__weak UIImageView * weakImageView = ImageView;
+		[ImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:imageModel.url originalSize:CGSizeMake(imageModel.width.floatValue, imageModel.height.floatValue) size:CGSizeMake(x, height)]]
+		placeholderImage:nil
+		completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
+			if (cacheType == SDImageCacheTypeNone) {
+				[UIView animateWithDuration:0.3
+				animations:^{
+					weakImageView.alpha = 1.0;
+				}];
+				return;
+			}
+			weakImageView.alpha = 1.0;
+		}];
 		ImageView.tag = 400 + number;
 		ImageView.userInteractionEnabled = YES;
 		[self.contentView addSubview:ImageView];
@@ -571,12 +607,15 @@
 	}
 	else {
 		NSInteger assetNum = 0;
+		
 		for (QJImageObject * imageModel in _assets) {
 			if (imageModel.width.floatValue > imageModel.height.floatValue)
 				break;
 			assetNum++;
 		}
+		
 		float imageH;
+		
 		if (assetNum == _assets.count)
 			imageH = 320;
 		else
@@ -584,6 +623,7 @@
 		_bigImageScrollView.frame = CGRectMake(5, cellHeight, x, imageH);
 		_bigImageScrollView.hidden = NO;
 		NSInteger pa = 0;
+		
 		for (QJImageObject * imageModel in _assets) {
 			ImageView = [[UIImageView alloc]initWithFrame:CGRectMake(pa * x, 0, x, imageH)];
 			ImageView.clipsToBounds = YES;
@@ -688,8 +728,8 @@
 				likeHeight += (imageHeight + 5);
 			}
 			UIImageView * likebody = [LJUIController createCircularImageViewWithFrame:CGRectMake(likeWidth, cellHeight + likeHeight, imageHeight, imageHeight) imageName:@"头像"];
-			            likebody.clipsToBounds=YES;
-            likebody.contentMode=UIViewContentModeScaleAspectFill;
+			likebody.clipsToBounds = YES;
+			likebody.contentMode = UIViewContentModeScaleAspectFill;
 			[likebody setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:likebody.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像.png"]];
 			UITapGestureRecognizer * liketap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onLikeTap:)];
 			likebody.userInteractionEnabled = YES;
@@ -721,8 +761,8 @@
 			QJCommentObject * commentModel = _comments[i];
 			QJUser * user = commentModel.user;
 			UIImageView * commentImage = [LJUIController createCircularImageViewWithFrame:CGRectMake(45, cellHeight + commentHeight, imageHeight, imageHeight) imageName:nil];
-            commentImage.contentMode=UIViewContentModeScaleAspectFill;
-            commentImage.clipsToBounds = YES;
+			commentImage.contentMode = UIViewContentModeScaleAspectFill;
+			commentImage.clipsToBounds = YES;
 			commentImage.tag = 500 + i;
 			UITapGestureRecognizer * commentTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onCommentTap:)];
 			commentImage.userInteractionEnabled = YES;

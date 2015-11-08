@@ -45,8 +45,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 
 @interface OWTMainViewCon () <IChatManagerDelegate>
 {
-	NSMutableURLRequest * _request;
-	NSArray * _array;
 	NSString * _caption;
 	ALAssetsLibrary * _assetsLibrary;
 	
@@ -98,7 +96,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	[[NSNotificationCenter defaultCenter] addObserver:self
 	selector:@selector(reachabilityChangedNotification:)
 	name:kReachabilityChangedNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loginStatusChange:) name:kQJUserNotLoginNotification object:nil];
+	[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loginStatusChange:) name:kQJUserNotLoginNotification object:nil];
 	[self setupNetworkMonitor];
 	
 	GetThemer().homePageColor = HWColor(46, 46, 46);
@@ -354,34 +352,35 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 
 - (void)asigo:(id)obj
 {
-	_array = (NSArray *)obj;
-	NSLog(@"%@", _array);
+	NSArray * array = (NSArray *)obj;
 	
+	if (!array || (array.count == 0))
+		return;
+		
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-		if (_array.count > 0) {
-			dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-			QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
-			
-			for (NSInteger i = _array.count - 1; i >= 0; i--) {
-				while (!_isWifi)
-					[NSThread sleepForTimeInterval:2.0];
-					
-				NSDictionary * dict = _array[i];
-				__weak QJDatabaseManager * weakManager = manager;
-				[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * concurrencyContext) {
-					QJImageCaption * model = [weakManager getImageCaptionByUrl:dict[@"imageurl"]
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
+		
+		for (NSInteger i = array.count - 1; i >= 0; i--) {
+			while (!_isWifi)
+				[NSThread sleepForTimeInterval:2.0];
+				
+			NSDictionary * dict = array[i];
+			__weak QJDatabaseManager * weakManager = manager;
+			[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * concurrencyContext) {
+				QJImageCaption * model = [weakManager getImageCaptionByUrl:dict[@"imageurl"]
+				context:concurrencyContext];
+				
+				// 若本地没有 发起网络请求并
+				if ((model == nil) || model.isSelfInsert.boolValue)
+					[self getResouceWithImageUrl:dict[@"imageurl"]
+					model:model
 					context:concurrencyContext];
-					//若本地没有 发起网络请求并
-					if ((model == nil) || model.isSelfInsert.boolValue)
-						[self getResouceWithImageUrl:dict[@"imageurl"]
-						model:model
-						context:concurrencyContext];
-				}
-				finished:^(NSManagedObjectContext * mainContext) {
-					dispatch_semaphore_signal(sem);
-				}];
-				dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 			}
+			finished:^(NSManagedObjectContext * mainContext) {
+				dispatch_semaphore_signal(sem);
+			}];
+			dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 		}
 	});
 }
@@ -420,17 +419,15 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	NSString * strUrl = @"http://api.tiankong.com/qjapi/pictag";
 	NSURL * url = [NSURL URLWithString:strUrl];
 	
-	_request = [NSMutableURLRequest requestWithURL:url];
-	_request.HTTPMethod = @"POST";
-	[_request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-	_request.HTTPBody = mData;
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url];
+	request.HTTPMethod = @"POST";
+	[request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+	request.HTTPBody = mData;
 	
 	NSURLResponse * reponse = [[NSURLResponse alloc] init];
-	NSData * received = [NSURLConnection sendSynchronousRequest:_request returningResponse:&reponse error:&error];
+	NSData * received = [NSURLConnection sendSynchronousRequest:request returningResponse:&reponse error:&error];
 	
 	if (!error && received) {
-		QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
-		
 		NSMutableString * caption = [[NSMutableString alloc]init];
 		NSDate * date = [asset valueForProperty:ALAssetPropertyDate];
 		NSString * timeCap = [NSString stringWithFormat:@"%@", date];
@@ -447,10 +444,10 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 			else
 				[caption appendString:[NSString stringWithFormat:@"%@ ", dict1[@"tag"]]];
 				
-			NSArray * adviseCaptionArray = [manager getAdviseCaptionsByCaption:dict1[@"tag"] context:context];
+			NSArray * adviseCaptionArray = [[QJDatabaseManager sharedManager] getAdviseCaptionsByCaption:dict1[@"tag"] context:context];
 			
 			if (!adviseCaptionArray)
-				[manager setAdviseCaptionByImageUrl:imageUrl
+				[[QJDatabaseManager sharedManager] setAdviseCaptionByImageUrl:imageUrl
 				caption:dict1[@"tag"]
 				number:[NSNumber numberWithLong:1]
 				context:context];
@@ -468,7 +465,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 			model.caption = caption;
 		}
 		else {
-			[manager setImageCaptionByImageUrl:imageUrl
+			[[QJDatabaseManager sharedManager] setImageCaptionByImageUrl:imageUrl
 			caption:caption
 			isSelfInsert:NO
 			context:context];
@@ -874,7 +871,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		notification.alertBody = NSLocalizedString(@"receiveMessage", @"you have a new message");
 	}
 	
-    // 去掉注释会显示[本地]开头, 方便在开发中区分是否为本地推送
+	// 去掉注释会显示[本地]开头, 方便在开发中区分是否为本地推送
 	// notification.alertBody = [[NSString alloc] initWithFormat:@"[本地]%@", notification.alertBody];
 	
 	notification.alertAction = NSLocalizedString(@"open", @"Open");
@@ -924,14 +921,15 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		[[QJPassport sharedPassport] logout];
 	} onQueue:nil];
 }
--(void)loginStatusChange:(NSNotification *)sender
-{
-    if ([QJPassport sharedPassport].isLogin) {
-        [[QJPassport sharedPassport]logout];
-        [self showAuthViewCon];
-    }
 
+- (void)loginStatusChange:(NSNotification *)sender
+{
+	if ([QJPassport sharedPassport].isLogin) {
+		[[QJPassport sharedPassport]logout];
+		[self showAuthViewCon];
+	}
 }
+
 /* [[EaseMob sharedInstance].chatManager asyncLogoffWithUnbindDeviceToken:NO completion:^(NSDictionary *info, EMError *error) {
  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"prompt", @"Prompt") message:NSLocalizedString(@"loginAtOtherDevice", @"your login account has been in other places") delegate:self cancelButtonTitle:NSLocalizedString(@"ok", @"OK") otherButtonTitles:nil, nil];
  alertView.tag = 100;

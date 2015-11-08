@@ -93,16 +93,16 @@
 	RESideMenu * _sideMenu;
 	OWTUserViewCon * _userViewCon1;
 	NSString * _keyword;
-    UIImageView *adverBack;
-    UIImageView *advertisetion;
-    NSMutableData *_data;
-    UIWindow *_window;
+	UIImageView * adverBack;
+	UIImageView * advertisetion;
+	NSMutableData * _data;
+	UIWindow * _window;
 }
 - (void)viewWillAppear:(BOOL)animated
 {
 	[_tabBarHider showTabBar];
 	[self.view setHidden:NO];
-    [MobClick beginEvent:@"首页"];
+	[MobClick beginEvent:@"首页"];
 	//    [self setupNavigationBarColor];
 }
 
@@ -110,87 +110,97 @@
 {
 	[_searchBar resignFirstResponder];
 	_searchBar.text = nil;
-    [MobClick endEvent:@"首页"];
+	[MobClick endEvent:@"首页"];
 }
 
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-    
+	
 	[self setUpNavigation];
 	[self setUpData];
 	[self setUpTableView];
 	[self setUpOtherView];
 	[self setUpHeaderView];
 	[self setupNavMenu];
-    [self setUpAdversation];
+	[self setUpAdversation];
 }
--(void)setUpAdversation
+
+- (void)setUpAdversation
 {
-    NSUserDefaults *userDefaults=[NSUserDefaults standardUserDefaults];
-    NSString *imgUrl=[userDefaults objectForKey:@"ImgUrl"];
-    if (imgUrl==nil) {
-        return;
-    }
-    _window=[[UIWindow alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI)];
-    _window.windowLevel = UIWindowLevelStatusBar + 1;
-    [_window makeKeyAndVisible];
-    adverBack=[LJUIController createImageViewWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI) imageName:@"开机画面6s.png"];
-    //    imageView.backgroundColor=[UIColor whiteColor];
-    [_window addSubview:adverBack];
-    advertisetion=[LJUIController createImageViewWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI-120) imageName:@""];
-    //    advertisetion.backgroundColor=[UIColor whiteColor];
-    [adverBack addSubview:advertisetion];
-        [advertisetion setImageWithURL:[NSURL URLWithString:imgUrl]];
-    NSURLConnection *connection=[[NSURLConnection alloc]initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://api.tiankong.com/qjapi/homead"]] delegate:self];
+	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+	NSString * imgUrl = [userDefaults objectForKey:@"ImgUrl"];
+	
+	if (imgUrl == nil)
+		return;
+		
+	_window = [[UIWindow alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI)];
+	_window.windowLevel = UIWindowLevelStatusBar + 1;
+	[_window makeKeyAndVisible];
+	adverBack = [LJUIController createImageViewWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI) imageName:@"开机画面6s.png"];
+	//    imageView.backgroundColor=[UIColor whiteColor];
+	[_window addSubview:adverBack];
+	advertisetion = [LJUIController createImageViewWithFrame:CGRectMake(0, 0, SCREENWIT, SCREENHEI - 120) imageName:@""];
+	//    advertisetion.backgroundColor=[UIColor whiteColor];
+	[adverBack addSubview:advertisetion];
+	[advertisetion setImageWithURL:[NSURL URLWithString:imgUrl]];
+	NSURLConnection * connection = [[NSURLConnection alloc]initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://api.tiankong.com/qjapi/homead"]] delegate:self];
 }
--(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    [_data setLength:0];
+	[_data setLength:0];
 }
--(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    [_data appendData:data];
+	[_data appendData:data];
 }
--(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-[UIView animateWithDuration:03 animations:^{
-    adverBack.alpha=0.0;
-}];
-    [self removeAdvertise];
-    [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+	[UIView animateWithDuration:03 animations:^{
+		adverBack.alpha = 0.0;
+	}];
+	[self removeAdvertise];
+	[[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
 }
--(void)connectionDidFinishLoading:(NSURLConnection *)connection
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    NSArray *arr=[NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingMutableContainers error:nil];
-    NSUserDefaults *userDefaults=[NSUserDefaults standardUserDefaults];
-    NSDictionary *dict=arr[0];
-    NSString *str=[userDefaults objectForKey:@"id"];
-    NSString *imgUrl=[userDefaults objectForKey:@"ImgUrl"];
-    if ([dict[@"id"] isEqualToString:@"0"]) {
-        
-        [userDefaults removeObjectForKey:@"ImgUrl"];
-        //        [userDefaults removeObjectForKey:@"id"];
-        [userDefaults synchronize];
-        [self removeAdvertise];
-    }else {
-        if (imgUrl!=nil) {
-            [advertisetion setImageWithURL:[NSURL URLWithString:dict[@"ImgUrl"]]];
-        }
-        [self performSelector:@selector(removeAdvertise) withObject:nil afterDelay:3];
-        if (![str isEqualToString:dict[@"id"]]) {
-            [userDefaults setValue:dict[@"id"] forKey:@"id"];
-            [userDefaults setValue:dict[@"ImgUrl"] forKey:@"ImgUrl"];
-        }}
+	NSArray * arr = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingMutableContainers error:nil];
+	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+	NSDictionary * dict = arr[0];
+	NSString * str = [userDefaults objectForKey:@"id"];
+	NSString * imgUrl = [userDefaults objectForKey:@"ImgUrl"];
+	
+	if ([dict[@"id"] isEqualToString:@"0"]) {
+		[userDefaults removeObjectForKey:@"ImgUrl"];
+		//        [userDefaults removeObjectForKey:@"id"];
+		[userDefaults synchronize];
+		[self removeAdvertise];
+	}
+	else {
+		if (imgUrl != nil)
+			[advertisetion setImageWithURL:[NSURL URLWithString:dict[@"ImgUrl"]]];
+		[self performSelector:@selector(removeAdvertise) withObject:nil afterDelay:3];
+		
+		if (![str isEqualToString:dict[@"id"]]) {
+			[userDefaults setValue:dict[@"id"] forKey:@"id"];
+			[userDefaults setValue:dict[@"ImgUrl"] forKey:@"ImgUrl"];
+		}
+	}
 }
--(void)removeAdvertise
+
+- (void)removeAdvertise
 {
-    [UIView animateWithDuration:0.3 animations:^{
-        _window.alpha=0;
-    } completion:^(BOOL finished) {
-       [_window removeFromSuperview];
-    }];
+	[UIView animateWithDuration:0.3 animations:^{
+		_window.alpha = 0;
+	} completion:^(BOOL finished) {
+		[_window removeFromSuperview];
+	}];
 }
+
 - (void)setUpData
 {
 	_keyword = [[NSString alloc]init];
@@ -198,7 +208,7 @@
 	_showArr = [[NSMutableArray alloc]init];
 	_categaryBeautiful = [[NSMutableArray alloc]init];
 	_biaoqianClickArr = [[NSMutableArray alloc]init];
-    _data=[[NSMutableData alloc]init];
+	_data = [[NSMutableData alloc]init];
 	[self getThePreserveData];
 }
 
@@ -449,9 +459,9 @@
 	if (_showArr.count > 0) {
 		NSMutableArray * tempArray = [[NSMutableArray alloc]init];
 		[_showArr enumerateObjectsUsingBlock:^(QJHomeIndexObject * obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (!obj.imageUrl||!obj.title) {
-                return ;
-            }
+			if (!obj.imageUrl || !obj.title)
+				return;
+				
 			NSString * str = obj.imageUrl;
 			NSString * str1 = obj.title;
 			[tempArray addObject:[NSDictionary dictionaryWithObjects:@[str, str1, @NO] forKeys:@[@"pic", @"title", @"isLoc"]]];
@@ -593,7 +603,7 @@
 	OWTSearchResultsViewCon * searchResultsViewCon = [[OWTSearchResultsViewCon alloc] initWithNibName:nil bundle:nil];
 	
 	searchResultsViewCon.view.tag = 8173;
-    searchResultsViewCon.title=title;
+	searchResultsViewCon.title = title;
 	[searchResultsViewCon setKeyword:_keyword];
 	searchResultsViewCon.hidesBottomBarWhenPushed = YES;
 	//	[searchResultsViewCon substituteNavigationBarBackItem];
@@ -604,7 +614,7 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar					// called when
 {
-    [self performSearch:nil];
+	[self performSearch:nil];
 	[_searchBar resignFirstResponder];
 	_searchBar.text = @"";
 }
@@ -617,28 +627,29 @@
 		[fm requestHomeIndex:^(NSDictionary * _Nonnull homeIndexDic, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
 			if (error != nil)
 				return;
-             dispatch_async(dispatch_get_main_queue(), ^{
-			NSString * homeDictionary = NSHomeDirectory();	// 获取根目录
-			NSString * homePath = [homeDictionary stringByAppendingString:@"/Documents/homeIndex.archiver"];
-			BOOL ret = [NSKeyedArchiver archiveRootObject:homeIndexDic toFile:homePath];
-			[_categaryBeautiful removeAllObjects];
-			[_biaoqianClickArr removeAllObjects];
-			[_showArr removeAllObjects];
-			[_categaryBeautiful addObjectsFromArray:homeIndexDic[@"mhrs"]];
-			[_biaoqianClickArr addObjectsFromArray:homeIndexDic[@"shzm"]];
-			[_showArr addObjectsFromArray:homeIndexDic[@"lbt"]];
-			NSMutableArray * tempArray = [[NSMutableArray alloc]init];
-			[_showArr enumerateObjectsUsingBlock:^(QJHomeIndexObject * obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if (!obj.imageUrl||!obj.title) {
-                    return ;
-                }
-                NSString * str = obj.imageUrl;
-				NSString * str1 = obj.title;
-				[tempArray addObject:[NSDictionary dictionaryWithObjects:@[str, str1, @NO] forKeys:@[@"pic", @"title", @"isLoc"]]];
-			}];
-			_Topic.pics = tempArray;
-			_Topic.ifHomePage = YES;
-			_page.numberOfPages = tempArray.count;
+				
+			dispatch_async(dispatch_get_main_queue(), ^{
+				NSString * homeDictionary = NSHomeDirectory();	// 获取根目录
+				NSString * homePath = [homeDictionary stringByAppendingString:@"/Documents/homeIndex.archiver"];
+				BOOL ret = [NSKeyedArchiver archiveRootObject:homeIndexDic toFile:homePath];
+				[_categaryBeautiful removeAllObjects];
+				[_biaoqianClickArr removeAllObjects];
+				[_showArr removeAllObjects];
+				[_categaryBeautiful addObjectsFromArray:homeIndexDic[@"mhrs"]];
+				[_biaoqianClickArr addObjectsFromArray:homeIndexDic[@"shzm"]];
+				[_showArr addObjectsFromArray:homeIndexDic[@"lbt"]];
+				NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+				[_showArr enumerateObjectsUsingBlock:^(QJHomeIndexObject * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+					if (!obj.imageUrl || !obj.title)
+						return;
+						
+					NSString * str = obj.imageUrl;
+					NSString * str1 = obj.title;
+					[tempArray addObject:[NSDictionary dictionaryWithObjects:@[str, str1, @NO] forKeys:@[@"pic", @"title", @"isLoc"]]];
+				}];
+				_Topic.pics = tempArray;
+				_Topic.ifHomePage = YES;
+				_page.numberOfPages = tempArray.count;
 				[_Topic upDate];
 				[self reloadImageViewImage];
 				[_tableView reloadData];
@@ -702,13 +713,14 @@
 		return;
 		
 	QJHomeIndexObject * model = _categaryBeautiful[selectTag];
-    if (model.title) {
-        NSDictionary *dict=@{@"title":model.title};
-        [MobClick event:@"index_mehrs" attributes:dict];
-    }
-    _keyword = model.typeValue;
-    [self performSearch:model.title];
-
+	
+	if (model.title) {
+		NSDictionary * dict = @{@"title":model.title};
+		[MobClick event:@"index_mehrs" attributes:dict];
+	}
+	_keyword = model.typeValue;
+	[self performSearch:model.title];
+	
 	// 旅游的跳转页面
 }
 
@@ -728,11 +740,11 @@
 	[_tabBarHider hideTabBar];
 	QJHomeIndexObject * model = _showArr[self.page.currentPage];
 	WLJWebViewController * evc = [[WLJWebViewController alloc]init];
-    if (model.title) {
-        NSDictionary *dict=@{@"title":model.title};
-        [MobClick event:@"index_shzm" attributes:dict];
-
-    }
+	
+	if (model.title) {
+		NSDictionary * dict = @{@"title":model.title};
+		[MobClick event:@"index_shzm" attributes:dict];
+	}
 	//
 	evc.SummaryStr = model.detailText;
 	//    //
@@ -801,11 +813,12 @@
 	NSString * Type = model.type;
 	NSString * searchValue = model.typeValue;
 	NSLog(@"searchValue  %@", searchValue);
-    NSDictionary *dict=@{@"title":searchValue};
+	NSDictionary * dict = @{@"title":searchValue};
 	[MobClick event:@"index_shzm" attributes:dict];
+	
 	if ([Type isEqualToString:@"search"]) {
 		_keyword = searchValue;
-        [self performSearch:model.title];
+		[self performSearch:model.title];
 	}
 	else if ([Type isEqualToString:@"article"]) {
 		if ([searchValue isEqualToString:@"1"]) {
