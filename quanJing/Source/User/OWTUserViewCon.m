@@ -397,9 +397,9 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	NSString * toChat = [@"qj" stringByAppendingString:[_quser.uid stringValue]];
 	// 开始聊天
 	_chatVC = [[ChatViewController_rename alloc] initWithChatter:toChat isGroup:NO tile1:@"" title2:@""];
-	_chatVC.title = _user.nickname;
-	_chatVC.currentUserImage = GetUserManager().currentUser.currentImage;
-	_chatVC.senderImage = _userInfoView1.mAvatarView.avatarImage;
+	_chatVC.title = _quser.nickName;
+    _chatVC.currentUser = [QJPassport sharedPassport].currentUser;
+    _chatVC.otherUser = _quser;
 }
 
 - (BOOL)authouDetect

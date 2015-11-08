@@ -39,6 +39,7 @@
 #import "QJPassport.h"
 #import "QJInterfaceManager.h"
 #import <UIImageView+WebCache.h>
+#import "NetStatusMonitor.h"
 
 @interface ChatListViewController ()<UITableViewDelegate,UITableViewDataSource, UISearchDisplayDelegate,SRRefreshDelegate, IChatManagerDelegate,UIAlertViewDelegate>
 
@@ -228,7 +229,7 @@
 {
     [super viewWillAppear:animated];
     _user = [[QJPassport sharedPassport]currentUser];
-    if (_user.nickName.length==0) {
+    if (_user.nickName.length==0 && [NetStatusMonitor isExistenceNetwork]) {
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请先完善个人信息" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
         [alert show];
     }
@@ -238,6 +239,9 @@
     [self registerNotifications];
     _mPopView.frame = CGRectMake(self.view.frame.size.width-5-120, -90, 120, 90);
     _isSelect = false;
+    
+    [[NSUserDefaults standardUserDefaults]setObject:[NSNumber numberWithBool:NO] forKey:@"boxNewStatus"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {

@@ -830,6 +830,8 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
     [[EaseMob sharedInstance].deviceManager asyncPlayVibration];
     //去设置圈子里的红点 － 显示
     [[NSNotificationCenter defaultCenter] postNotificationName:@"setRedPointStatus" object:nil userInfo:(NSDictionary*)[NSNumber numberWithBool:YES]];
+     [[NSUserDefaults standardUserDefaults]setObject:[NSNumber numberWithBool:YES] forKey:@"boxNewStatus"];
+     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)showNotificationWithMessage:(EMMessage *)message

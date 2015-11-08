@@ -216,6 +216,11 @@
     _redPoint.frame = CGRectMake(button2.bounds.size.width-8-5, 0+3, 8, 8);
     [button2 addSubview:_redPoint];
     [_redPoint setHidden:YES];
+    NSUserDefaults *userDafault = [NSUserDefaults standardUserDefaults];
+    NSNumber *num = [userDafault objectForKey:@"boxNewStatus"];
+    if ([num boolValue]) {
+        [_redPoint setHidden:NO];
+    }
 	self.navigationItem.titleView = _headView;
 }
 
