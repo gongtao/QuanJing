@@ -129,15 +129,13 @@
 		NSString * title = [element content];
 		_articleTitle = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		NSLog(@"result = %@", _articleTitle);
-		
-		dispatch_async(dispatch_get_main_queue(), ^{
-			self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, _ifCustom ? 10 : 0, self.view.bounds.size.width, _ifCustom ? self.view.bounds.size.height : self.view.bounds.size.height)];
-			_webView.delegate = self;
-			_webView.alpha = 0.0;
-			[self.view addSubview:self.webView];
-			[self.webView loadHTMLString:htmlString baseURL:url.baseURL];
-		});
 	});
+	
+	self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, _ifCustom ? 10 : 0, self.view.bounds.size.width, _ifCustom ? self.view.bounds.size.height : self.view.bounds.size.height)];
+	_webView.delegate = self;
+	_webView.alpha = 0.0;
+	[self.view addSubview:self.webView];
+	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_urlString]]];
 	
 	UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
 	[button setBackgroundImage:[UIImage imageNamed:@"webShare1.png"]
