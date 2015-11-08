@@ -9,7 +9,6 @@
 #import "HxNickNameImageModel.h"
 #import "OWTUser.h"
 #import "QJInterfaceManager.h"
-#import "QJUser.h"
 #import "QJPassport.h"
 @implementation HxNickNameImageModel
 
@@ -274,14 +273,15 @@
     
     return  avatarNickNameArray;
 }
-
+//应该先判断本地是否有ID
 +(NSMutableArray*)getTriggleValeByIDArray:(NSArray*)usrIds
 {
     NSMutableArray *array = [[NSMutableArray alloc]init];
     for (NSString *userId in usrIds) {
         NSNumber *uid = [NSNumber numberWithInteger:[userId integerValue]];
+        //接口有bug 不存在的user返回了非空但内容为空的对象
         [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
-            if (error == nil && user != nil) {
+            if (error == nil && user != nil && user.uid != nil) {
                 [array addObject:user];
             }
         }];
@@ -295,49 +295,86 @@
         NSNumber *uid = [NSNumber numberWithInteger:[usrId integerValue]];
         [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
             if (error == nil && user != nil) {
+                
+                NSString *homeDictionary = NSHomeDirectory();//获取根目录
+                NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+                NSDictionary *dictionNary = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+                
+                NSMutableDictionary *mulDic = [[NSMutableDictionary alloc]init];
+                if (dictionNary != nil) {
+                    mulDic = [[NSMutableDictionary alloc]initWithDictionary:dictionNary];
+                }
+                NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+                [dic setValue:user.uid forKey:@"id"];
+                [dic setValue:user.nickName forKey:@"nickName"];
+                [dic setValue:user.avatar forKey:@"avatar"];
+                [mulDic setValue:dic forKey:[user.uid stringValue]];
+                [NSKeyedArchiver archiveRootObject:mulDic toFile:homePath];
                 _user = user;
             }
         }];
     return _user;
 }
 
-+(id)checekisExsitByID:(NSString*)userId
+-(void)checekisExsitByID:(NSString*)userId
 {
+    
     NSString *homeDictionary = NSHomeDirectory();//获取根目录
     NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
-    NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
-    NSMutableArray *mutableArray = [NSMutableArray arrayWithArray:array];
-    BOOL isExist = NO;
-    __block QJUser *_user = [[QJUser alloc]init];
-    for (NSDictionary *dic in mutableArray) {
-      NSDictionary *dic2  =  [dic objectForKey:@"uid"];
-        NSNumber*  num = [dic2 objectForKey:@"uid"];
-        if ( [[num stringValue] isEqualToString:userId]) {
-            if ([dic objectForKey:@"avatar"] != nil &&  [dic objectForKey:@"nickName"] != nil) {
-                isExist = YES;
-                [_user setPropertiesFromJson:dic];
-                return _user;
-                break;
-            }
+    NSDictionary *dictionNary = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    
+    if ([[dictionNary allKeys] containsObject:userId]) {
+        NSDictionary *dic = [dictionNary objectForKey:userId];
+         QJUser *user = [[QJUser alloc]initWithJson:dic];
+        if (_finshRequest) {
+            _finshRequest(user);
         }
     }
-    
-    if (!isExist) {
-        NSNumber *uid = [NSNumber numberWithInteger:[userId integerValue]];
-            [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
-                    if (error == nil && user != nil) {
-                        _user = user;
-                        NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
-                        [dic setValue:user.uid forKey:@"uid"];
-                        [dic setValue:user.nickName forKey:@"nickName"];
-                        [dic setValue:user.avatar forKey:@"avatar"];
-                        NSDictionary *tmp = [NSDictionary dictionaryWithObject:dic forKey:@"uid"];
-                        [NSKeyedArchiver archiveRootObject:tmp toFile:homePath];
-                        
-                    }
-            }];
+    else {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
+            NSNumber *uid = [NSNumber numberWithInteger:[userId integerValue]];
+            [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error)
+             {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     if (error == nil && user != nil) {
+                         NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+                         [dic setValue:user.uid forKey:@"id"];
+                         [dic setValue:user.nickName forKey:@"nickName"];
+                         [dic setValue:user.avatar forKey:@"avatar"];
+                         
+                         NSMutableDictionary *mulDic = [[NSMutableDictionary alloc]init];
+                         if (dictionNary != nil) {
+                             mulDic = [[NSMutableDictionary alloc]initWithDictionary:dictionNary];
+                         }
+                         [mulDic setValue:dic forKey:[user.uid stringValue]];
+                         [NSKeyedArchiver archiveRootObject:mulDic toFile:homePath];
+                         if (_finshRequest) {
+                             _finshRequest(user);
+                         }
+                         
+                     }
+                 });
 
+             }];
+        });
     }
-    return _user;
+}
+
++(QJUser*)checekisExsitByID2:(NSString*)userId
+{
+    
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+    NSDictionary *dictionNary = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    
+    if ([[dictionNary allKeys] containsObject:userId]) {
+        NSDictionary *dic = [dictionNary objectForKey:userId];
+        QJUser *user = [[QJUser alloc]initWithJson:dic];
+        if (user!=nil) {
+            return user;
+        }
+    }
+    return nil;
 }
 @end

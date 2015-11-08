@@ -196,7 +196,7 @@
         __block NSArray * friendsArray = [NSArray array];
         NSString *homeDictionary = NSHomeDirectory();//获取根目录
         NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
-        NSMutableArray *urlArrays = [[NSMutableArray alloc]init];
+        NSMutableDictionary *urldics = [[NSMutableDictionary alloc]init];
         [[QJPassport sharedPassport]requestUserFriendList:[[QJPassport sharedPassport]currentUser].uid finished:^(NSArray * userArray, NSError * error){
             if (error == nil) {
                 for (QJUser *user in userArray) {
@@ -213,16 +213,16 @@
                     
                     if (user.uid != nil ) {
                         user.nickName = ( user.nickName.length>0)? user.nickName:nil;
-                        user.avatar = ( user.avatar.length>0)? user.nickName:nil;
+                        user.avatar = ( user.avatar.length>0)? user.avatar:nil;
                         NSMutableDictionary *dic2 = [[NSMutableDictionary alloc]init];
-                        [dic2 setValue:user.uid forKey:@"uid"];
+                        [dic2 setValue:user.uid forKey:@"id"];
                         [dic2 setValue:user.nickName forKey:@"nickName"];
                         [dic2 setValue:user.avatar forKey:@"avatar"];
-                        [urlArrays addObject:[NSDictionary dictionaryWithObject:dic2 forKey:@"uid"]];
+                        [urldics setValue:dic2 forKey:[user.uid stringValue]];
                     }
                    
                 }
-                [NSKeyedArchiver archiveRootObject:urlArrays toFile:homePath];
+                [NSKeyedArchiver archiveRootObject:urldics toFile:homePath];
 
             }
         }];

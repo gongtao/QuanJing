@@ -69,6 +69,7 @@
 @property(nonatomic,strong)UIImageView *fimeImagView;
 @property (nonatomic, strong)NSString *diffCreatMask;
 @property (nonatomic, strong)NSArray *cacheDataArray;
+@property (nonatomic, strong)NSMutableArray *retainArray;
 
 @end
 
@@ -85,6 +86,7 @@
         _isChatGroup = isGroup;
         _messages = [NSMutableArray array];
         _cacheDataArray = [[NSMutableArray alloc]init];
+        _retainArray = [[NSMutableArray alloc]init];
         [[[EaseMob sharedInstance] deviceManager] addDelegate:self onQueue:nil];
         [[EaseMob sharedInstance].chatManager removeDelegate:self];
         //注册为SDK的ChatManager的delegate
@@ -425,37 +427,33 @@
             if (model.isSender) {
                 if (adaptURLCurrent == nil) {
                     model.thumbnailImage = [UIImage imageNamed:@"chatListCellHead"];
+                }else{
+                    model.headImageURL = [NSURL URLWithString:adaptURLCurrent];
                 }
-                model.headImageURL = [NSURL URLWithString:adaptURLCurrent];
             }else{
                 if (adaptURLOther == nil) {
                     model.thumbnailImage = [UIImage imageNamed:@"chatListCellHead"];
-                }
+                }else{
                     model.headImageURL = [NSURL URLWithString:adaptURLOther];
+                }
             }
             //群聊头像数据的获取
             model.senderImage =  _senderImage;
             if (model.isChatGroup) {
+                QJUser *qjuser;
                 NSString *userId = [model.username substringFromIndex:2];
-                __block QJUser *qjuser;
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                   qjuser = [HxNickNameImageModel checekisExsitByID:userId];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSString *adaptURL = [QJInterfaceManager thumbnailUrlFromImageUrl:qjuser.avatar size:CGSizeMake(50, 50)];
-                        if (adaptURL == nil) {
-                            model.thumbnailImage = [UIImage imageNamed:@"chatListCellHead"];
-                        }
-                        model.headImageURL = [NSURL URLWithString:adaptURL];
-                        cell.messageModel = model;
-
-                    });
-                });
+                if (model.isSender) {
+                   qjuser = [QJPassport sharedPassport].currentUser;
+                }else{
+                    qjuser = [HxNickNameImageModel checekisExsitByID2:userId];
+                }
+                NSString *groudURL = [QJInterfaceManager thumbnailUrlFromImageUrl:qjuser.avatar size:CGSizeMake(50, 50)];
+                    if (groudURL == nil) {
+                         model.thumbnailImage = [UIImage imageNamed:@"chatListCellHead"];
+                    }else{
+                        model.headImageURL = [NSURL URLWithString:groudURL];
+                    }
                 
-//                [HxNickNameImageModel askProfileNickNamebyUserIds:[NSArray arrayWithObject:userId]];
-//                model.senderImage = [HxNickNameImageModel getProfileImage:model.username];
-//                if (model.senderImage == nil) {
-//                    model.senderImage = [UIImage imageNamed:@"chatListCellHead"];
-//                }
             }
             
             cell.messageModel = model;
@@ -507,7 +505,21 @@
 - (void)reloadData{
     _chatTagDate = nil;
     self.dataSource = [[self formatMessages:self.messages] mutableCopy];
-    [self.tableView reloadData];
+    MessageModel *obj = [self.dataSource firstObject];
+    if (obj.isChatGroup) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            for (MessageModel *obj in self.dataSource) {
+                HxNickNameImageModel *manager = [[HxNickNameImageModel alloc]init];
+                NSString *userId = [obj.username substringFromIndex:2];
+                [manager checekisExsitByID:userId];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+              [self.tableView reloadData];
+            });
+        });
+    }else{
+     [self.tableView reloadData];
+    }
 }
 
 #pragma mark - UIResponder actions

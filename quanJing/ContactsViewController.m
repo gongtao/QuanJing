@@ -511,14 +511,16 @@
 {
     NSString *homeDictionary = NSHomeDirectory();//获取根目录
     NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
-    NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSDictionary *dictionNary = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSEnumerator * enumeratorValue = [dictionNary objectEnumerator];
     NSMutableArray *dataArray = [[NSMutableArray alloc]init];
-    if (array.count >0) {
-        for (NSDictionary* dic in array) {
-            NSDictionary *json = [dic objectForKey:@"uid"];
-            QJUser *user = [[QJUser alloc]initWithJson:json];
-            [dataArray addObject:user];
-        }
+
+    for (NSDictionary *dicjson in enumeratorValue) {
+        QJUser *user = [[QJUser alloc]initWithJson:dicjson];
+        [dataArray addObject:user];
+
+    }
+    if (dataArray.count>0) {
         [self goAssembleData:dataArray];
 
     }
@@ -530,17 +532,16 @@
 {
     [_progress setHidden:NO];
     __weak ContactsViewController* wself = self;
+    
     NSString *homeDictionary = NSHomeDirectory();//获取根目录
     NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
     
-    NSArray *tmpCache = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
-    NSMutableArray *cacheArray = [[NSMutableArray alloc]initWithArray:tmpCache];
-    
-    //从cacheArray 取出uid存入cacheValue
-    NSMutableArray *cacheValue = [[NSMutableArray alloc]init];
-    for (NSDictionary *dic in cacheArray) {
-        [cacheValue addObject:[[dic objectForKey:@"uid"] objectForKey:@"uid"]];
+    NSDictionary *dic = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSMutableDictionary *mulDic = [[NSMutableDictionary alloc]init];
+    if (dic != nil) {
+        mulDic = [[NSMutableDictionary alloc]initWithDictionary:dic];
     }
+
     //异步线程
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //耗时操作
@@ -548,14 +549,18 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error == nil) {
                     for (QJUser *user in userArray) {
-                        if (user.uid != nil && user.nickName != nil &&  user.avatar != nil) {
-                            if (![cacheValue containsObject:user.uid]) {
-                                NSDictionary *dic = [NSDictionary dictionaryWithObjects:@[user.uid,user.nickName,user.avatar] forKeys:@[@"uid",@"nickName",@"avatar"]];
-                                [cacheArray addObject:[NSDictionary dictionaryWithObject:dic forKey:@"uid"]];
-                                [NSKeyedArchiver archiveRootObject:cacheArray toFile:homePath];
-                            }
+                        if (![[mulDic allKeys] containsObject:[user.uid stringValue]]) {
+                            user.nickName = (user.nickName.length>0)?user.nickName:nil;
+                            user.avatar = (user.avatar.length>0)?user.avatar:nil;
+                            [dic setValue:user.uid forKey:@"id"];
+                            [dic setValue:user.nickName forKey:@"nickName"];
+                            [dic setValue:user.avatar forKey:@"avatar"];
+                            [mulDic setValue:dic forKey:[user.uid stringValue]];
+                            [NSKeyedArchiver archiveRootObject:mulDic toFile:homePath];
                         }
+                        
                     }
+                    
                     [_dataSource removeAllObjects];
                     [self goAssembleData:[NSMutableArray arrayWithArray:userArray]];
                     [wself hideHud];

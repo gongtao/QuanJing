@@ -371,20 +371,18 @@
 {
     NSString *homeDictionary = NSHomeDirectory();//获取根目录
     NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
-    NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
-    if (array.count >0) {
-        for (NSDictionary* dic in array) {
-            NSDictionary *json = [dic objectForKey:@"uid"];
-            if ([json objectForKey:@"uid"] == nil) {
-                return;
-            }
-            QJUser *user = [[QJUser alloc]initWithJson:json];
-            [_dataSource addObject:user];
-        }
-        [self loadDataSource];
-
-
+    NSDictionary *dictionNary = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSEnumerator * enumeratorValue = [dictionNary objectEnumerator];
+    for (NSDictionary *dicjson in enumeratorValue) {
+        QJUser *user = [[QJUser alloc]initWithJson:dicjson];
+        [_dataSource addObject:user];
     }
+    
+    if (_dataSource.count>0) {
+        [self loadDataSource];
+    }
+
+
 }
 -(void)getFriendsList
 {
@@ -393,13 +391,10 @@
     NSString *homeDictionary = NSHomeDirectory();//获取根目录
     NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
     
-    NSArray *tmpCache = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
-    NSMutableArray *cacheArray = [[NSMutableArray alloc]initWithArray:tmpCache];
-    
-    //从cacheArray 取出uid存入cacheValue
-    NSMutableArray *cacheValue = [[NSMutableArray alloc]init];
-    for (NSDictionary *dic in cacheArray) {
-        [cacheValue addObject:[[dic objectForKey:@"uid"] objectForKey:@"uid"]];
+    NSDictionary *dic = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSMutableDictionary *mulDic = [[NSMutableDictionary alloc]init];
+    if (dic != nil) {
+        mulDic = [[NSMutableDictionary alloc]initWithDictionary:dic];
     }
 
     //异步线程
@@ -409,18 +404,19 @@
             dispatch_async(dispatch_get_main_queue(), ^{
             if (error == nil) {
                 NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+                
                 for (QJUser *user in userArray) {
-                    if (user.uid != nil ) {
-                        if (![cacheValue containsObject:user.uid]) {
-                            user.nickName = (user.nickName.length>0)?user.nickName:nil;
-                            user.avatar = (user.avatar.length>0)?user.avatar:nil;
-                            [dic setValue:user.uid forKey:@"uid"];
-                            [dic setValue:user.nickName forKey:@"nickName"];
-                            [dic setValue:user.avatar forKey:@"avatar"];
-                            [cacheArray addObject:[NSDictionary dictionaryWithObject:dic forKey:@"uid"]];
-                        }
+                    
+                    if (![[mulDic allKeys] containsObject:[user.uid stringValue]]) {
+                        user.nickName = (user.nickName.length>0)?user.nickName:nil;
+                        user.avatar = (user.avatar.length>0)?user.avatar:nil;
+                        [dic setValue:user.uid forKey:@"id"];
+                        [dic setValue:user.nickName forKey:@"nickName"];
+                        [dic setValue:user.avatar forKey:@"avatar"];
+                        [mulDic setValue:dic forKey:[user.uid stringValue]];
+                        [NSKeyedArchiver archiveRootObject:mulDic toFile:homePath];
                     }
-                    [NSKeyedArchiver archiveRootObject:cacheArray toFile:homePath];
+                    
 
                 }
                 [_dataSource removeAllObjects];

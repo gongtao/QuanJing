@@ -445,13 +445,38 @@
     
     [self.dataSource addObjectsFromArray:self.chatGroup.occupants];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self refreshScrollView];
-        [self refreshFooterView];
-        [self hideHud];
+    
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+    NSDictionary *dictionNary = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSArray *allkeys = [dictionNary allKeys];
+    
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        for (NSString *username in self.dataSource) {
+            //qj+Id
+            NSString *userId = [username substringFromIndex:2];
+            //如果本地缓存没有相关数据 去服务器请求头像和昵称的数据
+            if (![allkeys containsObject:userId]) {
+                 QJUser *qjuser = [HxNickNameImageModel getTriggleValeByuserID:userId];
+            }
+           
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self goReloadData];
+        });
     });
+    
 }
 
+
+-(void)goReloadData
+{
+    [self refreshScrollView];
+    [self refreshFooterView];
+    [self hideHud];
+}
 #pragma -mark 获取头像数据和昵称数据
 - (void)refreshScrollView
 {
@@ -487,7 +512,10 @@
     int j = 0;
     BOOL isEditing = self.addButton.hidden ? YES : NO;
     BOOL isEnd = NO;
-    
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+    NSDictionary *dictionNary = [NSKeyedUnarchiver unarchiveObjectWithFile:homePath];
+    NSArray *allkeys = [dictionNary allKeys];
     for (i = 0; i < row; i++) {
         for (j = 0; j < kColOfRow; j++) {
             NSInteger index = i * kColOfRow + j;
@@ -496,7 +524,12 @@
                 NSString *username = [self.dataSource objectAtIndex:index];
                 NSString *userId = [username substringFromIndex:2];
                 //如果本地缓存没有相关数据 去服务器请求头像和昵称的数据
-                QJUser *qjuser = [HxNickNameImageModel getTriggleValeByuserID:userId];
+                QJUser *qjuser = [[QJUser alloc]init];
+                qjuser.uid = [[NSNumber alloc]initWithInteger:[userId integerValue]];
+                if ([allkeys containsObject:userId]) {
+                    NSDictionary *dic = [dictionNary objectForKey:userId];
+                    [qjuser setPropertiesFromJson:dic];
+                }
                 
                 ContactView *contactView = [[ContactView alloc] initWithFrame:CGRectMake(j * kContactSize, i * kContactSize, kContactSize, kContactSize)];
                 contactView.index = i * kColOfRow + j;

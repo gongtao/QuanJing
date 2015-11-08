@@ -7,8 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "QJUser.h"
 @interface HxNickNameImageModel : NSObject
+
+
+@property (nonatomic, strong) void (^finshRequest)(QJUser* userId);
 
 +(void)askProfileNickNamebyUserIds:(NSArray*)usrId;
 
@@ -30,7 +33,9 @@
 
 +(id)getTriggleValeByuserID:(NSString*)usrId;
 
-+(id)checekisExsitByID:(NSString*)userId;
++(QJUser*)checekisExsitByID2:(NSString*)userId;
+
+-(void)checekisExsitByID:(NSString*)userId;
 
 
 @end

@@ -54,7 +54,7 @@
 @property (strong, nonatomic)PoperView *mPopView;
 @property (assign, nonatomic)BOOL isSelect;
 @property (strong, nonatomic)UITapGestureRecognizer *tap;
-@property (strong, nonatomic)NSArray *cacheArray;
+@property (strong, nonatomic)NSDictionary *cacheArray;
 @property (strong, nonatomic)NSMutableArray *thatUsrs1;
 @property (strong, nonatomic)NSMutableArray *thatUsrs2;
 
@@ -79,10 +79,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self substituteNavigationBarBackItem2];
-    
-    [self removeEmptyConversationsFromDB];
     [self setup];
+    [self substituteNavigationBarBackItem2];
+    [self removeEmptyConversationsFromDB];
     [self.view addSubview:self.tableView];
     //[self.tableView addSubview:self.slimeView];
     [self networkStateView];
@@ -103,13 +102,10 @@
     _thatUsrs1 = [[NSMutableArray alloc]init];
     _thatUsrs2 = [[NSMutableArray alloc]init];
 
-    if (_cacheArray.count >0) {
-        for (NSDictionary* dic in _cacheArray) {
-            NSDictionary *json = [dic objectForKey:@"uid"];
-            QJUser *user = [[QJUser alloc]initWithJson:json];
-            [_thatUsrs1 addObject:user];
-        }
-        
+    NSEnumerator * enumeratorValue = [_cacheArray objectEnumerator];
+    for (NSDictionary *dicjson in enumeratorValue) {
+        QJUser *user = [[QJUser alloc]initWithJson:dicjson];
+        [_thatUsrs1 addObject:user];
     }
 
 
@@ -140,9 +136,9 @@
             [weakSelf saveConversation];
             ChatViewController_rename *chatController = [[ChatViewController_rename alloc] initWithChatter:group.groupId isGroup:YES tile1:@"creatGropEnter" title2:@""];
             chatController.title = group.groupSubject;
-            chatController.currentUserImage = GetUserManager().currentUser.currentImage;
+            chatController.currentUser =  [[QJPassport sharedPassport]currentUser];
             chatController.ifpopToRootView = YES;
-            chatController.currentUserName = GetUserManager().currentUser.nickname;
+            chatController.currentUserName = [[QJPassport sharedPassport]currentUser].nickName;
             chatController.hidesBottomBarWhenPushed = YES;
             [weakSelf.navigationController pushViewController:chatController animated:YES];
         };
@@ -380,9 +376,12 @@
 {
     NSMutableArray *array = [[NSMutableArray alloc]init];
     for (EMConversation *conversation in displayArray) {
-        NSString *str = [NSString stringWithString:conversation.chatter];
-        NSString  *usrId = [str substringFromIndex:2];
-        [array addObject:usrId];
+        if (![conversation isGroup]) {
+            NSString *str = [NSString stringWithString:conversation.chatter];
+            NSString  *usrId = [str substringFromIndex:2];
+            [array addObject:usrId];
+        }
+       
     }
     
     [self getServerUsrInfo: array];
@@ -403,10 +402,29 @@
 //            [filetArray addObject:userID];
 //        }
 //    }
-    //_thatUsrs2 = [[NSMutableArray alloc]initWithArray:_thatUsrs1];
+    _thatUsrs2 = [[NSMutableArray alloc]initWithArray:_thatUsrs1];
+    NSString *homeDictionary = NSHomeDirectory();//获取根目录
+    NSString *homePath  = [homeDictionary stringByAppendingString:@"/Documents/hxCache.archiver"];
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //耗时操作
         NSArray *result = [HxNickNameImageModel getTriggleValeByIDArray:usrIds];
+        for (QJUser *user in result) {
+            if (![[_cacheArray allKeys]containsObject:[user.uid stringValue]]) {
+                NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+                NSMutableDictionary *tmp = [[NSMutableDictionary alloc]init];
+                if (_cacheArray != nil) {
+                    dic = [[NSMutableDictionary alloc]initWithDictionary:_cacheArray];
+                }
+                user.nickName = (user.nickName.length>0)?user.nickName:nil;
+                user.avatar = (user.avatar.length>0)?user.avatar:nil;
+                [tmp setValue:user.uid forKey:@"id"];
+                [tmp setValue:user.nickName forKey:@"nickName"];
+                [tmp setValue:user.avatar forKey:@"avatar"];
+                [dic setValue:tmp forKey:[user.uid stringValue]];
+                [NSKeyedArchiver archiveRootObject:dic toFile:homePath];
+            }
+        }
             if (result.count >0) {
                 [_thatUsrs2 removeAllObjects];
                 [_thatUsrs2 addObjectsFromArray:result];
@@ -519,6 +537,7 @@
                 break;
             }
         }
+        cell.imageURL = [NSURL URLWithString:@""];
         cell.placeholderImage = [UIImage imageNamed:imageName];
     }
     cell.detailMsg = [self subTitleMessageByConversation:conversation];
