@@ -529,15 +529,13 @@
 
 - (void)onLikeTap:(UIGestureRecognizer *)sender
 {
-	LJAssetLikeModel * model = _likes[sender.view.tag - 700];
-	OWTUser * ownerUser = [GetUserManager() userForID:model.userID];
-	QJUser * user = [QJPassport sharedPassport].currentUser;
+	QJUser * model = _likes[sender.view.tag - 700];
 	
-	if (ownerUser != nil) {
+	if (model != nil) {
 		OWTUserViewCon * userViewCon1 = [[OWTUserViewCon alloc] initWithNibName:nil bundle:nil];
 		userViewCon1.hidesBottomBarWhenPushed = YES;
 		[_controller.navigationController pushViewController:userViewCon1 animated:YES];
-		userViewCon1.user = ownerUser;
+		userViewCon1.quser = model;
 	}
 }
 

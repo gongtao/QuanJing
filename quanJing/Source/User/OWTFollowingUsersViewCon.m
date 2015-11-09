@@ -86,7 +86,6 @@
 	// 请求喜欢当前用户 人的数据
 	_userFlowViewCon.refreshDataFunc = ^(void (^ refreshDoneFunc)())
 	{
-		[wself.userFlowViewCon.dataResouce removeAllObjects];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			[[QJPassport sharedPassport] requestUserFollowList:wself.user.uid pageNum:1 pageSize:30 finished:^(NSArray * _Nonnull followUserArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
 				dispatch_async(dispatch_get_main_queue(), ^{
@@ -98,8 +97,11 @@
 					}
 					else {
 						wself.userFlowViewCon.islast = (!followUserArray || followUserArray.count == 0 || followUserArray.count != 30);
-						[wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
+						[wself.userFlowViewCon.dataResouce removeAllObjects];
 						
+						if (followUserArray && (followUserArray.count > 0))
+							[wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
+							
 						if (refreshDoneFunc != nil)
 							refreshDoneFunc();
 					}

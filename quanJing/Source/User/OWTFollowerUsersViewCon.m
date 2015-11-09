@@ -74,8 +74,10 @@
 					else {
 						wself.userFlowViewCon.islast = isLastPage;
 						[wself.userFlowViewCon.dataResouce removeAllObjects];
-						[wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
 						
+						if (followUserArray && (followUserArray.count > 0))
+							[wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
+							
 						if (refreshDoneFunc != nil)
 							refreshDoneFunc();
 					}
@@ -109,8 +111,9 @@
 							loadMoreDoneFunc();
 					}
 					else {
-						[wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
-						
+						if (followUserArray && (followUserArray.count > 0))
+							[wself.userFlowViewCon.dataResouce addObjectsFromArray:followUserArray];
+							
 						if (loadMoreDoneFunc)
 							loadMoreDoneFunc();
 					}

@@ -780,9 +780,9 @@
 		E0B99C9C1B05BE7C00ED7831 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B99C9B1B05BE7C00ED7831 /* libiconv.dylib */; };
 		E0B99C9E1B05BE8C00ED7831 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B99C9D1B05BE8C00ED7831 /* libresolv.dylib */; };
 		E0B99CA01B05BEC200ED7831 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B99C9F1B05BEC200ED7831 /* libstdc++.6.0.9.dylib */; };
-		E0B9A7171BEFB84C00DFE852 /* webShare2.png in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A7161BEFB84C00DFE852 /* webShare2.png */; settings = {ASSET_TAGS = (); }; };
-		E0B9A7231BEFD04100DFE852 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A7211BEFD04100DFE852 /* Default-568h@2x.png */; settings = {ASSET_TAGS = (); }; };
-		E0B9A7241BEFD04100DFE852 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A7221BEFD04100DFE852 /* Default@2x.png */; settings = {ASSET_TAGS = (); }; };
+		E0B9A7171BEFB84C00DFE852 /* webShare2.png in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A7161BEFB84C00DFE852 /* webShare2.png */; };
+		E0B9A7231BEFD04100DFE852 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A7211BEFD04100DFE852 /* Default-568h@2x.png */; };
+		E0B9A7241BEFD04100DFE852 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A7221BEFD04100DFE852 /* Default@2x.png */; };
 		E0BAB5231B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational2.m in Sources */ = {isa = PBXBuildFile; fileRef = E0BAB5161B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational2.m */; };
 		E0BAB5241B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational3.m in Sources */ = {isa = PBXBuildFile; fileRef = E0BAB5181B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational3.m */; };
 		E0BAB5251B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational4.m in Sources */ = {isa = PBXBuildFile; fileRef = E0BAB51A1B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational4.m */; };
@@ -4898,7 +4898,6 @@
 				ORGANIZATIONNAME = "SparkingSoft Co., Ltd";
 				TargetAttributes = {
 					9044E3C018CAE4D800784D38 = {
-						DevelopmentTeam = T3BNK5WMQ7;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -5897,7 +5896,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "9ec62d94-81c8-4c7e-896a-5177c8c41940";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = NO;
 				VALID_ARCHS = "armv7 armv7s";
@@ -5934,7 +5933,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PROVISIONING_PROFILE = "9ec62d94-81c8-4c7e-896a-5177c8c41940";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = NO;
 				VALID_ARCHS = "armv7 armv7s";
@@ -5954,8 +5953,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6087,9 +6086,9 @@
 					"-force_load",
 					"\"$(SRCROOT)/libEaseMobClientSDKLite.a\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c0c39a9e-d64b-42e0-b92d-5402cf3a7e66";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 				VALID_ARCHS = "armv7 arm64";
@@ -6244,9 +6243,9 @@
 					"-force_load",
 					"\"$(SRCROOT)/libEaseMobClientSDKLite.a\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quanjing.quanjing2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c0c39a9e-d64b-42e0-b92d-5402cf3a7e66";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";

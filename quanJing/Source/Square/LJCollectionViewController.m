@@ -137,7 +137,7 @@
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(LJCollectionViewLayout *)collectionViewLayout heightForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (_cellHeights.count > 0)
+	if ((_cellHeights.count > 0) && (indexPath.item < _cellHeights.count))
 		return [_cellHeights[indexPath.item] floatValue];
 	else
 		return 50;
@@ -181,7 +181,6 @@
 		[self getDataSourceWithDict:dict];
 	else
 		[self getDataSourceWithDict1:dict];
-		
 }
 
 - (void)refreshMore
@@ -197,7 +196,6 @@
 			[self getDataSourceWithDict:dict];
 		else
 			[self getDataSourceWithDict1:dict];
-			
 	}
 	else {
 		[_collectionView footerEndRefreshing];

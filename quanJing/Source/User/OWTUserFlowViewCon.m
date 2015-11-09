@@ -44,7 +44,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)setup
 {
-	_dataResouce = [[NSMutableArray alloc]init];
+	_dataResouce = [[NSMutableArray alloc] init];
 	_tabBarHider = [[OWTTabBarHider alloc] init];
 }
 

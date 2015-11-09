@@ -324,8 +324,9 @@
 						str = [NSString stringWithFormat:@"%f", height.floatValue + imageHeight];
 					[_viewContoller.heights replaceObjectAtIndex:_number withObject:str];
 				}
-                if ([QJPassport sharedPassport].currentUser)
-                    [arr addObject:[QJPassport sharedPassport].currentUser];
+				
+				if ([QJPassport sharedPassport].currentUser)
+					[arr addObject:[QJPassport sharedPassport].currentUser];
 				actionModel.likes = arr;
 				[_viewContoller reloadData:_number];
 			});
@@ -856,7 +857,6 @@
 		cellHeight += 65;
 		CGFloat x = SCREENWIT - 10;
 		CGFloat height;
-		CGFloat width;
 		
 		if (assets.count == 1) {
 			QJImageObject * imageModel = assets[0];
