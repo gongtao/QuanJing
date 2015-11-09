@@ -137,29 +137,28 @@ static const int kDefaultLoadItemNum1 = 10;
 				[_categoriesList insertObject:model atIndex:0];
 				_view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 30)];
 				_view.backgroundColor = [UIColor colorWithRed:246 / 255.0 green:246 / 255.0 blue:246 / 255.0 alpha:1.0];
-                if (_categoriesList.count<6) {
-                    return ;
-                }
+				
+				if (_categoriesList.count < 6)
+					return;
+					
 				for (int i = 0; i < 6; i++) {
 					QJArticleCategory * model = _categoriesList[i];
 					UIButton * btn = [LJUIController createButtonWithFrame:CGRectMake(SCREENWIT / 6 * i, 5, SCREENWIT / 6, 20) imageName:nil title:model.name target:self action:@selector(naviClick:)];
 					btn.titleLabel.font = [UIFont systemFontOfSize:12];
 					
 					//        btn.titleLabel.font=[UIFont fontWithName:@"冬青黑体" size:12];
-					if (i == 0) {
-						[btn setBackgroundImage:[UIImage imageNamed:nil] forState:UIControlStateNormal];
+					if (i == 0)
+						//						[btn setBackgroundImage:[UIImage imageNamed:nil] forState:UIControlStateNormal];
 						[btn setTitleColor:_titleColor1 forState:UIControlStateNormal];
-					}
-					else {
+					else
 						[btn setTitleColor:_titleColor0 forState:UIControlStateNormal];
-					}
 					btn.tag = 300 + i;
 					[_view addSubview:btn];
 				}
 				
 				[self.view addSubview:_view];
-                QJArticleCategory *model1=_categoriesList[0];
-                [MobClick beginEvent:model1.name];
+				QJArticleCategory * model1 = _categoriesList[0];
+				[MobClick beginEvent:model1.name];
 				[currentTableView headerBeginRefreshing];
 			});
 		}];
@@ -221,12 +220,15 @@ static const int kDefaultLoadItemNum1 = 10;
 #pragma mark scrollViewDelegate
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    QJArticleCategory *mode1=_categoriesList[_pageCount];
-    [MobClick endEvent:mode1.name];
+	QJArticleCategory * mode1 = _categoriesList[_pageCount];
+	
+	[MobClick endEvent:mode1.name];
+	
 	if (scrollView == _scrollView) {
 		_pageCount = scrollView.contentOffset.x / SCREENWIT;
-            QJArticleCategory *mode2=_categoriesList[_pageCount];
-        [MobClick beginEvent:mode2.name];
+		QJArticleCategory * mode2 = _categoriesList[_pageCount];
+		[MobClick beginEvent:mode2.name];
+		
 		for (UIView * view in _scrollView.subviews)
 			if (view.tag == 200 + _pageCount)
 				currentTableView = (UITableView *)view;
@@ -271,8 +273,9 @@ static const int kDefaultLoadItemNum1 = 10;
 #pragma mark clickAndTap
 - (void)naviClick:(UIButton *)sender
 {
-    QJArticleCategory *mode1=_categoriesList[_pageCount];
-    [MobClick endEvent:mode1.name];
+	QJArticleCategory * mode1 = _categoriesList[_pageCount];
+	
+	[MobClick endEvent:mode1.name];
 	NSInteger i = sender.tag - 300;
 	
 	for (UIView * view in _view.subviews) {
@@ -290,9 +293,10 @@ static const int kDefaultLoadItemNum1 = 10;
 	
 	[_scrollView setContentOffset:CGPointMake(SCREENWIT * i, 0) animated:YES];
 	_pageCount = i;
-    QJArticleCategory *model2=_categoriesList[_pageCount];
-
-    [MobClick beginEvent:model2.name];
+	QJArticleCategory * model2 = _categoriesList[_pageCount];
+	
+	[MobClick beginEvent:model2.name];
+	
 	for (UIView * view in _scrollView.subviews)
 		if (view.tag == 200 + _pageCount)
 			currentTableView = (UITableView *)view;
@@ -333,36 +337,36 @@ static const int kDefaultLoadItemNum1 = 10;
 	
 	page1++;
 	[pages replaceObjectAtIndex:_pageCount withObject:[NSString stringWithFormat:@"%ld", (long)page1]];
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		QJArticleCategory * model = _categoriesList[_pageCount];
+	
+	QJArticleCategory * model = _categoriesList[_pageCount];
+	
+	if (_arr.count == 0)
+		return;
 		
-		if (_arr.count == 0)
-			return;
-			
-		QJArticleObject * model1 = [_arr lastObject];
+	QJArticleObject * model1 = [_arr lastObject];
+	
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		[[QJInterfaceManager sharedManager]requestArticleList:model.cid cursorIndex:model1.aid pageSize:30 finished:^(NSArray * _Nonnull articleObjectArray, NSNumber * _Nonnull nextCursorIndex, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
-			if (_pageCount == 0)
-			
-				[_categories addObjectsFromArray:articleObjectArray];
-			else if (_pageCount == 1)
-			
-				[_categories1 addObjectsFromArray:articleObjectArray];
-				
-			else if (_pageCount == 2)
-			
-				[_categories2 addObjectsFromArray:articleObjectArray];
-				
-			else if (_pageCount == 3)
-			
-				[_categories3 addObjectsFromArray:articleObjectArray];
-				
-			else if (_pageCount == 4)
-				[_categories4 addObjectsFromArray:articleObjectArray];
-				
-			else
-				[_categories5 addObjectsFromArray:articleObjectArray];
-				
 			dispatch_async(dispatch_get_main_queue(), ^{
+				if (_pageCount == 0)
+					[_categories addObjectsFromArray:articleObjectArray];
+				else if (_pageCount == 1)
+				
+					[_categories1 addObjectsFromArray:articleObjectArray];
+					
+				else if (_pageCount == 2)
+				
+					[_categories2 addObjectsFromArray:articleObjectArray];
+					
+				else if (_pageCount == 3)
+				
+					[_categories3 addObjectsFromArray:articleObjectArray];
+					
+				else if (_pageCount == 4)
+					[_categories4 addObjectsFromArray:articleObjectArray];
+					
+				else
+					[_categories5 addObjectsFromArray:articleObjectArray];
 				[self reloadTableView];
 				[currentTableView footerEndRefreshing];
 			});
@@ -417,7 +421,6 @@ static const int kDefaultLoadItemNum1 = 10;
 						else
 							// do something
 							[model setValue:appdict[key] forKey:key];
-							
 					}
 					
 					if (_pageCount == 0)
@@ -432,7 +435,6 @@ static const int kDefaultLoadItemNum1 = 10;
 						[_categories4 addObject:model];
 					else
 						[_categories5 addObject:model];
-						
 				}
 			}
 			
@@ -470,34 +472,35 @@ static const int kDefaultLoadItemNum1 = 10;
 ///要修改
 - (void)refresh
 {
+	QJArticleCategory * model = _categoriesList[_pageCount];
+	
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		QJArticleCategory * model = _categoriesList[_pageCount];
 		[[QJInterfaceManager sharedManager]requestArticleList:model.cid cursorIndex:nil pageSize:30 finished:^(NSArray * _Nonnull articleObjectArray, NSNumber * _Nonnull nextCursorIndex, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
-			if (_pageCount == 0) {
-				[_categories removeAllObjects];
-				[_categories addObjectsFromArray:articleObjectArray];
-			}
-			else if (_pageCount == 1) {
-				[_categories1 removeAllObjects];
-				[_categories1 addObjectsFromArray:articleObjectArray];
-			}
-			else if (_pageCount == 2) {
-				[_categories2 removeAllObjects];
-				[_categories2 addObjectsFromArray:articleObjectArray];
-			}
-			else if (_pageCount == 3) {
-				[_categories3 removeAllObjects];
-				[_categories3 addObjectsFromArray:articleObjectArray];
-			}
-			else if (_pageCount == 4) {
-				[_categories4 removeAllObjects];
-				[_categories4 addObjectsFromArray:articleObjectArray];
-			}
-			else {
-				[_categories5 removeAllObjects];
-				[_categories5 addObjectsFromArray:articleObjectArray];
-			}
 			dispatch_async(dispatch_get_main_queue(), ^{
+				if (_pageCount == 0) {
+					[_categories removeAllObjects];
+					[_categories addObjectsFromArray:articleObjectArray];
+				}
+				else if (_pageCount == 1) {
+					[_categories1 removeAllObjects];
+					[_categories1 addObjectsFromArray:articleObjectArray];
+				}
+				else if (_pageCount == 2) {
+					[_categories2 removeAllObjects];
+					[_categories2 addObjectsFromArray:articleObjectArray];
+				}
+				else if (_pageCount == 3) {
+					[_categories3 removeAllObjects];
+					[_categories3 addObjectsFromArray:articleObjectArray];
+				}
+				else if (_pageCount == 4) {
+					[_categories4 removeAllObjects];
+					[_categories4 addObjectsFromArray:articleObjectArray];
+				}
+				else {
+					[_categories5 removeAllObjects];
+					[_categories5 addObjectsFromArray:articleObjectArray];
+				}
 				[self reloadTableView];
 				[currentTableView headerEndRefreshing];
 			});
@@ -542,10 +545,12 @@ static const int kDefaultLoadItemNum1 = 10;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    QJArticleObject * category;
-    QJArticleCategory *model=_categoriesList[_pageCount];
-    NSDictionary *dict=@{@"title":model.name};
-    [MobClick event:@"article_category" attributes:dict];
+	QJArticleObject * category;
+	QJArticleCategory * model = _categoriesList[_pageCount];
+	NSDictionary * dict = @{@"title":model.name};
+	
+	[MobClick event:@"article_category" attributes:dict];
+	
 	if (_pageCount == 0)
 		category = _categories[indexPath.row];
 	else if (_pageCount == 1)
@@ -561,8 +566,7 @@ static const int kDefaultLoadItemNum1 = 10;
 		
 	else
 		category = _categories5[indexPath.row];
-    
-
+		
 	WLJWebViewController * evc = [[WLJWebViewController alloc]init];
 	
 	//
