@@ -600,15 +600,12 @@
 
 - (void)performSearch:(NSString *)title
 {
-	OWTSearchResultsViewCon * searchResultsViewCon = [[OWTSearchResultsViewCon alloc] initWithNibName:nil bundle:nil];
-	
-	searchResultsViewCon.view.tag = 8173;
-	searchResultsViewCon.title = title;
-	[searchResultsViewCon setKeyword:_keyword];
-	searchResultsViewCon.hidesBottomBarWhenPushed = YES;
-	//	[searchResultsViewCon substituteNavigationBarBackItem];
-	[_tabBarHider hideTabBar];
-	[self.navigationController pushViewController:searchResultsViewCon animated:YES];
+    LJSearchViewController * lvc = [[LJSearchViewController alloc]init];
+    
+    lvc.hidesBottomBarWhenPushed = YES;
+    //	[_tabBarHider hideTabBar];
+        [self.navigationController pushViewController:lvc animated:NO];
+    [lvc setSearchWord:title];
 	_searchBar.text = nil;
 }
 
@@ -665,7 +662,7 @@
 	LJSearchViewController * lvc = [[LJSearchViewController alloc]init];
 	
 	lvc.hidesBottomBarWhenPushed = YES;
-	[_tabBarHider hideTabBar];
+//	[_tabBarHider hideTabBar];
 	[self.navigationController pushViewController:lvc animated:NO];
 }
 
@@ -705,7 +702,7 @@
 
 - (void)tapImage:(UIGestureRecognizer *)sender
 {
-	[_tabBarHider hideTabBar];
+//	[_tabBarHider hideTabBar];
 	[self.view setHidden:YES];
 	NSInteger selectTag = sender.view.tag - 100;
 	
@@ -807,7 +804,7 @@
 	if (_biaoqianClickArr.count == 0)
 		return;
 		
-	[_tabBarHider hideTabBar];
+//	[_tabBarHider hideTabBar];
 	QJHomeIndexObject * model = _biaoqianClickArr[indexPath.row];
 	NSDictionary * jdic = _biaoqianClickArr[indexPath.row];
 	NSString * Type = model.type;

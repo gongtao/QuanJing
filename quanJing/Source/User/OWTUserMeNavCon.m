@@ -179,7 +179,7 @@
 			
 			for (NSDictionary * dict1 in arr) {
 				NSString * detailStr = [NSString stringWithFormat:@"、%@、%@、", dict1[@"word"], dict1[@"detailed"]];
-				[manager setSearchWordByWord:dict1[@"word"] detailed:detailStr context:concurrencyContext];
+				[wmanager setSearchWordByWord:dict1[@"word"] detailed:detailStr context:concurrencyContext];
 			}
 		}
 	} finished:nil];

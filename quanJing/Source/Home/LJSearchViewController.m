@@ -10,8 +10,23 @@
 #import "OWTSearchResultsViewCon.h"
 #import "LJSearchCell.h"
 #import "UIColor+HexString.h"
-@interface LJSearchViewController ()<UISearchBarDelegate,UITableViewDelegate,UITableViewDataSource,NSURLConnectionDataDelegate>
+#import "OWaterFlowLayout.h"
+#import "OWTImageCell.h"
+#import "QuanJingSDK.h"
+#import "MobClick.h"
+#import "LJSearchCell.h"
+#import "SVProgressHUD+WTError.h"
+#import "OWTImageInfo.h"
+#import "OWTAssetViewCon.h"
+#import "OWTPhotoUploadTagButton.h"
+#import "OWTTabBarHider.h"
 
+static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
+@interface LJSearchViewController ()<UISearchBarDelegate,UITableViewDelegate,UITableViewDataSource,NSURLConnectionDataDelegate,UICollectionViewDataSource,UICollectionViewDelegate>
+@property (nonatomic, strong) NSString * keyword;
+@property (nonatomic, strong) NSMutableOrderedSet * assets;
+@property (nonatomic, strong) UICollectionView * collectionView;
+@property (nonatomic, strong) OWaterFlowLayout * collectionViewLayout;
 @end
 
 @implementation LJSearchViewController
@@ -24,24 +39,24 @@
     NSUserDefaults *_userDefault;
     BOOL isHistory;
     UIView *_footerView;
+    UIImageView * _imageView1;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setUpData];
     [self setUpFooterView];
     [self setUpNavigation];
+    [self setupCollectionView];
     [self setUpTableView];
 }
 -(void)viewWillAppear:(BOOL)animated
 {
     for (UIView *view in self.navigationController.view.subviews) {
-        if (view.tag==111) {
+        if (view.tag==111||view.tag==333) {
             view.hidden=NO;
         }
     }
-    if (_searchBar) {
-        [_searchBar becomeFirstResponder];
-    }
+    [[[OWTTabBarHider alloc]init]showTabBar];
     [self getUpHistoryData];
 }
 #pragma mark setUpView
@@ -51,6 +66,7 @@
     _data=[[NSMutableData alloc]init];
     _dataArr=[[NSMutableArray alloc]init];
     _userDefault=[NSUserDefaults standardUserDefaults];
+    _assets = [[NSMutableOrderedSet alloc]init];
 }
 -(void)setUpFooterView
 {
@@ -104,6 +120,39 @@
     [_tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     _tableView.backgroundColor=[UIColor whiteColor];
 }
+- (void)setupCollectionView
+{
+    _collectionViewLayout = [[OWaterFlowLayout alloc] init];
+    _collectionViewLayout.sectionInset = UIEdgeInsetsMake(5, 10, 5, 10);
+    _collectionViewLayout.columnCount = 2;
+    
+    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
+                                             collectionViewLayout:_collectionViewLayout];
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    
+    [self.view addSubview:_collectionView];
+    
+    self.view.backgroundColor = GetThemer().themeColorBackground;
+    
+    [self.collectionView registerClass:OWTImageCell.class forCellWithReuseIdentifier:kWaterFlowCellID];
+    
+    self.collectionView.backgroundColor = GetThemer().themeColorBackground;
+    self.collectionView.showsHorizontalScrollIndicator = NO;
+    self.collectionView.showsVerticalScrollIndicator = NO;
+    
+    self.collectionView.alwaysBounceVertical = YES;
+}
+- (void)setUpBackView
+{
+    _imageView1 = [LJUIController createImageViewWithFrame:CGRectMake(0, 0, 100, 100) imageName:@"seach"];
+    //    _imageView1.backgroundColor=[UIColor blackColor];
+    _imageView1.hidden = YES;
+    //    _imageView1.center=self.view.center;
+    _imageView1.center = CGPointMake(self.view.center.x, self.view.center.y - 50);
+    [self.view addSubview:_imageView1];
+}
+
 -(void)getUpHistoryData
 {
     [_dataArr removeAllObjects];
@@ -116,21 +165,52 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-#pragma mark searchBarDelegate
-- (void)performSearch:(NSString *)keyword
+-(void)setSearchWord:(NSString *)keyword
 {
-    OWTSearchResultsViewCon* searchResultsViewCon = [[OWTSearchResultsViewCon alloc] initWithNibName:nil bundle:nil];
-    searchResultsViewCon.view.tag = 8173;
-//    self.navigationController.navigationBar.barTintColor = nil;
-    [searchResultsViewCon setKeyword:keyword ];
-    searchResultsViewCon.hidesBottomBarWhenPushed = YES;
-//    [searchResultsViewCon substituteNavigationBarBackItem];
-//    UIApplication *application = [UIApplication sharedApplication];
-//    [application setStatusBarStyle:UIStatusBarStyleDefault];
-    
-    [self.navigationController pushViewController:searchResultsViewCon animated:YES];
-    _searchBar.text = nil;
+    self.keyword=keyword;
+    [self loadMoreData];
+    [self.view bringSubviewToFront:_collectionView];
+    [self updateSearbarButtons:_keyword];
+    [_searchBar resignFirstResponder];
 }
+#pragma mark 网络请求
+- (void)loadMoreData
+{
+    QJInterfaceManager * fm = [QJInterfaceManager sharedManager];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [fm requestImageSearchKey:_keyword pageNum:_assets.count / 50 + 1 pageSize:50 currentImageId:nil finished:^(NSArray * imageObjectArray, NSArray * resultArray, NSError * error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [SVProgressHUD showError:error];
+                    return;
+                }
+                
+                if (imageObjectArray.count == 0) {
+                    if (_assets.count == 0)
+                        [self.view bringSubviewToFront:_imageView1];
+                        _imageView1.hidden = NO;
+                }
+                else {
+                    _imageView1.hidden = YES;
+                }
+
+                [SVProgressHUD dismiss];
+                
+                
+                    [self mergeAssets:imageObjectArray];
+            });
+        }];
+    });
+}
+- (void)mergeAssets:(NSArray *)assets
+{
+    if (assets.count>0) {
+    [_assets addObjectsFromArray:assets];
+    }
+    [_collectionView reloadData];
+}
+#pragma mark searchBarDelegate
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar                    // called when
 {
@@ -154,20 +234,63 @@
     }
     [_userDefault setObject:arr1 forKey:@"searchHistory"];
     [_userDefault synchronize];
-    [self performSearch:searchBar.text];
+    _keyword=_searchBar.text;
+    [_assets removeAllObjects];
+    [self loadMoreData];
+    [self updateSearbarButtons:_keyword];
+    [self.view bringSubviewToFront:_collectionView];
     [_searchBar resignFirstResponder];
     _searchBar.text = @"";
-    for (UIView *view in self.navigationController.view.subviews) {
-        if (view.tag==111) {
-            view.hidden=YES;
-        }
-    }
+}
+-(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    [self.view bringSubviewToFront:_tableView];
 }
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
     if (searchText.length>0) {
      [self getImageData:searchText];   
     }
+}
+-(void)updateSearbarButtons:(NSString *)searchtext
+{
+    UIView *backImage=[[UIView alloc]initWithFrame:CGRectMake(8, 26, SCREENWIT-65, 30)];
+
+    backImage.layer.cornerRadius=2;
+    backImage.backgroundColor=[UIColor whiteColor];
+    backImage.userInteractionEnabled=YES;
+    UIImageView *back1=[LJUIController createImageViewWithFrame:CGRectMake(0, 0, SCREENWIT-65, 30) imageName:nil];
+    [backImage addSubview:back1];
+    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapBackImage:)];
+    [back1 addGestureRecognizer:tap];
+    NSArray *arr=[searchtext componentsSeparatedByString:@" "];
+  __block float witch=0;
+    [arr enumerateObjectsUsingBlock:^(NSString * tagStr, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (!tagStr || tagStr.length == 0 ) {
+            return;
+        }
+        UIFont *font = [UIFont systemFontOfSize:13.0];
+        CGRect frame = [tagStr boundingRectWithSize:CGSizeMake(NSUIntegerMax, NSUIntegerMax)
+                                            options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                         attributes:@{NSFontAttributeName: font}
+                                            context:nil];
+        frame.size.width += 30.0;
+        if (witch+frame.size.width+2+5>SCREENWIT-65) {
+            return;
+        }
+        OWTPhotoUploadTagButton *button = [[OWTPhotoUploadTagButton alloc] initWithFrame:CGRectMake(5+witch, 2.5, frame.size.width, 25.0)];
+        button.tag=900+idx;
+        witch +=(frame.size.width+2);
+        [button addTarget:self action:@selector(deleteTag1:) forControlEvents:UIControlEventTouchUpInside];
+        button.title =tagStr;
+////        int value = arc4random() % 3;
+//        NSString *imgStr = [NSString stringWithFormat:@"上传图片tag%@.png", _imageArray[value]];
+        UIImage *image = [UIImage imageNamed:@"上传图片tag红.png"];
+        button.imageView.image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(0.0, 2.0, 0.0, 27.0)];
+        [backImage addSubview:button];
+    }];
+    backImage.tag=333;
+    [self.navigationController.view addSubview:backImage];
 }
 #pragma mark 请求数据
 -(void)getImageData:(NSString *)searchText
@@ -248,7 +371,119 @@
 {
     return 30;
 }
+#pragma mark - OWaterFlowLayoutDataSource
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    QJImageObject * model = _assets[indexPath.row];
+    
+    if (model != nil)
+        return CGSizeMake(model.width.intValue, model.height.intValue);
+    else
+        return CGSizeZero;
+}
+
+#pragma mark - UICollectionViewDataSource methods
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    if (_assets != nil)
+        return _assets.count;
+    else
+        return 0;
+}
+
+// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    OWTImageCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:kWaterFlowCellID forIndexPath:indexPath];
+    QJImageObject * model = _assets[indexPath.row];
+    OWTImageInfo * imageInfo = [[OWTImageInfo alloc]init];
+    
+    imageInfo.url = model.url;
+    imageInfo.width = model.width.intValue;
+    imageInfo.height = model.height.intValue;
+    imageInfo.primaryColorHex = model.bgcolor;
+    
+    if (model != nil) {
+        if (imageInfo != nil)
+            [cell setImageWithInfo:imageInfo];
+        else
+            cell.backgroundColor = [UIColor lightGrayColor];
+    }
+    
+    return cell;
+}
+
+#pragma mark - UICollectionViewDelegate methods
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+// called when the user taps on an already-selected item in multi-select mode
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    QJImageObject * model = _assets[indexPath.row];
+    for (UIView *view in self.navigationController.view.subviews) {
+        if (view.tag==111||view.tag==333) {
+            view.hidden=YES;
+        }
+    }
+    if (model != nil) {
+        model.imageType = [NSNumber numberWithInt:1];
+        OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc]initWithImageId:model imageType:model.imageType];
+        [self.navigationController pushViewController:assetViewCon animated:YES];
+    }
+}
+
 #pragma mark tapAndClick
+-(void)tapBackImage:(UIGestureRecognizer*)sender
+{
+    [_searchBar becomeFirstResponder];
+    _searchBar.text=[NSString stringWithFormat:@"%@ ",_keyword];
+    for (UIView *view in self.navigationController.view.subviews) {
+        if (view.tag==333) {
+            [view removeFromSuperview];
+        }
+    }
+}
+-(void)deleteTag1:(OWTPhotoUploadTagButton *)sender
+{
+    [_searchBar becomeFirstResponder];
+    NSMutableArray *arr=[[NSMutableArray alloc]init];
+    NSArray *arr1=[_keyword componentsSeparatedByString:@" "];
+    NSString *str;
+    if (arr1.count<=1) {
+        str=@"";
+    }
+    else{
+    [arr1 enumerateObjectsUsingBlock:^(NSString * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([sender.title isEqualToString:obj]||obj.length==0) {
+            return ;
+        }
+        [arr addObject:obj];
+    }];
+        str=[NSString stringWithFormat:@"%@ ",[arr componentsJoinedByString:@" "]];
+    }
+    _searchBar.text=str;
+    for (UIView *view in self.navigationController.view.subviews) {
+        if (view.tag==333) {
+            [view removeFromSuperview];
+        }
+    }
+}
 -(void)clearHistory
 {
     [_userDefault removeObjectForKey:@"searchHistory"];
@@ -258,7 +493,7 @@
 -(void)cancelClick
 {
     for (UIView *view in self.navigationController.view.subviews) {
-        if (view.tag==111) {
+        if (view.tag==111||view.tag==333) {
             [view removeFromSuperview];
         }
     }
@@ -286,14 +521,13 @@
     }
     [_userDefault setObject:arr1 forKey:@"searchHistory"];
     [_userDefault synchronize];
-    [self performSearch:_dataArr[indexPath.row]];
+    _keyword=_dataArr[indexPath.row];
+        [_assets removeAllObjects];
+    [self loadMoreData];
+    [self.view bringSubviewToFront:_collectionView];
+    [self updateSearbarButtons:_keyword];
     [_searchBar resignFirstResponder];
     _searchBar.text = @"";
-    for (UIView *view in self.navigationController.view.subviews) {
-        if (view.tag==111) {
-            view.hidden=YES;
-        }
-    }
 
 }
 -(void)inputKeyboardWillShow:(NSNotification *)notification
