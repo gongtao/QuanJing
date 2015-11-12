@@ -13,10 +13,7 @@
 #import "AlbumPhotosListView.h"
 @interface OWTUserMeNavCon : OQJNavCon
 
-//@property (nonatomic, strong) UserAlbumListView* userViewCon;
+// @property (nonatomic, strong) UserAlbumListView* userViewCon;
 
-
-
-
-@property (nonatomic, strong) AlbumPhotosListView *photolistview;
+@property (nonatomic, strong) AlbumPhotosListView * photolistview;
 @end
