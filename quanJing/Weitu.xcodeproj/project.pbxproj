@@ -14,6 +14,8 @@
 		311BF04919B2E9250046C11D /* OQJNavCon.m in Sources */ = {isa = PBXBuildFile; fileRef = 311BF04719B2E9250046C11D /* OQJNavCon.m */; };
 		311D8B971BD7982E0003AE4E /* QJArticleCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 311D8B941BD7982E0003AE4E /* QJArticleCategory.m */; };
 		311D8B981BD7982E0003AE4E /* QJArticleObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 311D8B961BD7982E0003AE4E /* QJArticleObject.m */; };
+		312C07501BF465680056328C /* QJWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 312C074F1BF465680056328C /* QJWebView.m */; };
+		312C07531BF465DC0056328C /* QJWebProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 312C07521BF465DC0056328C /* QJWebProgressView.m */; };
 		3131894E19C79D8400C42120 /* OWTAssetInfoViewa.m in Sources */ = {isa = PBXBuildFile; fileRef = 3131894C19C79D8400C42120 /* OWTAssetInfoViewa.m */; };
 		3131894F19C79D8400C42120 /* OWTAssetInfoViewa.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3131894D19C79D8400C42120 /* OWTAssetInfoViewa.xib */; };
 		31338AA819B5405600A2EE6E /* OQJSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31338AA419B5405600A2EE6E /* OQJSearchView.m */; };
@@ -875,6 +877,10 @@
 		311D8B941BD7982E0003AE4E /* QJArticleCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJArticleCategory.m; sourceTree = "<group>"; };
 		311D8B951BD7982E0003AE4E /* QJArticleObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJArticleObject.h; sourceTree = "<group>"; };
 		311D8B961BD7982E0003AE4E /* QJArticleObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJArticleObject.m; sourceTree = "<group>"; };
+		312C074E1BF465680056328C /* QJWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJWebView.h; sourceTree = "<group>"; };
+		312C074F1BF465680056328C /* QJWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJWebView.m; sourceTree = "<group>"; };
+		312C07511BF465DC0056328C /* QJWebProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QJWebProgressView.h; sourceTree = "<group>"; };
+		312C07521BF465DC0056328C /* QJWebProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QJWebProgressView.m; sourceTree = "<group>"; };
 		3131894B19C79D8400C42120 /* OWTAssetInfoViewa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTAssetInfoViewa.h; sourceTree = "<group>"; };
 		3131894C19C79D8400C42120 /* OWTAssetInfoViewa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTAssetInfoViewa.m; sourceTree = "<group>"; };
 		3131894D19C79D8400C42120 /* OWTAssetInfoViewa.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OWTAssetInfoViewa.xib; sourceTree = "<group>"; };
@@ -2565,6 +2571,10 @@
 				66A310A11ACE8E8200D31259 /* WLJWebViewController.m */,
 				66A310A21ACE8E8200D31259 /* WLJArticle.h */,
 				66A310A31ACE8E8200D31259 /* WLJArticle.m */,
+				312C074E1BF465680056328C /* QJWebView.h */,
+				312C074F1BF465680056328C /* QJWebView.m */,
+				312C07511BF465DC0056328C /* QJWebProgressView.h */,
+				312C07521BF465DC0056328C /* QJWebProgressView.m */,
 			);
 			name = web;
 			path = ..;
@@ -5569,6 +5579,7 @@
 				66CC10D11A5E30F800919E46 /* OQJSelectedViewCon.m in Sources */,
 				E0B99BFA1B05985400ED7831 /* Emoji.m in Sources */,
 				E0B99B671B05966000ED7831 /* PSTGridLayoutSection.m in Sources */,
+				312C07501BF465680056328C /* QJWebView.m in Sources */,
 				A3B1A6461BA95E5F0044B645 /* LJExploreViewCellTableViewCell.m in Sources */,
 				A3604FC21B27DEF000A68FDA /* ASIHTTPRequest.m in Sources */,
 				E0BAB5231B5E26D5006F5D9A /* OQJExploreViewConlvyouinternational2.m in Sources */,
@@ -5602,6 +5613,7 @@
 				A36CD7451B429E21006564CF /* LJCollectionReusableView.m in Sources */,
 				9044E3D118CAE4D800784D38 /* main.m in Sources */,
 				E06454D91B677832003820D2 /* OWTCategoryManagerjiaju.m in Sources */,
+				312C07531BF465DC0056328C /* QJWebProgressView.m in Sources */,
 				E081D6041BC7C3D50086F951 /* OWTDefaultTableViewCell.m in Sources */,
 				90D5CD9A18FBA67500D301E3 /* OWTAlbumCellView.m in Sources */,
 				90A7BC0B195D354200FE2602 /* OWTAssetData.m in Sources */,
