@@ -396,9 +396,9 @@
 			NSInteger maxNumber = _imagePickerController.maximumNumberOfPhotosToBeSelected;
 			
 			if (0 < maxNumber)
-				self.navigationController.navigationBar.topItem.prompt = [NSString stringWithFormat:@"(%d/%d)", [AGIPCGridItem numberOfSelections], maxNumber];
+				self.navigationController.navigationBar.topItem.prompt = [NSString stringWithFormat:@"(%lu/%li)", [AGIPCGridItem numberOfSelections], maxNumber];
 			else
-				self.navigationController.navigationBar.topItem.prompt = [NSString stringWithFormat:@"(%d/%d)", [AGIPCGridItem numberOfSelections], self.assets.count];
+				self.navigationController.navigationBar.topItem.prompt = [NSString stringWithFormat:@"(%lu/%li)", [AGIPCGridItem numberOfSelections], self.assets.count];
 		}
 	}
 }
@@ -686,86 +686,84 @@
 	lib = [[ALAssetsLibrary alloc]init];
 	
 	__block BOOL ret = NO;
-	QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
-	__weak QJDatabaseManager * wmanager = manager;
-	[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
-		for (NSString * str in someCaptions)
-			if (![str isEqualToString:@""])
-				ret = YES;
-				
-		NSArray * someCaptionModel;
-		
-		if (ret == YES)
-			someCaptionModel = [wmanager getImageCaptions:concurrencyContext captions:someCaptions];
+	
+	for (NSString * str in someCaptions)
+		if (![str isEqualToString:@""])
+			ret = YES;
 			
-		for (QJImageCaption * model in someCaptionModel)
-			[imageUrls addObject:model.imageUrl];
-	} finished:^(NSManagedObjectContext * _Nonnull mainContext) {
-		[self.assets removeAllObjects];
-		__block NSUInteger number = imageUrls.count;
+	NSArray * someCaptionModel;
+	
+	if (ret == YES)
+		someCaptionModel = [[QJDatabaseManager sharedManager] getImageCaptions:nil captions:someCaptions];
 		
-		for (NSString * imageurl in imageUrls) {
-			[lib assetForURL:[NSURL URLWithString:imageurl] resultBlock:^(ALAsset * asset) {
-				if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
-					AGIPCGridItem * gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:self.imagePickerController asset:asset andDelegate:self];
-					[self.assets addObject:gridItem];
-					
-					if (self.assets.count == number)
-						dispatch_async(dispatch_get_main_queue(), ^{
-							[self reloadData];
-						});
-				}
-				else {
-					number = number - 1;
-				}
-			} failureBlock:^(NSError * error) {
-				number = number - 1;
-			}];
-		}
+	for (QJImageCaption * model in someCaptionModel)
+		[imageUrls addObject:model.imageUrl];
 		
-		if (ret == NO)
-			[self.assets addObjectsFromArray:_allAssets];
-		isSearching = NO;
-		
-		_searchBar.delegate = self;
-		_searchBar.text = nil;
-		_searchBar.placeholder = @"搜索";
-		[_searchBar endEditing:YES];
-		_searchBar.showsCancelButton = NO;
-		
-		[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-		float x = 13;
-		NSInteger i = 0;
-		
-		for (UIView * view in _searchBar.subviews)
-			for (UIView * view1 in view.subviews)
-				if ([view1 isKindOfClass:[UIButton class]])
-					if ((view1.tag >= 1000) && (view.tag < 1010))
-						[view1 removeFromSuperview];
-						
-		for (NSString * cap in someCaptions) {
-			if (cap.length > 0) {
-				CGSize size = [cap sizeWithFont:[UIFont systemFontOfSize:15]];
+	[self.assets removeAllObjects];
+	
+	__block NSUInteger number = imageUrls.count;
+	
+	for (NSString * imageurl in imageUrls) {
+		[lib assetForURL:[NSURL URLWithString:imageurl] resultBlock:^(ALAsset * asset) {
+			if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
+				AGIPCGridItem * gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:self.imagePickerController asset:asset andDelegate:self];
+				[self.assets addObject:gridItem];
 				
-				if (x + size.width + 50 > SCREENWIT)
-					break;
-				UITextField * txfSearchField = [_searchBar valueForKey:@"_searchField"];
-				[txfSearchField setLeftViewMode:UITextFieldViewModeNever];
-				_searchBar.placeholder = nil;
-				UIButton * button = [LJUIController createButtonWithFrame:CGRectMake(x, 10, size.width + 25, size.height) imageName:@"1_03.png" title:cap target:nil action:nil];
-				button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-				UIButton * deleteButton = [LJUIController createButtonWithFrame:CGRectMake(x + size.width + 10, 11, 15, 15) imageName:@"未标题-1_10.png" title:nil target:self action:@selector(deleteCaption:)];
-				deleteButton.tag = 1000 + i;
-				button.tag = 1000 + i;
-				[_searchBar addSubview:button];
-				[_searchBar addSubview:deleteButton];
-				x += (30 + size.width);
+				if (self.assets.count == number)
+					dispatch_async(dispatch_get_main_queue(), ^{
+						[self reloadData];
+					});
 			}
-			i++;
+			else {
+				number = number - 1;
+			}
+		} failureBlock:^(NSError * error) {
+			number = number - 1;
+		}];
+	}
+	
+	if (ret == NO)
+		[self.assets addObjectsFromArray:_allAssets];
+	isSearching = NO;
+	
+	_searchBar.delegate = self;
+	_searchBar.text = nil;
+	_searchBar.placeholder = @"搜索";
+	[_searchBar endEditing:YES];
+	_searchBar.showsCancelButton = NO;
+	
+	[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+	float x = 13;
+	NSInteger i = 0;
+	
+	for (UIView * view in _searchBar.subviews)
+		for (UIView * view1 in view.subviews)
+			if ([view1 isKindOfClass:[UIButton class]])
+				if ((view1.tag >= 1000) && (view.tag < 1010))
+					[view1 removeFromSuperview];
+					
+	for (NSString * cap in someCaptions) {
+		if (cap.length > 0) {
+			CGSize size = [cap sizeWithFont:[UIFont systemFontOfSize:15]];
+			
+			if (x + size.width + 50 > SCREENWIT)
+				break;
+			UITextField * txfSearchField = [_searchBar valueForKey:@"_searchField"];
+			[txfSearchField setLeftViewMode:UITextFieldViewModeNever];
+			_searchBar.placeholder = nil;
+			UIButton * button = [LJUIController createButtonWithFrame:CGRectMake(x, 10, size.width + 25, size.height) imageName:@"1_03.png" title:cap target:nil action:nil];
+			button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+			UIButton * deleteButton = [LJUIController createButtonWithFrame:CGRectMake(x + size.width + 10, 11, 15, 15) imageName:@"未标题-1_10.png" title:nil target:self action:@selector(deleteCaption:)];
+			deleteButton.tag = 1000 + i;
+			button.tag = 1000 + i;
+			[_searchBar addSubview:button];
+			[_searchBar addSubview:deleteButton];
+			x += (30 + size.width);
 		}
-		
-		[self.tableView reloadData];
-	}];
+		i++;
+	}
+	
+	[self.tableView reloadData];
 }
 
 - (void)changeSearchBarBackcolor:(UISearchBar *)mySearchBar

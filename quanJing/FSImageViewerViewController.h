@@ -37,25 +37,24 @@
 
 - (id)initWithCustomImageSource:(id <FSImageSource>)imageSource imageIndex:(NSInteger)imageIndex withViewController:(id)viewController;
 
-- (id)initWithGridImageSource:(id <FSImageSource>)imageSource imageIndex:(NSInteger)imageIndex withViewController:(id)viewController gridItems:(NSMutableArray*)gridItems ;
+- (id)initWithGridImageSource:(id <FSImageSource>)imageSource imageIndex:(NSInteger)imageIndex withViewController:(id)viewController gridItems:(NSMutableArray *)gridItems;
 
 - (id)initWithAssestImageSource:(id <FSImageSource>)imageSource imageIndex:(NSInteger)imageIndex withViewController:(id)viewController;
 
-
-@property(nonatomic, assign)BOOL ifCetainPage;
+@property(nonatomic, assign) BOOL ifCetainPage;
 @property(strong, nonatomic, readonly) id <FSImageSource> imageSource;
 
 /// FSImageView array
-@property(strong, nonatomic) NSMutableArray *imageViews;
+@property(strong, nonatomic) NSMutableArray * imageViews;
 
 /// Main scrollView
-@property(strong, nonatomic) UIScrollView *scrollView;
+@property(strong, nonatomic) UIScrollView * scrollView;
 
-@property(nonatomic,strong)NSArray *assetData;
+@property(nonatomic, strong) NSArray * assetData;
 
-@property(nonatomic,assign)BOOL isLocal;
+@property(nonatomic, assign) BOOL isLocal;
 
-@property (nonatomic, assign)BOOL ifGridImage;
+@property (nonatomic, assign) BOOL ifGridImage;
 
 /// Current index of the image displayed
 /// @return current index of the image displayed

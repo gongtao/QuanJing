@@ -61,7 +61,7 @@
 	NSMutableArray * assertArray;
 	BOOL isUpload;
 	OWTTabBarHider * _tabBarHider;
-    NSMutableDictionary *_dictData;
+	NSMutableDictionary * _dictData;
 }
 - (id)initWithImageSource:(id <FSImageSource>)aImageSource
 {
@@ -165,11 +165,10 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-    _dictData=[[NSMutableDictionary alloc]init];
+	_dictData = [[NSMutableDictionary alloc]init];
 #ifdef __IPHONE_7_0
 		if ([self respondsToSelector:@selector(setAutomaticallyAdjustsScrollViewInsets:)])
 			self.automaticallyAdjustsScrollViewInsets = NO;
-			
 #endif
 
 	self.view.backgroundColor = [UIColor blackColor];
@@ -251,7 +250,7 @@
 	[_imageView addSubview:_textField];
 	_sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	[_sendButton setTitle:@"添加标签" forState:UIControlStateNormal];
-    [_sendButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[_sendButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 	[_sendButton setFrame:CGRectMake(SCREENWIT - 80, 2, 80, 40)];
 	[_sendButton addTarget:self action:@selector(onSendBtn:) forControlEvents:UIControlEventTouchUpInside];
 	[_imageView addSubview:_sendButton];
@@ -268,7 +267,6 @@
 		
 		if (str.length == 0)
 			[arr1 removeObject:@""];
-			
 	}
 	
 	NSString * str1 = [arr1 componentsJoinedByString:@" "];
@@ -287,8 +285,8 @@
 		OWTImageInfo * dd = dict[@"imageInfo"];
 		imageurl = dd.url;
 	}
-    NSString * str =[self checkTheCaption:imageurl];
-
+	NSString * str = [self checkTheCaption:imageurl];
+	
 	NSArray * arr2 = [str componentsSeparatedByString:@" "];
 	
 	if (arr1.count + arr2.count >= 20) {
@@ -296,22 +294,29 @@
 		return;
 	}
 	
+	void (^block)(void) = ^{
+		FSImageView * imageView;
+		
+		for (UIView * view in _scrollView.subviews)
+			if (view.tag == _page)
+				imageView = (FSImageView *)view;
+				
+		[self updateCaptionView:imageView withPage:_page with:YES];
+		[self onBackTap];
+	};
+	
 	if (_dictData == nil) {
-        [self insertCaptionToCoredata:imageurl caption:str1 isself:@"1"];
-
+		[self insertCaptionToCoredata:imageurl
+		caption:str1
+		isSelf:@"1"
+		finished:block];
 	}
 	else {
 		NSString * caption = [NSString stringWithFormat:@"%@ %@ ", str, str1];
-        [self updataCaption:caption withImage:imageurl];
+		[self updataCaption:caption
+		withImage:imageurl
+		finished:block];
 	}
-	FSImageView * imageView;
-	
-	for (UIView * view in _scrollView.subviews)
-		if (view.tag == _page)
-			imageView = (FSImageView *)view;
-			
-	[self updateCaptionView:imageView withPage:_page with:YES];
-	[self onBackTap];
 }
 
 - (void)inputKeyboardWillShow:(NSNotification *)notification
@@ -336,7 +341,6 @@
 {
 	if (isUpload == YES)
 		[self setBarsHidden:NO animated:NO];
-		
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -365,7 +369,6 @@
 {
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 		return interfaceOrientation == UIInterfaceOrientationLandscapeRight || interfaceOrientation == UIInterfaceOrientationLandscapeLeft;
-		
 		
 	return UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait;
 }
@@ -433,7 +436,6 @@
 	if (hidden && barsHidden)
 		return;
 		
-		
 	[self setStatusBarHidden:hidden];
 	[self.navigationController setNavigationBarHidden:hidden animated:animated];
 	
@@ -445,7 +447,6 @@
 			if ([imageView isKindOfClass:[FSImageView class]]) {
 				if (_ifCetainPage)
 					imageView.identifyVC = self;
-					
 					
 				[imageView changeBackgroundColor:backgroundColor];
 				imageView.showBack = ^{[wself backNav]; };
@@ -514,7 +515,6 @@
 	if (_titleView)
 	
 		_titleView.text = _imageSource[pageIndex].title;
-		
 }
 
 - (void)moveToImageAtIndex:(NSInteger)index animated:(BOOL)animated
@@ -622,7 +622,6 @@
 	if (page >= [_imageSource numberOfImages])
 		return;
 		
-		
 	FSImageView * imageView = [_imageViews objectAtIndex:(NSUInteger)page];
 	
 	if ((NSNull *)imageView == [NSNull null]) {
@@ -684,13 +683,13 @@
 			//            AGIPCGridItem *gridItem=assertArray[page];
 			ALAsset * asset = basic.assert;
 			NSString * imageurl = [[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString];
-          str=[self checkTheCaption:imageurl];
+			str = [self checkTheCaption:imageurl];
 		}
 		else {
 			NSDictionary * dict = _assetData[page];
 			OWTImageInfo * dd = dict[@"imageInfo"];
-           str= [self checkTheCaption:dd.url];
-        }
+			str = [self checkTheCaption:dd.url];
+		}
 		
 		for (UIView * view in imageView.subviews)
 			if (view.tag >= 700)
@@ -805,12 +804,12 @@
 		//            AGIPCGridItem *gridItem=assertArray[page];
 		ALAsset * asset = basic.assert;
 		imageurl = [[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString];
-     str=[self checkTheCaption:imageurl];
+		str = [self checkTheCaption:imageurl];
 	}
 	else {
 		NSDictionary * dict = _assetData[imageView.tag];
 		OWTImageInfo * dd = dict[@"imageInfo"];
-      str=[self checkTheCaption:dd.url];
+		str = [self checkTheCaption:dd.url];
 		imageurl = dd.url;
 	}
 	NSArray * arr = [str componentsSeparatedByString:@" "];
@@ -821,8 +820,12 @@
 	NSMutableArray * arr1 = [[NSMutableArray alloc]initWithArray:arr];
 	[arr1 removeObjectAtIndex:sender.tag - 900];
 	NSString * caption = [arr1 componentsJoinedByString:@" "];
-    [self updataCaption:caption withImage:imageurl];
-	[self updateCaptionView:imageView withPage:imageView.tag with:YES];
+	
+	__weak __typeof(self) weakSelf = self;
+	
+	[self updataCaption:caption withImage:imageurl finished:^{
+		[weakSelf updateCaptionView:imageView withPage:imageView.tag with:YES];
+	}];
 }
 
 - (void)insertCaption:(UIButton *)sender
@@ -838,12 +841,12 @@
 		//            AGIPCGridItem *gridItem=assertArray[page];
 		ALAsset * asset = basic.assert;
 		NSString * imageurl = [[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString];
-      str=[self checkTheCaption:imageurl];
+		str = [self checkTheCaption:imageurl];
 	}
 	else {
 		NSDictionary * dict = _assetData[imageview.tag];
 		OWTImageInfo * dd = dict[@"imageInfo"];
-      str=[self checkTheCaption:dd.url];
+		str = [self checkTheCaption:dd.url];
 	}
 	
 	NSArray * arr = [str componentsSeparatedByString:@" "];
@@ -866,13 +869,12 @@
 		//            AGIPCGridItem *gridItem=assertArray[page];
 		ALAsset * asset = basic.assert;
 		NSString * imageurl = [[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString];
-       str= [self checkTheCaption:imageurl];
+		str = [self checkTheCaption:imageurl];
 	}
 	else {
 		NSDictionary * dict = _assetData[page];
 		OWTImageInfo * dd = dict[@"imageInfo"];
-       str= [self checkTheCaption:dd.url];
-
+		str = [self checkTheCaption:dd.url];
 	}
 	
 	for (UIView * view in imageView.subviews)
@@ -990,7 +992,6 @@
 	else
 	
 		[self updateCaptionView:imageView withPage:imageView.tag with:NO];
-		
 }
 
 - (void)update:(UIButton *)sender
@@ -1042,50 +1043,53 @@
 	shareToSnsNames:[NSArray arrayWithObjects:UMShareToWechatSession, UMShareToWechatTimeline, UMShareToSina, UMShareToWechatFavorite, UMShareToQzone, UMShareToQQ, UMShareToSms, nil]
 	delegate:nil];
 }
+
 #pragma mark -coreDataMothed
--(void)updataCaption:(NSString *)caption withImage:(NSString *)imageurl
+- (void)updataCaption:(NSString *)caption
+	withImage:(NSString *)imageurl
+	finished:(void (^)(void))finished
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
-        __weak QJDatabaseManager *wmanager=manager;
-        dispatch_semaphore_t sem=dispatch_semaphore_create(0);
-        [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
-            QJImageCaption *model= [wmanager getImageCaptionByUrl:imageurl context:concurrencyContext];
-            model.caption=caption;
-        } finished:^(NSManagedObjectContext * _Nonnull mainContext) {
-            dispatch_semaphore_signal(sem);
-        }];
-        
-        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-        
-    });
-
+	QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
+	__weak QJDatabaseManager * wmanager = manager;
+	
+	[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
+		QJImageCaption * model = [wmanager getImageCaptionByUrl:imageurl
+		context:concurrencyContext];
+		model.caption = caption;
+	} finished:^(NSManagedObjectContext * mainContext) {
+		if (finished)
+			finished();
+	}];
 }
--(NSString *)checkTheCaption:(NSString *)imageurl
+
+- (NSString *)checkTheCaption:(NSString *)imageurl
 {
-    [_dictData removeAllObjects];
-
-    QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
-  QJImageCaption *model=[manager getImageCaptionByUrl:imageurl context:manager.managedObjectContext];
-    return model.caption;
+	[_dictData removeAllObjects];
+	
+	QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
+	QJImageCaption * model = [manager getImageCaptionByUrl:imageurl context:nil];
+	return model.caption;
 }
--(void)insertCaptionToCoredata:(NSString*)imageurl caption:(NSString *)caption isself:(NSString *)isself
+
+- (void)insertCaptionToCoredata:(NSString *)imageurl
+	caption:(NSString *)caption
+	isSelf:(NSString *)isSelf
+	finished:(void (^)(void))finished
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        QJDatabaseManager *manager=[QJDatabaseManager sharedManager];
-        __weak QJDatabaseManager *wmanager=manager;
-        dispatch_semaphore_t sem=dispatch_semaphore_create(0);
-        [manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
-            [wmanager setImageCaptionByImageUrl:imageurl caption:caption isSelfInsert:isself.boolValue context:concurrencyContext];
-        } finished:^(NSManagedObjectContext * _Nonnull mainContext) {
-            dispatch_semaphore_signal(sem);
-        }];
-        
-        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-        
-    });
-
+	QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
+	__weak QJDatabaseManager * wmanager = manager;
+	
+	[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
+		[wmanager setImageCaptionByImageUrl:imageurl
+		caption:caption
+		isSelfInsert:isSelf.boolValue
+		context:concurrencyContext];
+	} finished:^(NSManagedObjectContext * mainContext) {
+		if (finished)
+			finished();
+	}];
 }
+
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -1110,7 +1114,6 @@
 	
 	if ((index >= [_imageSource numberOfImages]) || (index < 0))
 		return;
-		
 		
 	[self moveToImageAtIndex:index animated:YES];
 }

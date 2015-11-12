@@ -529,33 +529,23 @@
 
 - (void)getCaptionsResouce
 {
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
-		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-		__weak QJDatabaseManager * wmanager = manager;
-		[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * concurrencyContext) {
-			NSArray * arr1 = [wmanager getAllAdviseCaptions:concurrencyContext];
-			NSMutableArray * arr2 = [[NSMutableArray alloc]initWithArray:arr1];
-			
-			if (arr2.count > 10)
-				for (NSInteger i = 0; i < 10; i++) {
-					NSInteger y = arc4random() % arr2.count;
-					QJAdviseCaption * model = arr2[y];
-					NSDictionary * dict = @{@"imageurl":model.imageUrl, @"caption":model.caption};
-					[_captionsResouce addObject:dict];
-					[arr2 removeObjectAtIndex:y];
-				}
-				
-			else
-				for (QJAdviseCaption * model in arr2) {
-					NSDictionary * dict = @{@"imageurl":model.imageUrl, @"caption":model.caption};
-					[_captionsResouce addObject:dict];
-				}
-		} finished:^(NSManagedObjectContext * mainContext) {
-			dispatch_semaphore_signal(sem);
-		}];
-		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-	});
+    NSArray * arr1 = [[QJDatabaseManager sharedManager] getAllAdviseCaptions:nil];
+    NSMutableArray * arr2 = [[NSMutableArray alloc] initWithArray:arr1];
+    
+    if (arr2.count > 10)
+        for (NSInteger i = 0; i < 10; i++) {
+            NSInteger y = arc4random() % arr2.count;
+            QJAdviseCaption * model = arr2[y];
+            NSDictionary * dict = @{@"imageurl":model.imageUrl, @"caption":model.caption};
+            [_captionsResouce addObject:dict];
+            [arr2 removeObjectAtIndex:y];
+        }
+    
+    else
+        for (QJAdviseCaption * model in arr2) {
+            NSDictionary * dict = @{@"imageurl":model.imageUrl, @"caption":model.caption};
+            [_captionsResouce addObject:dict];
+        }
 }
 
 - (void)changeSearchBarBackcolor:(UISearchBar *)mySearchBar
@@ -854,103 +844,86 @@
 	[_assert removeAllObjects];
 	[dataSource removeAllObjects];
 	
-	NSMutableArray * imageUrls = [[NSMutableArray alloc]init];
-	
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
-		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-		__weak QJDatabaseManager * wmanager = manager;
-		[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * concurrencyContext) {
-			BOOL ret = NO;
-			
-			for (NSString * str in someCaptions)
-				if (![str isEqualToString:@""])
-					ret = YES;
-					
-			NSArray * someCaptionModel;
-			
-			if (ret == YES)
-				someCaptionModel = [wmanager getImageCaptions:concurrencyContext captions:someCaptions];
-				
-			for (QJImageCaption * model in someCaptionModel)
-				[imageUrls addObject:model.imageUrl];
-				
-			__block NSUInteger number = imageUrls.count;
-			
-			for (NSString * imageurl in imageUrls) {
-				[_assetsLibrary assetForURL:[NSURL URLWithString:imageurl] resultBlock:^(ALAsset * asset) {
-					if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
-						OWTImageInfo * imageInfo = [[OWTImageInfo alloc] init];
-						imageInfo.url = [[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString];
-						imageInfo.primaryColorHex = @"DDDDDD";
-						imageInfo.width = 64;
-						imageInfo.height = 64;
-						NSDictionary * dic = @{@"image":[UIImage imageWithCGImage:asset.thumbnail], @"selected":@"NO", @"imageInfo":imageInfo};
-						
-						[dataSource addObject:dic];
-						[_assert addObject:asset];
-						
-						if (dataSource.count == number) {
-							_assert = (NSMutableArray *)[[_assert reverseObjectEnumerator]allObjects];
-							//                        dataSource=(NSMutableArray *)[[dataSource reverseObjectEnumerator]allObjects];
-							dispatch_async(dispatch_get_main_queue(), ^{
-								[_maintableview reloadData];
-							});
-						}
-					}
-					else {
-						number = number - 1;
-					}
-				} failureBlock:^(NSError * error) {
-					number = number - 1;
-				}];
-			}
-			
-			dispatch_async(dispatch_get_main_queue(), ^{
-				isSearching = NO;
-				
-				if (ret == NO) {
-					[dataSource addObjectsFromArray:_allPhotos];
-					_assert = (NSMutableArray *)[[_allAsserts reverseObjectEnumerator]allObjects];
-				}
-				_searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 44.0)];
-				_searchBar.delegate = self;
-				_searchBar.placeholder = @"搜索";
-				_searchBar.translucent = YES;
-				[self changeSearchBarBackcolor:_searchBar];
-				[_maintableview setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-				float x = 16;
-				NSInteger i = 0;
-				
-				for (NSString * cap in someCaptions) {
-					if (cap.length > 0) {
-						CGSize size = [cap sizeWithFont:[UIFont systemFontOfSize:15]];
-						
-						if (x + size.width + 50 > SCREENWIT)
-							break;
-						UITextField * txfSearchField = [_searchBar valueForKey:@"_searchField"];
-						[txfSearchField setLeftViewMode:UITextFieldViewModeNever];
-						_searchBar.placeholder = nil;
-						UIButton * button = [LJUIController createButtonWithFrame:CGRectMake(x, 13, size.width + 25, size.height) imageName:@"1_03.png" title:cap target:nil action:nil];
-						button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-						UIButton * deleteButton = [LJUIController createButtonWithFrame:CGRectMake(x + size.width + 10, 14, 15, 15) imageName:@"未标题-1_10.png" title:nil target:self action:@selector(deleteCaption:)];
-						deleteButton.tag = 1000 + i;
-						button.tag = 1000 + i;
-						[_searchBar addSubview:button];
-						[_searchBar addSubview:deleteButton];
-						x += (30 + size.width);
-					}
-					i++;
-				}
-				
-				if (imageUrls.count == 0)
-					[_maintableview reloadData];
-			});
-		} finished:^(NSManagedObjectContext * mainContext) {
-			dispatch_semaphore_signal(sem);
-		}];
-		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-	});
+    __block BOOL ret = NO;
+	__block NSMutableArray * imageUrls = [[NSMutableArray alloc] init];
+    for (NSString * str in someCaptions)
+        if (![str isEqualToString:@""])
+            ret = YES;
+    
+    NSArray * someCaptionModel;
+    
+    if (ret == YES)
+        someCaptionModel = [[QJDatabaseManager sharedManager] getImageCaptions:nil captions:someCaptions];
+    
+    for (QJImageCaption * model in someCaptionModel)
+        [imageUrls addObject:model.imageUrl];
+    __block NSUInteger number = imageUrls.count;
+    
+    for (NSString * imageurl in imageUrls) {
+        [_assetsLibrary assetForURL:[NSURL URLWithString:imageurl] resultBlock:^(ALAsset * asset) {
+            if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
+                OWTImageInfo * imageInfo = [[OWTImageInfo alloc] init];
+                imageInfo.url = [[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString];
+                imageInfo.primaryColorHex = @"DDDDDD";
+                imageInfo.width = 64;
+                imageInfo.height = 64;
+                NSDictionary * dic = @{@"image":[UIImage imageWithCGImage:asset.thumbnail], @"selected":@"NO", @"imageInfo":imageInfo};
+                
+                [dataSource addObject:dic];
+                [_assert addObject:asset];
+                
+                if (dataSource.count == number) {
+                    _assert = (NSMutableArray *)[[_assert reverseObjectEnumerator] allObjects];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [_maintableview reloadData];
+                    });
+                }
+            }
+            else {
+                number = number - 1;
+            }
+        } failureBlock:^(NSError * error) {
+            number = number - 1;
+        }];
+    }
+    isSearching = NO;
+    
+    if (ret == NO) {
+        [dataSource addObjectsFromArray:_allPhotos];
+        _assert = (NSMutableArray *)[[_allAsserts reverseObjectEnumerator]allObjects];
+    }
+    _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 44.0)];
+    _searchBar.delegate = self;
+    _searchBar.placeholder = @"搜索";
+    _searchBar.translucent = YES;
+    [self changeSearchBarBackcolor:_searchBar];
+    [_maintableview setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    float x = 16;
+    NSInteger i = 0;
+    
+    for (NSString * cap in someCaptions) {
+        if (cap.length > 0) {
+            CGSize size = [cap sizeWithFont:[UIFont systemFontOfSize:15]];
+            
+            if (x + size.width + 50 > SCREENWIT)
+                break;
+            UITextField * txfSearchField = [_searchBar valueForKey:@"_searchField"];
+            [txfSearchField setLeftViewMode:UITextFieldViewModeNever];
+            _searchBar.placeholder = nil;
+            UIButton * button = [LJUIController createButtonWithFrame:CGRectMake(x, 13, size.width + 25, size.height) imageName:@"1_03.png" title:cap target:nil action:nil];
+            button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+            UIButton * deleteButton = [LJUIController createButtonWithFrame:CGRectMake(x + size.width + 10, 14, 15, 15) imageName:@"未标题-1_10.png" title:nil target:self action:@selector(deleteCaption:)];
+            deleteButton.tag = 1000 + i;
+            button.tag = 1000 + i;
+            [_searchBar addSubview:button];
+            [_searchBar addSubview:deleteButton];
+            x += (30 + size.width);
+        }
+        i++;
+    }
+    
+    if (imageUrls.count == 0)
+        [_maintableview reloadData];
 }
 
 - (void)deleteCaption:(UIButton *)sender
