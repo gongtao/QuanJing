@@ -8,6 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol QJWebViewResourceLoadDelegate;
+
+NS_ASSUME_NONNULL_BEGIN
+
 @interface QJWebView : UIWebView
 
+@property (nullable, nonatomic, weak) id <QJWebViewResourceLoadDelegate> resourceLoadDelegate;
+
 @end
+
+@protocol QJWebViewResourceLoadDelegate <NSObject>
+
+- (void)webView:(QJWebView *)webView didLoadResourceCount:(NSUInteger)currentCount totalCount:(NSUInteger)totalCount;
+
+@end
+
+NS_ASSUME_NONNULL_END

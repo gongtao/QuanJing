@@ -19,18 +19,20 @@
 #import "OWTTabBarHider.h"
 #import "QuanJingSDK.h"
 #import <NBUAdditions.h>
+#import "QJWebView.h"
+#import "QJWebProgressView.h"
 
-@interface WLJWebViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, UIWebViewDelegate>{
+@interface WLJWebViewController () <QJWebViewResourceLoadDelegate, UIGestureRecognizerDelegate, UIScrollViewDelegate, UIWebViewDelegate>{
 	NSString * _articleTitle;
 	TFHpple * _xpathParser;
 	DealErrorPageViewController * _vc;
 	CGRect _viewRect;
 	BOOL _ifCustom;
 	
-	UIActivityIndicatorView * _activityIndicator;
+	QJWebProgressView * _progressView;
 }
 
-@property (nonatomic, strong) UIWebView * webView;
+@property (nonatomic, strong) QJWebView * webView;
 @property (nonatomic, strong) UIScrollView * imgScrollView;
 
 @end
@@ -80,9 +82,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated
-{
-	[SVProgressHUD dismiss];
-}
+{}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -104,8 +104,8 @@
 		error:&error];
 		
 		if (error)
-            return;
-		
+			return;
+			
 		NSLog(@"%@", htmlString);
 		
 		NSData * htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
@@ -115,18 +115,28 @@
 		// 网络异常的时候，处理指针异常
 		if (elements.count < 1)
 			return;
-		
+			
 		TFHppleElement * element = [elements objectAtIndex:0];
 		NSString * title = [element content];
 		_articleTitle = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		NSLog(@"result = %@", _articleTitle);
 	});
-    
-	self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, _ifCustom ? 10 : 0, self.view.bounds.size.width, _ifCustom ? self.view.bounds.size.height : self.view.bounds.size.height - 42.0 - 64.0)];
-    NSLog(@"height:%f", self.view.bounds.size.height);
+	
+	self.webView = [[QJWebView alloc] initWithFrame:CGRectMake(0, _ifCustom ? 10 : 0, self.view.bounds.size.width, _ifCustom ? self.view.bounds.size.height : self.view.bounds.size.height - 42.0 - 64.0)];
+	NSLog(@"height:%f", self.view.bounds.size.height);
 	_webView.delegate = self;
+	_webView.resourceLoadDelegate = self;
 	[self.view addSubview:self.webView];
 	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_urlString]]];
+	
+	_progressView = [[QJWebProgressView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 4.0)];
+	_progressView.progress = 0.0;
+	[self.view addSubview:_progressView];
+	
+	__weak QJWebProgressView * weakView = _progressView;
+	_progressView.finished = ^{
+		weakView.hidden = YES;
+	};
 	
 	UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
 	[button setBackgroundImage:[UIImage imageNamed:@"webShare2"]
@@ -200,8 +210,6 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-	[SVProgressHUD dismiss];
-	
 	NSString * js = @"\
     var elements = document.getElementsByTagName('img');\
     for (var i = 0; i < elements.length - 1; i++)\
@@ -220,13 +228,10 @@
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
-{
-    [SVProgressHUD showWithStatus:@"正在加载"];
-}
+{}
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    [SVProgressHUD showErrorWithStatus:@"加载失败"];
 	NSLog(@"didFailLoadWithError");
 }
 
@@ -249,6 +254,19 @@
 	}
 	
 	return YES;
+}
+
+#pragma mark - QJWebViewResourceLoadDelegate
+
+- (void)webView:(QJWebView *)webView didLoadResourceCount:(NSUInteger)currentCount totalCount:(NSUInteger)totalCount
+{
+	CGFloat p = 0.0;
+	
+	if (totalCount != 0)
+		p = (currentCount * 1.0) / totalCount;
+		
+	if (p > _progressView.progress)
+		[_progressView setProgress:p animated:YES];
 }
 
 @end
