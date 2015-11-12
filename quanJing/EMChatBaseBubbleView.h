@@ -45,7 +45,7 @@ extern NSString *const kRouterEventChatCellBubbleTapEventName;
 
 @property (nonatomic, strong) UIImageView *backImageView;
 @property (nonatomic, strong) THProgressView *progressView;
-
+@property (nonatomic, strong) UITableView *kTableView;
 - (void)bubbleViewPressed:(id)sender;
 
 + (CGFloat)heightForBubbleWithObject:(MessageModel *)object;

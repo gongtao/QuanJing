@@ -46,6 +46,7 @@
 #import "OWTPhotoUploadViewController.h"
 #import "QuanJingSDK.h"
 #import "MobClick.h"
+#import "OWTMainViewCon.h"
 #define IS_WIDESCREEN (fabs((double)[[UIScreen mainScreen] bounds].size.height - (double)568) < DBL_EPSILON)
 
 @interface LJFeedWithUserProfileViewCon () <UITableViewDelegate, UITableViewDataSource, XHRefreshControlDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate>
@@ -151,11 +152,17 @@
 - (void)setNewPointStatus:(NSNotification *)notify
 {
 	NSNumber * number = (NSNumber *)notify.userInfo;
-	
-	if ([number boolValue])
+	OWTAppDelegate *_delegate = (OWTAppDelegate*)[UIApplication sharedApplication].delegate;
+    OWTMainViewCon *_mainViewcon = _delegate.mainViewCon;
+    if ([number boolValue]){
 		[_redPoint setHidden:NO];
-	else
+        [_mainViewcon.redPointView setHidden:NO];
+    }
+    
+    else{
 		[_redPoint setHidden:YES];
+        [_mainViewcon.redPointView setHidden:YES];
+    }
 		
 }
 

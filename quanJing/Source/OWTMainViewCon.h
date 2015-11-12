@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface OWTMainViewCon : UITabBarController <UITabBarControllerDelegate>
+@property (nonatomic, strong) UIImageView *redPointView;
 
 - (void)jumpToChatList;
 

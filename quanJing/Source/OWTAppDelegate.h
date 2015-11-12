@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "HXLoginStatus.h"
 #import "OQJNavCon.h"
-
+@class OWTMainViewCon;
 @interface OWTAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow * window;
@@ -38,6 +38,7 @@
 @property (strong, nonatomic, readonly) OWTRecommendationManager * recommendationManager;
 @property (strong, nonatomic, readonly) OWTRecommendationManager1 * recommendationManager1;
 @property (strong, nonatomic, readonly) OWTSearchManager * searchManager;
+@property (nonatomic, strong) OWTMainViewCon * mainViewCon;
 // 保存 环信是否正确的初始化和登录
 @property (strong, nonatomic) HXLoginStatus * hxStatus;
 @property (strong, nonatomic) OQJNavCon * hxChatNavCon;

@@ -14,17 +14,19 @@
 
 +(NSString*)getNickName:(NSString*)userId
 {
-    NSString *usrID = [userId substringFromIndex:2];
-    NSDictionary *rootDic =  [[NSUserDefaults standardUserDefaults]objectForKey:@"HxChatData"];
+//    NSString *usrID = [userId substringFromIndex:2];
+//    NSDictionary *rootDic =  [[NSUserDefaults standardUserDefaults]objectForKey:@"HxChatData"];
+//    
+//    if ([rootDic[usrID] isKindOfClass:[NSNull  class]]) {
+//        return @"";
+//    }
+//    if ([[rootDic[usrID] objectForKey:@"nickName"]isKindOfClass:[NSNull class]])
+//    {
+//        return @"";
+//    }
+//    return [rootDic[usrID] objectForKey:@"nickName"];
     
-    if ([rootDic[usrID] isKindOfClass:[NSNull  class]]) {
-        return @"";
-    }
-    if ([[rootDic[usrID] objectForKey:@"nickName"]isKindOfClass:[NSNull class]])
-    {
-        return @"";
-    }
-    return [rootDic[usrID] objectForKey:@"nickName"];
+    return @"";
 }
 
 +(UIImage*)getProfileImage:(NSString*)userId

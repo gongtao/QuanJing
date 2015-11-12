@@ -92,9 +92,9 @@ NSString *const kShouldResendCell = @"kShouldResendCell";
     [super setMessageModel:model];
     
     if (model.isChatGroup) {
-        NSString *userId = [model.username substringFromIndex:2];
-        [HxNickNameImageModel askProfileNickNamebyUserIds:[NSArray arrayWithObject:userId]];
-        _nameLabel.text =  [HxNickNameImageModel getNickName:model.username];
+//        NSString *userId = [model.username substringFromIndex:2];
+//        [HxNickNameImageModel askProfileNickNamebyUserIds:[NSArray arrayWithObject:userId]];
+//        _nameLabel.text =  [HxNickNameImageModel getNickName:model.username];
         
         
         _nameLabel.hidden = model.isSender;
@@ -148,6 +148,7 @@ NSString *const kShouldResendCell = @"kShouldResendCell";
     }
     
     _bubbleView = [self bubbleViewForMessageModel:messageModel];
+    _bubbleView.kTableView = _mTableView;
     [self.contentView addSubview:_bubbleView];
 }
 

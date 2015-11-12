@@ -144,7 +144,7 @@
     }
     
     if(!_senderImage){
-        _senderImage = [UIImage imageNamed:@"chatListCellHead"];
+       // _senderImage = [UIImage imageNamed:@"chatListCellHead"];
     }
     
     //通过会话管理者获取已收发消息
@@ -420,6 +420,7 @@
                 cell.backgroundColor = [UIColor clearColor];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
+            cell.mTableView = _tableView;
             NSString *adaptURLCurrent = [QJInterfaceManager thumbnailUrlFromImageUrl:_currentUser.avatar size:CGSizeMake(50, 50)];
             
             NSString *adaptURLOther = [QJInterfaceManager thumbnailUrlFromImageUrl:_otherUser.avatar size:CGSizeMake(50, 50)];

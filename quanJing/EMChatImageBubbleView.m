@@ -82,7 +82,22 @@ NSString *const kRouterEventImageBubbleTapEventName = @"kRouterEventImageBubbleT
             image = [UIImage imageNamed:@"imageDownloadFail.png"];
         }
     }
-    self.imageView.image = image;
+    if (model.isSender) {
+        self.imageView.image = image;
+    }
+    else{
+//        [self.imageView sd_setImageWithURL:model.imageRemoteURL placeholderImage: _model.thumbnailImage];
+        [self.imageView sd_setImageWithURL:model.imageRemoteURL placeholderImage: _model.thumbnailImage completed:^(UIImage *image, NSError *error, EMSDImageCacheType cacheType, NSURL *imageURL){
+            if (error == nil) {
+                NSLog(@"kengdiehuo2");
+                self.imageView.image  = nil;
+                [self.imageView setImage:image];
+            }
+        }];
+
+    }
+    
+   
 }
 
 #pragma mark - public

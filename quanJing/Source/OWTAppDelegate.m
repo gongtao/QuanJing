@@ -43,8 +43,6 @@
 #import "QuanJingSDK.h"
 @interface OWTAppDelegate ()
 
-@property (nonatomic, strong) OWTMainViewCon * mainViewCon;
-
 @end
 
 @implementation OWTAppDelegate

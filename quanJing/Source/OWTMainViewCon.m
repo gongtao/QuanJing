@@ -69,7 +69,6 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 @property (nonatomic, strong) ChatListViewController * chatListVC;
 
 @property (nonatomic, strong) UIViewController * lastViewConBeforeCapture;
-
 @end
 
 @implementation OWTMainViewCon
@@ -156,10 +155,17 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 		button.tag = 500 + i;
 		[_tabBarImageView addSubview:button];
 	}
-	
+    _redPointView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"repoint"]];
+    _redPointView.frame = CGRectMake(2 * point + point / 2+6, 10, 8, 8);
+    [_redPointView setHidden:YES];
+    NSUserDefaults * userDafault = [NSUserDefaults standardUserDefaults];
+    NSNumber * num = [userDafault objectForKey:@"boxNewStatus"];
+    if ([num boolValue])
+    [_redPointView setHidden:NO];
 	UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 0.2)];
 	label.backgroundColor = [UIColor blackColor];
 	[_tabBarImageView addSubview:label];
+    [label addSubview:_redPointView];
 }
 
 - (void)selectTap:(NSInteger)number
