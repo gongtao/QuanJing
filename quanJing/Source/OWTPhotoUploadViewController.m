@@ -237,21 +237,20 @@
 }
 
 #pragma mark -coredata
-- (void)updataCaption:(NSString *)caption withImage:(NSString *)imageurl
+- (void)updataCaption:(NSString *)caption
+	withImage:(NSString *)imageurl
+	finished:(void (^)(void))finished
 {
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
-		__weak QJDatabaseManager * wmanager = manager;
-		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-		[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
-			QJImageCaption * model = [wmanager getImageCaptionByUrl:imageurl context:concurrencyContext];
-			model.caption = caption;
-		} finished:^(NSManagedObjectContext * _Nonnull mainContext) {
-			dispatch_semaphore_signal(sem);
-		}];
-		
-		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-	});
+	QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
+	__weak QJDatabaseManager * wmanager = manager;
+	
+	[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
+		QJImageCaption * model = [wmanager getImageCaptionByUrl:imageurl context:concurrencyContext];
+		model.caption = caption;
+	} finished:^(NSManagedObjectContext * _Nonnull mainContext) {
+		if (finished)
+			finished();
+	}];
 }
 
 - (NSString *)checkTheCaption:(NSString *)imageurl
@@ -262,20 +261,23 @@
 	return model.caption;
 }
 
-- (void)insertCaptionToCoredata:(NSString *)imageurl caption:(NSString *)caption isself:(NSString *)isself
+- (void)insertCaptionToCoredata:(NSString *)imageurl
+	caption:(NSString *)caption
+	isSelf:(NSString *)isSelf
+	finished:(void (^)(void))finished
 {
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
-		__weak QJDatabaseManager * wmanager = manager;
-		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-		[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
-			[wmanager setImageCaptionByImageUrl:imageurl caption:caption isSelfInsert:isself.boolValue context:concurrencyContext];
-		} finished:^(NSManagedObjectContext * _Nonnull mainContext) {
-			dispatch_semaphore_signal(sem);
-		}];
-		
-		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-	});
+	QJDatabaseManager * manager = [QJDatabaseManager sharedManager];
+	__weak QJDatabaseManager * wmanager = manager;
+	
+	[manager performDatabaseUpdateBlock:^(NSManagedObjectContext * _Nonnull concurrencyContext) {
+		[wmanager setImageCaptionByImageUrl:imageurl
+		caption:caption
+		isSelfInsert:isSelf.boolValue
+		context:concurrencyContext];
+	} finished:^(NSManagedObjectContext * _Nonnull mainContext) {
+		if (finished)
+			finished();
+	}];
 }
 
 #pragma mark - Info
@@ -991,7 +993,13 @@
 	
 	if (_imageInfos && (_imageInfos.count > 0) && !self.isCameraImages) {
 		OWTImageInfo * imageInfo = _imageInfos[0];
-		[self updataCaption:_caption withImage:imageInfo.url];
+		[self updataCaption:_caption
+		withImage:imageInfo.url
+		finished:^{
+			[self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]]
+			withRowAnimation:UITableViewRowAnimationNone];
+		}];
+		return;
 	}
 	[self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]]
 	withRowAnimation:UITableViewRowAnimationNone];
