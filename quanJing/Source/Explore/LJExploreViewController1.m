@@ -194,12 +194,10 @@ static const int kDefaultLoadItemNum1 = 10;
 		if (view.tag == 200 + _pageCount)
 			currentTableView = (UITableView *)view;
 }
-
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
 }
-
 - (void)setupRefreshWithTableView:(UITableView *)tableView;
 {
 	self.title = @"发现";
@@ -266,10 +264,11 @@ static const int kDefaultLoadItemNum1 = 10;
 		}
 	}
 }
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{}
+{
 
+
+}
 #pragma mark clickAndTap
 - (void)naviClick:(UIButton *)sender
 {
@@ -371,79 +370,6 @@ static const int kDefaultLoadItemNum1 = 10;
 				[currentTableView footerEndRefreshing];
 			});
 		}];
-	});
-}
-
-- (void)reloadData3
-{
-	NSString * page = pages[_pageCount];
-	NSInteger page1 = page.intValue;
-	
-	page1++;
-	[pages replaceObjectAtIndex:_pageCount withObject:[NSString stringWithFormat:@"%ld", (long)page1]];
-	NSString * str;
-	NSInteger i;
-	i = _pageCount;
-	
-	if (_pageCount == 0) {
-		i = 10;
-		str = [NSString stringWithFormat:@"http://api.tiankong.com/qjapi/cdn1/articleFound?count=%ld&page=%ld", (long)i, (long)page1];
-	}
-	else {
-		if (_pageCount >= 3)
-			i = _pageCount + 1;
-		str = [NSString stringWithFormat:@"http://api.tiankong.com/qjapi/cdn1/article?count=10&&type=%ld&page=%ld", (long)i, (long)page1];
-	}
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-		NSURL * url = [NSURL URLWithString:str];
-		
-		// 利用三方解析json数据
-		
-		NSURLRequest * request = [NSURLRequest requestWithURL:url];
-		NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-		
-		// NSJSONSerialization解析
-		if (response != nil) {
-			NSDictionary * dic0 = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:nil];
-			
-			NSLog(@"dic0 =%@", dic0);
-			
-			if (response != nil) {
-				NSArray * appList = dic0[@"article"];
-				
-				for (NSDictionary * appdict in appList) {
-					OWTexploreModel * model = [[OWTexploreModel alloc]init];
-					
-					for (NSString * key in appdict) {
-						if ([appdict[key] isKindOfClass:[NSNull class]])
-							// do something
-							[model setValue:@"" forKey:key];
-						else
-							// do something
-							[model setValue:appdict[key] forKey:key];
-					}
-					
-					if (_pageCount == 0)
-						[_categories addObject:model];
-					else if (_pageCount == 1)
-						[_categories1 addObject:model];
-					else if (_pageCount == 2)
-						[_categories2 addObject:model];
-					else if (_pageCount == 3)
-						[_categories3 addObject:model];
-					else if (_pageCount == 4)
-						[_categories4 addObject:model];
-					else
-						[_categories5 addObject:model];
-				}
-			}
-			
-			[currentTableView reloadData];
-		}
-		//    else {
-		//        [SVProgressHUD showWithStatus:@"没有了" ];
-		//    }
-		[currentTableView footerEndRefreshing];
 	});
 }
 

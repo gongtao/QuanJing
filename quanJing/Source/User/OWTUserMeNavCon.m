@@ -169,6 +169,9 @@
                     NSURL *url=[NSURL URLWithString:str];
                     NSURLRequest *request=[NSURLRequest requestWithURL:url];
                     NSData *recievie=[NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+                    if (recievie==nil) {
+                        return ;
+                    }
                     NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:recievie options:NSJSONReadingMutableContainers error:nil];
                     NSArray *arr=dict[@"Words"];
                     for (NSDictionary *dict1 in arr) {
