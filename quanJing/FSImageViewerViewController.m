@@ -358,12 +358,7 @@
 	[self moveToImageAtIndex:pageIndex animated:NO];
 	[self setBarsHidden:YES animated:NO];
 	
-	if (!_isLocal) {
-		[SVProgressHUD show];
-		usleep(1000000);
-		[SVProgressHUD dismiss];
 	}
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -527,7 +522,7 @@
 		
 		[self loadScrollViewWithPage:index];
 		
-		[self.scrollView scrollRectToVisible:((FSImageView *)[_imageViews objectAtIndex:(NSUInteger)index]).frame animated:animated];
+		[self.scrollView scrollRectToVisible:((FSImageView *)[_imageViews objectAtIndex:(NSUInteger)index]).frame animated:NO];
 		
 		if (_imageSource[pageIndex].failed)
 			[self setBarsHidden:YES animated:NO];
@@ -562,9 +557,10 @@
 			CGRect newFrame = CGRectMake(originX, 0.0f, _scrollView.bounds.size.width, _scrollView.bounds.size.height);
 			
 			if (!CGRectEqualToRect(imageView.frame, newFrame))
-				[UIView animateWithDuration:0.1 animations:^{
-					imageView.frame = newFrame;
-				}];
+                imageView.frame = newFrame;
+//				[UIView animateWithDuration:0 animations:^{
+//					imageView.frame = newFrame;
+//				}];
 		}
 }
 
