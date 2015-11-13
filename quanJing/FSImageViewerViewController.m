@@ -544,11 +544,11 @@
 		if ((page >= 0) && (page < [_imageSource numberOfImages])) {
 			CGFloat originX = _scrollView.bounds.size.width * page;
 			
-			if (page < index)
-				originX -= kFSImageViewerImageGap;
-				
-			if (page > index)
-				originX += kFSImageViewerImageGap;
+//			if (page < index)
+//				originX -= kFSImageViewerImageGap;
+//				
+//			if (page > index)
+//				originX += kFSImageViewerImageGap;
 				
 			if (([_imageViews objectAtIndex:(NSUInteger)page] == [NSNull null]) || !((UIView *)[_imageViews objectAtIndex:(NSUInteger)page]).superview)
 				[self loadScrollViewWithPage:page];
@@ -558,9 +558,6 @@
 			
 			if (!CGRectEqualToRect(imageView.frame, newFrame))
                 imageView.frame = newFrame;
-//				[UIView animateWithDuration:0 animations:^{
-//					imageView.frame = newFrame;
-//				}];
 		}
 }
 
@@ -1086,20 +1083,36 @@
 
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-	NSInteger index = [self centerImageIndex];
-	
-	if ((index >= [_imageSource numberOfImages]) || (index < 0))
-		return;
-		
-	if ((pageIndex != index) && !rotating) {
-		pageIndex = index;
-		[self setViewState];
-		
-		if (![scrollView isTracking])
-			[self layoutScrollViewSubviews];
-	}
+    if (!decelerate) {
+        NSInteger index = [self centerImageIndex];
+        
+        if ((index >= [_imageSource numberOfImages]) || (index < 0))
+            return;
+        
+        if ((pageIndex != index) && !rotating) {
+            pageIndex = index;
+            [self setViewState];
+            
+            [self layoutScrollViewSubviews];
+        }
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    NSInteger index = [self centerImageIndex];
+    
+    if ((index >= [_imageSource numberOfImages]) || (index < 0))
+        return;
+    
+    if ((pageIndex != index) && !rotating) {
+        pageIndex = index;
+        [self setViewState];
+        
+        [self layoutScrollViewSubviews];
+    }
 }
 
 @end
