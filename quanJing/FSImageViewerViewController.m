@@ -657,12 +657,10 @@
 	if (ifAssert) {
 		FSBasicImage * basic = _imageSource[page];
 		UIImage * image = [UIImage imageWithCGImage:basic.assert.defaultRepresentation.fullScreenImage];
-		NSLog(@"%@", image);
 		imageView.image = [[FSBasicImage alloc]initWithImage:image];
 	}
 	else {
 		imageView.image = _imageSource[page];
-		NSLog(@"%@", _imageSource[page]);
 	}
 	
 	imageView.label.text = [NSString stringWithFormat:@"%li of %li", page + 1, [_imageSource numberOfImages]];

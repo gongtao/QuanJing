@@ -714,7 +714,7 @@
 			i++;
 		}
 		
-		_scrollView.contentSize = CGSizeMake((c + 5) * i - 5, c);
+		_scrollView.contentSize = CGSizeMake((c + 7.5) * i-5 , c);
 		cellHeight += (c + 5);
 	}
 	_likeBtn.frame = CGRectMake(SCREENWIT - 170, cellHeight + 5, 45, 17.5);
@@ -980,14 +980,14 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
 {
 	CGFloat x = SCREENWIT - 10;
-	float c = x / 5;
+	float c = x / 4;
 	
 	if (scrollView == _bigImageScrollView) {
 		NSInteger imageNumber = scrollView.contentOffset.x / x;
 		_imageNum = imageNumber;
 		
-		if ((imageNumber > 4) && (isSmallImageTap == NO))
-			[_scrollView setContentOffset:CGPointMake(c * (imageNumber - 4), 0) animated:YES];
+		if ((imageNumber > 3) && (isSmallImageTap == NO))
+			[_scrollView setContentOffset:CGPointMake(c * (imageNumber - 3), 0) animated:YES];
 		isSmallImageTap = NO;
 		
 		for (UIView * view in self.contentView.subviews) {
