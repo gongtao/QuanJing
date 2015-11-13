@@ -314,12 +314,26 @@
 		else {
 			__weak __typeof(self) weakSelf = self;
 			
+			__weak UIImageView * weakImageView = self.imageView;
+			
+			self.imageView.alpha = 0.0;
 			[self.imageView setImageWithURL:_image.URL
 			completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {
-				if (!error)
+				if (!error) {
 					[weakSelf setupImageViewWithImage:image];
-				else
+					
+					if (cacheType == SDImageCacheTypeNone) {
+						[UIView animateWithDuration:0.3
+						animations:^{
+							weakImageView.alpha = 1.0;
+						}];
+						return;
+					}
+				}
+				else {
 					[weakSelf handleFailedImage];
+				}
+				weakImageView.alpha = 1.0;
 			}];
 		}
 	}
@@ -356,8 +370,6 @@
 	[activityView stopAnimating];
 	_imageView.image = aImage;
 	[self layoutScrollViewAnimated:NO];
-	
-	//    [[self layer] addAnimation:[self fadeAnimation] forKey:@"opacity"];
 	self.userInteractionEnabled = YES;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:kFSImageViewerDidFinishedLoadingNotificationKey object:@{
@@ -439,8 +451,6 @@
 	self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
 	self.scrollView.contentOffset = CGPointMake(0.0f, 0.0f);
 	self.imageView.frame = self.scrollView.bounds;
-	//    if (_islocal==YES) {
-	NSLog(@"ss%f", self.imageView.frame.origin.y);
 	
 	if (self.scrollView.frame.origin.y + self.imageView.frame.size.height > SCREENHEI - 95) {
 		CGRect frame = self.imageView.frame;
@@ -448,10 +458,7 @@
 		frame.size.height = SCREENHEI - 95 - _scrollView.frame.origin.y;
 		self.imageView.frame = frame;
 	}
-	//    }
 	
-	//    NSLog(@"%f  %f  %f   %f",self.imageView.frame.origin.x,self.imageView.frame.size.width,self.imageView.frame.origin.y,self.imageView.frame.size.height);
-	// NSLog(@"ss%f",self.imageView.frame.size.height+self.imageView.frame.origin.y);
 	if (animated)
 		[UIView commitAnimations];
 }
@@ -507,16 +514,12 @@
 	self.scrollView.frame = CGRectMake(leftOffset, topOffset, newWidth, newHeight);
 	self.imageView.frame = self.scrollView.bounds;
 	
-	// NSLog(@"dd%f",self.imageView.frame.size.height+self.imageView.frame.origin.y);
-	//    if (_islocal==YES) {
 	if (self.scrollView.frame.origin.y + self.imageView.frame.size.height > SCREENHEI - 95) {
 		CGRect frame = self.imageView.frame;
 		
 		frame.size.height = SCREENHEI - 95 - _scrollView.frame.origin.y;
 		self.imageView.frame = frame;
 	}
-	
-	//    }
 	[UIView commitAnimations];
 }
 
@@ -525,7 +528,7 @@
 	return [self.scrollView viewWithTag:ZOOM_VIEW_TAG];
 }
 
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
 {
 	if (scrollView.zoomScale > 1.0f) {
 		CGFloat height, width;
