@@ -1057,11 +1057,16 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 				[UMSocialData defaultData].extConfig.wechatTimelineData.url = urlStr;
 				[UMSocialData defaultData].extConfig.qqData.url = urlStr;
 				[UMSocialData defaultData].extConfig.qzoneData.url = urlStr;
-				[UMSocialData defaultData].extConfig.qqData.title = _imageAsset.captionCn;
-				[UMSocialData defaultData].extConfig.qzoneData.title = _imageAsset.captionCn;
-				[UMSocialData defaultData].extConfig.wechatSessionData.title = _imageAsset.captionCn;
-				[UMSocialData defaultData].extConfig.wechatTimelineData.title = _imageAsset.captionCn;
-				//                           [[UMSocialData defaultData].urlResource setResourceType:UMSocialUrlResourceTypeImage url:urlStr];
+                NSString *title;
+                if (_imageAsset.tag) {
+                    title=[NSString stringWithFormat:@"全景图片：%@",_imageAsset.tag];
+                }else {
+                    title=@"全景图片";
+                }
+				[UMSocialData defaultData].extConfig.qqData.title = title;
+				[UMSocialData defaultData].extConfig.qzoneData.title = title;
+				[UMSocialData defaultData].extConfig.wechatSessionData.title = title;
+				[UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
 				[UMSocialSnsService presentSnsIconSheetView:self
 				appKey:nil
 				shareText:nil
@@ -1078,6 +1083,16 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			[SVProgressHUD dismiss];
 			[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
 			[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeImage;
+            NSString *title;
+            if (_imageAsset.tag) {
+                title=[NSString stringWithFormat:@"全景图片：%@",_imageAsset.tag];
+            }else {
+                title=@"全景图片";
+            }
+            [UMSocialData defaultData].extConfig.qqData.title = title;
+            [UMSocialData defaultData].extConfig.qzoneData.title = title;
+            [UMSocialData defaultData].extConfig.wechatSessionData.title = title;
+            [UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
 			[UMSocialSnsService presentSnsIconSheetView:self
 			appKey:nil
 			shareText:nil

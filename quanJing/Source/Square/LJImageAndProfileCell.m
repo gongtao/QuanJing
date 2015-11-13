@@ -432,6 +432,16 @@
 		[SVProgressHUD dismiss];
 		[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
 		[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeImage;
+        NSString *title;
+        if (imageModel.tag) {
+            title=[NSString stringWithFormat:@"全景图片：%@",imageModel.tag];
+        }else {
+        title=@"全景图片";
+        }
+        [UMSocialData defaultData].extConfig.qqData.title = title;
+        [UMSocialData defaultData].extConfig.qzoneData.title = title;
+        [UMSocialData defaultData].extConfig.wechatSessionData.title = title;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
 		[UMSocialSnsService presentSnsIconSheetView:_viewContoller
 		appKey:nil
 		shareText:nil
