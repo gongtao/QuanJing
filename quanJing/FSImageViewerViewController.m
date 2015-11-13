@@ -150,7 +150,6 @@
 - (void)dealloc
 {
 	_scrollView.delegate = nil;
-	[[FSImageLoader sharedInstance] cancelAllRequests];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -356,9 +355,9 @@
 		
 	[self setupScrollViewContentSize];
 	[self moveToImageAtIndex:pageIndex animated:NO];
+	[self layoutScrollViewSubviews];
 	[self setBarsHidden:YES animated:NO];
-	
-	}
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -544,12 +543,6 @@
 		if ((page >= 0) && (page < [_imageSource numberOfImages])) {
 			CGFloat originX = _scrollView.bounds.size.width * page;
 			
-//			if (page < index)
-//				originX -= kFSImageViewerImageGap;
-//				
-//			if (page > index)
-//				originX += kFSImageViewerImageGap;
-				
 			if (([_imageViews objectAtIndex:(NSUInteger)page] == [NSNull null]) || !((UIView *)[_imageViews objectAtIndex:(NSUInteger)page]).superview)
 				[self loadScrollViewWithPage:page];
 				
@@ -557,7 +550,7 @@
 			CGRect newFrame = CGRectMake(originX, 0.0f, _scrollView.bounds.size.width, _scrollView.bounds.size.height);
 			
 			if (!CGRectEqualToRect(imageView.frame, newFrame))
-                imageView.frame = newFrame;
+				imageView.frame = newFrame;
 		}
 }
 
@@ -1083,36 +1076,51 @@
 
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (!decelerate) {
-        NSInteger index = [self centerImageIndex];
-        
-        if ((index >= [_imageSource numberOfImages]) || (index < 0))
-            return;
-        
-        if ((pageIndex != index) && !rotating) {
-            pageIndex = index;
-            [self setViewState];
-            
-            [self layoutScrollViewSubviews];
-        }
-    }
+	NSInteger index = [self centerImageIndex];
+	
+	if ((index >= [_imageSource numberOfImages]) || (index < 0))
+		return;
+		
+	if ((pageIndex != index) && !rotating) {
+		pageIndex = index;
+		[self setViewState];
+		
+		[self layoutScrollViewSubviews];
+	}
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    NSInteger index = [self centerImageIndex];
-    
-    if ((index >= [_imageSource numberOfImages]) || (index < 0))
-        return;
-    
-    if ((pageIndex != index) && !rotating) {
-        pageIndex = index;
-        [self setViewState];
-        
-        [self layoutScrollViewSubviews];
-    }
-}
+// - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+// {
+//    if (!decelerate) {
+//        NSInteger index = [self centerImageIndex];
+//
+//        if ((index >= [_imageSource numberOfImages]) || (index < 0))
+//            return;
+//
+//        if ((pageIndex != index) && !rotating) {
+//            pageIndex = index;
+//            [self setViewState];
+//
+//            [self layoutScrollViewSubviews];
+//        }
+//    }
+// }
+//
+// - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+// {
+//    NSInteger index = [self centerImageIndex];
+//
+//    if ((index >= [_imageSource numberOfImages]) || (index < 0))
+//        return;
+//
+//    if ((pageIndex != index) && !rotating) {
+//        pageIndex = index;
+//        [self setViewState];
+//
+//        [self layoutScrollViewSubviews];
+//    }
+// }
 
 @end
