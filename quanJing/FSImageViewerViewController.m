@@ -1104,19 +1104,4 @@
 	}
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-	NSInteger index = [self centerImageIndex];
-	
-	if ((index >= [_imageSource numberOfImages]) || (index < 0))
-		return;
-		
-	[self moveToImageAtIndex:index animated:YES];
-}
-
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
-{
-	[self layoutScrollViewSubviews];
-}
-
 @end
