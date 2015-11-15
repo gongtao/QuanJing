@@ -127,7 +127,10 @@
 	_webView.delegate = self;
 	_webView.resourceLoadDelegate = self;
 	[self.view addSubview:self.webView];
-	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_urlString]]];
+	
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlString]];
+	request.cachePolicy = NSURLRequestReturnCacheDataElseLoad;
+	[self.webView loadRequest:request];
 	
 	_progressView = [[QJWebProgressView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 4.0)];
 	_progressView.progress = 0.0;

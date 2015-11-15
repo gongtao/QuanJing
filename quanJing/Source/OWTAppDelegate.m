@@ -41,6 +41,7 @@
 #import <Crashlytics/Crashlytics.h>
 #import "QJDatabaseManager.h"
 #import "QuanJingSDK.h"
+#import "QJURLCache.h"
 @interface OWTAppDelegate ()
 
 @end
@@ -57,6 +58,10 @@
 #else
 		[QJBaseManager setKeyChainAccessGroup:@"T3BNK5WMQ7.com.quanjing.device.identifier"];
 #endif
+    
+    NSUInteger capacity = 100 * 1024 * 1024;
+    QJURLCache * cache = [[QJURLCache alloc] initWithMemoryCapacity:capacity diskCapacity:capacity diskPath:nil];
+    [NSURLCache setSharedURLCache:cache];
 
 	[Fabric with:@[[Crashlytics class]]];
 	[self setup];
