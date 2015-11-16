@@ -86,7 +86,6 @@ NSString *const kRouterEventImageBubbleTapEventName = @"kRouterEventImageBubbleT
         self.imageView.image = image;
     }
     else{
-//        [self.imageView sd_setImageWithURL:model.imageRemoteURL placeholderImage: _model.thumbnailImage];
         [self.imageView sd_setImageWithURL:model.imageRemoteURL placeholderImage: _model.thumbnailImage completed:^(UIImage *image, NSError *error, EMSDImageCacheType cacheType, NSURL *imageURL){
             if (error == nil) {
                 NSLog(@"kengdiehuo2");

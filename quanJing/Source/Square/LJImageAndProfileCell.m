@@ -718,8 +718,8 @@
 		cellHeight += (c + 5);
 	}
 	_likeBtn.frame = CGRectMake(SCREENWIT - 170, cellHeight + 5, 45, 17.5);
-	_shareBtn.frame = CGRectMake(SCREENWIT - 115, cellHeight + 5, 45, 17.5);
-	_commentBtn.frame = CGRectMake(SCREENWIT - 60, cellHeight + 5, 45, 17.5);
+	_shareBtn.frame = CGRectMake(SCREENWIT - 60, cellHeight + 5, 45, 17.5);
+	_commentBtn.frame = CGRectMake(SCREENWIT - 115, cellHeight + 5, 45, 17.5);
 	cellHeight += 37.5;
 	CGFloat likeHeight = 0;
 	CGFloat imageHeight = 20;
