@@ -115,18 +115,17 @@
 	_careBtn = [LJUIController createButtonWithFrame:CGRectMake(SCREENWIT - 50, 20, 40, 17.5) imageName:@"关注00" title:nil target:self action:@selector(careBtnClick:)];
 	_likeBtn = [LJUIController createButtonWithFrame:CGRectZero imageName:@"赞00" title:nil target:self action:@selector(likeBtnClick:)];
 	_downLoadBtn = [LJUIController createButtonWithFrame:CGRectZero imageName:@"圈子5_33.png" title:nil target:self action:@selector(downLoadBtnClick)];
-	_collectionBtn = [LJUIController createButtonWithFrame:CGRectZero imageName:@"圈子5_34.png" title:nil target:self action:@selector(collectionBtnClick)];
+	//	_collectionBtn = [LJUIController createButtonWithFrame:CGRectZero imageName:@"圈子5_34.png" title:nil target:self action:@selector(collectionBtnClick)];
 	_shareBtn = [LJUIController createButtonWithFrame:CGRectZero imageName:@"分享" title:nil target:self action:@selector(shareBtnClick)];
 	_commentBtn = [LJUIController createButtonWithFrame:CGRectZero imageName:@"评论" title:nil target:self action:@selector(commentBtnClick)];
 	[self.contentView addSubview:_commentBtn];
 	[self.contentView addSubview:_likeBtn];
 	[self.contentView addSubview:_downLoadBtn];
-	[self.contentView addSubview:_collectionBtn];
+	//	[self.contentView addSubview:_collectionBtn];
 	[self.contentView addSubview:_shareBtn];
 	[self.contentView addSubview:_careBtn];
 	_commentBackView = [LJUIController createImageViewWithFrame:CGRectZero imageName:nil];
-	UIImage * backImage = [UIImage imageNamed:@"聊天背景框"];
-	//    backImage=[backImage stretchableImageWithLeftCapWidth:0 topCapHeight:50];
+	UIImage * backImage = [UIImage imageNamed:@"聊天背景框.png"];
 	backImage = [backImage resizableImageWithCapInsets:UIEdgeInsetsMake(10, 50, 5, 50)];
 	_commentBackView.image = backImage;
 	[self.contentView addSubview:_commentBackView];
@@ -169,8 +168,8 @@
 	NSDictionary * dict = @{@"url":asset1.webURL};
 	[om postObject:nil path:@"report" parameters:dict success:^(RKObjectRequestOperation * operation, RKMappingResult * mappingResult) {
 		NSLog(@"dd");
-		NSDictionary * dict = mappingResult.dictionary;
-		OWTServerError * error = dict[@"error"];
+		//		NSDictionary * dict = mappingResult.dictionary;
+		//		OWTServerError * error = dict[@"error"];
 		[SVProgressHUD showSuccessWithStatus:@"举报成功"];
 	} failure:^(RKObjectRequestOperation * operation, NSError * error) {
 		NSLog(@"%@", error);
@@ -432,16 +431,16 @@
 		[SVProgressHUD dismiss];
 		[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
 		[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeImage;
-        NSString *title;
-        if (imageModel.tag) {
-            title=[NSString stringWithFormat:@"全景图片：%@",imageModel.tag];
-        }else {
-        title=@"全景图片";
-        }
-        [UMSocialData defaultData].extConfig.qqData.title = title;
-        [UMSocialData defaultData].extConfig.qzoneData.title = title;
-        [UMSocialData defaultData].extConfig.wechatSessionData.title = title;
-        [UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
+		NSString * title;
+		
+		if (imageModel.tag)
+			title = [NSString stringWithFormat:@"全景图片：%@", imageModel.tag];
+		else
+			title = @"全景图片";
+		[UMSocialData defaultData].extConfig.qqData.title = title;
+		[UMSocialData defaultData].extConfig.qzoneData.title = title;
+		[UMSocialData defaultData].extConfig.wechatSessionData.title = title;
+		[UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
 		[UMSocialSnsService presentSnsIconSheetView:_viewContoller
 		appKey:nil
 		shareText:nil
@@ -520,7 +519,7 @@
 	CGFloat cellHeight = 0;
 	// 头像部分
 	QJUser * user = actionModel.user;
-	[_headerImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_headerImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像"]];
+	[_headerImageView setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:_headerImageView.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像.png"]];
 	CGSize size = [user.nickName sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(300, 200)];
 	
 	if ([user.uid.stringValue isEqualToString:[QJPassport sharedPassport].currentUser.uid.stringValue]) {
@@ -557,14 +556,12 @@
 	
 	CGFloat x = SCREENWIT - 10;
 	CGFloat height;
-	CGFloat width;
-	UIImageView * ImageView;
+	UIImageView * ImageView = nil;
 	
 	if (_assets.count == 1) {
 		_bigImageScrollView.frame = CGRectZero;
 		_bigImageScrollView.hidden = YES;
-		ImageView = [[UIImageView alloc]initWithFrame:CGRectZero];
-		//        ImageView.contentMode=UIViewContentModeScaleAspectFit;
+		ImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 		QJImageObject * imageModel = _assets[0];
 		
 		if (imageModel.width && imageModel.height) {
@@ -635,7 +632,7 @@
 		NSInteger pa = 0;
 		
 		for (QJImageObject * imageModel in _assets) {
-			ImageView = [[UIImageView alloc]initWithFrame:CGRectMake(pa * x, 0, x, imageH)];
+			ImageView = [[UIImageView alloc] initWithFrame:CGRectMake(pa * x, 0, x, imageH)];
 			ImageView.clipsToBounds = YES;
 			ImageView.contentMode = UIViewContentModeScaleAspectFill;
 			ImageView.tag = 400 + pa;
@@ -682,7 +679,7 @@
 	
 	if (_assets.count > 1) {
 		for (QJImageObject * imageModel in _assets) {
-			UIImageView * imageView1 = [[UIImageView alloc]initWithFrame:CGRectMake((c + 7.5) * i, 0, c + 2, c + 2)];
+			UIImageView * imageView1 = [[UIImageView alloc] initWithFrame:CGRectMake((c + 7.5) * i, 0, c + 2, c + 2)];
 			
 			if (i == number)
 				imageView1.backgroundColor = [UIColor colorWithHexString:@"#4c5c8d"];
@@ -714,7 +711,7 @@
 			i++;
 		}
 		
-		_scrollView.contentSize = CGSizeMake((c + 7.5) * i-5 , c);
+		_scrollView.contentSize = CGSizeMake((c + 7.5) * i - 5, c);
 		cellHeight += (c + 5);
 	}
 	_likeBtn.frame = CGRectMake(SCREENWIT - 170, cellHeight + 5, 45, 17.5);
@@ -737,7 +734,7 @@
 				likeWidth = 45;
 				likeHeight += (imageHeight + 5);
 			}
-			UIImageView * likebody = [LJUIController createCircularImageViewWithFrame:CGRectMake(likeWidth, cellHeight + likeHeight, imageHeight, imageHeight) imageName:@"头像"];
+			UIImageView * likebody = [LJUIController createCircularImageViewWithFrame:CGRectMake(likeWidth, cellHeight + likeHeight, imageHeight, imageHeight) imageName:@"头像.png"];
 			likebody.clipsToBounds = YES;
 			likebody.contentMode = UIViewContentModeScaleAspectFill;
 			[likebody setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:likebody.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像.png"]];
@@ -776,7 +773,7 @@
 			commentImage.tag = 500 + i;
 			UITapGestureRecognizer * commentTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onCommentTap:)];
 			commentImage.userInteractionEnabled = YES;
-			[commentImage setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:commentImage.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像"]];
+			[commentImage setImageWithURL:[NSURL URLWithString:[QJInterfaceManager thumbnailUrlFromImageUrl:user.avatar size:commentImage.bounds.size]] placeholderImage:[UIImage imageNamed:@"头像.png"]];
 			[commentImage addGestureRecognizer:commentTap];
 			[self.contentView addSubview:commentImage];
 			
@@ -794,7 +791,6 @@
 				UILabel * commentLabel = [LJUIController createLabelWithFrame:CGRectMake(50 + imageHeight, cellHeight + commentHeight + 3, size2.width, size2.height) Font:12 Text:nil];
 				commentLabel.attributedText = attString;
 				commentLabel.lineBreakMode = NSLineBreakByClipping;
-				commentLabel.lineBreakMode = UILineBreakModeClip;
 				commentLabel.tag = 600 + i;
 				commentLabel.userInteractionEnabled = YES;
 				UITapGestureRecognizer * replyTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onReplyTap:)];

@@ -171,7 +171,7 @@
 			NSURLRequest * request = [NSURLRequest requestWithURL:url];
 			NSData * recievie = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
 			
-			if (recievie == nil)
+			if ((recievie == nil) || (recievie.length == 0))
 				return;
 				
 			NSDictionary * dict = [NSJSONSerialization JSONObjectWithData:recievie options:NSJSONReadingMutableContainers error:nil];

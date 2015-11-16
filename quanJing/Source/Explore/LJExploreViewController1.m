@@ -41,8 +41,6 @@
 #import "MobClick.h"
 static NSString * kCategoryCellID = @"kCategoryCellID";
 
-static const int kDefaultLoadItemNum1 = 10;
-
 @interface LJExploreViewController1 () <ASIHTTPRequestDelegate, UIScrollViewDelegate>
 {
 	//    NSMutableArray *showArr;
@@ -218,6 +216,10 @@ static const int kDefaultLoadItemNum1 = 10;
 #pragma mark scrollViewDelegate
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    if (!_categoriesList ||
+        (_pageCount >= 0 && _pageCount < _categoriesList.count))
+        return;
+        
 	QJArticleCategory * mode1 = _categoriesList[_pageCount];
 	
 	[MobClick endEvent:mode1.name];
@@ -254,7 +256,7 @@ static const int kDefaultLoadItemNum1 = 10;
 	for (UIView * view in _view.subviews) {
 		if (view.tag == 300 + _pageCount) {
 			UIButton * btn = (UIButton *)view;
-			[btn setBackgroundImage:[UIImage imageNamed:nil] forState:UIControlStateNormal];
+			[btn setBackgroundImage:nil forState:UIControlStateNormal];
 			[btn setTitleColor:_titleColor1 forState:UIControlStateNormal];
 		}
 		else {
@@ -280,7 +282,7 @@ static const int kDefaultLoadItemNum1 = 10;
 	for (UIView * view in _view.subviews) {
 		if (view.tag == sender.tag) {
 			UIButton * btn = (UIButton *)view;
-			[btn setBackgroundImage:[UIImage imageNamed:nil] forState:UIControlStateNormal];
+			[btn setBackgroundImage:nil forState:UIControlStateNormal];
 			[btn setTitleColor:_titleColor1 forState:UIControlStateNormal];
 		}
 		else {
@@ -401,7 +403,7 @@ static const int kDefaultLoadItemNum1 = 10;
 	QJArticleCategory * model = _categoriesList[_pageCount];
 	
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		[[QJInterfaceManager sharedManager]requestArticleList:model.cid cursorIndex:nil pageSize:30 finished:^(NSArray * _Nonnull articleObjectArray, NSNumber * _Nonnull nextCursorIndex, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
+		[[QJInterfaceManager sharedManager] requestArticleList:model.cid cursorIndex:nil pageSize:30 finished:^(NSArray * _Nonnull articleObjectArray, NSNumber * _Nonnull nextCursorIndex, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
 			dispatch_async(dispatch_get_main_queue(), ^{
 				if (_pageCount == 0) {
 					[_categories removeAllObjects];

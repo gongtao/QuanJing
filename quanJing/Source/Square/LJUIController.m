@@ -47,7 +47,7 @@
 #pragma mark --创建imageView
 + (UIImageView *)createImageViewWithFrame:(CGRect)frame imageName:(NSString *)imageName
 {
-	UIImageView * imageView = [[UIImageView alloc]initWithFrame:frame];
+	UIImageView * imageView = [[UIImageView alloc] initWithFrame:frame];
 	
 	imageView.image = [UIImage imageNamed:imageName];
 	imageView.userInteractionEnabled = YES;
