@@ -221,8 +221,6 @@
 		return;
 	}
 	
-	NSLog(@"HTTP Response Headers:\n %@", response.allHeaderFields);
-	
 	NSData * data = cachedResponse.data;
 	
 	if (!data)
