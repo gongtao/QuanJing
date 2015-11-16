@@ -58,11 +58,9 @@
 #else
 		[QJBaseManager setKeyChainAccessGroup:@"T3BNK5WMQ7.com.quanjing.device.identifier"];
 #endif
-    
-    NSUInteger capacity = 100 * 1024 * 1024;
-    QJURLCache * cache = [[QJURLCache alloc] initWithMemoryCapacity:capacity diskCapacity:capacity diskPath:nil];
-    [NSURLCache setSharedURLCache:cache];
 
+	[NSURLCache setSharedURLCache:[QJURLCache sharedURLCache]];
+	
 	[Fabric with:@[[Crashlytics class]]];
 	[self setup];
 	
@@ -77,7 +75,7 @@
 	NSString * str1 = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
 	
 	if ([str isEqualToString:str1]) {
-		 _mainViewCon = [[OWTMainViewCon alloc]initWithNibName:nil bundle:nil];
+		_mainViewCon = [[OWTMainViewCon alloc]initWithNibName:nil bundle:nil];
 		_mainViewCon.tabBar.hidden = YES;
 		self.window.rootViewController = _mainViewCon;
 	}
@@ -295,7 +293,6 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-
 	OWTUserManager * um = GetUserManager();
 	
 	[um refreshCurrentUserSuccess:^{} failure:^(NSError * error) {}];

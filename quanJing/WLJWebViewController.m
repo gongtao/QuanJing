@@ -138,7 +138,10 @@
 	
 	__weak QJWebProgressView * weakView = _progressView;
 	_progressView.finished = ^{
-		weakView.hidden = YES;
+		[UIView animateWithDuration:0.3
+		animations:^{
+			weakView.alpha = 0.0;
+		}];
 	};
 	
 	UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];

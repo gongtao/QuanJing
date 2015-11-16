@@ -10,4 +10,6 @@
 
 @interface QJURLCache : NSURLCache
 
++ (instancetype)sharedURLCache;
+
 @end

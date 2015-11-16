@@ -18,7 +18,41 @@
 
 @end
 
+@interface QJURLCache ()
+{
+	dispatch_queue_t _queue;
+}
+
+@end
+
 @implementation QJURLCache
+
++ (instancetype)sharedURLCache
+{
+	static dispatch_once_t once;
+	static QJURLCache * cache = nil;
+	
+	dispatch_once(&once, ^{
+		NSUInteger capacity = 100 * 1024 * 1024;
+		cache = [[QJURLCache alloc] initWithMemoryCapacity:capacity
+		diskCapacity:capacity
+		diskPath:nil];
+	});
+	return cache;
+}
+
+- (instancetype)initWithMemoryCapacity:(NSUInteger)memoryCapacity
+	diskCapacity:(NSUInteger)diskCapacity
+	diskPath:(NSString *)path
+{
+	self = [super initWithMemoryCapacity:memoryCapacity
+		diskCapacity:diskCapacity
+		diskPath:path];
+		
+	if (self)
+		_queue = dispatch_queue_create("com.quanjing.URL.Cache", DISPATCH_QUEUE_SERIAL);
+	return self;
+}
 
 #pragma mark - Cache String
 
@@ -52,48 +86,82 @@
 
 - (NSDictionary *)headerFieldsWithURL:(NSString *)url
 {
-	// 提取缓存HTTP头
-	NSString * fileName = [self cachedFileNameForKey:url];
-	NSString * httpHeaderCacheDir = [self httpHeaderCacheDir];
-	NSString * filePath = [httpHeaderCacheDir stringByAppendingPathComponent:fileName];
+	__block NSDictionary * result = nil;
 	
-	NSFileManager * manager = [NSFileManager new];
-	
-	if ([manager fileExistsAtPath:filePath])
-		return [NSDictionary dictionaryWithContentsOfFile:filePath];
+	dispatch_sync(_queue, ^{
+		// 提取缓存HTTP头
+		NSString * fileName = [self cachedFileNameForKey:url];
+		NSString * httpHeaderCacheDir = [self httpHeaderCacheDir];
+		NSString * filePath = [httpHeaderCacheDir stringByAppendingPathComponent:fileName];
 		
-	return nil;
+		NSFileManager * manager = [NSFileManager new];
+		
+		if ([manager fileExistsAtPath:filePath])
+			result = [NSDictionary dictionaryWithContentsOfFile:filePath];
+	});
+	return result;
 }
 
 - (BOOL)storeHeaderFieldsWithHTTPResponse:(NSHTTPURLResponse *)response
 {
-	// 缓存HTTP头
-	NSString * url = response.URL.absoluteString;
-	NSString * fileName = [self cachedFileNameForKey:url];
-	NSString * httpHeaderCacheDir = [self httpHeaderCacheDir];
+	__block BOOL result = NO;
 	
-	NSFileManager * manager = [NSFileManager new];
-	
-	if (![manager fileExistsAtPath:httpHeaderCacheDir])
-		[manager createDirectoryAtPath:httpHeaderCacheDir withIntermediateDirectories:NO attributes:nil error:nil];
-	NSString * filePath = [httpHeaderCacheDir stringByAppendingPathComponent:fileName];
-	return [response.allHeaderFields writeToFile:filePath atomically:YES];
+	dispatch_sync(_queue, ^{
+		// 缓存HTTP头
+		NSString * url = response.URL.absoluteString;
+		NSString * fileName = [self cachedFileNameForKey:url];
+		NSString * httpHeaderCacheDir = [self httpHeaderCacheDir];
+		
+		NSFileManager * manager = [NSFileManager new];
+		
+		if (![manager fileExistsAtPath:httpHeaderCacheDir])
+			[manager createDirectoryAtPath:httpHeaderCacheDir withIntermediateDirectories:NO attributes:nil error:nil];
+		NSString * filePath = [httpHeaderCacheDir stringByAppendingPathComponent:fileName];
+		result = [response.allHeaderFields writeToFile:filePath atomically:YES];
+	});
+	return result;
+}
+
+- (void)cleanAllHeaderFields:(void (^)(BOOL success))block
+{
+	dispatch_async(_queue, ^{
+		NSString * imageDir = [self httpHeaderCacheDir];
+		NSFileManager * fileManager = [[NSFileManager alloc] init];
+		BOOL result = YES;
+		
+		if ([fileManager fileExistsAtPath:imageDir])
+			result = [fileManager removeItemAtPath:imageDir error:nil];
+			
+		if (block)
+			dispatch_async(dispatch_get_main_queue(), ^{
+				block(result);
+			});
+	});
+}
+
+- (void)cleanAllHeaderFields
+{
+	[self cleanAllHeaderFields:nil];
 }
 
 #pragma mark - Cache Data
 
 - (NSData *)cacheImageDataFromURL:(NSString *)url
 {
-	NSString * dir = [[SDImageCache sharedImageCache] diskCachePath];
-	NSString * fileName = [self cachedFileNameForKey:url];
-	NSString * filePath = [dir stringByAppendingPathComponent:fileName];
+	__block NSData * data = nil;
 	
-	NSFileManager * manager = [NSFileManager new];
-	
-	if ([manager fileExistsAtPath:filePath])
-		return [NSData dataWithContentsOfFile:filePath];
+	dispatch_sync(_queue, ^{
+		NSString * dir = [[SDImageCache sharedImageCache] diskCachePath];
+		NSString * fileName = [self cachedFileNameForKey:url];
+		NSString * filePath = [dir stringByAppendingPathComponent:fileName];
 		
-	return nil;
+		NSFileManager * manager = [NSFileManager new];
+		
+		if ([manager fileExistsAtPath:filePath])
+			data = [NSData dataWithContentsOfFile:filePath];
+	});
+	
+	return data;
 }
 
 #pragma mark - Override
@@ -143,6 +211,7 @@
 	if (!cachedResponse.response ||
 		![cachedResponse.response isKindOfClass:[NSHTTPURLResponse class]]) {
 		NSLog(@"Not HTTP Response");
+		[super storeCachedResponse:cachedResponse forRequest:request];
 		return;
 	}
 	NSHTTPURLResponse * response = (NSHTTPURLResponse *)cachedResponse.response;
