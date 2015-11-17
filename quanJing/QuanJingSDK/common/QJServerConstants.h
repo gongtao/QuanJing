@@ -15,8 +15,8 @@
 static NSString * const kQJCookieHost = @".tiankong.com";
 
 // 域名地址
-// static NSString * const kQJServerURL = @"http://mapp.tiankong.com";
-static NSString * const kQJServerURL = @"http://mapp_test.tiankong.com:8080";
+ static NSString * const kQJServerURL = @"http://mapp.tiankong.com";
+//static NSString * const kQJServerURL = @"http://mapp_test.tiankong.com:8080";
 
 // 要替换的图片域名地址
 static NSString * const kQJFakePhotoServerHost = @"quanjing-photo.oss.aliyuncs.com";
@@ -35,6 +35,9 @@ static NSString * const kQJShareActionPath = @"/share/share.show";
 
 // 图片故事详情url
 static NSString * const kQJArticleDetailPath = @"/articleSys/show?id=";
+
+// 环信注册
+static NSString * const kQJHuanXinRegistPath = @"/user/easemob.regist";
 
 // 发送注册短息
 static NSString * const kQJUserSendRegistSMSPath = @"/user/smsRegistered";

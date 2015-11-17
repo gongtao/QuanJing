@@ -24,6 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @name 全景用户接口
 ///-------------------
 
+// 环信注册
+- (NSError *)registerHuanXin:(NSNumber *)userId;
+
 // 发送注册短信
 - (NSError *)sendRegistSMS:(NSString *)phoneNumber;
 

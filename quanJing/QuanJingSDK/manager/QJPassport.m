@@ -46,6 +46,48 @@
 
 #pragma mark - 注册
 
+- (NSError *)registerHuanXin:(NSNumber *)userId
+{
+	NSParameterAssert(userId);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"id"] = userId;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJHuanXinRegistPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [self errorFromOperation:responseObject];
+		i--;
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
+	
+	if (error)
+		NSLog(@"%@", error);
+	else
+		NSLog(@"%@", responseObject);
+		
+	return error;
+}
+
 - (NSError *)sendRegistSMS:(NSString *)phoneNumber
 {
 	NSParameterAssert(phoneNumber);
