@@ -61,6 +61,7 @@
 	OWTUserData * _careUser;
 	UIButton * _jubaobtn;
 	UIView * _TapBackView;
+	NSNumber * _actionId;
 }
 
 - (void)awakeFromNib
@@ -106,11 +107,11 @@
 	[self.contentView addSubview:_upTime];
 	_scrollView = [[UIScrollView alloc]initWithFrame:CGRectZero];
 	_scrollView.delegate = self;
-    _scrollView.scrollsToTop=NO;
+	_scrollView.scrollsToTop = NO;
 	[self.contentView addSubview:_scrollView];
 	_bigImageScrollView = [[UIScrollView alloc]initWithFrame:CGRectZero];
 	_bigImageScrollView.delegate = self;
-    _bigImageScrollView.scrollsToTop=NO;
+	_bigImageScrollView.scrollsToTop = NO;
 	[self.contentView addSubview:_bigImageScrollView];
 	_caption = [LJUIController createLabelWithFrame:CGRectZero Font:12 Text:nil];
 	[self.contentView addSubview:_caption];
@@ -424,21 +425,37 @@
 	[SVProgressHUD showWithStatus:@"准备图片中..." maskType:SVProgressHUDMaskTypeBlack];
 	
 	SDWebImageManager * manager = [SDWebImageManager sharedManager];
-	NSURL * url = [NSURL URLWithString:imageModel.url];
-	
-	[manager downloadWithURL:url
+	NSString * url = [[QJInterfaceManager sharedManager] shareActionURLWithID:_actionId
+		imageId:imageModel.imageId];
+		
+	[manager downloadWithURL:[NSURL URLWithString:imageModel.url]
 	options:SDWebImageHighPriority
 	progress:nil
 	completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType, BOOL finished) {
-		[SVProgressHUD dismiss];
-		[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-		[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeImage;
-		NSString * title;
+		if (error) {
+			[SVProgressHUD showErrorWithStatus:@"获取图片失败"];
+			return;
+		}
 		
-		if (imageModel.tag)
-			title = [NSString stringWithFormat:@"全景图片：%@", imageModel.tag];
-		else
-			title = @"全景图片";
+		[SVProgressHUD dismiss];
+		
+		[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+		[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeDefault;
+		[UMSocialData defaultData].extConfig.wechatSessionData.url = url;
+		[UMSocialData defaultData].extConfig.wechatTimelineData.url = url;
+		[UMSocialData defaultData].extConfig.qqData.url = url;
+		[UMSocialData defaultData].extConfig.qzoneData.url = url;
+		
+		NSString * title = @"全景图片";
+		NSString * userName = _userName.text;
+		NSString * descript = _caption.text;
+		
+		if (userName && (userName.length > 0))
+			title = [title stringByAppendingFormat:@"：%@", userName];
+			
+		if (descript && (descript.length > 0))
+			title = [title stringByAppendingFormat:@"——%@", descript];
+			
 		[UMSocialData defaultData].extConfig.qqData.title = title;
 		[UMSocialData defaultData].extConfig.qzoneData.title = title;
 		[UMSocialData defaultData].extConfig.wechatSessionData.title = title;
@@ -485,6 +502,7 @@
 {
 	QJImageObject * imageModel = _assets[sender.view.tag - 400];
 	OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:imageModel.imageType];
+	
 	assetViewCon.isSquare = YES;
 	assetViewCon.hidesBottomBarWhenPushed = YES;
 	[_viewContoller.navigationController pushViewController:assetViewCon animated:NO];
@@ -512,6 +530,7 @@
 #pragma mark setUpCell
 - (void)customcell:(QJActionObject *)actionModel withImageNumber:(NSInteger)number
 {
+	_actionId = actionModel.aid;
 	_imageNum = number;
 	_viewContoller.height = 0;
 	_assets = [[NSMutableArray alloc]initWithArray:actionModel.images];
@@ -554,7 +573,7 @@
 		_likeBtn.selected = NO;
 		[_likeBtn setBackgroundImage:[UIImage imageNamed:@"赞00"] forState:UIControlStateNormal];
 	}
-    CGFloat x = SCREENWIT - 10;
+	CGFloat x = SCREENWIT - 10;
 	CGFloat height;
 	UIImageView * ImageView = nil;
 	

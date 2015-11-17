@@ -231,14 +231,14 @@
 
 - (void)share
 {
-	NSURL * url1 = self.image.URL;
+	NSURL * url = self.image.URL;
 	
 	// share
 	[SVProgressHUD showWithStatus:@"准备图片中..." maskType:SVProgressHUDMaskTypeBlack];
 	
 	SDWebImageManager * manager = [SDWebImageManager sharedManager];
 	
-	[manager downloadWithURL:url1
+	[manager downloadWithURL:url
 	options:SDWebImageHighPriority
 	progress:nil
 	completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType, BOOL finished) {
