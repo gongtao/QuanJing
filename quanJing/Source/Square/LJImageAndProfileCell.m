@@ -106,9 +106,11 @@
 	[self.contentView addSubview:_upTime];
 	_scrollView = [[UIScrollView alloc]initWithFrame:CGRectZero];
 	_scrollView.delegate = self;
+    _scrollView.scrollsToTop=NO;
 	[self.contentView addSubview:_scrollView];
 	_bigImageScrollView = [[UIScrollView alloc]initWithFrame:CGRectZero];
 	_bigImageScrollView.delegate = self;
+    _bigImageScrollView.scrollsToTop=NO;
 	[self.contentView addSubview:_bigImageScrollView];
 	_caption = [LJUIController createLabelWithFrame:CGRectZero Font:12 Text:nil];
 	[self.contentView addSubview:_caption];
@@ -483,7 +485,6 @@
 {
 	QJImageObject * imageModel = _assets[sender.view.tag - 400];
 	OWTAssetViewCon * assetViewCon = [[OWTAssetViewCon alloc]initWithImageId:imageModel imageType:imageModel.imageType];
-	
 	assetViewCon.isSquare = YES;
 	assetViewCon.hidesBottomBarWhenPushed = YES;
 	[_viewContoller.navigationController pushViewController:assetViewCon animated:NO];
@@ -553,8 +554,7 @@
 		_likeBtn.selected = NO;
 		[_likeBtn setBackgroundImage:[UIImage imageNamed:@"赞00"] forState:UIControlStateNormal];
 	}
-	
-	CGFloat x = SCREENWIT - 10;
+    CGFloat x = SCREENWIT - 10;
 	CGFloat height;
 	UIImageView * ImageView = nil;
 	

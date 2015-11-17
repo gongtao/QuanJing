@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "XHRefreshControl.h"
 #import "QuanJingSDK.h"
+#import "LJFeedWithUserProfileViewCon.h"
 @interface OWTUserViewCon : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, XHRefreshControlDelegate>
 
 @property (nonatomic, strong) OWTUser * user;
@@ -21,6 +22,7 @@
 @property (nonatomic, strong) NSNumber * totalAssetNum;
 @property (nonatomic, assign) BOOL rightTriggle;
 @property (nonatomic, assign) BOOL ifFirstEnter;
-
+@property(nonatomic,strong)LJFeedWithUserProfileViewCon *viewController;
+@property(nonatomic,assign)NSInteger pageNumber;
 - (void)adealloc;
 @end

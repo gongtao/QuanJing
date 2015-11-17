@@ -916,11 +916,18 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 
 - (void)didCareButtonPressed:(BOOL)isCared
 {
+    if (_viewController) {
+        QJActionObject *model=_viewController.activeList[_pageNumber];
+        model.user.hasFollowUser=[NSNumber numberWithBool:isCared];
+        [_viewController.activeList replaceObjectAtIndex:_pageNumber withObject:model];
+        [_viewController reloadData:_pageNumber];
+    }
 	if (isCared) {
 		UIButton * rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 45.0, 17.0)];
 		[rightBtn setTitle:@"已关注" forState:UIControlStateNormal];
 		[rightBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		rightBtn.titleLabel.font = [UIFont systemFontOfSize:9.0];
+        [rightBtn addTarget:self action:@selector(careButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
 	}
 	else {

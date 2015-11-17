@@ -699,6 +699,8 @@
 		_userViewCon1.ifFirstEnter = YES;
 		_userViewCon1.rightTriggle = YES;
 		_userViewCon1.quser = actionModel.user;
+        _userViewCon1.viewController=self;
+        _userViewCon1.pageNumber=page;
 		__weak __typeof( & * self) weakSelf = self;
 		
 		[weakSelf.navigationController pushViewController:_userViewCon1 animated:YES];
