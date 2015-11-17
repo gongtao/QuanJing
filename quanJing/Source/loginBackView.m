@@ -17,7 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    UIImageView *imageView=[LJUIController createImageViewWithFrame:CGRectMake(0, 64, SCREENWIT, SCREENHEI-64) imageName:@"loginBackImage"];
+    UIImageView *imageView=[LJUIController createImageViewWithFrame:CGRectMake(0, 64, SCREENWIT, SCREENHEI-64) imageName:@"loginBackImage.jpg"];
     [self.view addSubview:imageView];
 }
 

@@ -50,6 +50,8 @@
 	UIImageView * imageView = [[UIImageView alloc] initWithFrame:frame];
 	
 	imageView.image = [UIImage imageNamed:imageName];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.clipsToBounds = YES;
 	imageView.userInteractionEnabled = YES;
 	return imageView;
 }

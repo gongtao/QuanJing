@@ -360,24 +360,6 @@
 			
 		return CGSizeMake(640, originalSize.height * 640 / originalSize.width);
 	}
-	
-	//    if ((orientation == 8) || (orientation == 7) || (orientation == 6) || (orientation == 5)) {
-	//        CGSize originalSize = image.size;
-	//
-	//        if (originalSize.height < 640)
-	//            return originalSize;
-	//
-	//        NSLog(@"11111111111111111%f,%f", originalSize.height, originalSize.width);
-	//        return CGSizeMake(640 / originalSize.height * originalSize.width, 640);
-	//    }
-	//    else {
-	//        CGSize originalSize = image.size;
-	//
-	//        if (originalSize.width < 640)
-	//            return originalSize;
-	//
-	//        return CGSizeMake(640, originalSize.height * 640 / originalSize.width);
-	//    }
 }
 
 // 图片旋转
@@ -548,7 +530,7 @@
 						
 						UIImage * image = [UIImage imageWithData:data];
 						image = [image scaleImageSize:[weakSelf fixedUploadSizeForImage:image withorientation:image.imageOrientation]];
-						imageData = UIImageJPEGRepresentation(image, 0.8);
+						imageData = UIImageJPEGRepresentation(image, 0.9);
 					}
 				}
 				
@@ -795,7 +777,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return 6;
+	return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
