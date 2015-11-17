@@ -216,7 +216,7 @@
 		return;
 	}
 	
-	if (_codeTextField.text == nil) {
+	if (_codeTextField.text.length == 0) {
 		[SVProgressHUD showErrorWithStatus:NSLocalizedString(@"请输入验证码", @"请输入验证码")];
 		return;
 	}
@@ -225,7 +225,7 @@
     if (_isLogin) {
         [SVProgressHUD show];
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			[pt loginUser:_cellphone code:_codeTextField.text finished:^(NSNumber * userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
+			[pt loginUser:_cellphoneTextField.text code:_codeTextField.text finished:^(NSNumber * userId, NSString * _Nonnull ticket, NSError * _Nonnull error) {
 				if (error) {
 					dispatch_async(dispatch_get_main_queue(), ^{
 						NSString * reason = error.userInfo[@"reason"];
@@ -307,25 +307,32 @@
 		return;
 	}
 	_cellphone = _cellphoneTextField.text;
-	[self startResendTimer];
+
 	QJPassport * pt = [QJPassport sharedPassport];
-	
+    verifyBtn.enabled=NO;
 	if (_isLogin)
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			NSError * error = [pt sendLoginSMS:_cellphone];
 			dispatch_async(dispatch_get_main_queue(), ^{
 				if (error) {
+                    verifyBtn.enabled=YES;
 					_resendTimeLeft = 3;
 					[SVProgressHUD showError:error];
-				}
+                }else {
+                	[self startResendTimer];
+                }
 			});
 		});
 	else
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			NSError * error = [pt sendRegistSMS:_cellphone];
 			dispatch_async(dispatch_get_main_queue(), ^{
-				if (error)
-					[SVProgressHUD showError:error];
+                if (error){
+                    verifyBtn.enabled=YES;
+                    [SVProgressHUD showError:error];}
+                else {
+                	[self startResendTimer];
+                }
 			});
 		});
 }
