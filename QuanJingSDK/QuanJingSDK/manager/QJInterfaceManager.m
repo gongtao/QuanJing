@@ -798,16 +798,22 @@
 	NSParameterAssert(imageId);
 	
 	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
-	params[@"id"] = imageId;
-	
-	if (!QJ_IS_STR_NIL(title))
-		params[@"title"] = title;
-		
-	if (!QJ_IS_STR_NIL(tag))
-		params[@"tag"] = tag;
-		
-	if (!QJ_IS_STR_NIL(title))
-		params[@"position"] = position;
+    params[@"id"] = imageId;
+    
+    if (!QJ_IS_STR_NIL(title))
+        params[@"title"] = title;
+    else
+        params[@"title"] = @"";
+    
+    if (!QJ_IS_STR_NIL(tag))
+        params[@"tag"] = tag;
+    else
+        params[@"tag"] = @"";
+    
+    if (!QJ_IS_STR_NIL(title))
+        params[@"position"] = position;
+    else
+        params[@"position"] = @"";
 		
 	// When request fails, if it could, retry it 3 times at most.
 	int i = 3;

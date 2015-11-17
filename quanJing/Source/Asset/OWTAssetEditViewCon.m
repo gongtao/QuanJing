@@ -171,13 +171,6 @@
 {
     [self.view endEditing:YES];
     
-    _caption = _addDesCell.textView.text;
-    if (_caption == nil || _caption.length == 0)
-    {
-        [SVProgressHUD showErrorWithStatus:@"请输入图片标题"];
-        return;
-    }
-    
     [SVProgressHUD showWithStatus:@"正在修改图片"];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
