@@ -178,30 +178,27 @@
         return;
     }
     
-    OWTAssetManager* am = GetAssetManager();
+    [SVProgressHUD showWithStatus:@"正在修改图片"];
     
-    [SVProgressHUD show];
-    [am updateAsset:_asset
-        withCaption:_caption
-          isPrivate:_isPrivate
-         islocation:_locationString
-         iskeywords:_keywords
-             albums:nil
-            success:^{
-                [SVProgressHUD dismiss];
-                if (_doneAction != nil)
-                {
-                    _doneAction(nWTDoneTypeUpdated);
-                }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSError * error = [[QJInterfaceManager sharedManager] requestImageModify:_asset.imageId
+                                                                           title:_caption
+                                                                             tag:_keywords
+                                                                        position:_locationString];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                [SVProgressHUD showErrorWithStatus:@"修改失败"];
             }
-            failure:^(NSError* error) {
-                [SVProgressHUD dismiss];
-                if (_doneAction != nil)
-                {
-                    _doneAction(nWTDoneTypeUpdated);
-                }
-                
-            }];
+            else {
+                [SVProgressHUD showSuccessWithStatus:@"修改成功"];
+            }
+            
+            if (_doneAction != nil)
+            {
+                _doneAction(nWTDoneTypeUpdated);
+            }
+        });
+    });
 }
 
 - (void)delete {
@@ -392,18 +389,22 @@
 {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     if ([title isEqualToString:@"确定"]) {
-        [SVProgressHUD show];
-        OWTAssetManager* am = GetAssetManager();
-        [am deleteAsset:_asset
-                success:^{
-                    [SVProgressHUD dismiss];
-                    if (_doneAction != nil) {
-                        _doneAction(nWTDoneTypeDeleted);
-                    }
+        [SVProgressHUD showSuccessWithStatus:@"正在删除图片"];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError * error = [[QJInterfaceManager sharedManager] requestImageDelete:_asset.imageId];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [SVProgressHUD showErrorWithStatus:@"删除失败"];
                 }
-                failure:^(NSError* error) {
-                    [SVProgressHUD showError:error];
-                }];
+                else {
+                    [SVProgressHUD showSuccessWithStatus:@"删除成功"];
+                }
+                
+                if (_doneAction != nil) {
+                    _doneAction(nWTDoneTypeDeleted);
+                }
+            });
+        });
     }
     
 }
