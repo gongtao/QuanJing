@@ -103,7 +103,46 @@
 	[[QJPassport sharedPassport] logout];
 }
 
-#pragma mark - Private
+#pragma mark - 分享URL
+
+- (NSString *)shareImageURLWithID:(NSNumber *)imageId imageType:(NSNumber *)imageType
+{
+	if (QJ_IS_NUM_NIL(imageId) || QJ_IS_NUM_NIL(imageType))
+		return nil;
+		
+	NSString * url = nil;
+	NSString * params = [NSString stringWithFormat:@"?id=%@", imageId];
+	
+	switch (imageType.integerValue) {
+		case 1:
+			{
+				url = [[kQJServerURL stringByAppendingString:kQJShareImagePath] stringByAppendingString:params];
+				break;
+			}
+			
+		case 2:
+			{
+				url = [[kQJServerURL stringByAppendingString:kQJShareUserImagePath] stringByAppendingString:params];
+				break;
+			}
+			
+		default:
+			break;
+	}
+	
+	return url;
+}
+
+- (NSString *)shareActionURLWithID:(NSNumber *)actionId imageId:(NSNumber *)imageId
+{
+	if (QJ_IS_NUM_NIL(actionId) || QJ_IS_NUM_NIL(imageId))
+		return nil;
+		
+	NSString * url = [kQJServerURL stringByAppendingString:kQJShareActionPath];
+	NSString * params = [NSString stringWithFormat:@"?id=%@&imgId=%@", actionId, imageId];
+	
+	return [url stringByAppendingString:params];
+}
 
 #pragma mark - 首页
 

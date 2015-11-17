@@ -35,7 +35,7 @@
 	
 	if (!QJ_IS_NUM_NIL(aid)) {
 		self.aid = aid;
-		self.url = [kQJArticleDetailURL stringByAppendingString:[aid stringValue]];
+		self.url = [[kQJServerURL stringByAppendingString:kQJArticleDetailPath] stringByAppendingString:[aid stringValue]];
 	}
 	
 	// categoryId

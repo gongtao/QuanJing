@@ -195,10 +195,12 @@
 		[SVProgressHUD dismiss];
 		[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeNone;
 		[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeDefault;
-		[UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@&d=1", self.urlString];
-		[UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@&d=1", self.urlString];
-		[UMSocialData defaultData].extConfig.qqData.url = [NSString stringWithFormat:@"%@&d=1", self.urlString];
-		[UMSocialData defaultData].extConfig.qzoneData.url = [NSString stringWithFormat:@"%@&d=1", self.urlString];
+		
+		[UMSocialData defaultData].extConfig.wechatSessionData.url = self.urlString;
+		[UMSocialData defaultData].extConfig.wechatTimelineData.url = self.urlString;
+		[UMSocialData defaultData].extConfig.qqData.url = self.urlString;
+		[UMSocialData defaultData].extConfig.qzoneData.url = self.urlString;
+		
 		[UMSocialData defaultData].extConfig.qqData.title = _articleTitle;
 		[UMSocialData defaultData].extConfig.qzoneData.title = _articleTitle;
 		[UMSocialData defaultData].extConfig.wechatSessionData.title = _articleTitle;

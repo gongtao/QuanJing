@@ -152,11 +152,6 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	_collectionView.showsVerticalScrollIndicator = NO;
 	_collectionView.alwaysBounceVertical = YES;
 	
-	//    [_collectionView addFooterWithTarget:self action:@selector(loadRelatedAssetsInSearch)];
-	//    _collectionView.footerPullToRefreshText=@"";
-	//    _collectionView.footerRefreshingText=@"";
-	//    _collectionView.footerReleaseToRefreshText=@"";
-	//
 	if (_imageAsset != nil) {
 		if (_assetOwnerUser != nil) {
 			NSRange aa = [_assetOwnerUser.nickname rangeOfString:@"全景"];
@@ -171,14 +166,13 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			_jan = 1;
 		}
 	}
-	else {}
-	//
+	
 	[_collectionView registerClass:[LJAssetInfoView class] forSupplementaryViewOfKind:kWaterFlowElementKindSectionHeader withReuseIdentifier:@"AssetInfoViewa"];
 	
 	[_collectionView registerClass:OWTImageCell.class forCellWithReuseIdentifier:kWaterFlowCellID];
 	_collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.view addSubview:_collectionView];
-	//    [_collectionView easyFillSuperview];
+	
 	[self setupInputView];
 	[self setupNavigationBar];
 	[self getLikeAndCommendData];
@@ -377,7 +371,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	//    _likeButton = [self createLikeButton];
 	_commentButton = [self createCommentButton];
 	//    UIBarButtonItem* likeButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_likeButton];
-	UIBarButtonItem * commentButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_commentButton];
+	//	UIBarButtonItem * commentButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_commentButton];
 	
 	//    self.navigationItem.rightBarButtonItems = @[commentButtonItem];
 }
@@ -986,7 +980,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 				[am showAuthViewConWithSuccess:^{
 					// 写收藏
 					dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-						NSError * error = [[QJInterfaceManager sharedManager]requestImageCollect:_imageAsset.imageId imageType:_imageAsset.imageType];
+						NSError * error = [[QJInterfaceManager sharedManager] requestImageCollect:_imageAsset.imageId imageType:_imageAsset.imageType];
 						dispatch_async(dispatch_get_main_queue(), ^{
 							if (error == nil) {
 								[SVProgressHUD showSuccessWithStatus:@"收藏成功"];
@@ -1018,7 +1012,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	else {
 		// 写收藏
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			NSError * error = [[QJInterfaceManager sharedManager]requestImageCollect:_imageAsset.imageId imageType:_imageAsset.imageType];
+			NSError * error = [[QJInterfaceManager sharedManager] requestImageCollect:_imageAsset.imageId imageType:_imageAsset.imageType];
 			dispatch_async(dispatch_get_main_queue(), ^{
 				if (error == nil) {
 					[SVProgressHUD showSuccessWithStatus:@"收藏成功"];
@@ -1039,67 +1033,44 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 {
 	[SVProgressHUD showWithStatus:@"准备图片中..." maskType:SVProgressHUDMaskTypeBlack];
 	
-	SDWebImageManager * manager = [SDWebImageManager sharedManager];
-	NSURL * url = [NSURL URLWithString:_imageAsset.url];
-	
-	if (_isSquare != YES)
-	
-		[manager downloadWithURL:url
-		options:SDWebImageHighPriority
-		progress:nil
-		completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType, BOOL finished) {
-			if (image != nil) {
-				NSString * urlStr = _imageAsset.url;
-				[SVProgressHUD dismiss];
-				[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeNone;
-				[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeDefault;
-				[UMSocialData defaultData].extConfig.wechatSessionData.url = urlStr;
-				[UMSocialData defaultData].extConfig.wechatTimelineData.url = urlStr;
-				[UMSocialData defaultData].extConfig.qqData.url = urlStr;
-				[UMSocialData defaultData].extConfig.qzoneData.url = urlStr;
-                NSString *title;
-                if (_imageAsset.tag) {
-                    title=[NSString stringWithFormat:@"全景图片：%@",_imageAsset.tag];
-                }else {
-                    title=@"全景图片";
-                }
-				[UMSocialData defaultData].extConfig.qqData.title = title;
-				[UMSocialData defaultData].extConfig.qzoneData.title = title;
-				[UMSocialData defaultData].extConfig.wechatSessionData.title = title;
-				[UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
-				[UMSocialSnsService presentSnsIconSheetView:self
-				appKey:nil
-				shareText:nil
-				shareImage:image
-				shareToSnsNames:[NSArray arrayWithObjects:UMShareToWechatSession, UMShareToWechatTimeline, UMShareToSina, UMShareToWechatFavorite, UMShareToQzone, UMShareToQQ, UMShareToSms, nil]
-				delegate:nil];
-			}
-		}];
-	else
-		[manager downloadWithURL:url
-		options:SDWebImageHighPriority
-		progress:nil
-		completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType, BOOL finished) {
-			[SVProgressHUD dismiss];
-			[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-			[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeImage;
-            NSString *title;
-            if (_imageAsset.tag) {
-                title=[NSString stringWithFormat:@"全景图片：%@",_imageAsset.tag];
-            }else {
-                title=@"全景图片";
-            }
-            [UMSocialData defaultData].extConfig.qqData.title = title;
-            [UMSocialData defaultData].extConfig.qzoneData.title = title;
-            [UMSocialData defaultData].extConfig.wechatSessionData.title = title;
-            [UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
-			[UMSocialSnsService presentSnsIconSheetView:self
-			appKey:nil
-			shareText:nil
-			shareImage:image
-			shareToSnsNames:[NSArray arrayWithObjects:UMShareToSina, UMShareToWechatTimeline, UMShareToWechatSession, UMShareToWechatFavorite, UMShareToQzone, UMShareToQQ, UMShareToSms, nil]
-			delegate:nil];
-		}];
+	NSString * url = [[QJInterfaceManager sharedManager] shareImageURLWithID:_imageAsset.imageId
+		imageType:_imageAsset.imageType];
+		
+	[[SDWebImageManager sharedManager] downloadWithURL:[NSURL URLWithString:_imageAsset.url]
+	options:SDWebImageHighPriority
+	progress:nil
+	completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType, BOOL finished) {
+		if (error) {
+			[SVProgressHUD showErrorWithStatus:@"获取图片失败"];
+			return;
+		}
+		
+		[SVProgressHUD dismiss];
+		[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+		[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeDefault;
+		[UMSocialData defaultData].extConfig.wechatSessionData.url = url;
+		[UMSocialData defaultData].extConfig.wechatTimelineData.url = url;
+		[UMSocialData defaultData].extConfig.qqData.url = url;
+		[UMSocialData defaultData].extConfig.qzoneData.url = url;
+		NSString * title = nil;
+		
+		if (_imageAsset.tag)
+			title = [NSString stringWithFormat:@"全景图片：%@", _imageAsset.tag];
+		else
+			title = @"全景图片";
+			
+		[UMSocialData defaultData].extConfig.qqData.title = title;
+		[UMSocialData defaultData].extConfig.qzoneData.title = title;
+		[UMSocialData defaultData].extConfig.wechatSessionData.title = title;
+		[UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
+		
+		[UMSocialSnsService presentSnsIconSheetView:self
+		appKey:nil
+		shareText:nil
+		shareImage:image
+		shareToSnsNames:[NSArray arrayWithObjects:UMShareToWechatSession, UMShareToWechatTimeline, UMShareToSina, UMShareToWechatFavorite, UMShareToQzone, UMShareToQQ, UMShareToSms, nil]
+		delegate:nil];
+	}];
 }
 
 - (void)showAllAssetComments

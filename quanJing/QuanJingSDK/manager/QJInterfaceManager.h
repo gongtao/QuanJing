@@ -29,6 +29,16 @@ NS_ASSUME_NONNULL_BEGIN
 	size:(CGSize)size;
 	
 ///-------------------
+/// @name 全景分享链接
+///-------------------
+
+// 图片分享URL
+- (NSString *)shareImageURLWithID:(NSNumber *)imageId imageType:(NSNumber *)imageType;
+
+// 圈子分享URL
+- (NSString *)shareActionURLWithID:(NSNumber *)actionId imageId:(NSNumber *)imageId;
+
+///-------------------
 /// @name 全景数据接口
 ///-------------------
 
