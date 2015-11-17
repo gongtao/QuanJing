@@ -82,6 +82,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor colorWithHexString:@"f6f6f6"] forKey:UITextAttributeTextColor];
+    self.navigationController.navigationBar.barTintColor =[UIColor blackColor];
+    UIApplication *application = [UIApplication sharedApplication];
+    [application setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -96,11 +102,6 @@
 
 - (void)setupInterface {
     self.title = @"编辑图片";
-    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor colorWithHexString:@"f6f6f6"] forKey:UITextAttributeTextColor];
-    self.navigationController.navigationBar.barTintColor =[UIColor blackColor];
-    UIApplication *application = [UIApplication sharedApplication];
-    [application setStatusBarStyle:UIStatusBarStyleLightContent];
-    
     self.tableView.allowsSelection = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = kPhotoUploadVCBackgroundColor;
