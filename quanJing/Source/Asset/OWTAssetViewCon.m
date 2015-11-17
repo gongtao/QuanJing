@@ -504,7 +504,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
                 [self dismissViewControllerAnimated:YES completion:nil];
                 break;
             case nWTDoneTypeUpdated:
-                [self reloadData];
+                [self getLikeAndCommendData];
                 [self dismissViewControllerAnimated:YES completion:nil];
                 break;
             case nWTDoneTypeDeleted:
