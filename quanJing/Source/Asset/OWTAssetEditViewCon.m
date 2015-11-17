@@ -142,7 +142,7 @@
     }
     
     __weak __typeof(self) weakSelf = self;
-    _caption=_asset.captionCn;
+    _caption=_asset.descript;
     _locationString=_asset.position;
     _keywords=_asset.tag;
     _isPrivate=_asset.open.boolValue;
