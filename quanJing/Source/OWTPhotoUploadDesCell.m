@@ -27,7 +27,7 @@
         _textView.font = [UIFont systemFontOfSize:15.0];
         _textView.textContainerInset = UIEdgeInsetsMake(4.0, 5.0, 4.0, 5.0);
         _textView.showsVerticalScrollIndicator = NO;
-        
+        _textView.tintColor=[UIColor lightGrayColor];
         [self.contentView addSubview:_textView];
         
         _placeHolderLabel = [[UILabel alloc] init];

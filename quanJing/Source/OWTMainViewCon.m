@@ -30,9 +30,9 @@
 #import "HuanXinManager.h"
 #import "HXChatInitModel.h"
 #import "NetStatusMonitor.h"
+#import "OWTTabBarHider.h"
 
 #import "PostFormData.h"
-
 #import "RRConst.h"
 #import "LJHomeViewCon.h"
 #import "OWTAppDelegate.h"
@@ -74,6 +74,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 @implementation OWTMainViewCon
 {
 	UIImageView * _tabBarImageView;
+    OWTTabBarHider *_tabBar;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -91,7 +92,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 {
 	self.navigationController.navigationBar.backgroundColor = [UIColor blackColor];
 	self.delegate = self;
-	
+    _tabBar=[[OWTTabBarHider alloc]init];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 	selector:@selector(reachabilityChangedNotification:)
 	name:kReachabilityChangedNotification object:nil];
@@ -197,9 +198,9 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 {
 	NSArray * image1 = @[@"主页01", @"发现00", @"圈00", @"我00"];
 	NSArray * image2 = @[@"主页00", @"发现01", @"圈01", @"我01"];
-	
+    [_tabBar showTabBar];
 	self.selectedIndex = sender.tag - 500;
-	
+
 	for (UIView * view in _tabBarImageView.subviews) {
 		if ([view isKindOfClass:[UILabel class]]) {
 			UILabel * label = (UILabel *)view;

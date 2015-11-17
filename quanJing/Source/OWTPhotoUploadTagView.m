@@ -106,6 +106,7 @@
         _textField.font = [UIFont systemFontOfSize:13.0];
         _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         _textField.returnKeyType = UIReturnKeyDone;
+        _textField.tintColor=[UIColor lightGrayColor];
         [self addSubview:_textField];
         _tagsView = [[UIView alloc] init];
         [self addSubview:_tagsView];
