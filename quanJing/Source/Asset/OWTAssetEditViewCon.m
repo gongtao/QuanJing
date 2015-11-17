@@ -219,7 +219,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -247,7 +247,7 @@
             break;
         }
             
-        case 4: {
+        case 3: {
             if (!_deleteCell) {
                 _deleteCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
                 _deleteCell.backgroundColor = [UIColor clearColor];
