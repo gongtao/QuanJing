@@ -1038,7 +1038,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
         [UMSocialData defaultData].extConfig.qqData.shareText = _imageAsset.tag;
         [UMSocialData defaultData].extConfig.qzoneData.title = title;
         [UMSocialData defaultData].extConfig.qzoneData.shareText = _imageAsset.tag;
-		[UMSocialData defaultData].extConfig.wechatSessionData.shareText = title;
+		[UMSocialData defaultData].extConfig.wechatSessionData.shareText = shareText;
         [UMSocialData defaultData].extConfig.wechatTimelineData.title = shareText;
         [UMSocialData defaultData].extConfig.wechatFavoriteData.title = shareText;
 		
