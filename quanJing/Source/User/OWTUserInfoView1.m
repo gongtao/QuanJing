@@ -121,6 +121,13 @@ typedef enum {
 	[self updateFollowingNum:_user.followAmount.intValue];
 	[self updateLikesNum:[_user.collectAmount integerValue]];
 	[self updateBasedOnIsCurrentUser];
+	
+	if (self.user.bgUrl && (self.user.bgUrl.length > 0))
+		[_userImageView setImageWithURL:[NSURL URLWithString:self.user.bgUrl]
+		placeholderImage:[UIImage imageNamed:@"我背景.jpg"]
+		completed:^(UIImage * image, NSError * error, SDImageCacheType cacheType) {}];
+	else
+		_userImageView.image = [UIImage imageNamed:@"我背景.jpg"];
 }
 
 //
@@ -216,16 +223,12 @@ typedef enum {
 	preController.delegate = self;
 	
 	preController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-	
 }
 
 - (void)updateBasedOnIsCurrentUser
 {
 	if ([_user.uid.stringValue isEqualToString:[QJPassport sharedPassport].currentUser.uid.stringValue]) {
-		[_actionButton setTitle:[NSString stringWithFormat:@"ID:%@", _user.uid.stringValue] forState:UIControlStateNormal];
-		_actionButtonType = nWTUserInfoViewActionButtonEdit;
-		_actionButton.hidden = NO;
-		_signatureLabel.hidden = YES;
+		_signatureLabel.text = [NSString stringWithFormat:@"ID:%@", _user.uid.stringValue];
 		_hxChatBeginBtn.hidden = YES;
 		_ifCurrenUserEnter = YES;
 	}
@@ -238,7 +241,8 @@ typedef enum {
 		
 		if (currentUser != nil) {
 			// 是否关注
-            [self isFollowingUser:_user];
+			[self isFollowingUser:_user];
+			
 			if (_user.hasFollowUser.boolValue) {
 				_isCared = YES;
 				_actionButtonType = nWTUserInfoViewActionButtonUnfollow;
@@ -262,18 +266,18 @@ typedef enum {
 	}
 }
 
-- (BOOL)isFollowingUser:(QJUser*)user
+- (BOOL)isFollowingUser:(QJUser *)user
 {
-    NSNumber* userID = user.uid;
-//    if (_fellowshipInfo == nil || _fellowshipInfo.followingUserIDs == nil)
-//    {
-//        return NO;
-//    }
-    
-   BOOL isFollowing = [user.hasFollowUser boolValue];
-    return isFollowing;
+	NSNumber * userID = user.uid;
+	//    if (_fellowshipInfo == nil || _fellowshipInfo.followingUserIDs == nil)
+	//    {
+	//        return NO;
+	//    }
+	
+	BOOL isFollowing = [user.hasFollowUser boolValue];
+	
+	return isFollowing;
 }
-
 
 // 加关注按钮
 - (void)careButtonPressed
@@ -295,7 +299,7 @@ typedef enum {
 						[SVProgressHUD showError:error];
 						return;
 					}
-                    _user.hasFollowUser = [NSNumber numberWithBool:YES];
+					_user.hasFollowUser = [NSNumber numberWithBool:YES];
 					[SVProgressHUD dismiss];
 					[self updateBasedOnIsCurrentUser];
 				});
@@ -312,7 +316,7 @@ typedef enum {
 						[SVProgressHUD showError:error];
 						return;
 					}
-                    _user.hasFollowUser = [NSNumber numberWithBool:NO];
+					_user.hasFollowUser = [NSNumber numberWithBool:NO];
 					[SVProgressHUD dismiss];
 					[self updateBasedOnIsCurrentUser];
 				});
