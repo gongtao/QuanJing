@@ -1021,20 +1021,26 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 		[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
 		[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeDefault;
 		[UMSocialData defaultData].extConfig.wechatSessionData.url = url;
-		[UMSocialData defaultData].extConfig.wechatTimelineData.url = url;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = url;
+        [UMSocialData defaultData].extConfig.wechatFavoriteData.url = url;
 		[UMSocialData defaultData].extConfig.qqData.url = url;
 		[UMSocialData defaultData].extConfig.qzoneData.url = url;
-		NSString * title = nil;
+		NSString * title = @"全景图片";
 		
+        NSString * shareText = nil;
 		if (_imageAsset.tag)
-			title = [NSString stringWithFormat:@"全景图片--%@", _imageAsset.tag];
+			shareText = [NSString stringWithFormat:@"全景图片--%@", _imageAsset.tag];
 		else
-			title = @"全景图片";
-			
-		[UMSocialData defaultData].extConfig.qqData.title = title;
-		[UMSocialData defaultData].extConfig.qzoneData.title = title;
-		[UMSocialData defaultData].extConfig.wechatSessionData.title = title;
-		[UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
+			shareText = @"全景图片";
+        
+        [UMSocialData defaultData].extConfig.sinaData.shareText = shareText;
+        [UMSocialData defaultData].extConfig.qqData.title = title;
+        [UMSocialData defaultData].extConfig.qqData.shareText = _imageAsset.tag;
+        [UMSocialData defaultData].extConfig.qzoneData.title = title;
+        [UMSocialData defaultData].extConfig.qzoneData.shareText = _imageAsset.tag;
+		[UMSocialData defaultData].extConfig.wechatSessionData.shareText = title;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = shareText;
+        [UMSocialData defaultData].extConfig.wechatFavoriteData.title = shareText;
 		
 		[UMSocialSnsService presentSnsIconSheetView:self
 		appKey:nil

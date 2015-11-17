@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface LJSearchViewController : UIViewController
--(void)setSearchWord:(NSString*)keyword;
+- (void)setSearchWord:(NSString *)keyword;
 @end

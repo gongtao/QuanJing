@@ -442,20 +442,29 @@
 		[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
 		[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeDefault;
 		[UMSocialData defaultData].extConfig.wechatSessionData.url = url;
-		[UMSocialData defaultData].extConfig.wechatTimelineData.url = url;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = url;
+        [UMSocialData defaultData].extConfig.wechatFavoriteData.url = url;
 		[UMSocialData defaultData].extConfig.qqData.url = url;
-		[UMSocialData defaultData].extConfig.qzoneData.url = url;
-		
-		NSString * title = @"全景图片";
-		NSString * descript = _caption.text;
-			
-		if (descript && (descript.length > 0))
-			title = [title stringByAppendingFormat:@"--%@", descript];
-			
-		[UMSocialData defaultData].extConfig.qqData.title = title;
-		[UMSocialData defaultData].extConfig.qzoneData.title = title;
-		[UMSocialData defaultData].extConfig.wechatSessionData.title = title;
-		[UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
+        [UMSocialData defaultData].extConfig.qzoneData.url = url;
+        
+        NSString * title = @"全景图片";
+        
+        NSString * shareText = nil;
+        NSString * descript = _caption.text;
+        if (descript && (descript.length > 0))
+            shareText = [NSString stringWithFormat:@"全景图片--%@", descript];
+        else
+            shareText = @"全景图片";
+        
+        [UMSocialData defaultData].extConfig.sinaData.shareText = shareText;
+        [UMSocialData defaultData].extConfig.qqData.title = title;
+        [UMSocialData defaultData].extConfig.qqData.shareText = descript;
+        [UMSocialData defaultData].extConfig.qzoneData.title = title;
+        [UMSocialData defaultData].extConfig.qzoneData.shareText = descript;
+        [UMSocialData defaultData].extConfig.wechatSessionData.shareText = title;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = shareText;
+        [UMSocialData defaultData].extConfig.wechatFavoriteData.title = shareText;
+        
 		[UMSocialSnsService presentSnsIconSheetView:_viewContoller
 		appKey:nil
 		shareText:nil

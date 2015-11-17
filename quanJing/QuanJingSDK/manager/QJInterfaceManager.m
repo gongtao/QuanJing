@@ -139,7 +139,7 @@
 		return nil;
 		
 	NSString * url = [kQJServerURL stringByAppendingString:kQJShareActionPath];
-	NSString * params = [NSString stringWithFormat:@"?id=%@&imgId=%@", actionId, imageId];
+	NSString * params = [NSString stringWithFormat:@"?actionId=%@&imgId=%@", actionId, imageId];
 	
 	return [url stringByAppendingString:params];
 }

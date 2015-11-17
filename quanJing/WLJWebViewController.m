@@ -197,14 +197,18 @@
 		[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeDefault;
 		
 		[UMSocialData defaultData].extConfig.wechatSessionData.url = self.urlString;
-		[UMSocialData defaultData].extConfig.wechatTimelineData.url = self.urlString;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = self.urlString;
+        [UMSocialData defaultData].extConfig.wechatFavoriteData.url = self.urlString;
 		[UMSocialData defaultData].extConfig.qqData.url = self.urlString;
 		[UMSocialData defaultData].extConfig.qzoneData.url = self.urlString;
-			
-		[UMSocialData defaultData].extConfig.qqData.title = _articleTitle;
-		[UMSocialData defaultData].extConfig.qzoneData.title = _articleTitle;
-		[UMSocialData defaultData].extConfig.wechatSessionData.title = _articleTitle;
-		[UMSocialData defaultData].extConfig.wechatTimelineData.title = _articleTitle;
+        
+        [UMSocialData defaultData].extConfig.sinaData.shareText = _articleTitle;
+        [UMSocialData defaultData].extConfig.qqData.title = _articleTitle;
+        [UMSocialData defaultData].extConfig.qzoneData.title = _articleTitle;
+        [UMSocialData defaultData].extConfig.wechatSessionData.shareText = _articleTitle;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = _articleTitle;
+        [UMSocialData defaultData].extConfig.wechatFavoriteData.title = _articleTitle;
+        
 		[UMSocialSnsService presentSnsIconSheetView:self
 		appKey:nil
 		shareText:nil
