@@ -534,6 +534,43 @@
 			
 			NSLog(@"isLogin: %i", [[QJPassport sharedPassport] isLogin]);
 			
+			__block QJImageObject * imageObject = nil;
+			[[QJInterfaceManager sharedManager] requestUserImageList:nil
+			pageNum:1
+			pageSize:20
+			currentImageId:nil
+			finished:^(NSArray * imageObjectArray, BOOL isLastPage, NSArray * resultArray, NSError * error) {
+				if (error) {
+					XCTFail(@"testUserAlbumExample error: %@", error);
+					return;
+				}
+				
+				if (resultArray && (resultArray.count > 0))
+					imageObject = [imageObjectArray firstObject];
+			}];
+			
+			if (imageObject) {
+				[[QJInterfaceManager sharedManager] requestImageDetail:imageObject.imageId
+				imageType:imageObject.imageType
+				finished:^(QJImageObject * imageObject, NSError * error) {
+					if (error)
+						XCTFail(@"testImageExample error: %@", error);
+				}];
+				
+				NSError * error = [[QJInterfaceManager sharedManager] requestImageModify:imageObject.imageId
+				title:@"test"
+				tag:nil
+				position:nil];
+				
+				if (error)
+					XCTFail(@"testUserAlbumExample error: %@", error);
+					
+				error = [[QJInterfaceManager sharedManager] requestImageDelete:imageObject.imageId];
+				
+				if (error)
+					XCTFail(@"testUserAlbumExample error: %@", error);
+			}
+			
 			__block NSNumber * albumId = nil;
 			[[QJInterfaceManager sharedManager] requestUserAlbumList:1
 			pageSize:20

@@ -834,6 +834,104 @@
 		finished(nil, error);
 }
 
+// 图片修改
+- (NSError *)requestImageModify:(NSNumber *)imageId
+	title:(NSString *)title
+	tag:(NSString *)tag
+	position:(NSString *)position
+{
+	NSParameterAssert(imageId);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"id"] = imageId;
+	
+	if (!QJ_IS_STR_NIL(title))
+		params[@"title"] = title;
+		
+	if (!QJ_IS_STR_NIL(tag))
+		params[@"tag"] = tag;
+		
+	if (!QJ_IS_STR_NIL(title))
+		params[@"position"] = position;
+		
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJImageModifyPath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [self errorFromOperation:responseObject];
+		i--;
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+	else
+		NSLog(@"%@", error);
+		
+	return error;
+}
+
+// 图片删除
+- (NSError *)requestImageDelete:(NSNumber *)imageId
+{
+	NSParameterAssert(imageId);
+	
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	params[@"id"] = imageId;
+	
+	// When request fails, if it could, retry it 3 times at most.
+	int i = 3;
+	__block NSError * error = nil;
+	__block NSDictionary * responseObject = nil;
+	
+	do {
+		error = nil;
+		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+		[self.httpRequestManager getPath:kQJImageDeletePath
+		parameters:params
+		success:^(AFHTTPRequestOperation * operation, id resultResponseObject) {
+			NSLog(@"%@", operation.request.URL);
+			responseObject = resultResponseObject;
+			dispatch_semaphore_signal(sem);
+		}
+		failure:^(AFHTTPRequestOperation * operation, NSError * resultError) {
+			NSLog(@"%@", operation.request.URL);
+			error = resultError;
+			dispatch_semaphore_signal(sem);
+		}];
+		dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+		
+		if (!error)
+			error = [self errorFromOperation:responseObject];
+		i--;
+	} while ([self shouldRetryHttpRequest:error] && i >= 0);
+	
+	if (!error)
+		NSLog(@"%@", responseObject);
+	else
+		NSLog(@"%@", error);
+		
+	return error;
+}
+
 // 图片评论
 - (NSError *)requestImageComment:(NSNumber *)imageId
 	imageType:(NSNumber *)imageType

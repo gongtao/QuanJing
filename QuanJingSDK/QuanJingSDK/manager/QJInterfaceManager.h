@@ -93,6 +93,15 @@ NS_ASSUME_NONNULL_BEGIN
 	imageType:(NSNumber *)imageType
 	finished:(nullable void (^)(QJImageObject * imageObject, NSError * error))finished;
 	
+// 图片修改
+- (NSError *)requestImageModify:(NSNumber *)imageId
+	title:(nullable NSString *)title
+	tag:(nullable NSString *)tag
+	position:(nullable NSString *)position;
+	
+// 图片删除
+- (NSError *)requestImageDelete:(NSNumber *)imageId;
+
 // 图片评论
 - (NSError *)requestImageComment:(NSNumber *)imageId
 	imageType:(NSNumber *)imageType
