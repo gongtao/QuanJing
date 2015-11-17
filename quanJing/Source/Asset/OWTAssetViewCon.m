@@ -216,6 +216,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	_textField = [[UITextField alloc]initWithFrame:CGRectMake(10, 5, SCREENWIT - 90, 34)];
 	_textField.borderStyle = UITextBorderStyleRoundedRect;
 	_textField.placeholder = @"发表评论";
+    _textField.tintColor=[UIColor lightGrayColor];
 	[_imageView addSubview:_textField];
 	_sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	[_sendButton setBackgroundImage:[UIImage imageNamed:@"b3.png"] forState:UIControlStateNormal];

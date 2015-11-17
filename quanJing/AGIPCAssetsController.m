@@ -175,6 +175,7 @@
 		[wself.assets removeAllObjects];
 		[wself.assets addObjectsFromArray:arr];
 		_searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 40)];
+        _searchBar.tintColor=[UIColor lightGrayColor];
 		_searchBar.delegate = wself;
 		_searchBar.placeholder = @"搜索";
 		[wself changeSearchBarBackcolor:_searchBar];
@@ -201,6 +202,7 @@
 	// add by springox(20141105)
 	[AGIPCGridItem performSelector:@selector(resetNumberOfSelections)];
 	_searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 40)];
+    _searchBar.tintColor=[UIColor lightGrayColor];
 	_searchBar.delegate = self;
 	_searchBar.placeholder = @"搜索";
 	isSearching = NO;
@@ -536,6 +538,7 @@
 	_searchBar.delegate = self;
 	_searchBar.placeholder = @"搜索";
 	isSearching = NO;
+    _searchBar.tintColor=[UIColor lightGrayColor];
 	[self changeSearchBarBackcolor:_searchBar];
 	[_assets removeAllObjects];
 	[_assets addObjectsFromArray:_allAssets];

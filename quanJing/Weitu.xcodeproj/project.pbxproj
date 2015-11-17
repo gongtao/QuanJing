@@ -471,6 +471,7 @@
 		A3DB10C71BABAD690033522F /* 赞00.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10C01BABAD690033522F /* 赞00.png */; };
 		A3E1810C1BECE282004EDD22 /* seach@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E1810B1BECE282004EDD22 /* seach@3x.png */; };
 		A3E447FC1A79B00C000DE7BA /* selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E447FB1A79B00C000DE7BA /* selected@2x.png */; };
+		A3E6778C1BFAD0A700020B71 /* loginBackView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E6778B1BFAD0A700020B71 /* loginBackView.m */; settings = {ASSET_TAGS = (); }; };
 		A3EB5A411BD7412B00E08563 /* OWTSearchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A3C1BD7412B00E08563 /* OWTSearchManager.m */; };
 		A3EB5A421BD7412B00E08563 /* OWTSearchResultsViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A3E1BD7412B00E08563 /* OWTSearchResultsViewCon.m */; };
 		A3EB5A431BD7412B00E08563 /* OWTSearchViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A401BD7412B00E08563 /* OWTSearchViewCon.m */; };
@@ -1657,6 +1658,8 @@
 		A3DB10C01BABAD690033522F /* 赞00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "赞00.png"; sourceTree = "<group>"; };
 		A3E1810B1BECE282004EDD22 /* seach@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "seach@3x.png"; sourceTree = "<group>"; };
 		A3E447FB1A79B00C000DE7BA /* selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selected@2x.png"; sourceTree = "<group>"; };
+		A3E6778A1BFAD0A700020B71 /* loginBackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = loginBackView.h; sourceTree = "<group>"; };
+		A3E6778B1BFAD0A700020B71 /* loginBackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = loginBackView.m; sourceTree = "<group>"; };
 		A3EB5A3B1BD7412B00E08563 /* OWTSearchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTSearchManager.h; sourceTree = SOURCE_ROOT; };
 		A3EB5A3C1BD7412B00E08563 /* OWTSearchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTSearchManager.m; sourceTree = SOURCE_ROOT; };
 		A3EB5A3D1BD7412B00E08563 /* OWTSearchResultsViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTSearchResultsViewCon.h; sourceTree = SOURCE_ROOT; };
@@ -3764,6 +3767,8 @@
 				A3D4CBAC1A834C670097B48E /* OWTSMSAuthCodeVerifyViewCon.h */,
 				A3D4CBAD1A834C670097B48E /* OWTSMSAuthCodeVerifyViewCon.m */,
 				A3D4CBAE1A834C670097B48E /* OWTSMSAuthCodeVerifyViewCon.xib */,
+				A3E6778A1BFAD0A700020B71 /* loginBackView.h */,
+				A3E6778B1BFAD0A700020B71 /* loginBackView.m */,
 			);
 			name = auth;
 			sourceTree = "<group>";
@@ -5639,6 +5644,7 @@
 				9044E3FF18CAE5FB00784D38 /* OWTMainViewCon.m in Sources */,
 				A3C957C71BB0FFAF00EADD73 /* OWTPhotoUploadImagesCell.m in Sources */,
 				E0B99BAE1B0596D400ED7831 /* UIImage+EMGIF.m in Sources */,
+				A3E6778C1BFAD0A700020B71 /* loginBackView.m in Sources */,
 				66A4FA641AA9A1B7006F6547 /* AGImagePickerController.m in Sources */,
 				66A4FA661AA9A1B7006F6547 /* AGPreviewScrollView.m in Sources */,
 				31DB50561BF81AC8002BAE91 /* QJURLCache.m in Sources */,

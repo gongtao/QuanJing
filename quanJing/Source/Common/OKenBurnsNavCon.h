@@ -14,7 +14,7 @@
 @property (nonatomic, copy) NSArray* backgroundImages;
 @property (nonatomic, assign) float transitionDuration;
 @property (nonatomic, assign) float initialDelay;
-
+@property(nonatomic,assign)BOOL isAnimation;
 - (id)initWithBackgroundImages:(NSArray*)backgroundImages
             transitionDuration:(float)transitionDuration
                   initialDelay:(float)initialDelay;

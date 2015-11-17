@@ -72,6 +72,7 @@
 	_searchBar.placeholder = @"搜图片";
 	_searchBar.translucent = NO;
 	_searchBar.searchBarStyle = UISearchBarStyleMinimal;
+    _searchBar.tintColor=[UIColor lightGrayColor];
 	[_searchBar setSearchFieldBackgroundImage:[[UIImage imageNamed:@"SearchBarBG"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)]
 	forState:UIControlStateNormal];
 	[self changeSearchBarBackcolor:_searchBar];

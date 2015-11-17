@@ -518,6 +518,7 @@
 	self.maintableview.headerPullToRefreshText = @"";
 	self.maintableview.headerReleaseToRefreshText = @"";
 	_searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 44.0)];
+    _searchBar.tintColor=[UIColor lightGrayColor];
 	_searchBar.delegate = self;
 	_searchBar.placeholder = @"搜索";
 	[self changeSearchBarBackcolor:_searchBar];
@@ -619,6 +620,7 @@
 	_searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 44.0)];
 	_searchBar.delegate = self;
 	_searchBar.placeholder = @"搜索";
+    _searchBar.tintColor=[UIColor lightGrayColor];
 	[self changeSearchBarBackcolor:_searchBar];
 	isSearching = NO;
 	[dataSource removeAllObjects];
@@ -893,6 +895,7 @@
         _assert = (NSMutableArray *)[[_allAsserts reverseObjectEnumerator]allObjects];
     }
     _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 44.0)];
+    _searchBar.tintColor=[UIColor lightGrayColor];
     _searchBar.delegate = self;
     _searchBar.placeholder = @"搜索";
     _searchBar.translucent = YES;
@@ -1023,6 +1026,7 @@
 			_reloadAssetGroup = assetGroup;
 			_captions = nil;
 			_searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, SCREENWIT, 44.0)];
+            _searchBar.tintColor=[UIColor lightGrayColor];
 			_searchBar.delegate = self;
 			_searchBar.placeholder = @"搜索";
 			[self changeSearchBarBackcolor:_searchBar];
@@ -1484,8 +1488,8 @@
 	//    imagePickerController.selection = self.selectedPhotos;
 	imagePickerController.maximumNumberOfPhotosToBeSelected = 9;
 	
-	if ([_assert count] < 1)
-		return;
+//	if ([_assert count] < 1)
+//		return;
 		
 	[self presentModalViewController:imagePickerController animated:YES];
 	[imagePickerController showFirstAssetsController];

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OWTTextEditViewCon">
@@ -16,11 +16,12 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" text="Test" translatesAutoresizingMaskIntoConstraints="NO" id="zqT-Rh-DK2">
-                    <rect key="frame" x="0.0" y="72" width="320" height="220"/>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" text="Test" translatesAutoresizingMaskIntoConstraints="NO" id="zqT-Rh-DK2">
+                    <rect key="frame" x="0.0" y="72" width="320" height="312"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="220" id="JJi-4J-Zj3"/>
+                        <constraint firstAttribute="height" constant="312" id="rof-2C-8y5"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no"/>
@@ -28,16 +29,12 @@
             </subviews>
             <color key="backgroundColor" white="0.94910109186746983" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="zqT-Rh-DK2" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="L4A-OM-qoP"/>
-                <constraint firstItem="zqT-Rh-DK2" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="72" id="ggL-Wt-kaH"/>
-                <constraint firstAttribute="trailing" secondItem="zqT-Rh-DK2" secondAttribute="trailing" id="hZb-F3-vEl"/>
+                <constraint firstItem="zqT-Rh-DK2" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="5ZV-Ks-4a3"/>
+                <constraint firstItem="zqT-Rh-DK2" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="7h1-ML-Fdl"/>
+                <constraint firstAttribute="trailing" secondItem="zqT-Rh-DK2" secondAttribute="trailing" id="Ezu-nJ-H9R"/>
             </constraints>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+            <point key="canvasLocation" x="230" y="238"/>
         </view>
     </objects>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
 </document>

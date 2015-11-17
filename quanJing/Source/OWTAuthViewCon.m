@@ -7,7 +7,6 @@
 //
 
 #import "OWTAuthViewCon.h"
-#import "OKenBurnsNavCon.h"
 #import "OWTLoginRegisterSelectionViewCon.h"
 #import "OWTSMSAuthCodeRequestViewCon.h"
 #import "OWTSMSAuthCodeVerifyViewCon.h"
@@ -17,6 +16,7 @@
 #import "OWTAccessToken.h"
 #import <SIAlertView/SIAlertView.h>
 #import "UIColor+HexString.h"
+#import "loginBackView.h"
 @interface OWTAuthViewCon ()
 {
 }
@@ -57,18 +57,9 @@
 - (void)setupBackgroundView
 {
     self.navigationController.navigationBar.titleTextAttributes=[NSDictionary dictionaryWithObject:[UIColor colorWithHexString:@"f6f6f6"] forKey:UITextAttributeTextColor];
-    OKenBurnsNavCon* burnsViewCon = [[OKenBurnsNavCon alloc] initWithNibName:nil bundle:nil];
-
-    NSArray* images = @[
-                         [UIImage imageNamed:@"photo_bg_4"],
-                         [UIImage imageNamed:@"photo_bg_5"],
-                         [UIImage imageNamed:@"photo_bg_3"],
-                         [UIImage imageNamed:@"photo_bg_1"] ];
-
-    burnsViewCon.backgroundImages = images;
-    [self addChildViewController:burnsViewCon];
-    [self.view insertSubview:burnsViewCon.view atIndex:0];
-    burnsViewCon.view.frame = self.view.bounds;
+    loginBackView *lvc=[[loginBackView alloc]init];
+    [self addChildViewController:lvc];
+    [self.view insertSubview:lvc.view  atIndex:0];
 }
 
 - (void)setupLoginRegisterSelectionViewCon
