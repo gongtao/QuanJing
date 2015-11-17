@@ -8,19 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-
-
 #import "singleton.h"
 #import "QuanJingSDK.h"
 @interface OWTUserInfoView : UICollectionReusableView
 
-@property(nonatomic,strong)QJUser *user;
+@property(nonatomic, strong) QJUser * user;
 @property (nonatomic, strong) void (^editUserInfoAction)();
 
 @property (nonatomic, strong) void (^showAssetsAction)();
 @property (nonatomic, strong) void (^showLikedAssetsAction)();
 @property (nonatomic, strong) void (^showFollowingsAction)();
 @property (nonatomic, strong) void (^showFollowersAction)();
-@property (nonatomic, strong) void (^changBgImageACtion)(UIImageView* imageVIew);
+@property (nonatomic, strong) void (^changBgImageACtion)(UIImageView * imageVIew);
 @property (nonatomic, assign) NSInteger selfNum;
 @end
