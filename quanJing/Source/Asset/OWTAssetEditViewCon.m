@@ -141,8 +141,7 @@
         _uploadTagView.delegate = self;
     }
     
-    __weak __typeof(self) weakSelf = self;
-    _caption=_asset.descript;
+    _caption=_asset.title;
     _locationString=_asset.position;
     _keywords=_asset.tag;
     _isPrivate=_asset.open.boolValue;
@@ -173,6 +172,7 @@
     
     [SVProgressHUD showWithStatus:@"正在修改图片"];
     
+    _caption = _addDesCell.textView.text;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSError * error = [[QJInterfaceManager sharedManager] requestImageModify:_asset.imageId
                                                                            title:_caption
