@@ -197,6 +197,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 					_imageAsset.likes = imageObject.likes;
 					_imageAsset.userId = imageObject.userId;
 					_imageAsset.descript = imageObject.descript;
+					_imageAsset.picId = imageObject.picId;
 					[self reloadData];
 					[self loadRelatedAssetsInSearch];
 				}
@@ -216,7 +217,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	_textField = [[UITextField alloc]initWithFrame:CGRectMake(10, 5, SCREENWIT - 90, 34)];
 	_textField.borderStyle = UITextBorderStyleRoundedRect;
 	_textField.placeholder = @"发表评论";
-    _textField.tintColor=[UIColor lightGrayColor];
+	_textField.tintColor = [UIColor lightGrayColor];
 	[_imageView addSubview:_textField];
 	_sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	[_sendButton setBackgroundImage:[UIImage imageNamed:@"b3.png"] forState:UIControlStateNormal];
@@ -450,7 +451,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	
 	[_collectionView reloadData];
 	[self substituteNavigationBarBackItem];
-	    [self updateNavBarButtons];
+	[self updateNavBarButtons];
 	[_tabBarHider hideTabBar];
 	[MobClick beginEvent:@"图片详情"];
 }
@@ -493,41 +494,40 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	}
 }
 
- - (void)editAsset
- {
-
-    OWTAssetEditViewCon* editViewCon = [[OWTAssetEditViewCon alloc] initWithAsset:_imageAsset deletionAllowed:_deletionAllowed];
-        editViewCon.doneAction=^(EWTDoneType doneType) {
-        switch (doneType)
-        {
-            case nWTDoneTypeCancelled:
-                [self dismissViewControllerAnimated:YES completion:nil];
-                break;
-            case nWTDoneTypeUpdated:
-                [self getLikeAndCommendData];
-                [self dismissViewControllerAnimated:YES completion:nil];
-                break;
-            case nWTDoneTypeDeleted:
-            {
-                AssertTR(_deletionAllowed);
-                [self dismissViewControllerAnimated:YES completion:^{
-                    if (_onDeleteAction != nil)
-                    {
-                        _onDeleteAction();
-                    }
-                    [self.navigationController popViewControllerAnimated:YES];
-                }];
-                break;
-            }
-            default:
-                break;
-        }
-    };
-
-    UINavigationController* navCon = [[UINavigationController alloc] initWithRootViewController:editViewCon];
-    [self presentViewController:navCon animated:YES completion:nil];
- }
-
+- (void)editAsset
+{
+	OWTAssetEditViewCon * editViewCon = [[OWTAssetEditViewCon alloc] initWithAsset:_imageAsset deletionAllowed:_deletionAllowed];
+	
+	editViewCon.doneAction = ^(EWTDoneType doneType) {
+		switch (doneType) {
+			case nWTDoneTypeCancelled:
+				[self dismissViewControllerAnimated:YES completion:nil];
+				break;
+				
+			case nWTDoneTypeUpdated:
+				[self getLikeAndCommendData];
+				[self dismissViewControllerAnimated:YES completion:nil];
+				break;
+				
+			case nWTDoneTypeDeleted:
+				{
+					AssertTR(_deletionAllowed);
+					[self dismissViewControllerAnimated:YES completion:^{
+					if (_onDeleteAction != nil)
+						_onDeleteAction();
+					[self.navigationController popViewControllerAnimated:YES];
+				}];
+					break;
+				}
+				
+			default:
+				break;
+		}
+	};
+	
+	UINavigationController * navCon = [[UINavigationController alloc] initWithRootViewController:editViewCon];
+	[self presentViewController:navCon animated:YES completion:nil];
+}
 
 - (void)mergeAssets:(NSArray *)imageObjectArray
 {
@@ -548,13 +548,11 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 					return;
 				}
 				
-				if (imageObjectArray.count == 0) {
-					[SVProgressHUD showErrorWithStatus:@"没有找到图片"];
-				}
-				else {
-					[self mergeAssets:imageObjectArray];
-					[SVProgressHUD dismiss];
-				}
+				if (imageObjectArray.count == 0)
+					return;
+					
+				[self mergeAssets:imageObjectArray];
+				[SVProgressHUD dismiss];
 			});
 		}];
 	});
@@ -575,7 +573,8 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			[fm requestImageSearchKey:searchTag
-			pageNum:_searchResults.count / 50 + 1 pageSize:50
+			pageNum:_searchResults.count / 50 + 1
+			pageSize:50
 			currentImageId:_imageAsset.imageId
 			finished:^(NSArray * _Nonnull imageObjectArray, NSArray * _Nonnull resultArray, NSError * _Nonnull error) {
 				dispatch_async(dispatch_get_main_queue(), ^{
@@ -584,10 +583,9 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 						return;
 					}
 					
-					if (imageObjectArray.count == 0) {
-						[SVProgressHUD showErrorWithStatus:@"没有找到图片"];
+					if (imageObjectArray.count == 0)
 						return;
-					}
+						
 					[self mergeAssets:imageObjectArray];
 					[SVProgressHUD dismiss];
 				});

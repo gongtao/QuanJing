@@ -246,8 +246,8 @@
 	_reportBtn.frame = CGRectMake(SCREENWIT - 10 - 40, _userID.frame.origin.y, 40, 17.5);
 	
 	// *To do 编号 待补全*/
-	if ((_asset.captionCn != nil) && (_asset.captionCn > 0))
-		_userID.text = [NSString stringWithFormat:@"编号：%@", _asset.captionCn];
+	if ((_asset.picId != nil) && (_asset.picId.length > 0))
+		_userID.text = [NSString stringWithFormat:@"编号：%@", _asset.picId];
 	else
 		_userID.text = [NSString stringWithFormat:@"编号：%@", [_asset.imageId stringValue]];
 		

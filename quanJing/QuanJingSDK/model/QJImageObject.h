@@ -64,6 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSString * photographer;
 
+@property (nonatomic, strong, nullable) NSString * picId;
+
 @property (nonatomic, strong, nullable) NSNumber * picType;
 
 @property (nonatomic, strong, nullable) NSDate * shootingDate;

@@ -194,7 +194,13 @@
 	NSString * photographer = json[@"photographer"];
 	
 	if (!QJ_IS_STR_NIL(photographer))
-		self.photographer = photographer;
+        self.photographer = photographer;
+    
+    // picId
+    NSString * picId = json[@"picId"];
+    
+    if (!QJ_IS_STR_NIL(picId))
+        self.picId = picId;
 		
 	// picType
 	NSNumber * picType = json[@"picType"];

@@ -94,7 +94,13 @@
 	NSNumber * height = json[@"height"];
 	
 	if (!QJ_IS_NUM_NIL(height))
-		self.height = height;
+        self.height = height;
+    
+    // picId
+    NSString * picId = json[@"picId"];
+    
+    if (!QJ_IS_STR_NIL(picId))
+        self.picId = picId;
 		
 	// imageType
 	NSNumber * imageType = json[@"imageType"];
