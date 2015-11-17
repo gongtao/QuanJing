@@ -1056,7 +1056,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 		NSString * title = nil;
 		
 		if (_imageAsset.tag)
-			title = [NSString stringWithFormat:@"全景图片：%@", _imageAsset.tag];
+			title = [NSString stringWithFormat:@"全景图片--%@", _imageAsset.tag];
 		else
 			title = @"全景图片";
 			

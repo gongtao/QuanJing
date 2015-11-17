@@ -447,14 +447,10 @@
 		[UMSocialData defaultData].extConfig.qzoneData.url = url;
 		
 		NSString * title = @"全景图片";
-		NSString * userName = _userName.text;
 		NSString * descript = _caption.text;
-		
-		if (userName && (userName.length > 0))
-			title = [title stringByAppendingFormat:@"：%@", userName];
 			
 		if (descript && (descript.length > 0))
-			title = [title stringByAppendingFormat:@"——%@", descript];
+			title = [title stringByAppendingFormat:@"--%@", descript];
 			
 		[UMSocialData defaultData].extConfig.qqData.title = title;
 		[UMSocialData defaultData].extConfig.qzoneData.title = title;
