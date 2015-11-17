@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "QuanJingSDK.h"
 @interface OWTAssetEditViewCon : UITableViewController
 
 @property (nonatomic, strong) void (^doneAction)(EWTDoneType doneType);
 
-- (id)initWithAsset:(OWTAsset*)asset deletionAllowed:(BOOL)deletionAllowed;
+- (id)initWithAsset:(QJImageObject*)asset deletionAllowed:(BOOL)deletionAllowed;
 
 @end

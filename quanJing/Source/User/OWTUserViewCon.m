@@ -725,7 +725,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 			
 			__weak OWTUserViewCon * wself = self;
 			_userInfoView1.editUserInfoAction = ^{
-				//                            [wself editUserInfo];
+//				                            [wself editUserInfo];
 			};
 			_userInfoView1.showAssetsAction = ^{[wself showAssets]; };
 			_userInfoView1.showLikedAssetsAction = ^{[wself showLikedAssets]; };

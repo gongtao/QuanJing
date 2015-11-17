@@ -229,6 +229,9 @@ typedef enum {
 {
 	if ([_user.uid.stringValue isEqualToString:[QJPassport sharedPassport].currentUser.uid.stringValue]) {
 		_signatureLabel.text = [NSString stringWithFormat:@"ID:%@", _user.uid.stringValue];
+//        _actionButtonType = nWTUserInfoViewActionButtonEdit;
+//        _actionButton.hidden = NO;
+
 		_hxChatBeginBtn.hidden = YES;
 		_ifCurrenUserEnter = YES;
 	}
@@ -238,11 +241,8 @@ typedef enum {
 		_hxChatBeginBtn.hidden = NO;
 		_signatureLabel.text = [NSString stringWithFormat:@"ID:%@", _user.uid.stringValue];
 		QJUser * currentUser = [QJPassport sharedPassport].currentUser;
-		
 		if (currentUser != nil) {
 			// 是否关注
-			[self isFollowingUser:_user];
-			
 			if (_user.hasFollowUser.boolValue) {
 				_isCared = YES;
 				_actionButtonType = nWTUserInfoViewActionButtonUnfollow;
@@ -266,18 +266,6 @@ typedef enum {
 	}
 }
 
-- (BOOL)isFollowingUser:(QJUser *)user
-{
-	NSNumber * userID = user.uid;
-	//    if (_fellowshipInfo == nil || _fellowshipInfo.followingUserIDs == nil)
-	//    {
-	//        return NO;
-	//    }
-	
-	BOOL isFollowing = [user.hasFollowUser boolValue];
-	
-	return isFollowing;
-}
 
 // 加关注按钮
 - (void)careButtonPressed

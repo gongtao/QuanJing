@@ -856,7 +856,7 @@
 	}
 	else if ((likeHeight != 0) && (commentHeight == 0)) {
 		_commentBackView.hidden = NO;
-		_commentBackView.frame = CGRectMake(15, cellHeight - likeHeight - commentHeight - 10 - 5 - 10, SCREENWIT - 28, likeHeight + commentHeight + 10 + 10);
+		_commentBackView.frame = CGRectMake(15, cellHeight - likeHeight - commentHeight - 10 - 10, SCREENWIT - 28, likeHeight + commentHeight + 10 + 10);
 	}
 	else if ((likeHeight == 0) && (commentHeight != 0)) {
 		_commentBackView.hidden = NO;

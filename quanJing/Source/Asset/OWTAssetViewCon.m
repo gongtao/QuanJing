@@ -450,7 +450,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	
 	[_collectionView reloadData];
 	[self substituteNavigationBarBackItem];
-	//    [self updateNavBarButtons];
+	    [self updateNavBarButtons];
 	[_tabBarHider hideTabBar];
 	[MobClick beginEvent:@"图片详情"];
 }
@@ -493,68 +493,41 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	}
 }
 
-// - (void)editAsset
-// {
-//    LJAssetEditView *ljvc=[[LJAssetEditView alloc]initWithAsset:self.asset deletionAllowed:_deletionAllowed];
-//    OWTAssetEditViewCon* editViewCon = [[OWTAssetEditViewCon alloc] initWithAsset:self.asset deletionAllowed:_deletionAllowed];
-//    ljvc.doneAction = ^(EWTDoneType doneType) {
-//        switch (doneType)
-//        {
-//            case nWTDoneTypeCancelled:
-//                [self dismissViewControllerAnimated:YES completion:nil];
-//                break;
-//            case nWTDoneTypeUpdated:
-//                [self reloadData];
-//                [self dismissViewControllerAnimated:YES completion:nil];
-//                break;
-//            case nWTDoneTypeDeleted:
-//            {
-//                AssertTR(_deletionAllowed);
-//                [self dismissViewControllerAnimated:YES completion:^{
-//                    if (_onDeleteAction != nil)
-//                    {
-//                        _onDeleteAction();
-//                    }
-//                    [self.navigationController popViewControllerAnimated:YES];
-//                }];
-//                break;
-//            }
-//            default:
-//                break;
-//        }
-//    };
-//    editViewCon.doneAction=^(EWTDoneType doneType) {
-//        switch (doneType)
-//        {
-//            case nWTDoneTypeCancelled:
-//                [self dismissViewControllerAnimated:YES completion:nil];
-//                break;
-//            case nWTDoneTypeUpdated:
-//                [self reloadData];
-//                [self dismissViewControllerAnimated:YES completion:nil];
-//                break;
-//            case nWTDoneTypeDeleted:
-//            {
-//                AssertTR(_deletionAllowed);
-//                [self dismissViewControllerAnimated:YES completion:^{
-//                    if (_onDeleteAction != nil)
-//                    {
-//                        _onDeleteAction();
-//                    }
-//                    [self.navigationController popViewControllerAnimated:YES];
-//                }];
-//                break;
-//            }
-//            default:
-//                break;
-//        }
-//    };
-//
-//    UINavigationController* navCon = [[UINavigationController alloc] initWithRootViewController:editViewCon];
-//    UINavigationController *navc=[[UINavigationController alloc]initWithRootViewController:ljvc];
-//    [self presentViewController:navCon animated:YES completion:nil];
-// }
-//
+ - (void)editAsset
+ {
+
+    OWTAssetEditViewCon* editViewCon = [[OWTAssetEditViewCon alloc] initWithAsset:_imageAsset deletionAllowed:_deletionAllowed];
+        editViewCon.doneAction=^(EWTDoneType doneType) {
+        switch (doneType)
+        {
+            case nWTDoneTypeCancelled:
+                [self dismissViewControllerAnimated:YES completion:nil];
+                break;
+            case nWTDoneTypeUpdated:
+                [self reloadData];
+                [self dismissViewControllerAnimated:YES completion:nil];
+                break;
+            case nWTDoneTypeDeleted:
+            {
+                AssertTR(_deletionAllowed);
+                [self dismissViewControllerAnimated:YES completion:^{
+                    if (_onDeleteAction != nil)
+                    {
+                        _onDeleteAction();
+                    }
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+                break;
+            }
+            default:
+                break;
+        }
+    };
+
+    UINavigationController* navCon = [[UINavigationController alloc] initWithRootViewController:editViewCon];
+    [self presentViewController:navCon animated:YES completion:nil];
+ }
+
 
 - (void)mergeAssets:(NSArray *)imageObjectArray
 {

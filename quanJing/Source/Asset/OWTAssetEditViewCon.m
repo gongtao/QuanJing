@@ -24,7 +24,7 @@
 #import "SVProgressHUD+WTError.h"
 #import "UIImage+Resize.h"
 #import "OWTAlbumInfoEditViewCon.h"
-
+#import "QuanJingSDK.h"
 #define kPhotoUploadNavBarColor                 [UIColor colorWithHexString:@"#2b2b2b"]
 #define kPhotoUploadNavButtonHighlightedColor   [UIColor colorWithHexString:@"#fb0c09"]
 #define kPhotoUploadVCBackgroundColor           [UIColor colorWithHexString:@"#f2f4f5"]
@@ -46,7 +46,7 @@
     NSMutableData *_data;
 }
 
-@property (nonatomic, strong) OWTAsset* asset;
+@property (nonatomic, strong) QJImageObject* asset;
 @property (nonatomic, assign) BOOL deletionAllowed;
 
 @property (nonatomic, strong) UIButton *deleteButton;
@@ -59,7 +59,7 @@
 
 @implementation OWTAssetEditViewCon
 
-- (id)initWithAsset:(OWTAsset*)asset deletionAllowed:(BOOL)deletionAllowed
+- (id)initWithAsset:(QJImageObject*)asset deletionAllowed:(BOOL)deletionAllowed
 {
     self = [super initWithStyle:UITableViewStylePlain];
     if (self)
@@ -96,11 +96,10 @@
 
 - (void)setupInterface {
     self.title = @"编辑图片";
-    [self.navigationController.navigationBar setTitleTextAttributes:@{UITextAttributeTextColor: [UIColor whiteColor]}];
-    
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    
-    [self.navigationController.navigationBar setBarTintColor:kPhotoUploadNavBarColor];
+    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor colorWithHexString:@"f6f6f6"] forKey:UITextAttributeTextColor];
+    self.navigationController.navigationBar.barTintColor =[UIColor blackColor];
+    UIApplication *application = [UIApplication sharedApplication];
+    [application setStatusBarStyle:UIStatusBarStyleLightContent];
     
     self.tableView.allowsSelection = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -126,7 +125,7 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
 }
 
-- (void)setupWithAsset:(OWTAsset*)asset
+- (void)setupWithAsset:(QJImageObject*)asset
 {
     _asset = asset;
     
@@ -142,28 +141,14 @@
     }
     
     __weak __typeof(self) weakSelf = self;
-    RKObjectManager *um=[RKObjectManager sharedManager];
-    [um getObject:nil path:[NSString stringWithFormat:@"assets/%@/edit",_asset.assetID] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSDictionary *dict=mappingResult.dictionary;
-        OWTAssetData *finalAsset=dict[@"asset"];
-        _caption = finalAsset.caption;
-        _locationString = finalAsset.position;
-        _keywords = finalAsset.keywords;
-        NSInteger N=[finalAsset.isPrivate intValue];
-//     NSInteger N=   [finalAsset.isPrivate integerValue];
-        if (N==1) {
-            _isPrivate=YES;
-        }else
-        {
-            _isPrivate=NO;
-        }
-        _uploadTagView.tagStr = _keywords;
-        _addDesCell.textView.text = _caption;
-        [weakSelf textViewDidChange:_addDesCell.textView];
-        [weakSelf.tableView reloadData];
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        
-    }];
+    _caption=_asset.captionCn;
+    _locationString=_asset.position;
+    _keywords=_asset.tag;
+    _isPrivate=_asset.open.boolValue;
+    _addDesCell.textView.text=_caption;
+    _uploadTagView.tagStr = _keywords;
+    [self textViewDidChange:_addDesCell.textView];
+    [self.tableView reloadData];
 }
 
 

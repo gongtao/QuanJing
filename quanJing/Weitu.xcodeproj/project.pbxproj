@@ -467,11 +467,11 @@
 		A3DB10C21BABAD690033522F /* 分享.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10BB1BABAD690033522F /* 分享.png */; };
 		A3DB10C31BABAD690033522F /* 关注00.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10BC1BABAD690033522F /* 关注00.png */; };
 		A3DB10C41BABAD690033522F /* 关注01.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10BD1BABAD690033522F /* 关注01.png */; };
-		A3DB10C51BABAD690033522F /* 评论.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10BE1BABAD690033522F /* 评论.png */; };
 		A3DB10C71BABAD690033522F /* 赞00.png in Resources */ = {isa = PBXBuildFile; fileRef = A3DB10C01BABAD690033522F /* 赞00.png */; };
 		A3E1810C1BECE282004EDD22 /* seach@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E1810B1BECE282004EDD22 /* seach@3x.png */; };
 		A3E447FC1A79B00C000DE7BA /* selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E447FB1A79B00C000DE7BA /* selected@2x.png */; };
 		A3E6778C1BFAD0A700020B71 /* loginBackView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E6778B1BFAD0A700020B71 /* loginBackView.m */; settings = {ASSET_TAGS = (); }; };
+		A3E677911BFB15E000020B71 /* 评论.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E677901BFB15E000020B71 /* 评论.png */; settings = {ASSET_TAGS = (); }; };
 		A3EB5A411BD7412B00E08563 /* OWTSearchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A3C1BD7412B00E08563 /* OWTSearchManager.m */; };
 		A3EB5A421BD7412B00E08563 /* OWTSearchResultsViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A3E1BD7412B00E08563 /* OWTSearchResultsViewCon.m */; };
 		A3EB5A431BD7412B00E08563 /* OWTSearchViewCon.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EB5A401BD7412B00E08563 /* OWTSearchViewCon.m */; };
@@ -1654,12 +1654,12 @@
 		A3DB10BB1BABAD690033522F /* 分享.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "分享.png"; sourceTree = "<group>"; };
 		A3DB10BC1BABAD690033522F /* 关注00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "关注00.png"; sourceTree = "<group>"; };
 		A3DB10BD1BABAD690033522F /* 关注01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "关注01.png"; sourceTree = "<group>"; };
-		A3DB10BE1BABAD690033522F /* 评论.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "评论.png"; sourceTree = "<group>"; };
 		A3DB10C01BABAD690033522F /* 赞00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "赞00.png"; sourceTree = "<group>"; };
 		A3E1810B1BECE282004EDD22 /* seach@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "seach@3x.png"; sourceTree = "<group>"; };
 		A3E447FB1A79B00C000DE7BA /* selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selected@2x.png"; sourceTree = "<group>"; };
 		A3E6778A1BFAD0A700020B71 /* loginBackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = loginBackView.h; sourceTree = "<group>"; };
 		A3E6778B1BFAD0A700020B71 /* loginBackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = loginBackView.m; sourceTree = "<group>"; };
+		A3E677901BFB15E000020B71 /* 评论.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "评论.png"; sourceTree = "<group>"; };
 		A3EB5A3B1BD7412B00E08563 /* OWTSearchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTSearchManager.h; sourceTree = SOURCE_ROOT; };
 		A3EB5A3C1BD7412B00E08563 /* OWTSearchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTSearchManager.m; sourceTree = SOURCE_ROOT; };
 		A3EB5A3D1BD7412B00E08563 /* OWTSearchResultsViewCon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTSearchResultsViewCon.h; sourceTree = SOURCE_ROOT; };
@@ -3812,9 +3812,9 @@
 				A39A71321BAE998E00B59BEE /* 聊天背景框@2x.png */,
 				A39A712E1BAE5CEE00B59BEE /* 头像.png */,
 				A3DB10BB1BABAD690033522F /* 分享.png */,
+				A3E677901BFB15E000020B71 /* 评论.png */,
 				A3DB10BC1BABAD690033522F /* 关注00.png */,
 				A3DB10BD1BABAD690033522F /* 关注01.png */,
-				A3DB10BE1BABAD690033522F /* 评论.png */,
 				A3D4CFF11BB24F0E008482FD /* 收藏五角星0.png */,
 				A3D4CFF21BB24F0E008482FD /* 下载图标0.png */,
 				A3DB10C01BABAD690033522F /* 赞00.png */,
@@ -5032,7 +5032,6 @@
 				A301E8091A7B39EE0086D989 /* OQJSelectedViewCon2.xib in Resources */,
 				A3C957AE1BB0FF0000EADD73 /* OWTUserInfoView.xib in Resources */,
 				E013919F1B0C3EA500051B78 /* chat_sender_audio_playing_001@2x.png in Resources */,
-				A3DB10C51BABAD690033522F /* 评论.png in Resources */,
 				E01391761B0C3EA500051B78 /* chatBar_face.png in Resources */,
 				908E6357192DC54500263E4D /* OWTLicenseViewCon.xib in Resources */,
 				66A4FA441AA94A12006F6547 /* 照片管理2_05(1).png in Resources */,
@@ -5336,6 +5335,7 @@
 				E09544501BC92F95000D5C26 /* 启动2-1.png in Resources */,
 				E09413251B85DA09000160D7 /* wechatSmile1@2x.png in Resources */,
 				E01391781B0C3EA500051B78 /* chatBar_faceSelected.png in Resources */,
+				A3E677911BFB15E000020B71 /* 评论.png in Resources */,
 				A35D65F91B2E7414006EC936 /* 大图1_11.png in Resources */,
 				E0BCFF381B0D842C009D1D20 /* chatBar_more_locationSelected@2x.png in Resources */,
 				A3B1A6361BA94CB60044B645 /* 发现01.png in Resources */,
