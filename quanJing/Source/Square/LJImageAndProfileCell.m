@@ -689,6 +689,7 @@
 		cellHeight += (10 + imageH);
 		_bigImageScrollView.pagingEnabled = YES;
 		_bigImageScrollView.contentSize = CGSizeMake(x * pa, imageH);
+        [_bigImageScrollView setContentOffset:CGPointMake(x*number, 0) animated:NO];
 	}
 	
 	if (actionModel.descript.length > 0) {

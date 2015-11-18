@@ -98,6 +98,7 @@
                             <rect key="frame" x="57" y="330" width="158" height="23"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="16"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
@@ -132,6 +133,7 @@
                             <rect key="frame" x="57" y="276" width="221" height="23"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="16"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>

@@ -183,12 +183,11 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 			else
 				label.textColor = [UIColor blackColor];
 		}
-		
 		if ([view isKindOfClass:[UIImageView class]]) {
 			UIImageView * imageView = (UIImageView *)view;
-			
 			if (view.tag == number)
-				imageView.image = [UIImage imageNamed:image2[view.tag - 500]]; else
+				imageView.image = [UIImage imageNamed:image2[view.tag - 500]];
+            else
 				imageView.image = [UIImage imageNamed:image1[view.tag - 500]];
 		}
 	}
@@ -438,10 +437,10 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 	if (!error && received) {
 		NSMutableString * caption = [[NSMutableString alloc]init];
 		NSDate * date = [asset valueForProperty:ALAssetPropertyDate];
-		NSString * timeCap = [NSString stringWithFormat:@"%@", date];
+//		NSString * timeCap = [NSString stringWithFormat:@"%@", date];
 		
-		if (timeCap.length > 0)
-			[caption appendFormat:@" %@", [self getTheTime:timeCap]];
+//		if (timeCap.length > 0)
+//			[caption appendFormat:@" %@", [self getTheTime:timeCap]];
 			
 		NSDictionary * dict = [NSJSONSerialization JSONObjectWithData:received options:NSJSONReadingMutableContainers error:nil];
 		NSArray * arr = dict[@"scene_understanding"][@"matches"];

@@ -433,6 +433,7 @@
 	detailed:(NSString *)detailed
 	context:(NSManagedObjectContext *)context
 {
+    return nil;
 	if (!context)
 		context = self.managedObjectContext;
 		
@@ -449,6 +450,7 @@
 - (QJSearchWord *)getSearchWordByWord:(NSString *)word
 	context:(NSManagedObjectContext *)context
 {
+    return nil;
 	if (!context)
 		context = self.managedObjectContext;
 		

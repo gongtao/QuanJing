@@ -707,7 +707,8 @@
 	};
 	
 	cell.number = indexPath.row;
-	[cell customcell:_activeList[indexPath.row] withImageNumber:0];
+	[cell customcell:_activeList[indexPath.row] withImageNumber:_imageNum];
+    _imageNum=0;
 	return cell;
 }
 
