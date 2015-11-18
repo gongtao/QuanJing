@@ -922,15 +922,14 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
     }
 	if (isCared) {
 		UIButton * rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 45.0, 17.0)];
-		[rightBtn setTitle:@"已关注" forState:UIControlStateNormal];
-		[rightBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [rightBtn setImage:[UIImage imageNamed:@"我已关注"] forState:UIControlStateNormal];
 		rightBtn.titleLabel.font = [UIFont systemFontOfSize:9.0];
         [rightBtn addTarget:self action:@selector(careButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
 	}
 	else {
 		UIButton * rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 45.0, 17.0)];
-		[rightBtn setImage:[UIImage imageNamed:@"圈子用户加关注.png"] forState:UIControlStateNormal];
+		[rightBtn setImage:[UIImage imageNamed:@"关注"] forState:UIControlStateNormal];
 		[rightBtn addTarget:self action:@selector(careButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
 	}

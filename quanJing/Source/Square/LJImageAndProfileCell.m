@@ -115,7 +115,7 @@
 	[self.contentView addSubview:_bigImageScrollView];
 	_caption = [LJUIController createLabelWithFrame:CGRectZero Font:12 Text:nil];
 	[self.contentView addSubview:_caption];
-	_careBtn = [LJUIController createButtonWithFrame:CGRectMake(SCREENWIT - 50, 20, 40, 17.5) imageName:@"关注00" title:nil target:self action:@selector(careBtnClick:)];
+	_careBtn = [LJUIController createButtonWithFrame:CGRectMake(SCREENWIT - 50, 20, 40, 17.5) imageName:@"关注" title:nil target:self action:@selector(careBtnClick:)];
 	_likeBtn = [LJUIController createButtonWithFrame:CGRectZero imageName:@"赞00" title:nil target:self action:@selector(likeBtnClick:)];
 	_downLoadBtn = [LJUIController createButtonWithFrame:CGRectZero imageName:@"圈子5_33.png" title:nil target:self action:@selector(downLoadBtnClick)];
 	//	_collectionBtn = [LJUIController createButtonWithFrame:CGRectZero imageName:@"圈子5_34.png" title:nil target:self action:@selector(collectionBtnClick)];
@@ -557,11 +557,11 @@
 		
 		if (!user.hasFollowUser.boolValue) {
 			_careBtn.tag = 0;
-			[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注00"] forState:UIControlStateNormal];
+			[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注"] forState:UIControlStateNormal];
 		}
 		else {
 			_careBtn.tag = 1;
-			[_careBtn setBackgroundImage:[UIImage imageNamed:@"关注01"] forState:UIControlStateNormal];
+			[_careBtn setBackgroundImage:[UIImage imageNamed:@"已关注"] forState:UIControlStateNormal];
 		}
 	}
 	_userName.frame = CGRectMake(65, 13, size.width, size.height);

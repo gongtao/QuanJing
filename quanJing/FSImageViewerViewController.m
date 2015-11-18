@@ -107,7 +107,7 @@
 	return self;
 }
 
-- (id)initWithAssestImageSource:(id <FSImageSource>)aImageSource imageIndex:(NSInteger)imageIndex withViewController:(id)viewController
+- (id)initWithAssestImageSource:(id <FSImageSource>)aImageSource imageIndex:(NSInteger)imageIndex withViewController:(id)viewController 
 {
 	if ((self = [super init])) {
 		if (viewController)
