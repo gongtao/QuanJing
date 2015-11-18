@@ -164,11 +164,11 @@
 - (void)jubao
 {
 	RKObjectManager * om = [RKObjectManager sharedManager];
-	OWTAsset * asset1 = _assets[_imageNum];
+	QJImageObject * asset1 = _assets[_imageNum];
 	
 	_jubaobtn.hidden = YES;
 	_TapBackView.hidden = YES;
-	NSDictionary * dict = @{@"url":asset1.webURL};
+	NSDictionary * dict = @{@"url":asset1.url};
 	[om postObject:nil path:@"report" parameters:dict success:^(RKObjectRequestOperation * operation, RKMappingResult * mappingResult) {
 		NSLog(@"dd");
 		//		NSDictionary * dict = mappingResult.dictionary;
