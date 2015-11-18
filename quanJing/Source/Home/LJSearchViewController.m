@@ -191,7 +191,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	self.keyword = keyword;
 	[self loadMoreData];
 	[self.view bringSubviewToFront:_collectionView];
-	[self updateSearbarButtons:_keyword];
+//	[self updateSearbarButtons:_keyword];
 	[_searchBar resignFirstResponder];
 }
 
