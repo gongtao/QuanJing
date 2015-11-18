@@ -205,7 +205,7 @@
         [UMSocialData defaultData].extConfig.sinaData.shareText = _articleTitle;
         [UMSocialData defaultData].extConfig.qqData.title = _articleTitle;
         [UMSocialData defaultData].extConfig.qzoneData.title = _articleTitle;
-        [UMSocialData defaultData].extConfig.wechatSessionData.shareText = _articleTitle;
+        [UMSocialData defaultData].extConfig.wechatSessionData.title = _articleTitle;
         [UMSocialData defaultData].extConfig.wechatTimelineData.title = _articleTitle;
         [UMSocialData defaultData].extConfig.wechatFavoriteData.title = _articleTitle;
         

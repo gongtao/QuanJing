@@ -194,13 +194,13 @@
 	NSString * photographer = json[@"photographer"];
 	
 	if (!QJ_IS_STR_NIL(photographer))
-        self.photographer = photographer;
-    
-    // picId
-    NSString * picId = json[@"picId"];
-    
-    if (!QJ_IS_STR_NIL(picId))
-        self.picId = picId;
+		self.photographer = photographer;
+		
+	// picId
+	NSString * picId = json[@"picId"];
+	
+	if (!QJ_IS_STR_NIL(picId))
+		self.picId = picId;
 		
 	// picType
 	NSNumber * picType = json[@"picType"];
@@ -243,6 +243,12 @@
 	
 	if (!QJ_IS_NUM_NIL(size))
 		self.size = size;
+		
+	// User
+	NSDictionary * user = json[@"user"];
+	
+	if (!QJ_IS_DICT_NIL(user))
+		self.user = [[QJUser alloc] initWithJson:user];
 }
 
 @end

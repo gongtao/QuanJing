@@ -242,7 +242,13 @@
 	NSNumber * size = json[@"size"];
 	
 	if (!QJ_IS_NUM_NIL(size))
-		self.size = size;
+        self.size = size;
+    
+    // User
+    NSDictionary * user = json[@"user"];
+    
+    if (!QJ_IS_DICT_NIL(user))
+        self.user = [[QJUser alloc] initWithJson:user];
 }
 
 @end

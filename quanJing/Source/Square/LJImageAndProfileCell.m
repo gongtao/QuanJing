@@ -447,23 +447,28 @@
 		[UMSocialData defaultData].extConfig.qqData.url = url;
         [UMSocialData defaultData].extConfig.qzoneData.url = url;
         
-        NSString * title = @"全景图片";
-        
+        NSString * title = @"全景图片：每个人都是生活的摄影师";
         NSString * shareText = nil;
-        NSString * descript = _caption.text;
-        if (descript && (descript.length > 0))
-            shareText = [NSString stringWithFormat:@"全景图片--%@", descript];
-        else
-            shareText = @"全景图片";
         
-        [UMSocialData defaultData].extConfig.sinaData.shareText = shareText;
+        title = @"全景图片：每个人都是生活的摄影师";
+        NSString * name = (_userName.text && _userName.text.length > 0) ?[NSString stringWithFormat:@"%@的图片分享", _userName.text] : @"";
+        NSString * descript = (_caption.text && _caption.text.length > 0) ? _caption.text : @"";
+        shareText = [NSString stringWithFormat:@"来源：%@\n描述：%@", name, descript];
+        
+        NSString * sinaShareText = title;
+        
+        if (shareText && (shareText.length > 0))
+            sinaShareText = [title stringByAppendingFormat:@"\n%@", shareText];
+        
+        [UMSocialData defaultData].extConfig.sinaData.shareText = sinaShareText;
         [UMSocialData defaultData].extConfig.qqData.title = title;
-        [UMSocialData defaultData].extConfig.qqData.shareText = descript;
+        [UMSocialData defaultData].extConfig.qqData.shareText = shareText;
         [UMSocialData defaultData].extConfig.qzoneData.title = title;
-        [UMSocialData defaultData].extConfig.qzoneData.shareText = descript;
+        [UMSocialData defaultData].extConfig.qzoneData.shareText = shareText;
+        [UMSocialData defaultData].extConfig.wechatSessionData.title = title;
         [UMSocialData defaultData].extConfig.wechatSessionData.shareText = shareText;
-        [UMSocialData defaultData].extConfig.wechatTimelineData.title = shareText;
-        [UMSocialData defaultData].extConfig.wechatFavoriteData.title = shareText;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
+        [UMSocialData defaultData].extConfig.wechatFavoriteData.title = title;
         
 		[UMSocialSnsService presentSnsIconSheetView:_viewContoller
 		appKey:nil

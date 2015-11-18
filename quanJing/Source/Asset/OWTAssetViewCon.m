@@ -198,6 +198,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 					_imageAsset.userId = imageObject.userId;
 					_imageAsset.descript = imageObject.descript;
 					_imageAsset.picId = imageObject.picId;
+					_imageAsset.user = imageObject.user;
 					[self reloadData];
 					[self loadRelatedAssetsInSearch];
 				}
@@ -1021,26 +1022,41 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 		[UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
 		[UMSocialData defaultData].extConfig.qqData.qqMessageType = UMSocialQQMessageTypeDefault;
 		[UMSocialData defaultData].extConfig.wechatSessionData.url = url;
-        [UMSocialData defaultData].extConfig.wechatTimelineData.url = url;
-        [UMSocialData defaultData].extConfig.wechatFavoriteData.url = url;
+		[UMSocialData defaultData].extConfig.wechatTimelineData.url = url;
+		[UMSocialData defaultData].extConfig.wechatFavoriteData.url = url;
 		[UMSocialData defaultData].extConfig.qqData.url = url;
 		[UMSocialData defaultData].extConfig.qzoneData.url = url;
-		NSString * title = @"全景图片";
 		
-        NSString * shareText = nil;
-		if (_imageAsset.tag)
-			shareText = [NSString stringWithFormat:@"全景图片--%@", _imageAsset.tag];
-		else
-			shareText = @"全景图片";
-        
-        [UMSocialData defaultData].extConfig.sinaData.shareText = shareText;
-        [UMSocialData defaultData].extConfig.qqData.title = title;
-        [UMSocialData defaultData].extConfig.qqData.shareText = _imageAsset.tag;
-        [UMSocialData defaultData].extConfig.qzoneData.title = title;
-        [UMSocialData defaultData].extConfig.qzoneData.shareText = _imageAsset.tag;
+		NSString * title = nil;
+		NSString * shareText = nil;
+		
+		if (_imageAsset.imageType.integerValue == 1) {
+			title = @"全景图片：读图时代美好人生";
+			NSString * descript = _imageAsset.descript ? _imageAsset.descript : @"";
+			NSString * picId = _imageAsset.picId ? _imageAsset.picId : @"";
+			shareText = [NSString stringWithFormat:@"描述：%@\n编号：%@", descript, picId];
+		}
+		else if (_imageAsset.imageType.integerValue == 2) {
+			title = @"全景图片：每个人都是生活的摄影师";
+			NSString * name = _imageAsset.user.nickName ?[NSString stringWithFormat:@"%@的图片分享", _imageAsset.user.nickName] : @"";
+			NSString * tag = _imageAsset.tag ? _imageAsset.tag : @"";
+			shareText = [NSString stringWithFormat:@"来源：%@\n标签：%@", name, tag];
+		}
+		
+		NSString * sinaShareText = title;
+		
+		if (shareText && (shareText.length > 0))
+			sinaShareText = [title stringByAppendingFormat:@"\n%@", shareText];
+			
+		[UMSocialData defaultData].extConfig.sinaData.shareText = sinaShareText;
+		[UMSocialData defaultData].extConfig.qqData.title = title;
+		[UMSocialData defaultData].extConfig.qqData.shareText = shareText;
+		[UMSocialData defaultData].extConfig.qzoneData.title = title;
+		[UMSocialData defaultData].extConfig.qzoneData.shareText = shareText;
+		[UMSocialData defaultData].extConfig.wechatSessionData.title = title;
 		[UMSocialData defaultData].extConfig.wechatSessionData.shareText = shareText;
-        [UMSocialData defaultData].extConfig.wechatTimelineData.title = shareText;
-        [UMSocialData defaultData].extConfig.wechatFavoriteData.title = shareText;
+		[UMSocialData defaultData].extConfig.wechatTimelineData.title = title;
+		[UMSocialData defaultData].extConfig.wechatFavoriteData.title = title;
 		
 		[UMSocialSnsService presentSnsIconSheetView:self
 		appKey:nil

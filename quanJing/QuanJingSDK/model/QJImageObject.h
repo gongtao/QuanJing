@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSNumber * userId;
 
+@property (nonatomic, strong) QJUser * user;
+
 @property (nonatomic, strong, nullable) NSString * bgcolor;
 
 @property (nonatomic, strong, nullable) NSNumber * imageType;
