@@ -296,6 +296,7 @@
         __block QJUser *_user = nil;
         NSNumber *uid = [NSNumber numberWithInteger:[usrId integerValue]];
         [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error){
+            dispatch_async(dispatch_get_main_queue(), ^{
             if (error == nil && user != nil && user.uid != nil) {
                 
                 NSString *homeDictionary = NSHomeDirectory();//获取根目录
@@ -313,7 +314,7 @@
                 [mulDic setValue:dic forKey:[user.uid stringValue]];
                 [NSKeyedArchiver archiveRootObject:mulDic toFile:homePath];
                 _user = user;
-            }
+            }});
         }];
     return _user;
 }
@@ -333,8 +334,6 @@
         }
     }
     else {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            
             NSNumber *uid = [NSNumber numberWithInteger:[userId integerValue]];
             [[QJPassport sharedPassport]requestOtherUserInfo:uid finished:^(QJUser * user, NSDictionary * userDic, NSError * error)
              {
@@ -359,7 +358,6 @@
                  });
 
              }];
-        });
     }
 }
 

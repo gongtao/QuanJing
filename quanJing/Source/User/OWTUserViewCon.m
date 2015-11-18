@@ -186,9 +186,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	UIScreen * screen = [UIScreen mainScreen];
 	
 	_itemSize = (screen.bounds.size.width - 30.0) / 3;
-	
-	_collectionView.backgroundColor = [UIColor redColor];
-	
+		
 	_collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
 	_collectionViewLayout.minimumLineSpacing = 5.0;
 	_collectionViewLayout.minimumInteritemSpacing = 5.0;
@@ -389,7 +387,7 @@ static NSString * kWaterFlowCellID = @"kWaterFlowCellID";
 	// 登录检查
 	if (![[EaseMob sharedInstance].chatManager isLoggedIn]) {
 		[HuanXinManager sharedTool:hxUsrId passWord:password];
-		return;
+        TTAlertNoTitle(NSLocalizedString(@"消息失败,请重试！", @"Like Action First!"));
 	}
     if (_quser.uid == nil) {
         return;

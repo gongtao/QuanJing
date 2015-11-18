@@ -26,12 +26,14 @@
 #import "UIViewController+HUD.h"
 #import "MBProgressHUD.h"
 #import <UIImageView+WebCache.h>
+#import "OWTTabBarHider.h"
 
 
 @interface ContactsViewController ()<UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, BaseTableCellDelegate, SRRefreshDelegate>
 {
     NSIndexPath *_currentLongPressIndex;
     MBProgressHUD* _progress;
+    OWTTabBarHider * _tabBarHider;
     
 }
 
@@ -71,7 +73,8 @@
 {
     [super viewDidLoad];
     
-    
+    _tabBarHider = [[OWTTabBarHider alloc]init];
+    [_tabBarHider hideTabBar];
     self.tableView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     [self.view addSubview:self.tableView];
     //[self.tableView addSubview:self.slimeView];

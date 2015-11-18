@@ -110,6 +110,7 @@
     self.keyboardType = UIKeyboardTypeDefault;
     self.returnKeyType = UIReturnKeyDefault;
     self.textAlignment = NSTextAlignmentLeft;
+    self.tintColor = [UIColor darkGrayColor];
 }
 
 - (id)initWithFrame:(CGRect)frame

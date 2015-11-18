@@ -21,10 +21,11 @@
 #import <UIImageView+WebCache.h>
 #import "QJPassport.h"
 #import "QJInterfaceManager.h"
-
+#import "OWTTabBarHider.h"
 @interface AddFriendListViewController ()<SRRefreshDelegate>
 {
     MBProgressHUD* _progress;
+    OWTTabBarHider *_tabBarHider;
 }
 
 @property (strong, nonatomic) UITableView *tableView;
@@ -71,6 +72,8 @@
     [self getFriendsList];
     [self setupRefresh];
     
+    _tabBarHider = [[OWTTabBarHider alloc]init];
+    [_tabBarHider hideTabBar];
     //[self.tableView addSubview:self.slimeView];
     [self.view bringSubviewToFront:_progress];
     

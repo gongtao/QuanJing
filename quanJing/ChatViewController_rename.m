@@ -32,7 +32,7 @@
 #import "HxNickNameImageModel.h"
 #import "OWTUserViewCon.h"
 #import "ChatGroupDetailViewController.h"
-
+#import "OWTTabBarHider.h"
 #define KPageCount 20
 
 @interface ChatViewController_rename ()<UITableViewDataSource, UITableViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, IChatManagerDelegate, DXMessageToolBarDelegate, IDeviceManagerDelegate,DXChatBarMoreViewDelegate>
@@ -48,6 +48,7 @@
     
     NSMutableArray *_messages;
     BOOL _isScrollToBottom;
+    OWTTabBarHider * _tabBarHider;
     
 }
 
@@ -96,6 +97,7 @@
         //根据接收者的username获取当前会话的管理者
         _conversation = [[EaseMob sharedInstance].chatManager conversationForChatter:chatter isGroup:isGroup];
         [_conversation markAllMessagesAsRead:YES];
+        _tabBarHider = [[OWTTabBarHider alloc]init];
         
     }
     _diffCreatMask = creteGropEnter;
@@ -111,6 +113,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [_tabBarHider hideTabBar];
     
     //    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
     //        self.edgesForExtendedLayout =  UIRectEdgeNone;

@@ -15,6 +15,7 @@
 
 #import "OWTFeedManager.h"
 #import "LJFeedWithUserProfileViewCon.h"
+#import "OWTBaseSquareViewController.h"
 @interface OWTSocialNavCon ()
 
 
@@ -41,15 +42,17 @@
     [self setupTabBarItem];
 
     
+    OWTBaseSquareViewController *baseVC = [[OWTBaseSquareViewController alloc]init];
+    [self pushViewController:baseVC animated:NO];
     
-    LJFeedWithUserProfileViewCon *ljvc=[[LJFeedWithUserProfileViewCon alloc]initWithNibName:nil bundle:nil];
-    if (ljvc.feed == nil)
-    {
-        OWTFeed* feed = [GetFeedManager() feedWithID:kWTFeedSquare];
-        [ljvc presentFeed:feed animated:YES refresh:YES];
-    }
-    // hidesBottomBarWhenPushed
-    [self pushViewController:ljvc animated:NO];
+//    LJFeedWithUserProfileViewCon *ljvc=[[LJFeedWithUserProfileViewCon alloc]initWithNibName:nil bundle:nil];
+//    if (ljvc.feed == nil)
+//    {
+//        OWTFeed* feed = [GetFeedManager() feedWithID:kWTFeedSquare];
+//        [ljvc presentFeed:feed animated:YES refresh:YES];
+//    }
+////     hidesBottomBarWhenPushed
+//    [self pushViewController:ljvc animated:NO];
 
 }
 

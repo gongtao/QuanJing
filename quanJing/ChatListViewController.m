@@ -91,7 +91,9 @@
     
     [self setupFentchAddListBtn];
     [self setupPopView];
-    [self setupRefresh];
+    [self setupRefresh];//交个朋友 哪天可以约你 周末吃饭 见面聊聊或看个电影
+    self.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT+10);
+    _tabBarHider = [[OWTTabBarHider alloc] init];
     
 }
 
@@ -115,7 +117,7 @@
 {
     
     _tabBarHider = [[OWTTabBarHider alloc] init];
-    [_tabBarHider showTabBar];
+    //[_tabBarHider showTabBar];
     [self dismissViewControllerAnimated:YES
                              completion:NULL];
 }
@@ -188,12 +190,15 @@
 -(void)setupFentchAddListBtn
 {
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem SH_barButtonItemWithBarButtonSystemItem:UIBarButtonSystemItemAdd withBlock:^(UIBarButtonItem* sender) {
-        _isSelect = !_isSelect;
-        [self tapAddButonAction:_isSelect];
+        [self showAddButton];
     }];
 }
 
-
+-(void)showAddButton
+{
+    _isSelect = !_isSelect;
+    [self tapAddButonAction:_isSelect];
+}
 -(void)tapAddButonAction:(BOOL)isSelect
 {
     if (isSelect) {
@@ -429,11 +434,13 @@
                 [NSKeyedArchiver archiveRootObject:dic toFile:homePath];
             }
         }
+        dispatch_async(dispatch_get_main_queue(), ^{
             if (result.count >0) {
                 [_thatUsrs2 removeAllObjects];
                 [_thatUsrs2 addObjectsFromArray:result];
             }
-        dispatch_async(dispatch_get_main_queue(), ^{
+});
+                    dispatch_async(dispatch_get_main_queue(), ^{
             [_tableView reloadData];
         });
         
@@ -516,6 +523,8 @@
     chater = [chater substringFromIndex:2];
     QJUser *qjuser = nil;
     for (QJUser *user in _thatUsrs2) {
+        if (user.uid == nil)
+            break;
         if ([[user.uid stringValue] isEqualToString:chater]) {
             qjuser = user;
             break;
@@ -623,7 +632,7 @@
     chatController.hxUserID = conversation.chatter;
     chatController.currentUser = [[QJPassport sharedPassport]currentUser];
     chatController.hidesBottomBarWhenPushed =YES;
-    [self.navigationController pushViewController:chatController animated:YES];
+    [self.navigationController pushViewController:chatController animated:NO];
 }
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{

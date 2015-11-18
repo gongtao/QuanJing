@@ -23,4 +23,6 @@
 - (void)networkChanged:(EMConnectionState)connectionState;
 
 - (void)slimeRefreshStartRefresh:(SRRefreshView *)refreshView;
+- (void)showAddButton;
+- (void)tapToHidePopView;
 @end

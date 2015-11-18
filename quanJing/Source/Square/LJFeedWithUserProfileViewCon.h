@@ -10,7 +10,7 @@
 
 @interface LJFeedWithUserProfileViewCon : UIViewController <UIImagePickerControllerDelegate>
 
-@property(nonatomic, readonly) OWTFeed * feed;
+@property(nonatomic, strong) OWTFeed * feed;
 @property(nonatomic, assign) float height;
 @property(nonatomic, readonly) NSMutableArray * heights;
 @property(nonatomic, readonly) NSMutableArray * likes;

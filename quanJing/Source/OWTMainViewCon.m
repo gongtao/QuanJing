@@ -66,7 +66,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 
 @property (nonatomic, strong) LJExploreViewController1 * exploreViewCon;
 @property (nonatomic, strong) OQJSelectedViewCon * selectedViewCon;
-@property (nonatomic, strong) ChatListViewController * chatListVC;
+
 
 @property (nonatomic, strong) UIViewController * lastViewConBeforeCapture;
 @end
@@ -306,6 +306,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 - (void)setupHuanXinIM
 {
 	_chatListVC = [[ChatListViewController alloc]init];
+    _chatListVC.hidesBottomBarWhenPushed = YES;
 	_hxChatNavCon = [[OQJNavCon alloc] initWithRootViewController:_chatListVC];
 	OWTFont * icon = [OWTFont pictureIconWithSize:32];
 	icon.drawingPositionAdjustment = UIOffsetMake(0, -2);
